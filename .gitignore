@@ -5,29 +5,10 @@
 *.swp
 .DS_Store
 .atom/
+.buildlog/
+.history
 .svn/
-*.lock
-
-# Package files
-*.dart.js
-.packages
-.pub/
-/build/
-
-# Flutter/Dart/Pub related
-**/doc/api/
-.dart_tool/
-.flutter-plugins
-.flutter-plugins-dependencies
-.generated/
-.pub-cache/
-.pub/
-
-# Web related
-lib/generated_plugin_registrant.dart
-web/favicon.ico
-web/icons/
-web/images/
+migrate_working_dir/
 
 # IntelliJ related
 *.iml
@@ -35,49 +16,14 @@ web/images/
 *.iws
 .idea/
 
-# VSCode related
-.vscode/
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
 
-# Android related
-**/android/**/gradle-wrapper.jar
-**/android/.gradle
-**/android/captures/
-**/android/gradlew
-**/android/gradlew.bat
-**/android/local.properties
-**/android/**/GeneratedPluginRegistrant.java
-
-# iOS related
-**/ios/**/Flutter/.last_build_id
-**/ios/.symlinks/
-**/ios/Flutter/flutter_export_environment.sh
-**/ios/Flutter/Generated.xcconfig
-**/ios/Flutter/AppFrameworkInfo.plist
-**/ios/Flutter/GeneratedPluginRegistrant.*
-**/ios/Flutter/podhelper.rb
-**/ios/Pods/
-**/ios/.symlinks/
-**/ios/Runner.xcworkspace/
-
-# macOS related
-**/macos/Pods/
-**/macos/.symlinks/
-**/macos/Flutter/ephemeral/
-**/macos/Flutter/.last_build_id
-
-# Linux related
-**/linux/.dart_tool/
-**/linux/flutter/
-**/linux/.project
-
-# Windows related
-**/windows/flutter/
-**/windows/.dart_tool/
-**/windows/.cxx/
-**/windows/.idea/
-
-# Coverage
-coverage/
-
-# Symbols
-**/app.*.symbols
+# Flutter/Dart/Pub related
+# Libraries should not include pubspec.lock, per https://dart.dev/guides/libraries/private-files#pubspeclock.
+/pubspec.lock
+**/doc/api/
+.dart_tool/
+build/
