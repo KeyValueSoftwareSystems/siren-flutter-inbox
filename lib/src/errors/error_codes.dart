@@ -1,0 +1,20 @@
+// ignore_for_file: constant_identifier_names
+
+enum ErrorCode {
+  ERR_INTERNAL_SERVER,
+  ERR_OTP_VALIDATE,
+  ERR_OTP_GENERATE,
+  ERR_USER_NOT_FOUND,
+  ERR_UNAUTHORIZED,
+  ERR_DUPLICATE_GROUP_NAME,
+  ERR_GROUP_NOT_FOUND,
+  ERR_VALIDATION,
+  ERR_NOT_WHITELIST_NUMBER,
+  ERR_USER_ACCOUNT_HAS_ALREADY_REQUESTED_FOR_DELETE,
+  ERR_REMINDER_ALREADY_SEND,
+  ERR_NETWORK_ERROR;
+
+  String toJson() => name;
+
+  static ErrorCode fromJson(String json) => values.byName(json);
+}
