@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:siren_flutter_inbox/src/models/ui_models.dart';
 import 'package:siren_flutter_inbox/src/widgets/card.dart';
 
+export 'package:siren_flutter_inbox/src/models/ui_models.dart';
+
 ///Dummy Notification
 final notification = NotificationDataType(
   id: '1',
@@ -12,7 +14,8 @@ final notification = NotificationDataType(
     channel: '',
     header: 'Title of the notification',
     subHeader: 'Subheader of the notification',
-    body: 'You have a new message. This is the body. this is a longer text, lets see what happens',
+    body:
+        'You have a new message. This is the body. this is a longer text, lets see what happens',
     actionUrl: '',
     avatar: AvatarData(
       imageUrl: 'https://picsum.photos/200',
@@ -25,6 +28,12 @@ final notification = NotificationDataType(
 );
 
 class CustomText extends StatelessWidget {
+  const CustomText(
+      {super.key, this.customStyles, this.hideAvatar, this.deleteWidget});
+  final SirenStyleProps? customStyles;
+  final bool? hideAvatar;
+  final Widget? deleteWidget;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -55,17 +64,14 @@ class CustomText extends StatelessWidget {
               isRead: notification.isRead,
             ),
             cardProps: CardProps(
-              hideAvatar: false,
+              hideAvatar: hideAvatar,
               showMedia: true,
             ),
             onDelete: (id) {
               // Handle delete action
             },
-            deleteWidget: IconButton(
-              icon: Icon(Icons.delete),
-              onPressed: () {},
-            ),
-            styles: null,
+            deleteWidget: deleteWidget,
+            styles: customStyles,
           ),
         ],
       ),
