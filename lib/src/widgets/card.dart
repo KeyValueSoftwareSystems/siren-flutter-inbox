@@ -12,7 +12,6 @@ class CardWidget extends StatelessWidget {
   final SirenStyleProps? styles;
   final Function onDelete;
   final Widget? deleteWidget;
-  final Widget? avatarWidget;
 
   // Constructor to initialize the card with required parameters
   CardWidget({
@@ -22,7 +21,6 @@ class CardWidget extends StatelessWidget {
     required this.styles,
     required this.onDelete,
     this.deleteWidget,
-    this.avatarWidget,
   });
 
   @override
@@ -37,7 +35,7 @@ class CardWidget extends StatelessWidget {
             children: [
               // Display avatar if not hidden
               if (!(cardProps.hideAvatar ?? false))
-                avatarWidget ?? _buildDefaultAvatarContainer(),
+                _buildDefaultAvatarContainer(),
               Expanded(
                 child: Container(
                   decoration: styles?.cardContentContainer,
@@ -90,7 +88,7 @@ class CardWidget extends StatelessWidget {
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       style: styles?.cardTitle ??
-          TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+          const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
     );
   }
 
@@ -99,7 +97,7 @@ class CardWidget extends StatelessWidget {
     return NullableText(
       text: notification.message.subHeader,
       style: styles?.subHeaderText ??
-          TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+          const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
     );
   }
 
@@ -108,7 +106,7 @@ class CardWidget extends StatelessWidget {
     return Text(
       notification.message.body,
       style: styles?.cardDescription ??
-          TextStyle(fontSize: 10, fontWeight: FontWeight.w400),
+          const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
     );
   }
 

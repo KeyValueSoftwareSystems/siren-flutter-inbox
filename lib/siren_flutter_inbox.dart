@@ -12,7 +12,7 @@ final notification = NotificationDataType(
     channel: '',
     header: 'Title of the notification',
     subHeader: 'Subheader of the notification',
-    body: 'You have a new message. This is the body',
+    body: 'You have a new message. This is the body. this is a longer text, lets see what happens',
     actionUrl: '',
     avatar: AvatarData(
       imageUrl: 'https://picsum.photos/200',
