@@ -29,29 +29,32 @@ class CardWidget extends StatelessWidget {
       onTap: () => onCardClick(notification),
       child: Container(
         decoration: styles?.container ?? _getDefaultContainerDecoration(),
-        child: Container(
-          decoration: styles?.contentContainer,
-          child: Row(
-            children: [
-              // Display avatar if not hidden
-              if (!(cardProps.hideAvatar ?? false))
-                _buildDefaultAvatarContainer(),
-              Expanded(
-                child: Container(
-                  decoration: styles?.cardContentContainer,
-                  padding: const EdgeInsets.all(8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildHeaderText(),
-                      _buildSubHeaderText(),
-                      _buildBodyText(),
-                      _buildFooterRow(),
-                    ],
+        child: Padding(
+          padding: const EdgeInsets.only(top: 8),
+          child: Container(
+            decoration: styles?.contentContainer,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Display avatar if not hidden
+                if (!(cardProps.hideAvatar ?? false))
+                  _buildDefaultAvatarContainer(),
+                Expanded(
+                  child: Container(
+                    decoration: styles?.cardContentContainer,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildHeaderText(),
+                        _buildSubHeaderText(),
+                        _buildBodyText(),
+                        _buildFooterRow(),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -61,10 +64,12 @@ class CardWidget extends StatelessWidget {
   // Private method to get default container decoration
   BoxDecoration _getDefaultContainerDecoration() {
     return BoxDecoration(
-      border: Border.all(
-        color: notification.isRead ? Colors.transparent : Colors.black,
+      border: Border(
+        bottom: BorderSide(
+          color: Colors.blueGrey.withOpacity(0.2),
+        ),
       ),
-      borderRadius: BorderRadius.circular(8),
+      color: notification.isRead ? const Color(0xFFFFDADA) : null,
     );
   }
 
@@ -84,11 +89,11 @@ class CardWidget extends StatelessWidget {
   // Private method to build header text widget
   Text _buildHeaderText() {
     return Text(
-      notification.message.header,
+      notification.message.header.toUpperCase(),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       style: styles?.cardTitle ??
-          const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+          const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
     );
   }
 
@@ -97,16 +102,31 @@ class CardWidget extends StatelessWidget {
     return NullableText(
       text: notification.message.subHeader,
       style: styles?.subHeaderText ??
-          const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+          const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+          ),
     );
   }
 
   // Private method to build body text widget
-  Text _buildBodyText() {
-    return Text(
-      notification.message.body,
-      style: styles?.cardDescription ??
-          const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+  Widget _buildBodyText() {
+    return Column(
+      children: [
+        const SizedBox(
+          height: 10,
+        ),
+        Text(
+          notification.message.body,
+          style: styles?.cardDescription ??
+              const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+              ),
+          maxLines: 3,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ],
     );
   }
 
@@ -131,21 +151,18 @@ class CardWidget extends StatelessWidget {
   Text _buildTimestampText() {
     return Text(
       generateElapsedTimeText(DateTime.parse(notification.createdAt)),
-      style: styles?.dateStyle,
+      style: styles?.dateStyle ?? const TextStyle(fontSize: 12),
     );
   }
 
   // Private method to build default delete button container
-  Container _buildDefaultDeleteButton() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: styles?.deleteButton ??
-          BoxDecoration(
-              border: Border.all(color: Colors.red),
-              borderRadius: const BorderRadius.all(Radius.circular(8))),
-      child: Text(
-        'Delete',
-        style: styles?.deleteButtonText ?? const TextStyle(color: Colors.red),
+  IconButton _buildDefaultDeleteButton() {
+    return IconButton(
+      iconSize: 25,
+      onPressed: () {},
+      icon: const Icon(
+        Icons.delete_outline,
+        color: Colors.red,
       ),
     );
   }
