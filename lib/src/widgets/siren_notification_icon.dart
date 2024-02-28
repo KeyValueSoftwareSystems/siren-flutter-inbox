@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 
-class NotificationIconWidget extends StatelessWidget {
-  const NotificationIconWidget({
+class SirenNotificationIconWidget extends StatelessWidget {
+  const SirenNotificationIconWidget({
     super.key,
-    this.count,
     this.darkMode = false,
     this.notificationIcon,
     this.onError,
-    this.enableCount = true,
+    this.realTimeUnviewedCountEnabled = true,
   });
 
-  final bool? enableCount;
-  final int? count;
+  final bool? realTimeUnviewedCountEnabled;
   final bool? darkMode;
   final Function? onError;
   final Widget? notificationIcon;
 
   final iconSize = 40.0;
+  final count = 10;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +26,7 @@ class NotificationIconWidget extends StatelessWidget {
               Icons.notifications_none_outlined,
               size: iconSize,
             ),
-        if (enableCount ?? false) _getBadge(),
+        if (realTimeUnviewedCountEnabled ?? false) _getBadge(),
       ],
     );
   }
