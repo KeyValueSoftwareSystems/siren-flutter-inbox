@@ -13,7 +13,7 @@ class VerifyToken {
 
   Future<void> verifyToken(String token, String id) async {
     final apiResponse = await api.get(
-      path: 'api/v2/in-app/recipients/id',
+      path: 'api/v2/in-app/recipients/$id/verify-token',
       options: Options(
         headers: {
           'authorization': 'Bearer $token',

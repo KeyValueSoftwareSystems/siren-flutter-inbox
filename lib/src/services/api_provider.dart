@@ -1,25 +1,27 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
 
 Dio apiProvider() {
   final _dio = Dio();
   // ignore: cascade_invocations
   _dio
     //..options.baseUrl = Config.baseUrl
-    ..options.connectTimeout = const Duration(seconds: 5)
-    ..options.receiveTimeout = const Duration(seconds: 3)
+    ..options.connectTimeout = const Duration(seconds: 10)
+    ..options.receiveTimeout = const Duration(seconds: 10)
     ..interceptors.add(
       InterceptorsWrapper(
         /**
          * onRequest interceptor - Called before firing the request
          */
         onRequest: (RequestOptions options, RequestInterceptorHandler handler) {
-          // const token = 'TODO GET AUTH TOKEN';
-          // if (options.contentType != ''
-          //   ) {
-          //   options.headers.putIfAbsent('Authorization', () => 'Bearer $token');
-          // }
+
+          final token = SirenDataProvider.instance.userToken;
+          if (options.contentType != ''
+            ) {
+            options.headers.putIfAbsent('Authorization', () => 'Bearer $token');
+          }
           return handler.next(options);
         },
         /**
@@ -28,17 +30,7 @@ Dio apiProvider() {
         onResponse:
             (Response response, ResponseInterceptorHandler handler) async {
           if (response.data != '') {
-            if (response.data['errors']?[0]['extensions']['statusCode'] ==
-                401) {
-              // TODO
-            } else {
-              if (response.data['errors']?[0]['extensions']['error'] ==
-                  'E1014') {
-                // LOGOUT
-              } else {
-                return handler.next(response);
-              }
-            }
+            // handle error
           }
           return handler.next(response);
         },
