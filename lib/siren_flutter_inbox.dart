@@ -3,6 +3,7 @@ library siren_flutter_inbox;
 import 'package:flutter/material.dart';
 
 export 'package:siren_flutter_inbox/src/models/ui_models.dart';
+export 'package:siren_flutter_inbox/src/widgets/siren_notification_icon.dart';
 export 'package:siren_flutter_inbox/src/widgets/siren_window.dart';
 
 /// A Demo Text UI.
@@ -13,7 +14,7 @@ class CustomText extends StatelessWidget {
   Widget build(BuildContext context) {
     final sirenProvider = SirenProvider.of(context);
     final userToken = sirenProvider?.userToken;
-    return Text('TOKEN $userToken');
+    return Text('USER TOKEN IS $userToken');
   }
 }
 
