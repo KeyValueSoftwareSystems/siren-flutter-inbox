@@ -2,6 +2,9 @@ library siren_flutter_inbox;
 
 import 'package:flutter/material.dart';
 
+export 'package:siren_flutter_inbox/src/models/ui_models.dart';
+export 'package:siren_flutter_inbox/src/widgets/siren_window.dart';
+
 /// A Demo Text UI.
 class CustomText extends StatelessWidget {
   const CustomText({super.key});
