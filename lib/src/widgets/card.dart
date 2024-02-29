@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:siren_flutter_inbox/src/models/notification_model.dart';
 import 'package:siren_flutter_inbox/src/models/ui_models.dart';
 import 'package:siren_flutter_inbox/src/utils/common_utils.dart';
 import 'package:siren_flutter_inbox/src/widgets/common/nullable_text.dart';
@@ -69,7 +70,7 @@ class CardWidget extends StatelessWidget {
           color: Colors.blueGrey.withOpacity(0.2),
         ),
       ),
-      color: notification.isRead ? const Color(0xFFFFDADA) : null,
+      color: notification.isRead ?? true ? const Color(0xFFFFDADA) : null,
     );
   }
 
@@ -79,9 +80,13 @@ class CardWidget extends StatelessWidget {
       decoration: styles?.cardIconContainer,
       padding: const EdgeInsets.all(8),
       child: CircleAvatar(
-        backgroundImage: notification.message.avatar.imageUrl != null
-            ? NetworkImage(notification.message.avatar.imageUrl ?? '')
-            : null,
+        backgroundImage: notification.message?.avatar?.url != null
+            ? NetworkImage(
+                notification.message!.avatar?.url ?? '',
+              )
+            : const NetworkImage(
+                'https://picsum.photos/200/300',
+              ),
       ),
     );
   }
@@ -89,7 +94,7 @@ class CardWidget extends StatelessWidget {
   // Private method to build header text widget
   Text _buildHeaderText() {
     return Text(
-      notification.message.header.toUpperCase(),
+      notification.message?.header ?? ''.toUpperCase(),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       style: styles?.cardTitle ??
@@ -100,7 +105,7 @@ class CardWidget extends StatelessWidget {
   // Private method to build subheader text widget
   Widget _buildSubHeaderText() {
     return NullableText(
-      text: notification.message.subHeader,
+      text: notification.message?.subHeader,
       style: styles?.subHeaderText ??
           const TextStyle(
             fontSize: 14,
@@ -117,7 +122,7 @@ class CardWidget extends StatelessWidget {
           height: 10,
         ),
         Text(
-          notification.message.body,
+          notification.message?.body ?? '',
           style: styles?.cardDescription ??
               const TextStyle(
                 fontSize: 14,
@@ -150,7 +155,7 @@ class CardWidget extends StatelessWidget {
   // Private method to build timestamp text widget
   Text _buildTimestampText() {
     return Text(
-      generateElapsedTimeText(DateTime.parse(notification.createdAt)),
+      generateElapsedTimeText(DateTime.parse(notification.createdAt ?? '')),
       style: styles?.dateStyle ?? const TextStyle(fontSize: 12),
     );
   }

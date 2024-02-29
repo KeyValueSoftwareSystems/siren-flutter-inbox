@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:siren_flutter_inbox/src/api/fetch_all_notification.dart';
+import 'package:siren_flutter_inbox/src/models/notification_model.dart';
 import 'package:siren_flutter_inbox/src/models/ui_models.dart';
 import 'package:siren_flutter_inbox/src/widgets/card.dart';
 import 'package:siren_flutter_inbox/src/widgets/empty_widget.dart';
 
 class SirenWindow extends StatefulWidget {
   const SirenWindow({
-    super.key,
+    Key? key,
     this.customStyles,
     this.hideAvatar,
     this.deleteWidget,
@@ -14,7 +16,7 @@ class SirenWindow extends StatefulWidget {
     this.windowHeaderBackgroundColor,
     this.windowHeaderText,
     this.windowHeaderTextStyle,
-  });
+  }) : super(key: key);
 
   final SirenStyleProps? customStyles;
   final bool? hideAvatar;
@@ -30,62 +32,67 @@ class SirenWindow extends StatefulWidget {
 }
 
 class _SirenWindowState extends State<SirenWindow> {
-  late List<NotificationDataType> notifications;
+  late ScrollController _scrollController;
   bool isLoading = false;
   bool endReached = false;
+  bool isError = false;
+  int currentPage = 0;
+  late int totalElements;
+
+  List<NotificationDataType> notifications = [];
 
   @override
   void initState() {
     super.initState();
-    //dummy data
-    notifications = List.generate(
-      30,
-      (index) => NotificationDataType(
-        id: '${index + 1}',
-        createdAt: '2024-01-01T00:00:00Z',
-        message: MessageData(
-          channel: '',
-          header: 'Title of the notification ${index + 1}',
-          subHeader: 'Subheader of the notification ${index + 1}',
-          body:
-              'You have a new message from notification ${index + 1}. This is the body. this is a longer text, lets see what happens',
-          actionUrl: '',
-          avatar: AvatarData(
-            imageUrl: 'https://picsum.photos/200',
-            actionUrl: null,
-          ),
-          additionalData: '',
-        ),
-        requestId: '',
-        isRead: false,
-      ),
-    );
+    _scrollController = ScrollController();
+    _scrollController.addListener(_scrollListener);
+    fetchNotifications();
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: widget.showWindowHeader ?? true
-          ? AppBar(
-              title: Text(widget.windowHeaderText ?? 'Notifications'),
-              backgroundColor: widget.windowHeaderBackgroundColor,
-              titleTextStyle: widget.windowHeaderTextStyle,
-              centerTitle: false,
-            )
-          : null,
-      body: NotificationListView(
-        notifications: notifications,
-        isLoading: isLoading,
-        endReached: endReached,
-        onRefresh: onRefresh,
-        onDelete: onDelete,
-        onEndReached: onEndReached,
-        customStyles: widget.customStyles,
-        deleteWidget: widget.deleteWidget,
-        hideAvatar: widget.hideAvatar,
-        customEmptyWidget: widget.customEmptyWidget,
-      ),
-    );
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.atEdge &&
+        _scrollController.position.pixels == 0) {
+      onRefresh();
+    } else if (_scrollController.position.atEdge &&
+        _scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent) {
+      onEndReached();
+    }
+  }
+
+  Future<void> fetchNotifications() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final fetchedNotifications =
+          await FetchAllNotifications.instance.fetchAllNotifications(
+        page: currentPage,
+        size: 10,
+        isRead: false,
+      );
+      setState(() {
+        notifications.addAll(
+          fetchedNotifications.data as Iterable<NotificationDataType>,
+        );
+        isLoading = false;
+        isError = fetchedNotifications.isError;
+        totalElements = 11;
+        currentPage++;
+      });
+    } catch (error) {
+      setState(() {
+        isLoading = false;
+        isError = true;
+      });
+    }
   }
 
   Future<void> onRefresh() async {
@@ -106,10 +113,11 @@ class _SirenWindowState extends State<SirenWindow> {
         isLoading = true;
       });
 
-      Future.delayed(const Duration(seconds: 2), () {
+      Future.delayed(const Duration(seconds: 2), () async {
+        await fetchNotifications();
         setState(() {
           isLoading = false;
-          endReached = true;
+          endReached = totalElements == notifications.length;
         });
       });
     }
@@ -119,6 +127,35 @@ class _SirenWindowState extends State<SirenWindow> {
     setState(() {
       notifications.removeWhere((notification) => notification.id == id);
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: widget.showWindowHeader ?? true
+          ? AppBar(
+              title: Text(widget.windowHeaderText ?? 'Notifications'),
+              backgroundColor: widget.windowHeaderBackgroundColor,
+              titleTextStyle: widget.windowHeaderTextStyle,
+              centerTitle: false,
+            )
+          : null,
+      body: notifications.isEmpty && isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : NotificationListView(
+              notifications: notifications,
+              isLoading: isLoading,
+              endReached: endReached,
+              onRefresh: onRefresh,
+              onDelete: onDelete,
+              onEndReached: onEndReached,
+              customStyles: widget.customStyles,
+              deleteWidget: widget.deleteWidget,
+              hideAvatar: widget.hideAvatar,
+              customEmptyWidget: widget.customEmptyWidget,
+              scrollController: _scrollController,
+            ),
+    );
   }
 }
 
@@ -130,12 +167,13 @@ class NotificationListView extends StatelessWidget {
     required this.onRefresh,
     required this.onEndReached,
     required this.onDelete,
-    super.key,
-    this.customStyles,
-    this.hideAvatar,
-    this.deleteWidget,
-    this.customEmptyWidget,
-  });
+    required this.customStyles,
+    required this.hideAvatar,
+    required this.deleteWidget,
+    required this.customEmptyWidget,
+    required this.scrollController,
+    Key? key,
+  }) : super(key: key);
 
   final List<NotificationDataType> notifications;
   final bool isLoading;
@@ -147,6 +185,7 @@ class NotificationListView extends StatelessWidget {
   final bool? hideAvatar;
   final Widget? deleteWidget;
   final Widget? customEmptyWidget;
+  final ScrollController scrollController;
 
   @override
   Widget build(BuildContext context) {
@@ -155,7 +194,7 @@ class NotificationListView extends StatelessWidget {
       child: ListView.builder(
         itemCount: notifications.length + (endReached ? 0 : 1),
         itemBuilder: (context, index) {
-          if (notifications.isEmpty) {
+          if (notifications.isEmpty && !isLoading) {
             return Center(
               child: customEmptyWidget ?? const EmptyWidget(),
             );
@@ -170,28 +209,18 @@ class NotificationListView extends StatelessWidget {
                 hideAvatar: hideAvatar,
                 showMedia: true,
               ),
-              onDelete: () => onDelete(notifications[index].id),
+              onDelete: () => onDelete(notifications[index].id ?? ''),
               styles: customStyles,
               deleteWidget: deleteWidget,
             );
           } else {
-            return _buildLoader();
+            // Return an empty container for the loading indicator
+            return Container();
           }
         },
         physics: const AlwaysScrollableScrollPhysics(),
-        controller: ScrollController(),
+        controller: scrollController,
       ),
     );
-  }
-
-  Widget _buildLoader() {
-    return isLoading
-        ? const Padding(
-            padding: EdgeInsets.all(8),
-            child: Center(
-              child: CircularProgressIndicator(),
-            ),
-          )
-        : Container();
   }
 }
