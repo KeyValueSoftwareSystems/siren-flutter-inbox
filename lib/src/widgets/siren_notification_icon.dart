@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:siren_flutter_inbox/siren_flutter_inbox.dart';
 import 'package:siren_flutter_inbox/src/api/fetch_unviewed_notification_count.dart';
+import 'package:siren_flutter_inbox/src/api/verify_token.dart';
+import 'package:siren_flutter_inbox/src/constants/generics.dart';
 import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
 
 class SirenNotificationIconWidget extends StatefulWidget {
@@ -27,28 +31,60 @@ class _SirenNotificationIconWidgetState
     extends State<SirenNotificationIconWidget> {
   final iconSize = 40.0;
 
-  int count = 10;
+  bool _hasInitialized = false;
 
-  late final String token;
-  late final String id;
+  int _notificationsCount = 0;
+
+  VerificationStatus _tokenVerificationStatus = VerificationStatus.PENDING;
+
+  late Timer _periodicUpdateRef;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Access the inherited widget and perform initialization tasks
     final sirenProvider = SirenProvider.of(context);
-    token = sirenProvider?.userToken ?? '';
-    id = sirenProvider?.recipientId ?? '';
+    final token = sirenProvider?.userToken ?? '';
+    final id = sirenProvider?.recipientId ?? '';
     SirenDataProvider.instance.updateParams(userToken: token, recipientId: id);
 
-    // TODO: need to change this
-    callApi();
+    if (!_hasInitialized) {
+      initialize();
+      _hasInitialized = true;
+    }
   }
 
-  Future<void> callApi() async {
-    final data = await FetchUnviewedNotificationsCount.instance
-        .fetchUnviewedNotificationsCount();
-    count = data;
+  @override
+  void dispose() {
+    _periodicUpdateRef.cancel();
+    super.dispose();
+  }
+
+  void _startRealTimeUnviewedCountFetch() {
+    _periodicUpdateRef = Timer.periodic(
+        const Duration(seconds: Generics.DATA_FETCH_INTERVAL), (timer) async {
+      final val = await FetchUnviewedNotificationsCount.instance
+          .fetchUnviewedNotificationsCount();
+      setState(() {
+        _notificationsCount = val;
+      });
+    });
+  }
+
+  Future<void> initialize() async {
+    await verifyToken();
+    if (_tokenVerificationStatus.name == VerificationStatus.SUCCESS.name) {
+      final data = await FetchUnviewedNotificationsCount.instance
+          .fetchUnviewedNotificationsCount();
+      // _startRealTimeUnviewedCountFetch();
+      setState(() {
+        _notificationsCount = data;
+      });
+    }
+  }
+
+  Future<void> verifyToken() async {
+    _tokenVerificationStatus = await VerifyToken.instance.verifyToken();
   }
 
   @override
@@ -60,7 +96,9 @@ class _SirenNotificationIconWidgetState
               Icons.notifications_none_outlined,
               size: iconSize,
             ),
-        if (widget.realTimeUnviewedCountEnabled ?? false) _getBadge(),
+        if ((widget.realTimeUnviewedCountEnabled ?? true) &&
+            _notificationsCount > 0)
+          _getBadge(),
       ],
     );
   }
@@ -76,7 +114,7 @@ class _SirenNotificationIconWidgetState
           color: Colors.red,
         ),
         child: Text(
-          count.toString(), // Badge count
+          _notificationsCount.toString(), // Badge count
           style: const TextStyle(
             color: Colors.white,
             fontSize: 10,

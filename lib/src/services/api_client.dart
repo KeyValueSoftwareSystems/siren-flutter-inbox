@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
 
 class ApiClient {
-
   // injecting dio instance
   ApiClient(this._api);
   // dio instance
@@ -69,31 +68,6 @@ class ApiClient {
         onReceiveProgress: onReceiveProgress,
       );
       return validateResponse(response);
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  // Put API
-  Future<dynamic> put({
-    dynamic data,
-    Map<String, dynamic>? queryParameters,
-    Options? options,
-    CancelToken? cancelToken,
-    ProgressCallback? onSendProgress,
-    ProgressCallback? onReceiveProgress,
-  }) async {
-    try {
-      final response = await _api.put(
-        'TODO ADD BASE URL',
-        data: data,
-        queryParameters: queryParameters,
-        options: options,
-        cancelToken: cancelToken,
-        onSendProgress: onSendProgress,
-        onReceiveProgress: onReceiveProgress,
-      );
-      return response.data;
     } catch (e) {
       rethrow;
     }

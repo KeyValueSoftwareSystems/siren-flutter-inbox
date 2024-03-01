@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 
 class CardProps {
-  final bool? hideAvatar;
-  final bool? showMedia;
-
   CardProps({
     this.hideAvatar,
     this.showMedia,
   });
+  final bool? hideAvatar;
+  final bool? showMedia;
 }
 
 class SirenStyleProps {
