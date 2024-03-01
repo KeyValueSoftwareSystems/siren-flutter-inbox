@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:siren_flutter_inbox/src/api/delete_notification_by_id.dart';
 import 'package:siren_flutter_inbox/src/api/fetch_all_notification.dart';
 import 'package:siren_flutter_inbox/src/models/notification_model.dart';
 import 'package:siren_flutter_inbox/src/models/ui_models.dart';
@@ -41,12 +42,14 @@ class _SirenWindowState extends State<SirenWindow> {
   late int totalPages;
 
   List<NotificationDataType> notifications = [];
+  late final DeleteNotificationById _deleteNotificationById;
 
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
+    _deleteNotificationById = DeleteNotificationById.instance;
     fetchNotifications();
   }
 
@@ -56,7 +59,6 @@ class _SirenWindowState extends State<SirenWindow> {
     super.dispose();
   }
 
-  // Listener for scroll events
   void _scrollListener() {
     if (_scrollController.position.atEdge &&
         _scrollController.position.pixels == 0) {
@@ -68,40 +70,40 @@ class _SirenWindowState extends State<SirenWindow> {
     }
   }
 
-  // Fetch notifications from the API
   Future<void> fetchNotifications() async {
     setState(() {
       isLoading = true;
     });
 
-    try {
-      final fetchedNotifications =
-          await FetchAllNotifications.instance.fetchAllNotifications(
-        page: currentPage,
-        size: 10,
-        isRead: false,
-      );
-      setState(() {
-        notifications.addAll(
-            fetchedNotifications.data as Iterable<NotificationDataType>);
-        isLoading = false;
-        isError = fetchedNotifications.isError;
-        totalPages = fetchedNotifications.meta?.totalPages ?? 0;
-        if (currentPage < totalPages - 1) {
-          currentPage++;
-        } else {
-          endReached = true;
-        }
-      });
-    } catch (error) {
-      setState(() {
-        isLoading = false;
-        isError = true;
-      });
+    if (!endReached) {
+      try {
+        final fetchedNotifications =
+            await FetchAllNotifications.instance.fetchAllNotifications(
+          page: currentPage,
+          size: 10,
+          isRead: false,
+        );
+        setState(() {
+          notifications.addAll(
+              fetchedNotifications.data as Iterable<NotificationDataType>);
+          isLoading = false;
+          isError = fetchedNotifications.isError;
+          totalPages = fetchedNotifications.meta?.totalPages ?? 0;
+          if (currentPage < totalPages - 1) {
+            currentPage++;
+          } else {
+            endReached = true;
+          }
+        });
+      } catch (error) {
+        setState(() {
+          isLoading = false;
+          isError = true;
+        });
+      }
     }
   }
 
-  // Handle pull-to-refresh
   Future<void> onRefresh() async {
     Future.delayed(const Duration(seconds: 2), () async {
       await fetchNotifications();
@@ -111,9 +113,15 @@ class _SirenWindowState extends State<SirenWindow> {
     });
   }
 
-  // Handle reaching the end of the list
+  Future<void> deleteNotification(String id) async {
+    await _deleteNotificationById.deleteNotificationById(notificationId: id);
+    setState(() {
+      notifications.removeWhere((notification) => notification.id == id);
+    });
+  }
+
   void onEndReached() {
-    if (!isLoading && !endReached) {
+    if (!isLoading) {
       setState(() {
         isLoading = true;
       });
@@ -127,13 +135,6 @@ class _SirenWindowState extends State<SirenWindow> {
     }
   }
 
-  // Handle deletion of a notification
-  void onDelete(String id) {
-    setState(() {
-      notifications.removeWhere((notification) => notification.id == id);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -142,7 +143,6 @@ class _SirenWindowState extends State<SirenWindow> {
     );
   }
 
-  // Build the app bar if showWindowHeader is true
   AppBar? _buildAppBar() {
     return AppBar(
       title: Text(widget.windowHeaderText ?? 'Notifications'),
@@ -152,10 +152,8 @@ class _SirenWindowState extends State<SirenWindow> {
     );
   }
 
-  // Build the body of the widget
   Widget _buildBody() {
     if (isError) {
-      // Display error widget with retry option
       return CustomErrorWidget(
         onRetry: () {
           Future.delayed(const Duration(seconds: 2), () async {
@@ -168,22 +166,22 @@ class _SirenWindowState extends State<SirenWindow> {
       );
     } else {
       if (notifications.isEmpty && isLoading) {
-        // Display loading indicator
-        return const Center(child: CircularProgressIndicator());
+        return widget.customEmptyWidget ??
+            const Center(child: CircularProgressIndicator());
+      } else if (notifications.isEmpty && !isLoading) {
+        return const EmptyWidget();
       } else {
-        // Display the list of notifications
         return NotificationListView(
           notifications: notifications,
           isLoading: isLoading,
           endReached: endReached,
           onRefresh: onRefresh,
-          onDelete: onDelete,
           onEndReached: onEndReached,
           customStyles: widget.customStyles,
           deleteWidget: widget.deleteWidget,
           hideAvatar: widget.hideAvatar,
-          customEmptyWidget: widget.customEmptyWidget,
           scrollController: _scrollController,
+          onDelete: deleteNotification,
         );
       }
     }
@@ -197,12 +195,11 @@ class NotificationListView extends StatelessWidget {
     required this.endReached,
     required this.onRefresh,
     required this.onEndReached,
-    required this.onDelete,
     required this.customStyles,
     required this.hideAvatar,
     required this.deleteWidget,
-    required this.customEmptyWidget,
     required this.scrollController,
+    required this.onDelete,
     Key? key,
   }) : super(key: key);
 
@@ -211,12 +208,11 @@ class NotificationListView extends StatelessWidget {
   final bool endReached;
   final Future<void> Function() onRefresh;
   final VoidCallback onEndReached;
-  final void Function(String) onDelete;
   final SirenStyleProps? customStyles;
   final bool? hideAvatar;
   final Widget? deleteWidget;
-  final Widget? customEmptyWidget;
   final ScrollController scrollController;
+  final Future<void> Function(String) onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -225,14 +221,7 @@ class NotificationListView extends StatelessWidget {
       child: ListView.builder(
         itemCount: notifications.length + (endReached ? 0 : 1),
         itemBuilder: (context, index) {
-          if (notifications.isEmpty && !isLoading) {
-            // Display custom empty widget if there are no notifications
-            return Center(
-              child: customEmptyWidget ?? const EmptyWidget(),
-            );
-          }
           if (index < notifications.length) {
-            // Display a card for each notification
             return CardWidget(
               onCardClick: (notification) {
                 // Handle card click
@@ -242,12 +231,11 @@ class NotificationListView extends StatelessWidget {
                 hideAvatar: hideAvatar,
                 showMedia: true,
               ),
-              onDelete: () => onDelete(notifications[index].id ?? ''),
               styles: customStyles,
               deleteWidget: deleteWidget,
+              onDelete: onDelete,
             );
           } else {
-            // Return an empty container for the loading indicator
             return Container();
           }
         },

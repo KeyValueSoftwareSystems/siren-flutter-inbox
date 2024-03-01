@@ -11,7 +11,7 @@ class CardWidget extends StatelessWidget {
   final NotificationDataType notification;
   final CardProps cardProps;
   final SirenStyleProps? styles;
-  final Function onDelete;
+  final void Function(String) onDelete;
   final Widget? deleteWidget;
 
   // Constructor to initialize the card with required parameters
@@ -70,7 +70,7 @@ class CardWidget extends StatelessWidget {
           color: Colors.blueGrey.withOpacity(0.2),
         ),
       ),
-      color: notification.isRead ?? true ? const Color(0xFFFFDADA) : null,
+      color: notification.isRead ?? true ? null : const Color(0xFFFFDADA),
     );
   }
 
@@ -144,7 +144,7 @@ class CardWidget extends StatelessWidget {
         children: [
           _buildTimestampText(),
           GestureDetector(
-            onTap: () => onDelete(notification.id),
+            onTap: () => onDelete(notification.id ?? ''),
             child: deleteWidget ?? _buildDefaultDeleteButton(),
           ),
         ],
@@ -161,13 +161,13 @@ class CardWidget extends StatelessWidget {
   }
 
   // Private method to build default delete button container
-  IconButton _buildDefaultDeleteButton() {
-    return IconButton(
-      iconSize: 25,
-      onPressed: () {},
-      icon: const Icon(
+  Widget _buildDefaultDeleteButton() {
+    return const Padding(
+      padding: EdgeInsets.all(8),
+      child: Icon(
         Icons.delete_outline,
         color: Colors.red,
+        size: 25,
       ),
     );
   }

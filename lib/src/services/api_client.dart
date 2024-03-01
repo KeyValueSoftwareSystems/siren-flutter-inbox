@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
 
 class ApiClient {
-
   // injecting dio instance
   ApiClient(this._api);
   // dio instance
@@ -94,6 +93,28 @@ class ApiClient {
         onReceiveProgress: onReceiveProgress,
       );
       return response.data;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // Delete API
+  Future<dynamic> delete({
+    String? path,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    try {
+      final url = '${Generics.API_DOMAIN}$path';
+      final response = await _api.delete(
+        url,
+        queryParameters: queryParameters,
+        options: options,
+        cancelToken: cancelToken,
+      );
+      return validateResponse(response);
     } catch (e) {
       rethrow;
     }
