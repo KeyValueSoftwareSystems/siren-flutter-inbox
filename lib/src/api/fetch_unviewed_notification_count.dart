@@ -18,7 +18,7 @@ class FetchUnviewedNotificationsCount {
   Future<int> fetchUnviewedNotificationsCount() async {
     final id = SirenDataProvider.instance.recipientId;
     final apiResponse = await api.get(
-      path: 'api/v2/in-app/recipients/$id',
+      path: 'recipients/$id',
     );
 
     final data = apiResponse['data'] as Map<String, dynamic>?;

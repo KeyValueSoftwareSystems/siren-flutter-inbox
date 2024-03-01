@@ -15,7 +15,6 @@ class SirenProvider extends StatelessWidget {
     required this.child,
     super.key,
   }) {
-    // Perform initialization logic using the props
     SirenDataProvider.instance
         .updateParams(userToken: userToken, recipientId: recipientId);
   }

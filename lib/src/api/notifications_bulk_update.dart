@@ -9,7 +9,7 @@ class NotificationsBulkUpdate {
     final id = SirenDataProvider.instance.recipientId;
 
     final apiResponse = await api.post(
-      path: 'api/v2/in-app/recipients/$id/notifications/bulk-update',
+      path: 'recipients/$id/notifications/bulk-update',
       data: data,
     );
     return apiResponse;

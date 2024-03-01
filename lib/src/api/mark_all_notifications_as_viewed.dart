@@ -12,7 +12,7 @@ class MarkAllNotificationsAsViewed {
       'lastOpenedAt': untilDate,
     };
     final apiResponse = await api.patch(
-      path: 'api/v2/in-app/recipients/$id',
+      path: 'recipients/$id',
       data: data,
     );
     return apiResponse;
