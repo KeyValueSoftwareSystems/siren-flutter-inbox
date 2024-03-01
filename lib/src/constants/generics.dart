@@ -11,3 +11,8 @@ enum VerificationStatus {
   SUCCESS,
   FAILED,
 }
+
+enum BulkUpdateType {
+  MARK_AS_READ,
+  MARK_AS_DELETED,
+}

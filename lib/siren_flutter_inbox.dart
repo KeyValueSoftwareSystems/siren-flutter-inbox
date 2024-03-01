@@ -3,8 +3,8 @@ library siren_flutter_inbox;
 import 'package:flutter/material.dart';
 import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
 
-export 'package:siren_flutter_inbox/src/api/mark_notifications_as_viewed.dart';
 export 'package:siren_flutter_inbox/src/models/ui_models.dart';
+export 'package:siren_flutter_inbox/src/utils/siren.dart';
 export 'package:siren_flutter_inbox/src/widgets/siren_notification_icon.dart';
 export 'package:siren_flutter_inbox/src/widgets/siren_window.dart';
 
