@@ -18,36 +18,6 @@ class CustomText extends StatelessWidget {
   }
 }
 
-// class SirenProvider extends InheritedWidget {
-//   const SirenProvider({
-//     required this.userToken,
-//     required this.recipientId,
-//     required Widget child,
-//   }) : super(child: child);
-//   final String userToken;
-//   final String recipientId;
-
-//   static SirenProvider? of(BuildContext context) {
-//     //  SirenDataProvider.instance.updateParams(userToken: userToken, recipientId: recipientId);
-//     // return context.dependOnInheritedWidgetOfExactType<SirenProvider>();
-//     final sirenProvider = context.dependOnInheritedWidgetOfExactType<SirenProvider>();
-//     if (sirenProvider != null) {
-//       // Access the context indirectly by passing it to the updateParams method
-//       SirenDataProvider.instance.updateParams(
-//         userToken: sirenProvider.userToken,
-//         recipientId: sirenProvider.recipientId,
-//       );
-//     }
-//     return sirenProvider;
-//   }
-
-//   @override
-//   bool updateShouldNotify(covariant InheritedWidget oldWidget) {
-//     return false;
-//   }
-
-// }
-
 class SirenProvider extends StatelessWidget {
   SirenProvider({
     required this.userToken,
