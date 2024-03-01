@@ -54,7 +54,6 @@ class MessageData {
 }
 
 class SirenStyleProps {
-
   SirenStyleProps({
     this.container,
     this.contentContainer,
