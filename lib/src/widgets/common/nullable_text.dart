@@ -20,8 +20,7 @@ class NullableText extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
       );
     } else {
-      return SizedBox
-          .shrink(); // Return an empty widget if text is null or empty
+      return const SizedBox.shrink();
     }
   }
 }

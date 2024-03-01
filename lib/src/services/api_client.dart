@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
 
 class ApiClient {
-
   // injecting dio instance
   ApiClient(this._api);
   // dio instance

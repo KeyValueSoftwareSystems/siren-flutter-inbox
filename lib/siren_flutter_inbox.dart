@@ -10,9 +10,8 @@ class SirenProvider extends InheritedWidget {
   const SirenProvider({
     required this.userToken,
     required this.recipientId,
-    required super.child,
-    super.key,
-  });
+    required Widget child,
+  }) : super(child: child);
   final String userToken;
   final String recipientId;
 
