@@ -16,10 +16,8 @@ Dio apiProvider() {
          * onRequest interceptor - Called before firing the request
          */
         onRequest: (RequestOptions options, RequestInterceptorHandler handler) {
-
           final token = SirenDataProvider.instance.userToken;
-          if (options.contentType != ''
-            ) {
+          if (options.contentType != '') {
             options.headers.putIfAbsent('Authorization', () => 'Bearer $token');
           }
           return handler.next(options);

@@ -8,16 +8,6 @@ export 'package:siren_flutter_inbox/src/utils/siren.dart';
 export 'package:siren_flutter_inbox/src/widgets/siren_notification_icon.dart';
 export 'package:siren_flutter_inbox/src/widgets/siren_window.dart';
 
-/// A Demo Text UI.
-class CustomText extends StatelessWidget {
-  const CustomText({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Text('USER TOKEN IS');
-  }
-}
-
 class SirenProvider extends StatelessWidget {
   SirenProvider({
     required this.userToken,
