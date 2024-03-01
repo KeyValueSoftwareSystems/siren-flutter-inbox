@@ -3,7 +3,8 @@ import 'package:siren_flutter_inbox/src/services/api_client.dart';
 import 'package:siren_flutter_inbox/src/services/api_provider.dart';
 
 class MarkNotificationsAsViewed {
-  static Future<void> markNotificationsAsViewed(String lastOpenedAt) async {
+  // TODO need to change the type once API wrapper is merged
+  static Future<dynamic> markNotificationsAsViewed(String lastOpenedAt) async {
     final api = ApiClient(apiProvider());
     final id = SirenDataProvider.instance.recipientId;
     final data = {
