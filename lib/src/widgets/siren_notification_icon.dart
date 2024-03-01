@@ -63,6 +63,7 @@ class _SirenNotificationIconWidgetState
     if (_tokenVerificationStatus.name == VerificationStatus.SUCCESS.name) {
       final data = await FetchUnviewedNotificationsCount.instance
           .fetchUnviewedNotificationsCount();
+      // TODO Need to uncomment this later to start polling
       // _startRealTimeUnviewedCountFetch();
       setState(() {
         _notificationsCount = data;
