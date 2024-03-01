@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:siren_flutter_inbox/src/api/delete_notification_by_id.dart';
 import 'package:siren_flutter_inbox/src/api/fetch_all_notification.dart';
+import 'package:siren_flutter_inbox/src/constants/generics.dart';
 import 'package:siren_flutter_inbox/src/models/notification_model.dart';
 import 'package:siren_flutter_inbox/src/models/ui_models.dart';
 import 'package:siren_flutter_inbox/src/widgets/card.dart';
@@ -18,6 +19,7 @@ class SirenWindow extends StatefulWidget {
     this.windowHeaderBackgroundColor,
     this.windowHeaderText,
     this.windowHeaderTextStyle,
+    this.pageSize,
   }) : super(key: key);
 
   final SirenStyleProps? customStyles;
@@ -28,6 +30,7 @@ class SirenWindow extends StatefulWidget {
   final Color? windowHeaderBackgroundColor;
   final String? windowHeaderText;
   final TextStyle? windowHeaderTextStyle;
+  final int? pageSize;
 
   @override
   _SirenWindowState createState() => _SirenWindowState();
@@ -80,7 +83,7 @@ class _SirenWindowState extends State<SirenWindow> {
         final fetchedNotifications =
             await FetchAllNotifications.instance.fetchAllNotifications(
           page: currentPage,
-          size: 10,
+          size: widget.pageSize ?? Generics.PAGE_SIZE,
           isRead: false,
         );
         setState(() {

@@ -1,60 +1,15 @@
 import 'package:flutter/material.dart';
 
-// class NotificationDataType {
-//   NotificationDataType({
-//     required this.id,
-//     required this.createdAt,
-//     required this.message,
-//     required this.requestId,
-//     required this.isRead,
-//   });
-//   final String id;
-//   final String createdAt;
-//   final MessageData message;
-//   final String requestId;
-//   final bool isRead;
-// }
-
-// class AvatarData {
-//   AvatarData({
-//     this.imageUrl,
-//     this.actionUrl,
-//   });
-//   final String? imageUrl;
-//   final String? actionUrl;
-// }
-
 class CardProps {
-  final bool? hideAvatar;
-  final bool? showMedia;
-
   CardProps({
     this.hideAvatar,
     this.showMedia,
   });
+  final bool? hideAvatar;
+  final bool? showMedia;
 }
 
-// class MessageData {
-//   MessageData({
-//     required this.channel,
-//     required this.header,
-//     this.subHeader,
-//     required this.body,
-//     required this.actionUrl,
-//     required this.avatar,
-//     required this.additionalData,
-//   });
-//   final String channel;
-//   final String header;
-//   final String? subHeader;
-//   final String body;
-//   final String actionUrl;
-//   final AvatarData avatar;
-//   final String additionalData;
-// }
-
 class SirenStyleProps {
-
   SirenStyleProps({
     this.container,
     this.contentContainer,

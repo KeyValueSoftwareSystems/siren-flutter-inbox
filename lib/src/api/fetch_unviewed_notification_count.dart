@@ -15,7 +15,6 @@ class FetchUnviewedNotificationsCount {
 
   ApiClient api = NetworkService.instance.api;
 
-
   Future<int> fetchUnviewedNotificationsCount() async {
     final id = SirenDataProvider.instance.recipientId;
     final apiResponse = await api.get(
@@ -29,6 +28,4 @@ class FetchUnviewedNotificationsCount {
     }
     return 0;
   }
-
-
 }

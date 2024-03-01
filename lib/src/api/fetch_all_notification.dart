@@ -7,7 +7,6 @@ import 'package:siren_flutter_inbox/src/services/api_provider.dart';
 class FetchAllNotifications {
   FetchAllNotifications._internal();
   static final FetchAllNotifications instance = FetchAllNotifications._internal();
-
   final ApiClient api = ApiClient(apiProvider());
 
   static const String _apiPath =
@@ -33,7 +32,6 @@ class FetchAllNotifications {
   }) async {
     try {
       final result = ApiResponse()..isLoading = true;
-
       final apiResponse = await api.get(
         path: _apiPath,
         options: Options(
