@@ -2,11 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import 'package:siren_flutter_inbox/siren_flutter_inbox.dart';
 import 'package:siren_flutter_inbox/src/api/fetch_unviewed_notification_count.dart';
 import 'package:siren_flutter_inbox/src/api/verify_token.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
-import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
 
 class SirenNotificationIconWidget extends StatefulWidget {
   const SirenNotificationIconWidget({
@@ -31,8 +29,6 @@ class _SirenNotificationIconWidgetState
     extends State<SirenNotificationIconWidget> {
   final iconSize = 40.0;
 
-  bool _hasInitialized = false;
-
   int _notificationsCount = 0;
 
   VerificationStatus _tokenVerificationStatus = VerificationStatus.PENDING;
@@ -40,18 +36,9 @@ class _SirenNotificationIconWidgetState
   late Timer _periodicUpdateRef;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // Access the inherited widget and perform initialization tasks
-    final sirenProvider = SirenProvider.of(context);
-    final token = sirenProvider?.userToken ?? '';
-    final id = sirenProvider?.recipientId ?? '';
-    SirenDataProvider.instance.updateParams(userToken: token, recipientId: id);
-
-    if (!_hasInitialized) {
-      initialize();
-      _hasInitialized = true;
-    }
+  void initState() {
+    super.initState();
+    initialize();
   }
 
   @override
@@ -76,6 +63,7 @@ class _SirenNotificationIconWidgetState
     if (_tokenVerificationStatus.name == VerificationStatus.SUCCESS.name) {
       final data = await FetchUnviewedNotificationsCount.instance
           .fetchUnviewedNotificationsCount();
+      // TODO Need to uncomment this later to start polling
       // _startRealTimeUnviewedCountFetch();
       setState(() {
         _notificationsCount = data;
