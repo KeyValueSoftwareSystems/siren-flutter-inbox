@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:siren_flutter_inbox/src/constants/generics.dart';
+import 'package:siren_flutter_inbox/src/models/notification_model.dart';
 import 'package:siren_flutter_inbox/src/models/ui_models.dart';
 import 'package:siren_flutter_inbox/src/utils/common_utils.dart';
 import 'package:siren_flutter_inbox/src/widgets/common/nullable_text.dart';
 
-// Define a CardWidget class to display notification cards
 class CardWidget extends StatelessWidget {
-  // Define required parameters for the card
   final Function onCardClick;
   final NotificationDataType notification;
   final CardProps cardProps;
@@ -13,7 +13,6 @@ class CardWidget extends StatelessWidget {
   final Function onDelete;
   final Widget? deleteWidget;
 
-  // Constructor to initialize the card with required parameters
   CardWidget({
     required this.onCardClick,
     required this.notification,
@@ -36,7 +35,6 @@ class CardWidget extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Display avatar if not hidden
                 if (!(cardProps.hideAvatar ?? false))
                   _buildDefaultAvatarContainer(),
                 Expanded(
@@ -61,7 +59,6 @@ class CardWidget extends StatelessWidget {
     );
   }
 
-  // Private method to get default container decoration
   BoxDecoration _getDefaultContainerDecoration() {
     return BoxDecoration(
       border: Border(
@@ -69,27 +66,29 @@ class CardWidget extends StatelessWidget {
           color: Colors.blueGrey.withOpacity(0.2),
         ),
       ),
-      color: notification.isRead ? const Color(0xFFFFDADA) : null,
+      color: notification.isRead ?? true ? const Color(0xFFFFDADA) : null,
     );
   }
 
-  // Private method to build default avatar container
   Container _buildDefaultAvatarContainer() {
     return Container(
       decoration: styles?.cardIconContainer,
       padding: const EdgeInsets.all(8),
       child: CircleAvatar(
-        backgroundImage: notification.message.avatar.imageUrl != null
-            ? NetworkImage(notification.message.avatar.imageUrl ?? '')
-            : null,
+        backgroundImage: notification.message?.avatar?.url != null
+            ? NetworkImage(
+                notification.message!.avatar?.url ?? '',
+              )
+            : const NetworkImage(
+                Generics.PLACEHOLDER_IMAGE_URL,
+              ),
       ),
     );
   }
 
-  // Private method to build header text widget
   Text _buildHeaderText() {
     return Text(
-      notification.message.header.toUpperCase(),
+      (notification.message?.header ?? '').toUpperCase(),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       style: styles?.cardTitle ??
@@ -97,10 +96,9 @@ class CardWidget extends StatelessWidget {
     );
   }
 
-  // Private method to build subheader text widget
   Widget _buildSubHeaderText() {
     return NullableText(
-      text: notification.message.subHeader,
+      text: notification.message?.subHeader,
       style: styles?.subHeaderText ??
           const TextStyle(
             fontSize: 14,
@@ -109,7 +107,6 @@ class CardWidget extends StatelessWidget {
     );
   }
 
-  // Private method to build body text widget
   Widget _buildBodyText() {
     return Column(
       children: [
@@ -117,7 +114,7 @@ class CardWidget extends StatelessWidget {
           height: 10,
         ),
         Text(
-          notification.message.body,
+          notification.message?.body ?? '',
           style: styles?.cardDescription ??
               const TextStyle(
                 fontSize: 14,
@@ -130,7 +127,6 @@ class CardWidget extends StatelessWidget {
     );
   }
 
-  // Private method to build footer row containing timestamp and delete button
   Container _buildFooterRow() {
     return Container(
       decoration: styles?.cardFooterRow,
@@ -147,15 +143,13 @@ class CardWidget extends StatelessWidget {
     );
   }
 
-  // Private method to build timestamp text widget
   Text _buildTimestampText() {
     return Text(
-      generateElapsedTimeText(DateTime.parse(notification.createdAt)),
+      generateElapsedTimeText(DateTime.parse(notification.createdAt ?? '')),
       style: styles?.dateStyle ?? const TextStyle(fontSize: 12),
     );
   }
 
-  // Private method to build default delete button container
   IconButton _buildDefaultDeleteButton() {
     return IconButton(
       iconSize: 25,
