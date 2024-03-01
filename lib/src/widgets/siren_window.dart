@@ -4,6 +4,7 @@ import 'package:siren_flutter_inbox/src/models/notification_model.dart';
 import 'package:siren_flutter_inbox/src/models/ui_models.dart';
 import 'package:siren_flutter_inbox/src/widgets/card.dart';
 import 'package:siren_flutter_inbox/src/widgets/empty_widget.dart';
+import 'package:siren_flutter_inbox/src/widgets/error_widget.dart';
 
 class SirenWindow extends StatefulWidget {
   const SirenWindow({
@@ -37,7 +38,7 @@ class _SirenWindowState extends State<SirenWindow> {
   bool endReached = false;
   bool isError = false;
   int currentPage = 0;
-  late int totalElements;
+  late int totalPages;
 
   List<NotificationDataType> notifications = [];
 
@@ -55,6 +56,7 @@ class _SirenWindowState extends State<SirenWindow> {
     super.dispose();
   }
 
+  // Listener for scroll events
   void _scrollListener() {
     if (_scrollController.position.atEdge &&
         _scrollController.position.pixels == 0) {
@@ -66,6 +68,7 @@ class _SirenWindowState extends State<SirenWindow> {
     }
   }
 
+  // Fetch notifications from the API
   Future<void> fetchNotifications() async {
     setState(() {
       isLoading = true;
@@ -80,12 +83,15 @@ class _SirenWindowState extends State<SirenWindow> {
       );
       setState(() {
         notifications.addAll(
-          fetchedNotifications.data as Iterable<NotificationDataType>,
-        );
+            fetchedNotifications.data as Iterable<NotificationDataType>);
         isLoading = false;
         isError = fetchedNotifications.isError;
-        totalElements = 11;
-        currentPage++;
+        totalPages = fetchedNotifications.meta?.totalPages ?? 0;
+        if (currentPage < totalPages - 1) {
+          currentPage++;
+        } else {
+          endReached = true;
+        }
       });
     } catch (error) {
       setState(() {
@@ -95,18 +101,17 @@ class _SirenWindowState extends State<SirenWindow> {
     }
   }
 
+  // Handle pull-to-refresh
   Future<void> onRefresh() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    await Future.delayed(const Duration(seconds: 2));
-
-    setState(() {
-      isLoading = false;
+    Future.delayed(const Duration(seconds: 2), () async {
+      await fetchNotifications();
+      setState(() {
+        isLoading = false;
+      });
     });
   }
 
+  // Handle reaching the end of the list
   void onEndReached() {
     if (!isLoading && !endReached) {
       setState(() {
@@ -117,12 +122,12 @@ class _SirenWindowState extends State<SirenWindow> {
         await fetchNotifications();
         setState(() {
           isLoading = false;
-          endReached = totalElements == notifications.length;
         });
       });
     }
   }
 
+  // Handle deletion of a notification
   void onDelete(String id) {
     setState(() {
       notifications.removeWhere((notification) => notification.id == id);
@@ -132,30 +137,56 @@ class _SirenWindowState extends State<SirenWindow> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: widget.showWindowHeader ?? true
-          ? AppBar(
-              title: Text(widget.windowHeaderText ?? 'Notifications'),
-              backgroundColor: widget.windowHeaderBackgroundColor,
-              titleTextStyle: widget.windowHeaderTextStyle,
-              centerTitle: false,
-            )
-          : null,
-      body: notifications.isEmpty && isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : NotificationListView(
-              notifications: notifications,
-              isLoading: isLoading,
-              endReached: endReached,
-              onRefresh: onRefresh,
-              onDelete: onDelete,
-              onEndReached: onEndReached,
-              customStyles: widget.customStyles,
-              deleteWidget: widget.deleteWidget,
-              hideAvatar: widget.hideAvatar,
-              customEmptyWidget: widget.customEmptyWidget,
-              scrollController: _scrollController,
-            ),
+      appBar: widget.showWindowHeader ?? true ? _buildAppBar() : null,
+      body: _buildBody(),
     );
+  }
+
+  // Build the app bar if showWindowHeader is true
+  AppBar? _buildAppBar() {
+    return AppBar(
+      title: Text(widget.windowHeaderText ?? 'Notifications'),
+      backgroundColor: widget.windowHeaderBackgroundColor,
+      titleTextStyle: widget.windowHeaderTextStyle,
+      centerTitle: false,
+    );
+  }
+
+  // Build the body of the widget
+  Widget _buildBody() {
+    if (isError) {
+      // Display error widget with retry option
+      return CustomErrorWidget(
+        onRetry: () {
+          Future.delayed(const Duration(seconds: 2), () async {
+            await fetchNotifications();
+            setState(() {
+              isLoading = false;
+            });
+          });
+        },
+      );
+    } else {
+      if (notifications.isEmpty && isLoading) {
+        // Display loading indicator
+        return const Center(child: CircularProgressIndicator());
+      } else {
+        // Display the list of notifications
+        return NotificationListView(
+          notifications: notifications,
+          isLoading: isLoading,
+          endReached: endReached,
+          onRefresh: onRefresh,
+          onDelete: onDelete,
+          onEndReached: onEndReached,
+          customStyles: widget.customStyles,
+          deleteWidget: widget.deleteWidget,
+          hideAvatar: widget.hideAvatar,
+          customEmptyWidget: widget.customEmptyWidget,
+          scrollController: _scrollController,
+        );
+      }
+    }
   }
 }
 
@@ -195,11 +226,13 @@ class NotificationListView extends StatelessWidget {
         itemCount: notifications.length + (endReached ? 0 : 1),
         itemBuilder: (context, index) {
           if (notifications.isEmpty && !isLoading) {
+            // Display custom empty widget if there are no notifications
             return Center(
               child: customEmptyWidget ?? const EmptyWidget(),
             );
           }
           if (index < notifications.length) {
+            // Display a card for each notification
             return CardWidget(
               onCardClick: (notification) {
                 // Handle card click

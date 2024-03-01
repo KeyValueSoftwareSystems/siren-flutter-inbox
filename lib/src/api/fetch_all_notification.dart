@@ -4,15 +4,15 @@ import 'package:siren_flutter_inbox/src/models/notification_model.dart';
 import 'package:siren_flutter_inbox/src/services/api_client.dart';
 import 'package:siren_flutter_inbox/src/services/api_provider.dart';
 
+/// Singleton class responsible for fetching notifications from the API.
 class FetchAllNotifications {
-  factory FetchAllNotifications() {
-    return instance;
-  }
-
+  /// Private constructor for the singleton pattern.
   FetchAllNotifications._internal();
-  static final FetchAllNotifications instance =
-      FetchAllNotifications._internal();
 
+  /// The instance of [FetchAllNotifications].
+  static final FetchAllNotifications instance = FetchAllNotifications._internal();
+
+  /// API client for making HTTP requests.
   final ApiClient api = ApiClient(apiProvider());
 
   // Constants
@@ -21,6 +21,7 @@ class FetchAllNotifications {
   static const String _authorizationToken =
       'Bearer 95d5544c106543e799084e19a988fd31';
 
+  /// Converts a list of JSON objects to a list of notification data types.
   List<NotificationDataType> convertJsonToNotificationList(
     List<dynamic> dataList,
   ) {
@@ -32,6 +33,12 @@ class FetchAllNotifications {
     }).toList();
   }
 
+  /// Fetches all notifications from the API.
+  ///
+  /// Parameters:
+  /// - [page]: The page number for pagination.
+  /// - [size]: The number of items per page.
+  /// - [isRead]: Whether to fetch read or unread notifications.
   Future<ApiResponse> fetchAllNotifications({
     int? page,
     int? size,
@@ -56,20 +63,23 @@ class FetchAllNotifications {
         },
       ) as Map<String, dynamic>;
 
+      // Extract data, meta, and error details from the API response
       final dataList = ApiResponse.fromJson(apiResponse).data as List<dynamic>;
+      final metaData = ApiResponse.fromJson(apiResponse).meta;
+      final apiError = ApiResponse.fromJson(apiResponse).error;
 
-      print('important debug ${ApiResponse.fromJson(apiResponse).meta}');
-
-      // Set loading status to false and success status to true
+      // Populate the result object
       result
         ..isLoading = false
         ..isSuccess = true
-        ..data = convertJsonToNotificationList(dataList);
+        ..data = convertJsonToNotificationList(dataList)
+        ..meta = metaData
+        ..error = apiError;
 
       // Return the result object
       return result;
     } catch (error) {
-      // Set loading status to false and error status to true
+      // Handle errors and return an ApiResponse with error details
       final result = ApiResponse()
         ..isLoading = false
         ..isError = true
@@ -77,7 +87,6 @@ class FetchAllNotifications {
           errorCode: '500',
           message: 'Internal Server Error',
         );
-      // Return the result object
       return result;
     }
   }

@@ -66,7 +66,7 @@ class AvatarData {
 
   factory AvatarData.fromJson(Map<String, dynamic>? json) {
     return AvatarData(
-      url: json?['url'] as String?,
+      url: json?['imageUrl'] as String?,
       altText: json?['altText'] as String?,
     );
   }
