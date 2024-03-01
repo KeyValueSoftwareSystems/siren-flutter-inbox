@@ -5,9 +5,7 @@ import 'package:siren_flutter_inbox/src/models/ui_models.dart';
 import 'package:siren_flutter_inbox/src/utils/common_utils.dart';
 import 'package:siren_flutter_inbox/src/widgets/common/nullable_text.dart';
 
-// Define a CardWidget class to display notification cards
 class CardWidget extends StatelessWidget {
-  // Define required parameters for the card
   final Function onCardClick;
   final NotificationDataType notification;
   final CardProps cardProps;
@@ -15,7 +13,6 @@ class CardWidget extends StatelessWidget {
   final Function onDelete;
   final Widget? deleteWidget;
 
-  // Constructor to initialize the card with required parameters
   CardWidget({
     required this.onCardClick,
     required this.notification,
@@ -38,7 +35,6 @@ class CardWidget extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Display avatar if not hidden
                 if (!(cardProps.hideAvatar ?? false))
                   _buildDefaultAvatarContainer(),
                 Expanded(
@@ -63,7 +59,6 @@ class CardWidget extends StatelessWidget {
     );
   }
 
-  // Private method to get default container decoration
   BoxDecoration _getDefaultContainerDecoration() {
     return BoxDecoration(
       border: Border(
@@ -75,7 +70,6 @@ class CardWidget extends StatelessWidget {
     );
   }
 
-  // Private method to build default avatar container
   Container _buildDefaultAvatarContainer() {
     return Container(
       decoration: styles?.cardIconContainer,
@@ -92,7 +86,6 @@ class CardWidget extends StatelessWidget {
     );
   }
 
-  // Private method to build header text widget
   Text _buildHeaderText() {
     return Text(
       (notification.message?.header ?? '').toUpperCase(),
@@ -103,7 +96,6 @@ class CardWidget extends StatelessWidget {
     );
   }
 
-  // Private method to build subheader text widget
   Widget _buildSubHeaderText() {
     return NullableText(
       text: notification.message?.subHeader,
@@ -115,7 +107,6 @@ class CardWidget extends StatelessWidget {
     );
   }
 
-  // Private method to build body text widget
   Widget _buildBodyText() {
     return Column(
       children: [
@@ -136,7 +127,6 @@ class CardWidget extends StatelessWidget {
     );
   }
 
-  // Private method to build footer row containing timestamp and delete button
   Container _buildFooterRow() {
     return Container(
       decoration: styles?.cardFooterRow,
@@ -153,7 +143,6 @@ class CardWidget extends StatelessWidget {
     );
   }
 
-  // Private method to build timestamp text widget
   Text _buildTimestampText() {
     return Text(
       generateElapsedTimeText(DateTime.parse(notification.createdAt ?? '')),
@@ -161,7 +150,6 @@ class CardWidget extends StatelessWidget {
     );
   }
 
-  // Private method to build default delete button container
   IconButton _buildDefaultDeleteButton() {
     return IconButton(
       iconSize: 25,

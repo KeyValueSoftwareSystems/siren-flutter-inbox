@@ -59,7 +59,6 @@ class _SirenWindowState extends State<SirenWindow> {
     super.dispose();
   }
 
-  // Listener for scroll events
   void _scrollListener() {
     if (_scrollController.position.atEdge &&
         _scrollController.position.pixels == 0) {
@@ -71,7 +70,6 @@ class _SirenWindowState extends State<SirenWindow> {
     }
   }
 
-  // Fetch notifications from the API
   Future<void> fetchNotifications() async {
     setState(() {
       isLoading = true;
@@ -104,7 +102,6 @@ class _SirenWindowState extends State<SirenWindow> {
     }
   }
 
-  // Handle pull-to-refresh
   Future<void> onRefresh() async {
     Future.delayed(const Duration(seconds: 2), () async {
       await fetchNotifications();
@@ -114,7 +111,6 @@ class _SirenWindowState extends State<SirenWindow> {
     });
   }
 
-  // Handle reaching the end of the list
   void onEndReached() {
     if (!isLoading && !endReached) {
       setState(() {
@@ -130,7 +126,6 @@ class _SirenWindowState extends State<SirenWindow> {
     }
   }
 
-  // Handle deletion of a notification
   void onDelete(String id) {
     setState(() {
       notifications.removeWhere((notification) => notification.id == id);
@@ -145,7 +140,6 @@ class _SirenWindowState extends State<SirenWindow> {
     );
   }
 
-  // Build the app bar if showWindowHeader is true
   AppBar? _buildAppBar() {
     return AppBar(
       title: Text(widget.windowHeaderText ?? 'Notifications'),
@@ -155,10 +149,8 @@ class _SirenWindowState extends State<SirenWindow> {
     );
   }
 
-  // Build the body of the widget
   Widget _buildBody() {
     if (isError) {
-      // Display error widget with retry option
       return CustomErrorWidget(
         onRetry: () {
           Future.delayed(const Duration(seconds: 2), () async {
@@ -171,10 +163,8 @@ class _SirenWindowState extends State<SirenWindow> {
       );
     } else {
       if (notifications.isEmpty && isLoading) {
-        // Display loading indicator
         return const Center(child: CircularProgressIndicator());
       } else {
-        // Display the list of notifications
         return NotificationListView(
           notifications: notifications,
           isLoading: isLoading,
@@ -229,17 +219,13 @@ class NotificationListView extends StatelessWidget {
         itemCount: notifications.length + (endReached ? 0 : 1),
         itemBuilder: (context, index) {
           if (notifications.isEmpty && !isLoading) {
-            // Display custom empty widget if there are no notifications
             return Center(
               child: customEmptyWidget ?? const EmptyWidget(),
             );
           }
           if (index < notifications.length) {
-            // Display a card for each notification
             return CardWidget(
-              onCardClick: (notification) {
-                // Handle card click
-              },
+              onCardClick: (notification) {},
               notification: notifications[index],
               cardProps: CardProps(
                 hideAvatar: hideAvatar,
@@ -250,7 +236,6 @@ class NotificationListView extends StatelessWidget {
               deleteWidget: deleteWidget,
             );
           } else {
-            // Return an empty container for the loading indicator
             return Container();
           }
         },
