@@ -2,12 +2,26 @@ library siren_flutter_inbox;
 
 import 'package:flutter/material.dart';
 
+export 'package:siren_flutter_inbox/src/models/ui_models.dart';
+export 'package:siren_flutter_inbox/src/widgets/siren_notification_icon.dart';
+export 'package:siren_flutter_inbox/src/widgets/siren_window.dart';
 
-/// A Demo Text UI.
-class CustomText extends StatelessWidget {
+class SirenProvider extends InheritedWidget {
+  const SirenProvider({
+    required this.userToken,
+    required this.recipientId,
+    required super.child,
+    super.key,
+  });
+  final String userToken;
+  final String recipientId;
+
+  static SirenProvider? of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<SirenProvider>();
+  }
 
   @override
-  Widget build(BuildContext context) {
-    return Text('THE DEMO TEXT WIDGET');
-  } 
-} 
+  bool updateShouldNotify(covariant InheritedWidget oldWidget) {
+    return false;
+  }
+}
