@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:siren_flutter_inbox/src/constants/generics.dart';
 import 'package:siren_flutter_inbox/src/models/notification_model.dart';
 import 'package:siren_flutter_inbox/src/models/ui_models.dart';
 import 'package:siren_flutter_inbox/src/utils/common_utils.dart';
@@ -85,7 +86,7 @@ class CardWidget extends StatelessWidget {
                 notification.message!.avatar?.url ?? '',
               )
             : const NetworkImage(
-                'https://picsum.photos/200/300',
+                Generics.PLACEHOLDER_IMAGE_URL,
               ),
       ),
     );
@@ -94,7 +95,7 @@ class CardWidget extends StatelessWidget {
   // Private method to build header text widget
   Text _buildHeaderText() {
     return Text(
-      notification.message?.header ?? ''.toUpperCase(),
+      (notification.message?.header ?? '').toUpperCase(),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       style: styles?.cardTitle ??
