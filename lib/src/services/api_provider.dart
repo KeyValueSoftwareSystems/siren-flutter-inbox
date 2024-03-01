@@ -8,8 +8,8 @@ Dio apiProvider() {
   // ignore: cascade_invocations
   _dio
     //..options.baseUrl = Config.baseUrl
-    ..options.connectTimeout = const Duration(seconds: 10)
-    ..options.receiveTimeout = const Duration(seconds: 10)
+    ..options.connectTimeout = const Duration(seconds: 100)
+    ..options.receiveTimeout = const Duration(seconds: 3)
     ..interceptors.add(
       InterceptorsWrapper(
         /**
