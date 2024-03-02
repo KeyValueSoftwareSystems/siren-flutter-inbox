@@ -8,8 +8,12 @@ class ApiResponse {
   factory ApiResponse.fromJson(dynamic json) {
     return ApiResponse(
       data: json['data'],
-      error: ApiErrorDetails.fromJson(json['error'] as Map<String, dynamic>?),
-      meta: MetaResponse.fromJson(json?['meta'] as Map<String, dynamic>?),
+      error: json['error'] != null
+          ? ApiErrorDetails.fromJson(json['error'] as Map<String, dynamic>?)
+          : null,
+      meta: json['meta'] != null
+          ? MetaResponse.fromJson(json?['meta'] as Map<String, dynamic>?)
+          : null,
     );
   }
 

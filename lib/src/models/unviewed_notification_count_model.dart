@@ -1,9 +1,9 @@
 class UnviewedNotificationsCountModel {
   UnviewedNotificationsCountModel({required this.totalUnviewed});
 
-  factory UnviewedNotificationsCountModel.fromMap(Map<String, dynamic> map) {
+  factory UnviewedNotificationsCountModel.fromJson(Map<String, dynamic> map) {
     return UnviewedNotificationsCountModel(
-      totalUnviewed: map['totalUnviewed'] as int,
+      totalUnviewed: map['totalUnviewed'] !=null ? map['totalUnviewed'] as int : 0,
     );
   }
 
