@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:siren_flutter_inbox/src/api/read_notification_by_id.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
 import 'package:siren_flutter_inbox/src/models/notification_model.dart';
 import 'package:siren_flutter_inbox/src/models/ui_models.dart';
@@ -29,12 +28,9 @@ class CardWidget extends StatefulWidget {
 }
 
 class _CardWidgetState extends State<CardWidget> {
-  late bool _isRead;
-
   @override
   void initState() {
     super.initState();
-    _isRead = widget.notification.isRead ?? true;
   }
 
   @override
@@ -84,7 +80,8 @@ class _CardWidgetState extends State<CardWidget> {
           color: Colors.blueGrey.withOpacity(0.2),
         ),
       ),
-      color: widget.notification.cardColor ?? const Color(0xFFFFDADA),
+      color: widget.notification.cardColor ??
+          (widget.notification.isRead ?? true ? null : const Color(0xFFFFDADA)),
     );
   }
 
