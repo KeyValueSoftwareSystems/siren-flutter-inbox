@@ -1,12 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:siren_flutter_inbox/src/models/api_response.dart';
-import 'package:siren_flutter_inbox/src/models/notification_model.dart';
 import 'package:siren_flutter_inbox/src/services/api_client.dart';
 import 'package:siren_flutter_inbox/src/services/api_provider.dart';
 
-class FetchAllNotifications {
-  FetchAllNotifications._internal();
-  static final FetchAllNotifications instance = FetchAllNotifications._internal();
+class ReadNotificationById {
+  ReadNotificationById._internal();
+  static final ReadNotificationById instance = ReadNotificationById._internal();
+
   final ApiClient api = ApiClient(apiProvider());
 
   static const String _apiPath =
@@ -14,46 +14,30 @@ class FetchAllNotifications {
   static const String _authorizationToken =
       'Bearer 080f749eb36e4d3fa7535112cbcdc0be';
 
-  List<NotificationDataType> convertJsonToNotificationList(
-    List<dynamic> dataList,
-  ) {
-    return dataList.map((json) {
-      if (json is Map<String, dynamic>) {
-        return NotificationDataType.fromJson(json);
-      }
-      throw const FormatException('Invalid JSON format');
-    }).toList();
-  }
-
-  Future<ApiResponse> fetchAllNotifications({
-    int? page,
-    int? size,
-    bool? isRead,
+  Future<ApiResponse> readNotificationById({
+    required String notificationId,
   }) async {
     try {
       final result = ApiResponse()..isLoading = true;
-      final apiResponse = await api.get(
-        path: _apiPath,
+
+      final apiResponse = await api.patch(
+        path: '$_apiPath/$notificationId',
         options: Options(
           headers: {
             'authorization': _authorizationToken,
           },
         ),
-        queryParameters: {
-          'page': page,
-          'size': size,
+         data: {
+          'isRead': true,
+          'isDelivered': false,
         },
       ) as Map<String, dynamic>;
-
-      final dataList = ApiResponse.fromJson(apiResponse).data as List<dynamic>;
-      final metaData = ApiResponse.fromJson(apiResponse).meta;
       final apiError = ApiResponse.fromJson(apiResponse).error;
 
       result
         ..isLoading = false
-        ..isSuccess = true
-        ..data = convertJsonToNotificationList(dataList)
-        ..meta = metaData
+        ..isSuccess = apiError?.errorCode.isEmpty ?? true
+        ..isError = apiError?.errorCode.isNotEmpty ?? false
         ..error = apiError;
 
       return result;

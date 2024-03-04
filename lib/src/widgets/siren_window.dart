@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:siren_flutter_inbox/src/api/delete_notification_by_id.dart';
 import 'package:siren_flutter_inbox/src/api/fetch_all_notification.dart';
+import 'package:siren_flutter_inbox/src/api/read_notification_by_id.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
 import 'package:siren_flutter_inbox/src/models/notification_model.dart';
 import 'package:siren_flutter_inbox/src/models/ui_models.dart';
@@ -46,6 +47,7 @@ class _SirenWindowState extends State<SirenWindow> {
 
   List<NotificationDataType> notifications = [];
   late final DeleteNotificationById _deleteNotificationById;
+  late final ReadNotificationById _readNotificationById;
 
   @override
   void initState() {
@@ -53,6 +55,7 @@ class _SirenWindowState extends State<SirenWindow> {
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
     _deleteNotificationById = DeleteNotificationById.instance;
+    _readNotificationById = ReadNotificationById.instance;
     fetchNotifications();
   }
 
@@ -138,6 +141,18 @@ class _SirenWindowState extends State<SirenWindow> {
     }
   }
 
+  Future<void> _markNotificationAsRead(String id) async {
+    try {
+      await _readNotificationById.readNotificationById(notificationId: id);
+      setState(() {
+        final notification = notifications.firstWhere((n) => n.id == id);
+        notification.markAsRead();
+      });
+    } catch (error) {
+      print('error: $error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -185,6 +200,7 @@ class _SirenWindowState extends State<SirenWindow> {
           hideAvatar: widget.hideAvatar,
           scrollController: _scrollController,
           onDelete: deleteNotification,
+          markAsRead: _markNotificationAsRead, // Pass the markAsRead function
         );
       }
     }
@@ -203,6 +219,7 @@ class NotificationListView extends StatelessWidget {
     required this.deleteWidget,
     required this.scrollController,
     required this.onDelete,
+    required this.markAsRead, // Add the markAsRead callback
     Key? key,
   }) : super(key: key);
 
@@ -216,6 +233,7 @@ class NotificationListView extends StatelessWidget {
   final Widget? deleteWidget;
   final ScrollController scrollController;
   final Future<void> Function(String) onDelete;
+  final void Function(String) markAsRead; // Add the markAsRead callback
 
   @override
   Widget build(BuildContext context) {
@@ -227,7 +245,9 @@ class NotificationListView extends StatelessWidget {
           if (index < notifications.length) {
             return CardWidget(
               onCardClick: (notification) {
-                // Handle card click
+                markAsRead(
+                  notifications[index].id ?? '',
+                ); 
               },
               notification: notifications[index],
               cardProps: CardProps(

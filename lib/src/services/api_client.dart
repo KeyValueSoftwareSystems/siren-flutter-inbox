@@ -119,4 +119,28 @@ class ApiClient {
       rethrow;
     }
   }
+
+  // Patch API
+  Future<dynamic> patch({
+    String? path,
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    try {
+      final url = '${Generics.API_DOMAIN}$path';
+      final response = await _api.patch(
+        url,
+        data: data,
+        queryParameters: queryParameters,
+        options: options,
+        cancelToken: cancelToken,
+      );
+      return validateResponse(response);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

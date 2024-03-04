@@ -1,5 +1,7 @@
 // models.dart
 
+import 'package:flutter/material.dart';
+
 class NotificationDataType {
   NotificationDataType({
     required this.id,
@@ -7,6 +9,7 @@ class NotificationDataType {
     required this.message,
     required this.requestId,
     required this.isRead,
+    required this.cardColor,
   });
 
   factory NotificationDataType.fromJson(Map<String, dynamic>? json) {
@@ -16,6 +19,7 @@ class NotificationDataType {
       message: MessageData.fromJson(json?['message'] as Map<String, dynamic>?),
       requestId: json?['requestId'] as String?,
       isRead: json?['isRead'] as bool?,
+      cardColor: json?['cardColor'] as Color?,
     );
   }
 
@@ -23,7 +27,13 @@ class NotificationDataType {
   final String? createdAt;
   final MessageData? message;
   final String? requestId;
-  final bool? isRead;
+  bool? isRead;
+  Color? cardColor;
+
+  void markAsRead() {
+    isRead = true;
+    cardColor = Colors.transparent;
+  }
 }
 
 class MessageData {
