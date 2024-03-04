@@ -8,7 +8,7 @@ Dio apiProvider() {
   // ignore: cascade_invocations
   _dio
     ..options.connectTimeout = const Duration(seconds: 10)
-    ..options.receiveTimeout = const Duration(seconds: 10)
+    ..options.receiveTimeout = const Duration(seconds: 3)
     ..interceptors.add(
       InterceptorsWrapper(
         /**
@@ -34,7 +34,7 @@ Dio apiProvider() {
         /**
          * onError interceptor - called on error
          */
-        onError: (DioError dioError, ErrorInterceptorHandler handler) async {
+        onError: (DioException dioError, ErrorInterceptorHandler handler) async {
           if (dioError.error is SocketException) {
             // HANDLE ERROR
           }

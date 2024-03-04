@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
+
 import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
 import 'package:siren_flutter_inbox/src/models/api_response.dart';
 import 'package:siren_flutter_inbox/src/models/unviewed_notification_count_model.dart';
@@ -36,12 +38,12 @@ class FetchUnviewedNotificationsCount {
         ..meta = null
         ..error = null;
       return result;
-    } catch (error) {
+    } on DioException catch (error) {
       final result = ApiResponse()
         ..isLoading = false
         ..isError = true
         ..error = ApiErrorDetails(
-          errorCode: '500',
+          errorCode: error.response?.statusCode?.toString() ?? '500',
           message: 'Internal Server Error',
         );
       return result;

@@ -38,12 +38,20 @@ class MetaResponse {
 
   factory MetaResponse.fromJson(Map<String, dynamic>? json) {
     return MetaResponse(
-      last: json?['last'] as String?,
-      totalPages: int.tryParse(json?['totalPages'] as String),
-      pageSize: int.tryParse(json?['pageSize'] as String),
-      currentPage: int.tryParse(json?['currentPage'] as String),
-      first: json?['first'] as String,
-      totalElements: int.tryParse(json?['totalElements'] as String),
+      last: json?['last'] != null ? (json?['last'] as String) : null,
+      totalPages: json?['totalPages'] != null
+          ? int.tryParse(json?['totalPages'] as String)
+          : null,
+      pageSize: json?['pageSize'] != null
+          ? int.tryParse(json?['pageSize'] as String)
+          : null,
+      currentPage: json?['currentPage'] != null
+          ? int.tryParse(json?['currentPage'] as String)
+          : null,
+      first: json?['first'] != null ? (json?['first'] as String) : null,
+      totalElements: json?['totalElements'] != null
+          ? int.tryParse(json?['totalElements'] as String)
+          : null,
     );
   }
 
@@ -63,8 +71,9 @@ class ApiErrorDetails {
 
   factory ApiErrorDetails.fromJson(Map<String, dynamic>? json) {
     return ApiErrorDetails(
-      errorCode: json?['errorCode'] as String? ?? '',
-      message: json?['message'] as String? ?? '',
+      errorCode:
+          json?['errorCode'] != null ? (json?['errorCode'] as String) : '',
+      message: json?['message'] != null ? (json?['errorCode'] as String) : '',
     );
   }
 
