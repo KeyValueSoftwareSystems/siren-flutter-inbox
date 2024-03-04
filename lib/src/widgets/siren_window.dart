@@ -87,7 +87,6 @@ class _SirenWindowState extends State<SirenWindow> {
             await FetchAllNotifications.instance.fetchAllNotifications(
           page: currentPage,
           size: widget.pageSize ?? Generics.PAGE_SIZE,
-          isRead: false,
         );
         setState(() {
           notifications.addAll(
@@ -247,7 +246,7 @@ class NotificationListView extends StatelessWidget {
               onCardClick: (notification) {
                 markAsRead(
                   notifications[index].id ?? '',
-                ); 
+                );
               },
               notification: notifications[index],
               cardProps: CardProps(

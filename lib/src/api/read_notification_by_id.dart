@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart';
+import 'package:siren_flutter_inbox/src/constants/generics.dart';
 import 'package:siren_flutter_inbox/src/models/api_response.dart';
 import 'package:siren_flutter_inbox/src/services/api_client.dart';
 import 'package:siren_flutter_inbox/src/services/api_provider.dart';
@@ -9,10 +9,7 @@ class ReadNotificationById {
 
   final ApiClient api = ApiClient(apiProvider());
 
-  static const String _apiPath =
-      'api/v2/in-app/recipients/4c6bc2b6-b2ca-49cc-8599-39b651d62520/notifications';
-  static const String _authorizationToken =
-      'Bearer 080f749eb36e4d3fa7535112cbcdc0be';
+  static final String _apiPath = '${Generics.API_PATH}/notifications';
 
   Future<ApiResponse> readNotificationById({
     required String notificationId,
@@ -22,12 +19,7 @@ class ReadNotificationById {
 
       final apiResponse = await api.patch(
         path: '$_apiPath/$notificationId',
-        options: Options(
-          headers: {
-            'authorization': _authorizationToken,
-          },
-        ),
-         data: {
+        data: {
           'isRead': true,
           'isDelivered': false,
         },

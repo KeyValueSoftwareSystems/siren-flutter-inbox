@@ -1,5 +1,4 @@
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
-import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
 import 'package:siren_flutter_inbox/src/services/api_client.dart';
 import 'package:siren_flutter_inbox/src/services/api_provider.dart';
 
@@ -13,9 +12,8 @@ class VerifyToken {
   ApiClient api = ApiClient(apiProvider());
 
   Future<VerificationStatus> verifyToken() async {
-    final id = SirenDataProvider.instance.recipientId;
     final apiResponse = await api.get(
-      path: 'api/v2/in-app/recipients/$id/verify-token',
+      path: '${Generics.API_PATH}/verify-token',
     );
 
     final status = apiResponse['data']['status']?.toString() ==
