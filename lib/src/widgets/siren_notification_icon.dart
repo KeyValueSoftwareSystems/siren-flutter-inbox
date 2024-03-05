@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 
@@ -13,12 +14,14 @@ class SirenNotificationIconWidget extends StatefulWidget {
     this.notificationIcon,
     this.onError,
     this.realTimeUnviewedCountEnabled = true,
+    this.onTap,
   });
 
   final bool? realTimeUnviewedCountEnabled;
   final bool? darkMode;
   final Function? onError;
   final Widget? notificationIcon;
+  final VoidCallback? onTap;
 
   @override
   State<SirenNotificationIconWidget> createState() =>
@@ -77,17 +80,20 @@ class _SirenNotificationIconWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        widget.notificationIcon ??
-            Icon(
-              Icons.notifications_none_outlined,
-              size: iconSize,
-            ),
-        if ((widget.realTimeUnviewedCountEnabled ?? true) &&
-            _notificationsCount > 0)
-          _getBadge(),
-      ],
+    return GestureDetector(
+      onTap: widget.onTap,
+      child: Stack(
+        children: [
+          widget.notificationIcon ??
+              Icon(
+                Icons.notifications_none_outlined,
+                size: iconSize,
+              ),
+          if ((widget.realTimeUnviewedCountEnabled ?? true) &&
+              _notificationsCount > 0)
+            _getBadge(),
+        ],
+      ),
     );
   }
 
