@@ -1,26 +1,29 @@
 library siren_flutter_inbox;
 
 import 'package:flutter/material.dart';
+import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
 
 export 'package:siren_flutter_inbox/src/models/ui_models.dart';
+export 'package:siren_flutter_inbox/src/utils/siren.dart';
 export 'package:siren_flutter_inbox/src/widgets/siren_notification_icon.dart';
 export 'package:siren_flutter_inbox/src/widgets/siren_window.dart';
 
-class SirenProvider extends InheritedWidget {
-  const SirenProvider({
+class SirenProvider extends StatelessWidget {
+  SirenProvider({
     required this.userToken,
     required this.recipientId,
-    required Widget child,
-  }) : super(child: child);
+    required this.child,
+    super.key,
+  }) {
+    SirenDataProvider.instance
+        .updateParams(userToken: userToken, recipientId: recipientId);
+  }
   final String userToken;
   final String recipientId;
-
-  static SirenProvider? of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<SirenProvider>();
-  }
+  final Widget child;
 
   @override
-  bool updateShouldNotify(covariant InheritedWidget oldWidget) {
-    return false;
+  Widget build(BuildContext context) {
+    return child;
   }
 }

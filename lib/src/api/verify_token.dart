@@ -15,7 +15,7 @@ class VerifyToken {
   Future<VerificationStatus> verifyToken() async {
     final id = SirenDataProvider.instance.recipientId;
     final apiResponse = await api.get(
-      path: 'api/v2/in-app/recipients/$id/verify-token',
+      path: 'recipients/$id/verify-token',
     );
 
     final status = apiResponse['data']['status']?.toString() ==

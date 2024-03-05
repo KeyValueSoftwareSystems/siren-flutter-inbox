@@ -7,7 +7,6 @@ Dio apiProvider() {
   final _dio = Dio();
   // ignore: cascade_invocations
   _dio
-    //..options.baseUrl = Config.baseUrl
     ..options.connectTimeout = const Duration(seconds: 10)
     ..options.receiveTimeout = const Duration(seconds: 10)
     ..interceptors.add(
@@ -23,7 +22,7 @@ Dio apiProvider() {
           return handler.next(options);
         },
         /**
-         * onResponse interceptor - called on response- check access token and refresh
+         * onResponse interceptor - called on response- check
          */
         onResponse:
             (Response response, ResponseInterceptorHandler handler) async {

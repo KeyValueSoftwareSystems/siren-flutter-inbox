@@ -7,22 +7,6 @@ class ApiClient {
   // dio instance
   final Dio _api;
 
-  // checking whether response is success or failure
-  dynamic validateResponse(Response response) {
-    final validErrorCodes = <String>[];
-    if (response.data['errors'] == null) {
-      return response.data;
-    } else if (validErrorCodes.contains(
-      response.data['errors']?[0]?['extensions']?['errors'],
-    )) {
-      return {
-        'error': response.data['errors']?[0]?['extensions']?['errors'],
-      };
-    } else {
-      return {};
-    }
-  }
-
   // Get API
   Future<dynamic> get({
     String? path,
@@ -32,7 +16,7 @@ class ApiClient {
     ProgressCallback? onReceiveProgress,
   }) async {
     try {
-      final url = '${Generics.API_DOMAIN}$path';
+      final url = '${Generics.BASE_URL}${Generics.API_PATH}$path';
       final response = await _api.get(
         url,
         queryParameters: queryParameters,
@@ -57,7 +41,7 @@ class ApiClient {
     ProgressCallback? onReceiveProgress,
   }) async {
     try {
-      final url = '${Generics.API_DOMAIN}$path';
+      final url = '${Generics.BASE_URL}${Generics.API_PATH}$path';
       final response = await _api.post(
         url,
         data: data,
@@ -67,7 +51,34 @@ class ApiClient {
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
       );
-      return validateResponse(response);
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // Patch API
+  Future<dynamic> patch({
+    String? path,
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    try {
+      final url = '${Generics.BASE_URL}${Generics.API_PATH}$path';
+      final response = await _api.patch(
+        url,
+        data: data,
+        queryParameters: queryParameters,
+        options: options,
+        cancelToken: cancelToken,
+        onSendProgress: onSendProgress,
+        onReceiveProgress: onReceiveProgress,
+      );
+      return response.data;
     } catch (e) {
       rethrow;
     }
@@ -107,14 +118,14 @@ class ApiClient {
     ProgressCallback? onReceiveProgress,
   }) async {
     try {
-      final url = '${Generics.API_DOMAIN}$path';
+      final url = '${Generics.BASE_URL}$path';
       final response = await _api.delete(
         url,
         queryParameters: queryParameters,
         options: options,
         cancelToken: cancelToken,
       );
-      return validateResponse(response);
+      return response;
     } catch (e) {
       rethrow;
     }
