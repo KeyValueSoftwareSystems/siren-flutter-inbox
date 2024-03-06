@@ -52,10 +52,10 @@ class _SirenNotificationIconWidgetState
   void _startRealTimeUnviewedCountFetch() {
     _periodicUpdateRef = Timer.periodic(
         const Duration(seconds: Generics.DATA_FETCH_INTERVAL), (timer) async {
-      final val = await FetchUnviewedNotificationsCount.instance
+      final response = await FetchUnviewedNotificationsCount.instance
           .fetchUnviewedNotificationsCount();
       setState(() {
-        _notificationsCount = val;
+        _notificationsCount = response.data as int;
       });
     });
   }
@@ -63,12 +63,12 @@ class _SirenNotificationIconWidgetState
   Future<void> initialize() async {
     await verifyToken();
     if (_tokenVerificationStatus.name == VerificationStatus.SUCCESS.name) {
-      final data = await FetchUnviewedNotificationsCount.instance
+      final response = await FetchUnviewedNotificationsCount.instance
           .fetchUnviewedNotificationsCount();
       // TODO Need to uncomment this later to start polling
       // _startRealTimeUnviewedCountFetch();
       setState(() {
-        _notificationsCount = data;
+        _notificationsCount = response.data as int;
       });
     }
   }

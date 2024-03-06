@@ -25,7 +25,7 @@ class ApiClient {
         onReceiveProgress: onReceiveProgress,
       );
       return response.data;
-    } catch (e) {
+    } on DioException {
       rethrow;
     }
   }
@@ -52,7 +52,7 @@ class ApiClient {
         onReceiveProgress: onReceiveProgress,
       );
       return response;
-    } catch (e) {
+    } on DioException {
       rethrow;
     }
   }
@@ -79,7 +79,7 @@ class ApiClient {
         onReceiveProgress: onReceiveProgress,
       );
       return response.data;
-    } catch (e) {
+    } on DioException {
       rethrow;
     }
   }
