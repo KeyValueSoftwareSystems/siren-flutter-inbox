@@ -31,6 +31,7 @@ class SirenWindow extends StatefulWidget {
     this.onCardClick,
     this.onFetchNotificationsError,
     this.onDeletionError,
+    this.onReadError,
   });
 
   final SirenStyleProps? customStyles;
@@ -49,6 +50,7 @@ class SirenWindow extends StatefulWidget {
   final void Function(NotificationDataType)? onCardClick;
   final void Function(ApiErrorDetails)? onFetchNotificationsError;
   final void Function(ApiErrorDetails)? onDeletionError;
+  final void Function(ApiErrorDetails)? onReadError;
 
   @override
   _SirenWindowState createState() => _SirenWindowState();
@@ -170,7 +172,7 @@ class _SirenWindowState extends State<SirenWindow> {
           totalPages = fetchedNotifications.meta?.totalPages ?? 0;
           updateCurrentPageState();
         });
-        // pollFetchNotifications();
+        pollFetchNotifications();
       } else if (fetchedNotifications.isError) {
         setState(() {
           isError = fetchedNotifications.isError;
@@ -218,14 +220,17 @@ class _SirenWindowState extends State<SirenWindow> {
   }
 
   Future<void> _markNotificationAsRead(String id) async {
-    try {
-      await _readNotificationById.readNotificationById(notificationId: id);
-      setState(() {
-        final notification = notifications.firstWhere((n) => n.id == id);
-        notification.markAsRead();
-      });
-    } catch (error) {
-      print('error: $error');
+    final readStatus =
+        await _readNotificationById.readNotificationById(notificationId: id);
+    if (readStatus.isSuccess) {
+      setState(
+        () {
+          final notification = notifications.firstWhere((n) => n.id == id);
+          notification.markAsRead();
+        },
+      );
+    } else if (readStatus.isError) {
+      widget.onReadError?.call(readStatus.error ?? ApiErrorDetails());
     }
   }
 

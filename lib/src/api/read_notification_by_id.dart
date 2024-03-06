@@ -14,34 +14,24 @@ class ReadNotificationById {
   Future<ApiResponse> readNotificationById({
     required String notificationId,
   }) async {
-    try {
-      final result = ApiResponse()..isLoading = true;
+    final result = ApiResponse()..isLoading = true;
 
-      final apiResponse = await api.patch(
-        path: '$_apiPath/$notificationId',
-        data: {
-          'isRead': true,
-          'isDelivered': true,
-        },
-      ) as Map<String, dynamic>;
-      final apiError = ApiResponse.fromJson(apiResponse).error;
+    final apiResponse = await api.patch(
+      path: '$_apiPath/$notificationId',
+      data: {
+        'isRead': true,
+        'isDelivered': true,
+      },
+    );
 
-      result
-        ..isLoading = false
-        ..isSuccess = apiError?.errorCode.isEmpty ?? true
-        ..isError = apiError?.errorCode.isNotEmpty ?? false
-        ..error = apiError;
+    final apiError = ApiResponse.fromJson(apiResponse.data).error;
 
-      return result;
-    } catch (error) {
-      final result = ApiResponse()
-        ..isLoading = false
-        ..isError = true
-        ..error = ApiErrorDetails(
-          errorCode: '500',
-          message: 'Internal Server Error',
-        );
-      return result;
-    }
+    result
+      ..isLoading = false
+      ..isSuccess = apiResponse.statusCode == 200
+      ..isError = apiResponse.statusCode != 200
+      ..error = apiError;
+
+    return result;
   }
 }
