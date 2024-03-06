@@ -7,6 +7,7 @@ import 'package:siren_flutter_inbox/src/api/fetch_all_notification.dart';
 import 'package:siren_flutter_inbox/src/api/mark_all_notifications_as_viewed.dart';
 import 'package:siren_flutter_inbox/src/api/read_notification_by_id.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
+import 'package:siren_flutter_inbox/src/models/api_response.dart';
 import 'package:siren_flutter_inbox/src/widgets/card.dart';
 import 'package:siren_flutter_inbox/src/widgets/empty_widget.dart';
 import 'package:siren_flutter_inbox/src/widgets/error_widget.dart';
@@ -28,6 +29,7 @@ class SirenWindow extends StatefulWidget {
     this.isCenterTitle,
     this.buildCardWidget,
     this.onCardClick,
+    this.onFetchNotificationsError,
   });
 
   final SirenStyleProps? customStyles;
@@ -44,6 +46,7 @@ class SirenWindow extends StatefulWidget {
   final bool? isCenterTitle;
   final Widget Function(NotificationDataType)? buildCardWidget;
   final void Function(NotificationDataType)? onCardClick;
+  final void Function(ApiErrorDetails)? onFetchNotificationsError;
 
   @override
   _SirenWindowState createState() => _SirenWindowState();
@@ -71,7 +74,6 @@ class _SirenWindowState extends State<SirenWindow> {
     _deleteNotificationById = DeleteNotificationById.instance;
     _readNotificationById = ReadNotificationById.instance;
     fetchNotifications();
-    pollFetchNotifications();
   }
 
   @override
@@ -105,13 +107,12 @@ class _SirenWindowState extends State<SirenWindow> {
     _periodicUpdateRef = Timer.periodic(
       const Duration(seconds: Generics.DATA_FETCH_INTERVAL),
       (timer) async {
-        try {
-          final fetchedNotifications =
-              await FetchAllNotifications.instance.fetchAllNotifications(
-            page: 0,
-            size: widget.pageSize ?? Generics.PAGE_SIZE,
-          );
-
+        final fetchedNotifications =
+            await FetchAllNotifications.instance.fetchAllNotifications(
+          page: 0,
+          size: widget.pageSize ?? Generics.PAGE_SIZE,
+        );
+        if (fetchedNotifications.isSuccess) {
           if (fetchedNotifications.meta!.totalElements! > totalElements) {
             newNotifications.addAll(
               fetchedNotifications.data as Iterable<NotificationDataType>,
@@ -128,9 +129,12 @@ class _SirenWindowState extends State<SirenWindow> {
             totalPages = fetchedNotifications.meta!.totalPages ?? 0;
             newNotifications = [];
           }
-        } catch (error) {
-          // Handle errors
-          print('Error: $error');
+        } else if (fetchedNotifications.isError) {
+          setState(() {
+            isError = fetchedNotifications.isError;
+          });
+          widget.onFetchNotificationsError
+              ?.call(fetchedNotifications.error ?? ApiErrorDetails());
         }
       },
     );
@@ -142,12 +146,12 @@ class _SirenWindowState extends State<SirenWindow> {
     });
 
     if (!endReached) {
-      try {
-        final fetchedNotifications =
-            await FetchAllNotifications.instance.fetchAllNotifications(
-          page: currentPage,
-          size: widget.pageSize ?? Generics.PAGE_SIZE,
-        );
+      final fetchedNotifications =
+          await FetchAllNotifications.instance.fetchAllNotifications(
+        page: currentPage,
+        size: widget.pageSize ?? Generics.PAGE_SIZE,
+      );
+      if (fetchedNotifications.isSuccess) {
         try {
           await MarkAllNotificationsAsViewed.markAllNotificationsAsViewed(
             untilDate: DateTime.now().toUtc().toIso8601String(),
@@ -160,16 +164,17 @@ class _SirenWindowState extends State<SirenWindow> {
             fetchedNotifications.data as Iterable<NotificationDataType>,
           );
           isLoading = false;
-          isError = fetchedNotifications.isError;
           totalElements = fetchedNotifications.meta?.totalElements ?? 0;
           totalPages = fetchedNotifications.meta?.totalPages ?? 0;
           updateCurrentPageState();
         });
-      } catch (error) {
+        pollFetchNotifications();
+      } else if (fetchedNotifications.isError) {
         setState(() {
-          isLoading = false;
-          isError = true;
+          isError = fetchedNotifications.isError;
         });
+        widget.onFetchNotificationsError
+            ?.call(fetchedNotifications.error ?? ApiErrorDetails());
       }
     }
   }
