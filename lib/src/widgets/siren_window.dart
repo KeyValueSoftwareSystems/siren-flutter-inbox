@@ -30,6 +30,7 @@ class SirenWindow extends StatefulWidget {
     this.buildCardWidget,
     this.onCardClick,
     this.onFetchNotificationsError,
+    this.onDeletionError,
   });
 
   final SirenStyleProps? customStyles;
@@ -47,6 +48,7 @@ class SirenWindow extends StatefulWidget {
   final Widget Function(NotificationDataType)? buildCardWidget;
   final void Function(NotificationDataType)? onCardClick;
   final void Function(ApiErrorDetails)? onFetchNotificationsError;
+  final void Function(ApiErrorDetails)? onDeletionError;
 
   @override
   _SirenWindowState createState() => _SirenWindowState();
@@ -168,7 +170,7 @@ class _SirenWindowState extends State<SirenWindow> {
           totalPages = fetchedNotifications.meta?.totalPages ?? 0;
           updateCurrentPageState();
         });
-        pollFetchNotifications();
+        // pollFetchNotifications();
       } else if (fetchedNotifications.isError) {
         setState(() {
           isError = fetchedNotifications.isError;
@@ -187,11 +189,17 @@ class _SirenWindowState extends State<SirenWindow> {
   }
 
   Future<void> deleteNotification(String id) async {
-    await _deleteNotificationById.deleteNotificationById(notificationId: id);
-    setState(() {
-      notifications.removeWhere((notification) => notification.id == id);
-    });
-    totalElements = totalElements - 1;
+    final deletionStatus = await _deleteNotificationById.deleteNotificationById(
+        notificationId: id);
+
+    if (deletionStatus.data == Status.SUCCESS && deletionStatus.isSuccess) {
+      setState(() {
+        notifications.removeWhere((notification) => notification.id == id);
+      });
+      totalElements = totalElements - 1;
+    } else if (deletionStatus.isError) {
+      widget.onDeletionError?.call(deletionStatus.error ?? ApiErrorDetails());
+    }
   }
 
   void onEndReached() {
