@@ -15,6 +15,7 @@ class SirenNotificationIconWidget extends StatefulWidget {
     this.onError,
     this.realTimeUnviewedCountEnabled = true,
     this.onTap,
+    this.onFetchCountError,
   });
 
   final bool? realTimeUnviewedCountEnabled;
@@ -22,6 +23,7 @@ class SirenNotificationIconWidget extends StatefulWidget {
   final void Function(ApiErrorDetails)? onError;
   final Widget? notificationIcon;
   final VoidCallback? onTap;
+  final void Function(ApiErrorDetails)? onFetchCountError;
 
   @override
   State<SirenNotificationIconWidget> createState() =>
@@ -74,10 +76,16 @@ class _SirenNotificationIconWidgetState
       if (_tokenVerificationStatus == Status.SUCCESS) {
         final response = await FetchUnviewedNotificationsCount.instance
             .fetchUnviewedNotificationsCount();
-        _startRealTimeUnviewedCountFetch();
-        setState(() {
-          updateNotificationsCount(response.data);
-        });
+        if (response.isSuccess) {
+          _startRealTimeUnviewedCountFetch();
+          setState(
+            () {
+              updateNotificationsCount(response.data);
+            },
+          );
+        } else if (response.isError) {
+          widget.onFetchCountError?.call(response.error ?? ApiErrorDetails());
+        }
       }
     } else if (_tokenVerificationResponse.isError) {
       widget.onError
@@ -88,8 +96,7 @@ class _SirenNotificationIconWidgetState
 
   Future<void> verifyToken() async {
     _tokenVerificationResponse = await VerifyToken.instance.verifyToken();
-    _tokenVerificationStatus =
-        _tokenVerificationResponse.data as Status;
+    _tokenVerificationStatus = _tokenVerificationResponse.data as Status;
   }
 
   @override
