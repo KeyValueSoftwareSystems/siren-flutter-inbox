@@ -81,7 +81,7 @@ class _CardWidgetState extends State<CardWidget> {
         ),
       ),
       color: widget.notification.cardColor ??
-          (widget.notification.isRead ?? true ? null : const Color(0xFFFFDADA)),
+          (widget.notification.isRead ?? true ? null : const Color(0xFFFDEDE7)),
     );
   }
 
@@ -116,7 +116,7 @@ class _CardWidgetState extends State<CardWidget> {
       text: widget.notification.message?.subHeader,
       style: widget.styles?.subHeaderText ??
           const TextStyle(
-            fontSize: 14,
+            fontSize: 15,
             fontWeight: FontWeight.w400,
           ),
     );

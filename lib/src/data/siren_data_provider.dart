@@ -5,8 +5,8 @@ class SirenDataProvider {
 
   SirenDataProvider._internal();
   static final SirenDataProvider instance = SirenDataProvider._internal();
-  String userToken = '080f749eb36e4d3fa7535112cbcdc0be';
-  String recipientId = '4c6bc2b6-b2ca-49cc-8599-39b651d62520';
+  String userToken = '95d5544c106543e799084e19a988fd31';
+  String recipientId = '64a0811d-982b-4f8e-9601-d5adcc1fe7e2';
 
   void updateParams({
     required String userToken,
