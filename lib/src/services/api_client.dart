@@ -24,9 +24,9 @@ class ApiClient {
         cancelToken: cancelToken,
         onReceiveProgress: onReceiveProgress,
       );
-      return response.data;
-    } on DioException {
-      rethrow;
+      return [response.data, response.statusCode];
+    } on DioException catch (e) {
+      return [e.response?.data, e.response?.statusCode];
     }
   }
 
@@ -52,8 +52,8 @@ class ApiClient {
         onReceiveProgress: onReceiveProgress,
       );
       return response;
-    } on DioException {
-      rethrow;
+    } on DioException catch (e) {
+      return e.response?.data;
     }
   }
 
@@ -79,8 +79,8 @@ class ApiClient {
         onReceiveProgress: onReceiveProgress,
       );
       return response.data;
-    } on DioException {
-      rethrow;
+    } on DioException catch (e) {
+      return e.response?.data;
     }
   }
 
@@ -104,8 +104,8 @@ class ApiClient {
         onReceiveProgress: onReceiveProgress,
       );
       return response.data;
-    } catch (e) {
-      rethrow;
+    } on DioException catch (e) {
+      return e.response?.data;
     }
   }
 
@@ -126,8 +126,8 @@ class ApiClient {
         cancelToken: cancelToken,
       );
       return response;
-    } catch (e) {
-      rethrow;
+    } on DioException catch (e) {
+      return e.response?.data;
     }
   }
 }

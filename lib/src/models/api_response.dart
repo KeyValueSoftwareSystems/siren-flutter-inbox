@@ -65,18 +65,18 @@ class MetaResponse {
 
 class ApiErrorDetails {
   ApiErrorDetails({
-    required this.errorCode,
-    required this.message,
+    this.errorCode,
+    this.message,
   });
 
   factory ApiErrorDetails.fromJson(Map<String, dynamic>? json) {
     return ApiErrorDetails(
       errorCode:
           json?['errorCode'] != null ? (json?['errorCode'] as String) : '',
-      message: json?['message'] != null ? (json?['errorCode'] as String) : '',
+      message: json?['message'] != null ? (json?['message'] as String) : '',
     );
   }
 
-  final String errorCode;
-  final String message;
+  final String? errorCode;
+  final String? message;
 }

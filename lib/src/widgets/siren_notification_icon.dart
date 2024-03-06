@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:siren_flutter_inbox/src/api/fetch_unviewed_notification_count.dart';
 import 'package:siren_flutter_inbox/src/api/verify_token.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
+import 'package:siren_flutter_inbox/src/models/api_response.dart';
 
 class SirenNotificationIconWidget extends StatefulWidget {
   const SirenNotificationIconWidget({
@@ -18,7 +19,7 @@ class SirenNotificationIconWidget extends StatefulWidget {
 
   final bool? realTimeUnviewedCountEnabled;
   final bool? darkMode;
-  final Function? onError;
+  final void Function(ApiErrorDetails)? onError;
   final Widget? notificationIcon;
   final VoidCallback? onTap;
 
@@ -33,6 +34,7 @@ class _SirenNotificationIconWidgetState
 
   int _notificationsCount = 0;
 
+  ApiResponse _tokenVerificationResponse = ApiResponse()..isLoading;
   VerificationStatus _tokenVerificationStatus = VerificationStatus.PENDING;
 
   late Timer _periodicUpdateRef;
@@ -66,22 +68,28 @@ class _SirenNotificationIconWidgetState
     });
   }
 
-  
-
   Future<void> initialize() async {
     await verifyToken();
-    if (_tokenVerificationStatus.name == VerificationStatus.SUCCESS.name) {
-      final response = await FetchUnviewedNotificationsCount.instance
-          .fetchUnviewedNotificationsCount();
-      _startRealTimeUnviewedCountFetch();
-      setState(() {
-        updateNotificationsCount(response.data);
-      });
+    if (_tokenVerificationResponse.isSuccess) {
+      if (_tokenVerificationStatus == VerificationStatus.SUCCESS) {
+        final response = await FetchUnviewedNotificationsCount.instance
+            .fetchUnviewedNotificationsCount();
+        _startRealTimeUnviewedCountFetch();
+        setState(() {
+          updateNotificationsCount(response.data);
+        });
+      }
+    } else if (_tokenVerificationResponse.isError) {
+      widget.onError
+          ?.call(_tokenVerificationResponse.error ?? ApiErrorDetails());
     }
+    ;
   }
 
   Future<void> verifyToken() async {
-    _tokenVerificationStatus = await VerifyToken.instance.verifyToken();
+    _tokenVerificationResponse = await VerifyToken.instance.verifyToken();
+    _tokenVerificationStatus =
+        _tokenVerificationResponse.data as VerificationStatus;
   }
 
   @override
