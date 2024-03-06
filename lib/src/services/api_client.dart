@@ -16,7 +16,7 @@ class ApiClient {
     ProgressCallback? onReceiveProgress,
   }) async {
     try {
-      final url = '${Generics.BASE_URL}${Generics.API_PATH}$path';
+      final url = '${Generics.API_DOMAIN}$path';
       final response = await _api.get(
         url,
         queryParameters: queryParameters,
@@ -41,7 +41,7 @@ class ApiClient {
     ProgressCallback? onReceiveProgress,
   }) async {
     try {
-      final url = '${Generics.BASE_URL}${Generics.API_PATH}$path';
+      final url = '${Generics.API_DOMAIN}$path';
       final response = await _api.post(
         url,
         data: data,
@@ -68,7 +68,7 @@ class ApiClient {
     ProgressCallback? onReceiveProgress,
   }) async {
     try {
-      final url = '${Generics.BASE_URL}${Generics.API_PATH}$path';
+      final url = '${Generics.API_DOMAIN}$path';
       final response = await _api.patch(
         url,
         data: data,
@@ -80,6 +80,53 @@ class ApiClient {
       );
       return response.data;
     } on DioException {
+      rethrow;
+    }
+  }
+
+  // Put API
+  Future<dynamic> put({
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    try {
+      final response = await _api.put(
+        'TODO ADD BASE URL',
+        data: data,
+        queryParameters: queryParameters,
+        options: options,
+        cancelToken: cancelToken,
+        onSendProgress: onSendProgress,
+        onReceiveProgress: onReceiveProgress,
+      );
+      return response.data;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // Delete API
+  Future<dynamic> delete({
+    String? path,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    try {
+      final url = '${Generics.API_DOMAIN}$path';
+      final response = await _api.delete(
+        url,
+        queryParameters: queryParameters,
+        options: options,
+        cancelToken: cancelToken,
+      );
+      return response;
+    } catch (e) {
       rethrow;
     }
   }

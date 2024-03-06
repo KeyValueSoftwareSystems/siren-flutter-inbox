@@ -5,41 +5,53 @@ import 'package:siren_flutter_inbox/src/models/ui_models.dart';
 import 'package:siren_flutter_inbox/src/utils/common_utils.dart';
 import 'package:siren_flutter_inbox/src/widgets/common/nullable_text.dart';
 
-class CardWidget extends StatelessWidget {
+class CardWidget extends StatefulWidget {
+  const CardWidget(
+      {required this.onCardClick,
+      required this.notification,
+      required this.cardProps,
+      required this.styles,
+      required this.onDelete,
+      super.key,
+      this.deleteWidget});
   final Function onCardClick;
   final NotificationDataType notification;
   final CardProps cardProps;
   final SirenStyleProps? styles;
-  final Function onDelete;
+  final void Function(String) onDelete;
   final Widget? deleteWidget;
 
-  CardWidget({
-    required this.onCardClick,
-    required this.notification,
-    required this.cardProps,
-    required this.styles,
-    required this.onDelete,
-    this.deleteWidget,
-  });
+  @override
+  _CardWidgetState createState() => _CardWidgetState();
+}
+
+class _CardWidgetState extends State<CardWidget> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => onCardClick(notification),
+      onTap: () {
+        widget.onCardClick(widget.notification);
+      },
       child: Container(
-        decoration: styles?.container ?? _getDefaultContainerDecoration(),
+        decoration:
+            widget.styles?.container ?? _getDefaultContainerDecoration(),
         child: Padding(
           padding: const EdgeInsets.only(top: 8),
           child: Container(
-            decoration: styles?.contentContainer,
+            decoration: widget.styles?.contentContainer,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (!(cardProps.hideAvatar ?? false))
+                if (!(widget.cardProps.hideAvatar ?? false))
                   _buildDefaultAvatarContainer(),
                 Expanded(
                   child: Container(
-                    decoration: styles?.cardContentContainer,
+                    decoration: widget.styles?.cardContentContainer,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -66,18 +78,19 @@ class CardWidget extends StatelessWidget {
           color: Colors.blueGrey.withOpacity(0.2),
         ),
       ),
-      color: notification.isRead ?? true ? const Color(0xFFFFDADA) : null,
+      color: widget.notification.cardColor ??
+          (widget.notification.isRead ?? true ? null : const Color(0xFFFDEDE7)),
     );
   }
 
   Container _buildDefaultAvatarContainer() {
     return Container(
-      decoration: styles?.cardIconContainer,
+      decoration: widget.styles?.cardIconContainer,
       padding: const EdgeInsets.all(8),
       child: CircleAvatar(
-        backgroundImage: notification.message?.avatar?.url != null
+        backgroundImage: widget.notification.message?.avatar?.url != null
             ? NetworkImage(
-                notification.message!.avatar?.url ?? '',
+                widget.notification.message!.avatar!.url!,
               )
             : const NetworkImage(
                 Generics.PLACEHOLDER_IMAGE_URL,
@@ -88,20 +101,20 @@ class CardWidget extends StatelessWidget {
 
   Text _buildHeaderText() {
     return Text(
-      (notification.message?.header ?? '').toUpperCase(),
+      (widget.notification.message?.header ?? '').toUpperCase(),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
-      style: styles?.cardTitle ??
+      style: widget.styles?.cardTitle ??
           const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
     );
   }
 
   Widget _buildSubHeaderText() {
     return NullableText(
-      text: notification.message?.subHeader,
-      style: styles?.subHeaderText ??
+      text: widget.notification.message?.subHeader,
+      style: widget.styles?.subHeaderText ??
           const TextStyle(
-            fontSize: 14,
+            fontSize: 15,
             fontWeight: FontWeight.w400,
           ),
     );
@@ -114,8 +127,8 @@ class CardWidget extends StatelessWidget {
           height: 10,
         ),
         Text(
-          notification.message?.body ?? '',
-          style: styles?.cardDescription ??
+          widget.notification.message?.body ?? '',
+          style: widget.styles?.cardDescription ??
               const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
@@ -129,14 +142,14 @@ class CardWidget extends StatelessWidget {
 
   Container _buildFooterRow() {
     return Container(
-      decoration: styles?.cardFooterRow,
+      decoration: widget.styles?.cardFooterRow,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _buildTimestampText(),
           GestureDetector(
-            onTap: () => onDelete(notification.id),
-            child: deleteWidget ?? _buildDefaultDeleteButton(),
+            onTap: () => widget.onDelete(widget.notification.id ?? ''),
+            child: widget.deleteWidget ?? _buildDefaultDeleteButton(),
           ),
         ],
       ),
@@ -145,18 +158,19 @@ class CardWidget extends StatelessWidget {
 
   Text _buildTimestampText() {
     return Text(
-      generateElapsedTimeText(DateTime.parse(notification.createdAt ?? '')),
-      style: styles?.dateStyle ?? const TextStyle(fontSize: 12),
+      generateElapsedTimeText(
+          DateTime.parse(widget.notification.createdAt ?? '')),
+      style: widget.styles?.dateStyle ?? const TextStyle(fontSize: 12),
     );
   }
 
-  IconButton _buildDefaultDeleteButton() {
-    return IconButton(
-      iconSize: 25,
-      onPressed: () {},
-      icon: const Icon(
+  Widget _buildDefaultDeleteButton() {
+    return const Padding(
+      padding: EdgeInsets.all(8),
+      child: Icon(
         Icons.delete_outline,
         color: Colors.red,
+        size: 25,
       ),
     );
   }

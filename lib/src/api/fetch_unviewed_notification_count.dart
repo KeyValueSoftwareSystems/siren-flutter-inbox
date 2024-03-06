@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:siren_flutter_inbox/src/constants/generics.dart';
 
-import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
 import 'package:siren_flutter_inbox/src/models/api_response.dart';
 import 'package:siren_flutter_inbox/src/models/unviewed_notification_count_model.dart';
 import 'package:siren_flutter_inbox/src/services/api_client.dart';
@@ -21,9 +21,8 @@ class FetchUnviewedNotificationsCount {
   Future<ApiResponse> fetchUnviewedNotificationsCount() async {
     try {
       final result = ApiResponse()..isLoading = true;
-      final id = SirenDataProvider.instance.recipientId;
       final apiResponse = await api.get(
-        path: 'recipients/$id',
+        path: Generics.API_PATH,
       );
 
       var count = 0;

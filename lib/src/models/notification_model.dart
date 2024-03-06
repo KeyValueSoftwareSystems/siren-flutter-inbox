@@ -1,5 +1,7 @@
 // models.dart
 
+import 'package:flutter/material.dart';
+
 class NotificationDataType {
   NotificationDataType({
     required this.id,
@@ -7,15 +9,19 @@ class NotificationDataType {
     required this.message,
     required this.requestId,
     required this.isRead,
+    required this.cardColor,
   });
 
   factory NotificationDataType.fromJson(Map<String, dynamic>? json) {
     return NotificationDataType(
       id: json?['id'] as String?,
       createdAt: json?['createdAt'] as String?,
-      message: MessageData.fromJson(json?['message'] as Map<String, dynamic>?),
+      message: json?['message'] != null
+          ? MessageData.fromJson(json?['message'] as Map<String, dynamic>)
+          : null,
       requestId: json?['requestId'] as String?,
       isRead: json?['isRead'] as bool?,
+      cardColor: json?['cardColor'] as Color?,
     );
   }
 
@@ -23,7 +29,13 @@ class NotificationDataType {
   final String? createdAt;
   final MessageData? message;
   final String? requestId;
-  final bool? isRead;
+  bool? isRead;
+  Color? cardColor;
+
+  void markAsRead() {
+    isRead = true;
+    cardColor = Colors.transparent;
+  }
 }
 
 class MessageData {
@@ -44,7 +56,9 @@ class MessageData {
       subHeader: json?['subHeader'] as String?,
       body: json?['body'] as String?,
       actionUrl: json?['actionUrl'] as String?,
-      avatar: AvatarData.fromJson(json?['avatar'] as Map<String, dynamic>?),
+      avatar: json?['avatar'] != null
+          ? AvatarData.fromJson(json?['avatar'] as Map<String, dynamic>)
+          : null,
       additionalData: json?['additionalData'] as String?,
     );
   }
