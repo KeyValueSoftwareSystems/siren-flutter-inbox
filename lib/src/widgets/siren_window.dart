@@ -90,6 +90,14 @@ class _SirenWindowState extends State<SirenWindow> {
     }
   }
 
+  void updateCurrentPageState() {
+    if (currentPage < totalPages - 1) {
+      currentPage++;
+    } else {
+      endReached = true;
+    }
+  }
+
   void pollFetchNotifications() {
     late var newNotifications = <NotificationDataType>[];
     _periodicUpdateRef = Timer.periodic(
@@ -147,16 +155,13 @@ class _SirenWindowState extends State<SirenWindow> {
         }
         setState(() {
           notifications.addAll(
-              fetchedNotifications.data as Iterable<NotificationDataType>);
+            fetchedNotifications.data as Iterable<NotificationDataType>,
+          );
           isLoading = false;
           isError = fetchedNotifications.isError;
           totalElements = fetchedNotifications.meta?.totalElements ?? 0;
           totalPages = fetchedNotifications.meta?.totalPages ?? 0;
-          if (currentPage < totalPages - 1) {
-            currentPage++;
-          } else {
-            endReached = true;
-          }
+          updateCurrentPageState();
         });
       } catch (error) {
         setState(() {

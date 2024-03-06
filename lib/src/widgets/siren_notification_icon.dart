@@ -49,26 +49,33 @@ class _SirenNotificationIconWidgetState
     super.dispose();
   }
 
+  void updateNotificationsCount(dynamic responseData) {
+    if (responseData != null && responseData is int) {
+      _notificationsCount = responseData;
+    }
+  }
+
   void _startRealTimeUnviewedCountFetch() {
     _periodicUpdateRef = Timer.periodic(
         const Duration(seconds: Generics.DATA_FETCH_INTERVAL), (timer) async {
       final response = await FetchUnviewedNotificationsCount.instance
           .fetchUnviewedNotificationsCount();
       setState(() {
-        _notificationsCount = response.data as int;
+        updateNotificationsCount(response.data);
       });
     });
   }
+
+  
 
   Future<void> initialize() async {
     await verifyToken();
     if (_tokenVerificationStatus.name == VerificationStatus.SUCCESS.name) {
       final response = await FetchUnviewedNotificationsCount.instance
           .fetchUnviewedNotificationsCount();
-      // TODO Need to uncomment this later to start polling
-      // _startRealTimeUnviewedCountFetch();
+      _startRealTimeUnviewedCountFetch();
       setState(() {
-        _notificationsCount = response.data as int;
+        updateNotificationsCount(response.data);
       });
     }
   }
@@ -80,7 +87,7 @@ class _SirenNotificationIconWidgetState
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-     onTap: widget.onTap ?? () {},
+      onTap: widget.onTap ?? () {},
       child: Stack(
         children: [
           widget.notificationIcon ??
