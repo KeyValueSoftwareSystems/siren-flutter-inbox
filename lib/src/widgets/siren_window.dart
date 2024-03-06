@@ -33,6 +33,7 @@ class SirenWindow extends StatefulWidget {
     this.onDeletionError,
     this.onReadError,
     this.onBulkDeletionError,
+    this.loaderColor,
   });
 
   final SirenStyleProps? customStyles;
@@ -53,6 +54,7 @@ class SirenWindow extends StatefulWidget {
   final void Function(ApiErrorDetails)? onDeletionError;
   final void Function(ApiErrorDetails)? onReadError;
   final void Function(ApiErrorDetails)? onBulkDeletionError;
+  final Color? loaderColor;
 
   @override
   _SirenWindowState createState() => _SirenWindowState();
@@ -63,6 +65,7 @@ class _SirenWindowState extends State<SirenWindow> {
   bool isLoading = false;
   bool endReached = false;
   bool isError = false;
+  bool loadingNextPage = false;
   int currentPage = 0;
   late int totalPages;
   late int totalElements;
@@ -223,15 +226,16 @@ class _SirenWindowState extends State<SirenWindow> {
   }
 
   void onEndReached() {
-    if (!isLoading) {
+    if (!isLoading && !loadingNextPage) {
       setState(() {
-        isLoading = true;
+        loadingNextPage = true;
       });
 
       Future.delayed(const Duration(seconds: 2), () async {
         await fetchNotifications();
         setState(() {
           isLoading = false;
+          loadingNextPage = false;
         });
       });
     }
@@ -301,7 +305,9 @@ class _SirenWindowState extends State<SirenWindow> {
     } else {
       if (notifications.isEmpty && isLoading) {
         return widget.customEmptyWidget ??
-            const Center(child: CircularProgressIndicator());
+            LoaderWidget(
+              progressIndicatorColor: widget.loaderColor,
+            );
       } else if (notifications.isEmpty && !isLoading) {
         return const EmptyWidget();
       } else {
@@ -311,6 +317,7 @@ class _SirenWindowState extends State<SirenWindow> {
           endReached: endReached,
           onRefresh: onRefresh,
           onEndReached: onEndReached,
+          loadingNextPage: loadingNextPage,
           customStyles: widget.customStyles,
           deleteWidget: widget.deleteWidget,
           hideAvatar: widget.hideAvatar,
@@ -319,9 +326,26 @@ class _SirenWindowState extends State<SirenWindow> {
           markAsRead: _markNotificationAsRead,
           buildCardWidget: widget.buildCardWidget,
           onCardClick: widget.onCardClick,
+          loaderColor: widget.loaderColor,
         );
       }
     }
+  }
+}
+
+class LoaderWidget extends StatelessWidget {
+  const LoaderWidget({
+    super.key,
+    this.progressIndicatorColor,
+  });
+  final Color? progressIndicatorColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+        child: CircularProgressIndicator(
+      color: progressIndicatorColor ?? Theme.of(context).colorScheme.primary,
+    ));
   }
 }
 
@@ -332,6 +356,7 @@ class NotificationListView extends StatelessWidget {
     required this.endReached,
     required this.onRefresh,
     required this.onEndReached,
+    required this.loadingNextPage,
     required this.customStyles,
     required this.hideAvatar,
     required this.deleteWidget,
@@ -340,12 +365,14 @@ class NotificationListView extends StatelessWidget {
     required this.markAsRead,
     this.buildCardWidget,
     this.onCardClick,
-    Key? key,
-  }) : super(key: key);
+    this.loaderColor,
+    super.key,
+  });
 
   final List<NotificationDataType> notifications;
   final bool isLoading;
   final bool endReached;
+  final bool loadingNextPage;
   final Future<void> Function() onRefresh;
   final VoidCallback onEndReached;
   final SirenStyleProps? customStyles;
@@ -356,6 +383,7 @@ class NotificationListView extends StatelessWidget {
   final void Function(String) markAsRead;
   final Widget Function(NotificationDataType)? buildCardWidget;
   final void Function(NotificationDataType)? onCardClick;
+  final Color? loaderColor;
 
   @override
   Widget build(BuildContext context) {
@@ -382,7 +410,14 @@ class NotificationListView extends StatelessWidget {
                 );
             return itemWidget;
           } else {
-            return const SizedBox();
+            return loadingNextPage
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: LoaderWidget(
+                      progressIndicatorColor: loaderColor,
+                    ),
+                  )
+                : const SizedBox();
           }
         },
         physics: const AlwaysScrollableScrollPhysics(),
