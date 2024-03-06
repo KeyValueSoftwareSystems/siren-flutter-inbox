@@ -16,7 +16,9 @@ class NotificationDataType {
     return NotificationDataType(
       id: json?['id'] as String?,
       createdAt: json?['createdAt'] as String?,
-      message: MessageData.fromJson(json?['message'] as Map<String, dynamic>?),
+      message: json?['message'] != null
+          ? MessageData.fromJson(json?['message'] as Map<String, dynamic>)
+          : null,
       requestId: json?['requestId'] as String?,
       isRead: json?['isRead'] as bool?,
       cardColor: json?['cardColor'] as Color?,
@@ -54,7 +56,9 @@ class MessageData {
       subHeader: json?['subHeader'] as String?,
       body: json?['body'] as String?,
       actionUrl: json?['actionUrl'] as String?,
-      avatar: AvatarData.fromJson(json?['avatar'] as Map<String, dynamic>?),
+      avatar: json?['avatar'] != null
+          ? AvatarData.fromJson(json?['avatar'] as Map<String, dynamic>)
+          : null,
       additionalData: json?['additionalData'] as String?,
     );
   }

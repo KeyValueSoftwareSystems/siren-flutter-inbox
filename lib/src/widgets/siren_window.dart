@@ -327,7 +327,7 @@ class NotificationListView extends StatelessWidget {
     required this.deleteWidget,
     required this.scrollController,
     required this.onDelete,
-    required this.markAsRead, // Add the markAsRead callback
+    required this.markAsRead,
     Key? key,
   }) : super(key: key);
 
@@ -341,7 +341,7 @@ class NotificationListView extends StatelessWidget {
   final Widget? deleteWidget;
   final ScrollController scrollController;
   final Future<void> Function(String) onDelete;
-  final void Function(String) markAsRead; // Add the markAsRead callback
+  final void Function(String) markAsRead;
 
   @override
   Widget build(BuildContext context) {

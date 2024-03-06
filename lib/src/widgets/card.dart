@@ -6,22 +6,20 @@ import 'package:siren_flutter_inbox/src/utils/common_utils.dart';
 import 'package:siren_flutter_inbox/src/widgets/common/nullable_text.dart';
 
 class CardWidget extends StatefulWidget {
+  const CardWidget(
+      {required this.onCardClick,
+      required this.notification,
+      required this.cardProps,
+      required this.styles,
+      required this.onDelete,
+      super.key,
+      this.deleteWidget});
   final Function onCardClick;
   final NotificationDataType notification;
   final CardProps cardProps;
   final SirenStyleProps? styles;
   final void Function(String) onDelete;
   final Widget? deleteWidget;
-
-  CardWidget(
-      {required this.onCardClick,
-      required this.notification,
-      required this.cardProps,
-      required this.styles,
-      required this.onDelete,
-      Key? key,
-      this.deleteWidget})
-      : super(key: key);
 
   @override
   _CardWidgetState createState() => _CardWidgetState();

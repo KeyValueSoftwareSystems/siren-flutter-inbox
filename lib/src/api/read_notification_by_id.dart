@@ -21,7 +21,7 @@ class ReadNotificationById {
         path: '$_apiPath/$notificationId',
         data: {
           'isRead': true,
-          'isDelivered': false,
+          'isDelivered': true,
         },
       ) as Map<String, dynamic>;
       final apiError = ApiResponse.fromJson(apiResponse).error;
