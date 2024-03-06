@@ -28,37 +28,28 @@ class FetchAllNotifications {
     int? size,
     bool? isRead,
   }) async {
-    try {
-      final result = ApiResponse()..isLoading = true;
-      final apiResponse = await api.get(
-        path: _apiPath,
-        queryParameters: {
-          'page': page,
-          'size': size,
-        },
-      ) as Map<String, dynamic>;
+    final result = ApiResponse()..isLoading = true;
+    final apiResponse = await api.get(
+      path: _apiPath,
+      queryParameters: {
+        'page': page,
+        'size': size,
+      },
+    );
 
-      final dataList = ApiResponse.fromJson(apiResponse).data as List<dynamic>;
-      final metaData = ApiResponse.fromJson(apiResponse).meta;
-      final apiError = ApiResponse.fromJson(apiResponse).error;
+    final dataList =
+        ApiResponse.fromJson(apiResponse.data).data as List<dynamic>?;
+    final metaData = ApiResponse.fromJson(apiResponse.data).meta;
+    final apiError = ApiResponse.fromJson(apiResponse.data).error;
 
-      result
-        ..isLoading = false
-        ..isSuccess = true
-        ..data = convertJsonToNotificationList(dataList)
-        ..meta = metaData
-        ..error = apiError;
+    result
+      ..isLoading = false
+      ..isSuccess = apiResponse.statusCode == 200
+      ..isError = apiResponse.statusCode != 200
+      ..data = convertJsonToNotificationList(dataList ?? [])
+      ..meta = metaData
+      ..error = apiError;
 
-      return result;
-    } catch (error) {
-      final result = ApiResponse()
-        ..isLoading = false
-        ..isError = true
-        ..error = ApiErrorDetails(
-          errorCode: '500',
-          message: 'Internal Server Error',
-        );
-      return result;
-    }
+    return result;
   }
 }
