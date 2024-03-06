@@ -80,3 +80,10 @@ class ApiErrorDetails {
   final String? errorCode;
   final String? message;
 }
+
+class DioResponse {
+  DioResponse({required this.data, this.statusCode});
+
+  final dynamic data;
+  final int? statusCode;
+}

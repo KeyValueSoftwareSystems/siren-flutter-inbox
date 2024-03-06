@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
+import 'package:siren_flutter_inbox/src/models/api_response.dart';
 
 class ApiClient {
   // injecting dio instance
@@ -8,7 +9,7 @@ class ApiClient {
   final Dio _api;
 
   // Get API
-  Future<dynamic> get({
+  Future<DioResponse> get({
     String? path,
     Map<String, dynamic>? queryParameters,
     Options? options,
@@ -24,9 +25,10 @@ class ApiClient {
         cancelToken: cancelToken,
         onReceiveProgress: onReceiveProgress,
       );
-      return [response.data, response.statusCode];
+      return DioResponse(data: response.data, statusCode: response.statusCode);
     } on DioException catch (e) {
-      return [e.response?.data, e.response?.statusCode];
+      return DioResponse(
+          data: e.response?.data, statusCode: e.response?.statusCode);
     }
   }
 

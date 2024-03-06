@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:dio/dio.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
 
 import 'package:siren_flutter_inbox/src/models/api_response.dart';
@@ -19,33 +18,23 @@ class FetchUnviewedNotificationsCount {
   ApiClient api = NetworkService.instance.api;
 
   Future<ApiResponse> fetchUnviewedNotificationsCount() async {
-    try {
-      final result = ApiResponse()..isLoading = true;
-      final apiResponse = await api.get(
-        path: Generics.API_PATH,
-      );
+    final result = ApiResponse()..isLoading = true;
+    final apiResponse = await api.get(
+      path: Generics.API_PATH,
+    );
 
-      var count = 0;
-      final data =
-          ApiResponse.fromJson(apiResponse).data as Map<String, dynamic>;
-      final notificationCount = UnviewedNotificationsCountModel.fromJson(data);
-      count = notificationCount.totalUnviewed;
-      result
-        ..isLoading = false
-        ..isSuccess = true
-        ..data = count
-        ..meta = null
-        ..error = null;
-      return result;
-    } on DioException catch (error) {
-      final result = ApiResponse()
-        ..isLoading = false
-        ..isError = true
-        ..error = ApiErrorDetails(
-          errorCode: error.response?.statusCode?.toString() ?? '500',
-          message: 'Internal Server Error',
-        );
-      return result;
-    }
+    var count = 0;
+    final data =
+        ApiResponse.fromJson(apiResponse.data).data as Map<String, dynamic>;
+    final notificationCount = UnviewedNotificationsCountModel.fromJson(data);
+    count = notificationCount.totalUnviewed;
+    result
+      ..isLoading = false
+      ..isSuccess = apiResponse.statusCode == 200
+      ..isError = apiResponse.statusCode != 200
+      ..data = count
+      ..meta = null
+      ..error = null;
+    return result;
   }
 }
