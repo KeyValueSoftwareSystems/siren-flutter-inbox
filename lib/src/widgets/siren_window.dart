@@ -7,15 +7,13 @@ import 'package:siren_flutter_inbox/src/api/fetch_all_notification.dart';
 import 'package:siren_flutter_inbox/src/api/mark_all_notifications_as_viewed.dart';
 import 'package:siren_flutter_inbox/src/api/read_notification_by_id.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
-import 'package:siren_flutter_inbox/src/models/notification_model.dart';
-import 'package:siren_flutter_inbox/src/models/ui_models.dart';
 import 'package:siren_flutter_inbox/src/widgets/card.dart';
 import 'package:siren_flutter_inbox/src/widgets/empty_widget.dart';
 import 'package:siren_flutter_inbox/src/widgets/error_widget.dart';
 
 class SirenWindow extends StatefulWidget {
   const SirenWindow({
-    Key? key,
+    super.key,
     this.customStyles,
     this.hideAvatar,
     this.deleteWidget,
@@ -28,7 +26,9 @@ class SirenWindow extends StatefulWidget {
     this.showHeaderBackButton,
     this.headerIconTheme,
     this.isCenterTitle,
-  }) : super(key: key);
+    this.buildCardWidget,
+    this.onCardClick,
+  });
 
   final SirenStyleProps? customStyles;
   final bool? hideAvatar;
@@ -42,6 +42,8 @@ class SirenWindow extends StatefulWidget {
   final bool? showHeaderBackButton;
   final IconThemeData? headerIconTheme;
   final bool? isCenterTitle;
+  final Widget Function(NotificationDataType)? buildCardWidget;
+  final void Function(NotificationDataType)? onCardClick;
 
   @override
   _SirenWindowState createState() => _SirenWindowState();
@@ -173,11 +175,9 @@ class _SirenWindowState extends State<SirenWindow> {
   }
 
   Future<void> onRefresh() async {
-    Future.delayed(const Duration(seconds: 2), () async {
-      await fetchNotifications();
-      setState(() {
-        isLoading = false;
-      });
+    await fetchNotifications();
+    setState(() {
+      isLoading = false;
     });
   }
 
@@ -257,28 +257,6 @@ class _SirenWindowState extends State<SirenWindow> {
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: GestureDetector(
-            onTap: () async {
-              try {
-                await Siren.markNotificationsAsViewed(
-                    untilDate: DateTime.now().toUtc().toIso8601String());
-                setState(() {
-                  for (final notification in notifications) {
-                    notification.markAsRead();
-                  }
-                });
-              } catch (error) {
-                print('error $error');
-              }
-            },
-            child: const Text(
-              'Read All',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ),
       ],
     );
   }
@@ -314,6 +292,8 @@ class _SirenWindowState extends State<SirenWindow> {
           scrollController: _scrollController,
           onDelete: deleteNotification,
           markAsRead: _markNotificationAsRead,
+          buildCardWidget: widget.buildCardWidget,
+          onCardClick: widget.onCardClick,
         );
       }
     }
@@ -333,6 +313,8 @@ class NotificationListView extends StatelessWidget {
     required this.scrollController,
     required this.onDelete,
     required this.markAsRead,
+    this.buildCardWidget,
+    this.onCardClick,
     Key? key,
   }) : super(key: key);
 
@@ -347,6 +329,8 @@ class NotificationListView extends StatelessWidget {
   final ScrollController scrollController;
   final Future<void> Function(String) onDelete;
   final void Function(String) markAsRead;
+  final Widget Function(NotificationDataType)? buildCardWidget;
+  final void Function(NotificationDataType)? onCardClick;
 
   @override
   Widget build(BuildContext context) {
@@ -356,23 +340,24 @@ class NotificationListView extends StatelessWidget {
         itemCount: notifications.length + (endReached ? 0 : 1),
         itemBuilder: (context, index) {
           if (index < notifications.length) {
-            return CardWidget(
-              onCardClick: (notification) {
-                markAsRead(
-                  notifications[index].id ?? '',
+            final itemWidget = buildCardWidget?.call(notifications[index]) ??
+                CardWidget(
+                  onTap: (notification) {
+                    markAsRead(notifications[index].id ?? '');
+                    onCardClick?.call(notifications[index]);
+                  },
+                  notification: notifications[index],
+                  cardProps: CardProps(
+                    hideAvatar: hideAvatar,
+                    showMedia: true,
+                  ),
+                  styles: customStyles,
+                  deleteWidget: deleteWidget,
+                  onDelete: onDelete,
                 );
-              },
-              notification: notifications[index],
-              cardProps: CardProps(
-                hideAvatar: hideAvatar,
-                showMedia: true,
-              ),
-              styles: customStyles,
-              deleteWidget: deleteWidget,
-              onDelete: onDelete,
-            );
+            return itemWidget;
           } else {
-            return Container();
+            return const SizedBox();
           }
         },
         physics: const AlwaysScrollableScrollPhysics(),
