@@ -32,6 +32,7 @@ class SirenWindow extends StatefulWidget {
     this.onFetchNotificationsError,
     this.onDeletionError,
     this.onReadError,
+    this.onBulkDeletionError,
   });
 
   final SirenStyleProps? customStyles;
@@ -51,6 +52,7 @@ class SirenWindow extends StatefulWidget {
   final void Function(ApiErrorDetails)? onFetchNotificationsError;
   final void Function(ApiErrorDetails)? onDeletionError;
   final void Function(ApiErrorDetails)? onReadError;
+  final void Function(ApiErrorDetails)? onBulkDeletionError;
 
   @override
   _SirenWindowState createState() => _SirenWindowState();
@@ -190,6 +192,22 @@ class _SirenWindowState extends State<SirenWindow> {
     });
   }
 
+  Future<void> onBulkDelete() async {
+    final deleteAllResponse = await Siren.deleteNotificationByDate(
+        untilDate: DateTime.now().toUtc().toIso8601String());
+    if (deleteAllResponse.isSuccess) {
+      setState(
+        () {
+          notifications = [];
+        },
+      );
+      totalElements = 0;
+    } else if (deleteAllResponse.isError) {
+      widget.onBulkDeletionError
+          ?.call(deleteAllResponse.error ?? ApiErrorDetails());
+    }
+  }
+
   Future<void> deleteNotification(String id) async {
     final deletionStatus = await _deleteNotificationById.deleteNotificationById(
         notificationId: id);
@@ -257,18 +275,7 @@ class _SirenWindowState extends State<SirenWindow> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: GestureDetector(
-            onTap: () async {
-              try {
-                await Siren.deleteNotificationByDate(
-                    untilDate: DateTime.now().toUtc().toIso8601String());
-                setState(() {
-                  notifications = [];
-                });
-                totalElements = 0;
-              } catch (error) {
-                print('error $error');
-              }
-            },
+            onTap: onBulkDelete,
             child: const Text(
               'Clear All',
               style: TextStyle(color: Colors.white),

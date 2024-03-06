@@ -1,6 +1,7 @@
 import 'package:siren_flutter_inbox/src/api/mark_all_notifications_as_viewed.dart';
 import 'package:siren_flutter_inbox/src/api/notifications_bulk_update.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
+import 'package:siren_flutter_inbox/src/models/api_response.dart';
 
 class Siren {
   static Future<dynamic> markAsRead({
@@ -12,7 +13,7 @@ class Siren {
   static Future<dynamic> markNotificationsAsReadByDate({
     required String untilDate,
   }) async {
-   final data = {
+    final data = {
       'until': untilDate,
       'operation': BulkUpdateType.MARK_AS_READ.name,
     };
@@ -33,7 +34,7 @@ class Siren {
     // TODO
   }
 
-  static Future<dynamic> deleteNotificationByDate({
+  static Future<ApiResponse> deleteNotificationByDate({
     required String untilDate,
   }) async {
     final data = {

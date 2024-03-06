@@ -35,7 +35,7 @@ class ApiClient {
   }
 
   // Post API
-  Future<dynamic> post({
+  Future<DioResponse> post({
     String? path,
     dynamic data,
     Map<String, dynamic>? queryParameters,
@@ -55,9 +55,12 @@ class ApiClient {
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
       );
-      return response;
+      return DioResponse(data: response.data, statusCode: response.statusCode);
     } on DioException catch (e) {
-      return e.response?.data;
+      return DioResponse(
+        data: e.response?.data,
+        statusCode: e.response?.statusCode,
+      );
     }
   }
 
