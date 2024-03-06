@@ -91,31 +91,6 @@ class ApiClient {
     }
   }
 
-  // Put API
-  Future<dynamic> put({
-    dynamic data,
-    Map<String, dynamic>? queryParameters,
-    Options? options,
-    CancelToken? cancelToken,
-    ProgressCallback? onSendProgress,
-    ProgressCallback? onReceiveProgress,
-  }) async {
-    try {
-      final response = await _api.put(
-        'TODO ADD BASE URL',
-        data: data,
-        queryParameters: queryParameters,
-        options: options,
-        cancelToken: cancelToken,
-        onSendProgress: onSendProgress,
-        onReceiveProgress: onReceiveProgress,
-      );
-      return response.data;
-    } on DioException catch (e) {
-      return e.response?.data;
-    }
-  }
-
   // Delete API
   Future<DioResponse> delete({
     String? path,
