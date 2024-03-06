@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart';
+import 'package:siren_flutter_inbox/src/constants/generics.dart';
 import 'package:siren_flutter_inbox/src/models/api_response.dart';
 import 'package:siren_flutter_inbox/src/models/notification_model.dart';
 import 'package:siren_flutter_inbox/src/services/api_client.dart';
@@ -6,13 +6,11 @@ import 'package:siren_flutter_inbox/src/services/api_provider.dart';
 
 class FetchAllNotifications {
   FetchAllNotifications._internal();
-  static final FetchAllNotifications instance = FetchAllNotifications._internal();
+  static final FetchAllNotifications instance =
+      FetchAllNotifications._internal();
   final ApiClient api = ApiClient(apiProvider());
 
-  static const String _apiPath =
-      'api/v2/in-app/recipients/64a0811d-982b-4f8e-9601-d5adcc1fe7e2/notifications';
-  static const String _authorizationToken =
-      'Bearer 95d5544c106543e799084e19a988fd31';
+  static final String _apiPath = '${Generics.API_PATH}/notifications';
 
   List<NotificationDataType> convertJsonToNotificationList(
     List<dynamic> dataList,
@@ -34,11 +32,6 @@ class FetchAllNotifications {
       final result = ApiResponse()..isLoading = true;
       final apiResponse = await api.get(
         path: _apiPath,
-        options: Options(
-          headers: {
-            'authorization': _authorizationToken,
-          },
-        ),
         queryParameters: {
           'page': page,
           'size': size,

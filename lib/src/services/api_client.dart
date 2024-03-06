@@ -16,7 +16,7 @@ class ApiClient {
     ProgressCallback? onReceiveProgress,
   }) async {
     try {
-      final url = '${Generics.BASE_URL}${Generics.API_PATH}$path';
+      final url = '${Generics.API_DOMAIN}$path';
       final response = await _api.get(
         url,
         queryParameters: queryParameters,
@@ -41,7 +41,7 @@ class ApiClient {
     ProgressCallback? onReceiveProgress,
   }) async {
     try {
-      final url = '${Generics.BASE_URL}${Generics.API_PATH}$path';
+      final url = '${Generics.API_DOMAIN}$path';
       final response = await _api.post(
         url,
         data: data,
@@ -68,7 +68,7 @@ class ApiClient {
     ProgressCallback? onReceiveProgress,
   }) async {
     try {
-      final url = '${Generics.BASE_URL}${Generics.API_PATH}$path';
+      final url = '${Generics.API_DOMAIN}$path';
       final response = await _api.patch(
         url,
         data: data,
@@ -118,7 +118,7 @@ class ApiClient {
     ProgressCallback? onReceiveProgress,
   }) async {
     try {
-      final url = '${Generics.BASE_URL}$path';
+      final url = '${Generics.API_DOMAIN}$path';
       final response = await _api.delete(
         url,
         queryParameters: queryParameters,

@@ -3,23 +3,26 @@ import 'package:siren_flutter_inbox/src/models/api_response.dart';
 import 'package:siren_flutter_inbox/src/services/api_client.dart';
 import 'package:siren_flutter_inbox/src/services/api_provider.dart';
 
-class DeleteNotificationById {
-  DeleteNotificationById._internal();
-  static final DeleteNotificationById instance =
-      DeleteNotificationById._internal();
+class ReadNotificationById {
+  ReadNotificationById._internal();
+  static final ReadNotificationById instance = ReadNotificationById._internal();
 
   final ApiClient api = ApiClient(apiProvider());
 
   static final String _apiPath = '${Generics.API_PATH}/notifications';
 
-  Future<ApiResponse> deleteNotificationById({
+  Future<ApiResponse> readNotificationById({
     required String notificationId,
   }) async {
     try {
       final result = ApiResponse()..isLoading = true;
 
-      final apiResponse = await api.delete(
+      final apiResponse = await api.patch(
         path: '$_apiPath/$notificationId',
+        data: {
+          'isRead': true,
+          'isDelivered': true,
+        },
       ) as Map<String, dynamic>;
       final apiError = ApiResponse.fromJson(apiResponse).error;
 
