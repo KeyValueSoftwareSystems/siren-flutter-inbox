@@ -28,7 +28,9 @@ class ApiClient {
       return DioResponse(data: response.data, statusCode: response.statusCode);
     } on DioException catch (e) {
       return DioResponse(
-          data: e.response?.data, statusCode: e.response?.statusCode);
+        data: e.response?.data,
+        statusCode: e.response?.statusCode,
+      );
     }
   }
 
@@ -60,7 +62,7 @@ class ApiClient {
   }
 
   // Patch API
-  Future<dynamic> patch({
+  Future<DioResponse> patch({
     String? path,
     dynamic data,
     Map<String, dynamic>? queryParameters,
@@ -80,9 +82,12 @@ class ApiClient {
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
       );
-      return response.data;
+      return DioResponse(data: response.data, statusCode: response.statusCode);
     } on DioException catch (e) {
-      return e.response?.data;
+      return DioResponse(
+        data: e.response?.data,
+        statusCode: e.response?.statusCode,
+      );
     }
   }
 
@@ -112,7 +117,7 @@ class ApiClient {
   }
 
   // Delete API
-  Future<dynamic> delete({
+  Future<DioResponse> delete({
     String? path,
     Map<String, dynamic>? queryParameters,
     Options? options,
@@ -127,9 +132,12 @@ class ApiClient {
         options: options,
         cancelToken: cancelToken,
       );
-      return response;
+      return DioResponse(data: response.data, statusCode: response.statusCode);
     } on DioException catch (e) {
-      return e.response?.data;
+      return DioResponse(
+        data: e.response?.data,
+        statusCode: e.response?.statusCode,
+      );
     }
   }
 }

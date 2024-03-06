@@ -12,11 +12,11 @@ class VerifyToken {
 
   static final VerifyToken instance = VerifyToken._internal();
 
-  VerificationStatus convertJsonToVerificationStatus(dynamic response) {
+  Status convertJsonToVerificationStatus(dynamic response) {
     return (response['data']?['status']?.toString() ?? '') ==
-            VerificationStatus.SUCCESS.name
-        ? VerificationStatus.SUCCESS
-        : VerificationStatus.PENDING;
+            Status.SUCCESS.name
+        ? Status.SUCCESS
+        : Status.PENDING;
   }
 
   ApiClient api = ApiClient(apiProvider());

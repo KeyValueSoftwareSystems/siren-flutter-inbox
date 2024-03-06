@@ -35,7 +35,7 @@ class _SirenNotificationIconWidgetState
   int _notificationsCount = 0;
 
   ApiResponse _tokenVerificationResponse = ApiResponse()..isLoading;
-  VerificationStatus _tokenVerificationStatus = VerificationStatus.PENDING;
+  Status _tokenVerificationStatus = Status.PENDING;
 
   late Timer _periodicUpdateRef;
 
@@ -71,7 +71,7 @@ class _SirenNotificationIconWidgetState
   Future<void> initialize() async {
     await verifyToken();
     if (_tokenVerificationResponse.isSuccess) {
-      if (_tokenVerificationStatus == VerificationStatus.SUCCESS) {
+      if (_tokenVerificationStatus == Status.SUCCESS) {
         final response = await FetchUnviewedNotificationsCount.instance
             .fetchUnviewedNotificationsCount();
         _startRealTimeUnviewedCountFetch();
@@ -89,7 +89,7 @@ class _SirenNotificationIconWidgetState
   Future<void> verifyToken() async {
     _tokenVerificationResponse = await VerifyToken.instance.verifyToken();
     _tokenVerificationStatus =
-        _tokenVerificationResponse.data as VerificationStatus;
+        _tokenVerificationResponse.data as Status;
   }
 
   @override
