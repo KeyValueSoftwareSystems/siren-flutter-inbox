@@ -93,7 +93,7 @@ class _SirenWindowState extends State<SirenWindow> {
   void pollFetchNotifications() {
     late var newNotifications = <NotificationDataType>[];
     _periodicUpdateRef = Timer.periodic(
-      const Duration(seconds: 5),
+      const Duration(seconds: Generics.DATA_FETCH_INTERVAL),
       (timer) async {
         try {
           final fetchedNotifications =

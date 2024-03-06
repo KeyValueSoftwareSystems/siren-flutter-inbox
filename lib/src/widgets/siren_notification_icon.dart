@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 
@@ -81,7 +80,7 @@ class _SirenNotificationIconWidgetState
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: widget.onTap,
+     onTap: widget.onTap ?? () {},
       child: Stack(
         children: [
           widget.notificationIcon ??
