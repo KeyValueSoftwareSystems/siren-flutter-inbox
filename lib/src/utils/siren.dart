@@ -1,3 +1,4 @@
+import 'package:siren_flutter_inbox/src/api/delete_notification_by_id.dart';
 import 'package:siren_flutter_inbox/src/api/mark_all_notifications_as_viewed.dart';
 import 'package:siren_flutter_inbox/src/api/notifications_bulk_update.dart';
 import 'package:siren_flutter_inbox/src/api/read_notification_by_id.dart';
@@ -33,8 +34,8 @@ class Siren {
   static Future<ApiResponse> deleteNotification({
     required String id,
   }) async {
-    // TODO
-    return ApiResponse();
+    return DeleteNotificationById.instance
+        .deleteNotificationById(notificationId: id);
   }
 
   static Future<ApiResponse> deleteNotificationByDate({

@@ -7,7 +7,6 @@ import 'package:siren_flutter_inbox/src/api/fetch_all_notification.dart';
 import 'package:siren_flutter_inbox/src/api/mark_all_notifications_as_viewed.dart';
 import 'package:siren_flutter_inbox/src/api/read_notification_by_id.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
-import 'package:siren_flutter_inbox/src/models/api_response.dart';
 import 'package:siren_flutter_inbox/src/widgets/card.dart';
 import 'package:siren_flutter_inbox/src/widgets/empty_widget.dart';
 import 'package:siren_flutter_inbox/src/widgets/error_widget.dart';
@@ -34,6 +33,7 @@ class SirenWindow extends StatefulWidget {
     this.onReadError,
     this.onBulkDeletionError,
     this.loaderColor,
+    this.onMarkAsViewedApiError,
   });
 
   final SirenStyleProps? customStyles;
@@ -54,6 +54,7 @@ class SirenWindow extends StatefulWidget {
   final void Function(ApiErrorDetails)? onDeletionError;
   final void Function(ApiErrorDetails)? onReadError;
   final void Function(ApiErrorDetails)? onBulkDeletionError;
+  final void Function(ApiErrorDetails)? onMarkAsViewedApiError;
   final Color? loaderColor;
 
   @override
@@ -166,7 +167,9 @@ class _SirenWindowState extends State<SirenWindow> {
           untilDate: DateTime.now().toUtc().toIso8601String(),
         );
         if (notificationsMarkedAsViewed.isError) {
-          //TODO: Add some error handling
+          widget.onMarkAsViewedApiError?.call(
+            notificationsMarkedAsViewed.error ?? ApiErrorDetails(),
+          );
         }
         setState(() {
           notifications.addAll(
@@ -177,7 +180,7 @@ class _SirenWindowState extends State<SirenWindow> {
           totalPages = fetchedNotifications.meta?.totalPages ?? 0;
           updateCurrentPageState();
         });
-        // pollFetchNotifications();
+        pollFetchNotifications();
       } else if (fetchedNotifications.isError) {
         setState(() {
           isError = fetchedNotifications.isError;
