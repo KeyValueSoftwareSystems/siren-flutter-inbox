@@ -161,12 +161,12 @@ class _SirenWindowState extends State<SirenWindow> {
         size: widget.pageSize ?? Generics.PAGE_SIZE,
       );
       if (fetchedNotifications.isSuccess) {
-        try {
-          await MarkAllNotificationsAsViewed.markAllNotificationsAsViewed(
-            untilDate: DateTime.now().toUtc().toIso8601String(),
-          );
-        } catch (error) {
-          print('error $error');
+        final notificationsMarkedAsViewed =
+            await MarkAllNotificationsAsViewed.markAllNotificationsAsViewed(
+          untilDate: DateTime.now().toUtc().toIso8601String(),
+        );
+        if (notificationsMarkedAsViewed.isError) {
+          //TODO: Add some error handling
         }
         setState(() {
           notifications.addAll(
@@ -177,7 +177,7 @@ class _SirenWindowState extends State<SirenWindow> {
           totalPages = fetchedNotifications.meta?.totalPages ?? 0;
           updateCurrentPageState();
         });
-        pollFetchNotifications();
+        // pollFetchNotifications();
       } else if (fetchedNotifications.isError) {
         setState(() {
           isError = fetchedNotifications.isError;
