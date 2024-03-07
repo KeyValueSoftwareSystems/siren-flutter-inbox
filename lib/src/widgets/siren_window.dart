@@ -7,6 +7,7 @@ import 'package:siren_flutter_inbox/src/api/fetch_all_notification.dart';
 import 'package:siren_flutter_inbox/src/api/mark_all_notifications_as_viewed.dart';
 import 'package:siren_flutter_inbox/src/api/read_notification_by_id.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
+import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
 import 'package:siren_flutter_inbox/src/widgets/card.dart';
 import 'package:siren_flutter_inbox/src/widgets/empty_widget.dart';
 import 'package:siren_flutter_inbox/src/widgets/error_widget.dart';
@@ -74,7 +75,8 @@ class _SirenWindowState extends State<SirenWindow> {
   List<NotificationDataType> notifications = [];
   late final DeleteNotificationById _deleteNotificationById;
   late final ReadNotificationById _readNotificationById;
-  late Timer _periodicUpdateRef;
+  late Timer? _periodicUpdateRef;
+  late StreamSubscription<StreamResponse> _subscription;
 
   @override
   void initState() {
@@ -84,13 +86,31 @@ class _SirenWindowState extends State<SirenWindow> {
     _deleteNotificationById = DeleteNotificationById.instance;
     _readNotificationById = ReadNotificationById.instance;
     fetchNotifications();
+    _subscribeToStream();
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
-    _periodicUpdateRef.cancel();
+    _periodicUpdateRef?.cancel();
+    _subscription.cancel();
     super.dispose();
+  }
+
+  void _subscribeToStream() {
+    _subscription = SirenDataProvider.instance.controller.stream.listen(
+      (streamResponse) {
+        if (streamResponse.api == StateUpdationApi.READ_BY_ID) {
+          setState(
+            () {
+              final notification =
+                  notifications.firstWhere((n) => n.id == streamResponse.id);
+              notification.markAsRead();
+            },
+          );
+        }
+      },
+    );
   }
 
   void _scrollListener() {
