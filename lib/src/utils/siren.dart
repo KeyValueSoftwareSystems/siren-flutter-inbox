@@ -42,8 +42,11 @@ class Siren {
   static Future<ApiResponse> deleteNotification({
     required String id,
   }) async {
-    return DeleteNotificationById.instance
+    final response = await DeleteNotificationById.instance
         .deleteNotificationById(notificationId: id);
+    SirenDataProvider.instance.controller.sink
+        .add(StreamResponse(response, StateUpdationApi.DELETE_BY_ID, id));
+    return response;
   }
 
   static Future<ApiResponse> deleteNotificationByDate({

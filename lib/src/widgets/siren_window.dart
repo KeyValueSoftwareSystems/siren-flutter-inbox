@@ -100,21 +100,30 @@ class _SirenWindowState extends State<SirenWindow> {
   void _subscribeToStream() {
     _subscription = SirenDataProvider.instance.controller.stream.listen(
       (streamResponse) {
-        if (streamResponse.api == StateUpdationApi.READ_BY_ID) {
-          setState(
-            () {
-              final notification =
-                  notifications.firstWhere((n) => n.id == streamResponse.id);
-              notification.markAsRead();
-            },
-          );
-        }
-        if (streamResponse.api == StateUpdationApi.READ_ALL) {
-          setState(() {
-            for (final notification in notifications) {
-              notification.markAsRead();
-            }
-          });
+        if (streamResponse.response?.isSuccess ?? false) {
+          if (streamResponse.api == StateUpdationApi.READ_BY_ID) {
+            setState(
+              () {
+                final notification =
+                    notifications.firstWhere((n) => n.id == streamResponse.id);
+                notification.markAsRead();
+              },
+            );
+          }
+          if (streamResponse.api == StateUpdationApi.READ_ALL) {
+            setState(() {
+              for (final notification in notifications) {
+                notification.markAsRead();
+              }
+            });
+          }
+          if (streamResponse.api == StateUpdationApi.DELETE_BY_ID) {
+            setState(() {
+              notifications.removeWhere(
+                  (notification) => notification.id == streamResponse.id);
+            });
+            totalElements = totalElements - 1;
+          }
         }
       },
     );
