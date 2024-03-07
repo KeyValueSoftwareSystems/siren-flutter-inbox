@@ -14,6 +14,8 @@ class SirenDataProvider {
 
   StreamController<StreamResponse> controller =
       StreamController<StreamResponse>();
+  StreamController<StreamResponse> iconController =
+      StreamController<StreamResponse>();
 
   void updateParams({
     required String userToken,

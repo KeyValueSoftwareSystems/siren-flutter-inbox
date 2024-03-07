@@ -59,7 +59,7 @@ class _SirenNotificationIconWidgetState
   }
 
   void _subscribeToStream() {
-    _subscription = SirenDataProvider.instance.controller.stream.listen(
+    _subscription = SirenDataProvider.instance.iconController.stream.listen(
       (streamResponse) async {
         if (streamResponse.response?.isSuccess ?? false) {
           if (streamResponse.api == StateUpdationApi.VIEW_ALL) {
