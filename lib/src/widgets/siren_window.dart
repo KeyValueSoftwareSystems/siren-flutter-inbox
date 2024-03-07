@@ -109,6 +109,13 @@ class _SirenWindowState extends State<SirenWindow> {
             },
           );
         }
+        if (streamResponse.api == StateUpdationApi.READ_ALL) {
+          setState(() {
+            for (final notification in notifications) {
+              notification.markAsRead();
+            }
+          });
+        }
       },
     );
   }

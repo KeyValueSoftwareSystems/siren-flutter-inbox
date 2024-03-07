@@ -24,7 +24,11 @@ class Siren {
       'until': untilDate,
       'operation': BulkUpdateType.MARK_AS_READ.name,
     };
-    return NotificationsBulkUpdate.notificationsBulkUpdate(data: data);
+    final response =
+        await NotificationsBulkUpdate.notificationsBulkUpdate(data: data);
+    SirenDataProvider.instance.controller.sink
+        .add(StreamResponse(response, StateUpdationApi.READ_ALL, ''));
+    return response;
   }
 
   static Future<ApiResponse> markNotificationsAsViewed({
