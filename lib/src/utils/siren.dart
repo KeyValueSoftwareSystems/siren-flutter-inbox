@@ -34,9 +34,13 @@ class Siren {
   static Future<ApiResponse> markNotificationsAsViewed({
     required String untilDate,
   }) async {
-    return MarkAllNotificationsAsViewed.markAllNotificationsAsViewed(
+    final response =
+        await MarkAllNotificationsAsViewed.markAllNotificationsAsViewed(
       untilDate: untilDate,
     );
+    SirenDataProvider.instance.controller.sink
+        .add(StreamResponse(response, StateUpdationApi.VIEW_ALL, ''));
+    return response;
   }
 
   static Future<ApiResponse> deleteNotification({

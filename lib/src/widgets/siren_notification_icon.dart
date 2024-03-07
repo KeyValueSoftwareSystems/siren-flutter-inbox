@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:siren_flutter_inbox/src/api/fetch_unviewed_notification_count.dart';
 import 'package:siren_flutter_inbox/src/api/verify_token.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
+import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
 import 'package:siren_flutter_inbox/src/models/api_response.dart';
 
 class SirenNotificationIconWidget extends StatefulWidget {
@@ -41,16 +42,36 @@ class _SirenNotificationIconWidgetState
 
   late Timer _periodicUpdateRef;
 
+  late StreamSubscription<StreamResponse> _subscription;
+
   @override
   void initState() {
     super.initState();
     initialize();
+    _subscribeToStream();
   }
 
   @override
   void dispose() {
     _periodicUpdateRef.cancel();
     super.dispose();
+    _subscription.cancel();
+  }
+
+  void _subscribeToStream() {
+    _subscription = SirenDataProvider.instance.controller.stream.listen(
+      (streamResponse) async {
+        if (streamResponse.response?.isSuccess ?? false) {
+          if (streamResponse.api == StateUpdationApi.VIEW_ALL) {
+            final response = await FetchUnviewedNotificationsCount.instance
+                .fetchUnviewedNotificationsCount();
+            setState(() {
+              updateNotificationsCount(response.data);
+            });
+          }
+        }
+      },
+    );
   }
 
   void updateNotificationsCount(dynamic responseData) {
