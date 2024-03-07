@@ -101,40 +101,50 @@ class _SirenWindowState extends State<SirenWindow> {
     _subscription = SirenDataProvider.instance.controller.stream.listen(
       (streamResponse) {
         if (streamResponse.response?.isSuccess ?? false) {
-          if (streamResponse.api == StateUpdationApi.READ_BY_ID) {
-            setState(
-              () {
-                final notification =
-                    notifications.firstWhere((n) => n.id == streamResponse.id);
-                notification.markAsRead();
-              },
-            );
-          }
-          if (streamResponse.api == StateUpdationApi.READ_ALL) {
-            setState(() {
-              for (final notification in notifications) {
-                notification.markAsRead();
-              }
-            });
-          }
-          if (streamResponse.api == StateUpdationApi.DELETE_BY_ID) {
-            setState(() {
-              notifications.removeWhere(
-                  (notification) => notification.id == streamResponse.id);
-            });
-            totalElements = totalElements - 1;
-          }
-          if (streamResponse.api == StateUpdationApi.DELETE_ALL) {
-            setState(
-              () {
-                notifications = [];
-              },
-            );
-            totalElements = 0;
+          switch (streamResponse.api) {
+            case StateUpdationApi.READ_BY_ID:
+              _markNotificationAsReadById(streamResponse.id);
+            case StateUpdationApi.READ_ALL:
+              _markAllNotificationsAsRead();
+            case StateUpdationApi.DELETE_BY_ID:
+              _deleteById(streamResponse.id);
+            case StateUpdationApi.DELETE_ALL:
+              _deleteAllNotifications();
+            default:
+            //handle a default case
           }
         }
       },
     );
+  }
+
+  void _markNotificationAsReadById(String? notificationId) {
+    setState(() {
+      notifications.firstWhere((n) => n.id == notificationId).markAsRead();
+    });
+  }
+
+  void _markAllNotificationsAsRead() {
+    setState(() {
+      for (final notification in notifications) {
+        notification.markAsRead();
+      }
+    });
+  }
+
+  void _deleteById(String? notificationId) {
+    setState(() {
+      notifications
+          .removeWhere((notification) => notification.id == notificationId);
+      totalElements = totalElements - 1;
+    });
+  }
+
+  void _deleteAllNotifications() {
+    setState(() {
+      notifications = [];
+      totalElements = 0;
+    });
   }
 
   void _scrollListener() {
@@ -246,12 +256,7 @@ class _SirenWindowState extends State<SirenWindow> {
     final deleteAllResponse = await Siren.deleteNotificationByDate(
         untilDate: DateTime.now().toUtc().toIso8601String());
     if (deleteAllResponse.isSuccess) {
-      setState(
-        () {
-          notifications = [];
-        },
-      );
-      totalElements = 0;
+      _deleteAllNotifications();
     } else if (deleteAllResponse.isError) {
       widget.onBulkDeletionError
           ?.call(deleteAllResponse.error ?? ApiErrorDetails());
@@ -263,10 +268,7 @@ class _SirenWindowState extends State<SirenWindow> {
         notificationId: id);
 
     if (deletionStatus.data == Status.SUCCESS && deletionStatus.isSuccess) {
-      setState(() {
-        notifications.removeWhere((notification) => notification.id == id);
-      });
-      totalElements = totalElements - 1;
+      _deleteById(id);
     } else if (deletionStatus.isError) {
       widget.onDeletionError?.call(deletionStatus.error ?? ApiErrorDetails());
     }
@@ -292,12 +294,7 @@ class _SirenWindowState extends State<SirenWindow> {
     final readStatus =
         await _readNotificationById.readNotificationById(notificationId: id);
     if (readStatus.isSuccess) {
-      setState(
-        () {
-          final notification = notifications.firstWhere((n) => n.id == id);
-          notification.markAsRead();
-        },
-      );
+      _markNotificationAsReadById(id);
     } else if (readStatus.isError) {
       widget.onReadError?.call(readStatus.error ?? ApiErrorDetails());
     }
