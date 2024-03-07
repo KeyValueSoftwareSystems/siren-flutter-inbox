@@ -124,6 +124,14 @@ class _SirenWindowState extends State<SirenWindow> {
             });
             totalElements = totalElements - 1;
           }
+          if (streamResponse.api == StateUpdationApi.DELETE_ALL) {
+            setState(
+              () {
+                notifications = [];
+              },
+            );
+            totalElements = 0;
+          }
         }
       },
     );

@@ -56,6 +56,10 @@ class Siren {
       'until': untilDate,
       'operation': BulkUpdateType.MARK_AS_DELETED.name,
     };
-    return NotificationsBulkUpdate.notificationsBulkUpdate(data: data);
+    final response =
+        await NotificationsBulkUpdate.notificationsBulkUpdate(data: data);
+    SirenDataProvider.instance.controller.sink
+        .add(StreamResponse(response, StateUpdationApi.DELETE_ALL, ''));
+    return response;
   }
 }
