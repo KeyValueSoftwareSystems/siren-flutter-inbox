@@ -56,6 +56,7 @@ class _SirenNotificationIconWidgetState
     _periodicUpdateRef.cancel();
     super.dispose();
     _subscription.cancel();
+    SirenDataProvider.instance.dispose();
   }
 
   void _subscribeToStream() {

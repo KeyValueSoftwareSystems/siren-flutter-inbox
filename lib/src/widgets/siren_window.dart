@@ -91,9 +91,11 @@ class _SirenWindowState extends State<SirenWindow> {
 
   @override
   void dispose() {
+    markAllNotificationsAsViewed();
     _scrollController.dispose();
     _periodicUpdateRef?.cancel();
     _subscription.cancel();
+    SirenDataProvider.instance.dispose();
     super.dispose();
   }
 
@@ -204,6 +206,19 @@ class _SirenWindowState extends State<SirenWindow> {
     );
   }
 
+  Future<void> markAllNotificationsAsViewed() async {
+    final notificationsMarkedAsViewed =
+        await MarkAllNotificationsAsViewed.markAllNotificationsAsViewed(
+      untilDate: DateTime.now().toUtc().toIso8601String(),
+    );
+
+    if (notificationsMarkedAsViewed.isError) {
+      widget.onMarkAsViewedApiError?.call(
+        notificationsMarkedAsViewed.error ?? ApiErrorDetails(),
+      );
+    }
+  }
+
   Future<void> fetchNotifications() async {
     setState(() {
       isLoading = true;
@@ -216,15 +231,7 @@ class _SirenWindowState extends State<SirenWindow> {
         size: widget.pageSize ?? Generics.PAGE_SIZE,
       );
       if (fetchedNotifications.isSuccess) {
-        final notificationsMarkedAsViewed =
-            await MarkAllNotificationsAsViewed.markAllNotificationsAsViewed(
-          untilDate: DateTime.now().toUtc().toIso8601String(),
-        );
-        if (notificationsMarkedAsViewed.isError) {
-          widget.onMarkAsViewedApiError?.call(
-            notificationsMarkedAsViewed.error ?? ApiErrorDetails(),
-          );
-        }
+        await markAllNotificationsAsViewed();
         setState(() {
           notifications.addAll(
             fetchedNotifications.data as Iterable<NotificationDataType>,

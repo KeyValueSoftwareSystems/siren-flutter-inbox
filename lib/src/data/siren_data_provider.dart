@@ -7,15 +7,20 @@ class SirenDataProvider {
     return instance;
   }
 
-  SirenDataProvider._internal();
+  SirenDataProvider._internal() {
+    _controller = StreamController<StreamResponse>();
+    _iconController = StreamController<StreamResponse>();
+  }
   static final SirenDataProvider instance = SirenDataProvider._internal();
   String userToken = '';
   String recipientId = '';
 
-  StreamController<StreamResponse> controller =
-      StreamController<StreamResponse>();
-  StreamController<StreamResponse> iconController =
-      StreamController<StreamResponse>();
+  late StreamController<StreamResponse> _controller;
+  late StreamController<StreamResponse> _iconController;
+
+  StreamController<StreamResponse> get controller => _controller;
+
+  StreamController<StreamResponse> get iconController => _iconController;
 
   void updateParams({
     required String userToken,
@@ -23,5 +28,12 @@ class SirenDataProvider {
   }) {
     instance.userToken = userToken;
     instance.recipientId = recipientId;
+  }
+
+  void dispose() {
+    _controller.close();
+    _iconController.close();
+    _controller = StreamController<StreamResponse>();
+    _iconController = StreamController<StreamResponse>();
   }
 }
