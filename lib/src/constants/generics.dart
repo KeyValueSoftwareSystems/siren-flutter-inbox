@@ -10,6 +10,8 @@ class Generics {
   static const int DATA_FETCH_INTERVAL = 5;
   static const String PLACEHOLDER_IMAGE_URL = 'https://picsum.photos/200/300';
   static const int PAGE_SIZE = 10;
+
+  static const BELL_ICON_PATH = 'packages/siren_flutter_inbox/assets/images/bell.png';
 }
 
 enum Status {
