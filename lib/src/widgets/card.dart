@@ -81,22 +81,26 @@ class _CardWidgetState extends State<CardWidget> {
         ),
       ),
       color: widget.notification.cardColor ??
-          (widget.notification.isRead ?? true ? null : const Color(0xFFFDEDE7)),
+          (widget.notification.isRead ?? true
+              ? null
+              : widget.styles?.cardUnreadColor ?? const Color(0xFFFDEDE7)),
     );
   }
 
-  Container _buildDefaultAvatarContainer() {
-    return Container(
-      decoration: widget.styles?.cardIconContainer,
+  Widget _buildDefaultAvatarContainer() {
+    return Padding(
       padding: const EdgeInsets.all(8),
-      child: CircleAvatar(
-        backgroundImage: widget.notification.message?.avatar?.url != null
-            ? NetworkImage(
-                widget.notification.message!.avatar!.url!,
-              )
-            : const NetworkImage(
-                Generics.PLACEHOLDER_IMAGE_URL,
-              ),
+      child: Container(
+        decoration: widget.styles?.cardAvatarContainer,
+        child: CircleAvatar(
+          backgroundImage: widget.notification.message?.avatar?.url != null
+              ? NetworkImage(
+                  widget.notification.message!.avatar!.url!,
+                )
+              : const NetworkImage(
+                  Generics.PLACEHOLDER_IMAGE_URL,
+                ),
+        ),
       ),
     );
   }

@@ -35,6 +35,9 @@ class SirenWindow extends StatefulWidget {
     this.onBulkDeletionError,
     this.loaderColor,
     this.onMarkAsViewedApiError,
+    this.hideClearAll,
+    this.customHeaderSuffixCTA,
+    this.windowBackgroundColor,
   });
 
   final SirenStyleProps? customStyles;
@@ -57,6 +60,9 @@ class SirenWindow extends StatefulWidget {
   final void Function(ApiErrorDetails)? onBulkDeletionError;
   final void Function(ApiErrorDetails)? onMarkAsViewedApiError;
   final Color? loaderColor;
+  final bool? hideClearAll;
+  final List<Widget>? customHeaderSuffixCTA;
+  final Color? windowBackgroundColor;
 
   @override
   _SirenWindowState createState() => _SirenWindowState();
@@ -310,6 +316,7 @@ class _SirenWindowState extends State<SirenWindow> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: widget.windowBackgroundColor ?? Colors.white,
       appBar: widget.showWindowHeader ?? true ? _buildAppBar() : null,
       body: _buildBody(),
     );
@@ -327,16 +334,19 @@ class _SirenWindowState extends State<SirenWindow> {
       iconTheme:
           widget.headerIconTheme ?? const IconThemeData(color: Colors.white),
       actions: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: GestureDetector(
-            onTap: onBulkDelete,
-            child: const Text(
-              'Clear All',
-              style: TextStyle(color: Colors.white),
+        if (widget.customHeaderSuffixCTA != null)
+          ...widget.customHeaderSuffixCTA!,
+        if (!(widget.hideClearAll ?? false))
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: GestureDetector(
+              onTap: onBulkDelete,
+              child: const Text(
+                'Clear All',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ),
-        ),
       ],
     );
   }
