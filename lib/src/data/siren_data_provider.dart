@@ -8,17 +8,17 @@ class SirenDataProvider {
   }
 
   SirenDataProvider._internal() {
-    _controller = StreamController<StreamResponse>();
+    _inboxController = StreamController<StreamResponse>();
     _iconController = StreamController<StreamResponse>();
   }
   static final SirenDataProvider instance = SirenDataProvider._internal();
   String userToken = '';
   String recipientId = '';
 
-  late StreamController<StreamResponse> _controller;
+  late StreamController<StreamResponse> _inboxController;
   late StreamController<StreamResponse> _iconController;
 
-  StreamController<StreamResponse> get controller => _controller;
+  StreamController<StreamResponse> get controller => _inboxController;
 
   StreamController<StreamResponse> get iconController => _iconController;
 
@@ -31,9 +31,9 @@ class SirenDataProvider {
   }
 
   void dispose() {
-    _controller.close();
+    _inboxController.close();
     _iconController.close();
-    _controller = StreamController<StreamResponse>();
+    _inboxController = StreamController<StreamResponse>();
     _iconController = StreamController<StreamResponse>();
   }
 }
