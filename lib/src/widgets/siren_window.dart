@@ -7,6 +7,7 @@ import 'package:siren_flutter_inbox/src/api/fetch_all_notification.dart';
 import 'package:siren_flutter_inbox/src/api/mark_all_notifications_as_viewed.dart';
 import 'package:siren_flutter_inbox/src/api/read_notification_by_id.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
+import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
 import 'package:siren_flutter_inbox/src/widgets/card.dart';
 import 'package:siren_flutter_inbox/src/widgets/empty_widget.dart';
 import 'package:siren_flutter_inbox/src/widgets/error_widget.dart';
@@ -28,6 +29,15 @@ class SirenWindow extends StatefulWidget {
     this.isCenterTitle,
     this.buildCardWidget,
     this.onCardClick,
+    this.onFetchNotificationsError,
+    this.onDeletionError,
+    this.onReadError,
+    this.onBulkDeletionError,
+    this.loaderColor,
+    this.onMarkAsViewedApiError,
+    this.hideClearAll,
+    this.customHeaderSuffixCTA,
+    this.windowBackgroundColor,
   });
 
   final SirenStyleProps? customStyles;
@@ -44,6 +54,15 @@ class SirenWindow extends StatefulWidget {
   final bool? isCenterTitle;
   final Widget Function(NotificationDataType)? buildCardWidget;
   final void Function(NotificationDataType)? onCardClick;
+  final void Function(ApiErrorDetails)? onFetchNotificationsError;
+  final void Function(ApiErrorDetails)? onDeletionError;
+  final void Function(ApiErrorDetails)? onReadError;
+  final void Function(ApiErrorDetails)? onBulkDeletionError;
+  final void Function(ApiErrorDetails)? onMarkAsViewedApiError;
+  final Color? loaderColor;
+  final bool? hideClearAll;
+  final List<Widget>? customHeaderSuffixCTA;
+  final Color? windowBackgroundColor;
 
   @override
   _SirenWindowState createState() => _SirenWindowState();
@@ -54,6 +73,7 @@ class _SirenWindowState extends State<SirenWindow> {
   bool isLoading = false;
   bool endReached = false;
   bool isError = false;
+  bool loadingNextPage = false;
   int currentPage = 0;
   late int totalPages;
   late int totalElements;
@@ -61,7 +81,8 @@ class _SirenWindowState extends State<SirenWindow> {
   List<NotificationDataType> notifications = [];
   late final DeleteNotificationById _deleteNotificationById;
   late final ReadNotificationById _readNotificationById;
-  late Timer _periodicUpdateRef;
+  late Timer? _periodicUpdateRef;
+  late StreamSubscription<StreamResponse> _subscription;
 
   @override
   void initState() {
@@ -71,14 +92,67 @@ class _SirenWindowState extends State<SirenWindow> {
     _deleteNotificationById = DeleteNotificationById.instance;
     _readNotificationById = ReadNotificationById.instance;
     fetchNotifications();
-    pollFetchNotifications();
+    _subscribeToStream();
   }
 
   @override
   void dispose() {
+    markAllNotificationsAsViewed();
     _scrollController.dispose();
-    _periodicUpdateRef.cancel();
+    _periodicUpdateRef?.cancel();
+    _subscription.cancel();
+    SirenDataProvider.instance.dispose();
     super.dispose();
+  }
+
+  void _subscribeToStream() {
+    _subscription = SirenDataProvider.instance.controller.stream.listen(
+      (streamResponse) {
+        if (streamResponse.response?.isSuccess ?? false) {
+          switch (streamResponse.api) {
+            case StateUpdationApi.READ_BY_ID:
+              _markNotificationAsReadById(streamResponse.id);
+            case StateUpdationApi.READ_ALL:
+              _markAllNotificationsAsRead();
+            case StateUpdationApi.DELETE_BY_ID:
+              _deleteById(streamResponse.id);
+            case StateUpdationApi.DELETE_ALL:
+              _deleteAllNotifications();
+            default:
+            //handle a default case
+          }
+        }
+      },
+    );
+  }
+
+  void _markNotificationAsReadById(String? notificationId) {
+    setState(() {
+      notifications.firstWhere((n) => n.id == notificationId).markAsRead();
+    });
+  }
+
+  void _markAllNotificationsAsRead() {
+    setState(() {
+      for (final notification in notifications) {
+        notification.markAsRead();
+      }
+    });
+  }
+
+  void _deleteById(String? notificationId) {
+    setState(() {
+      notifications
+          .removeWhere((notification) => notification.id == notificationId);
+      totalElements = totalElements - 1;
+    });
+  }
+
+  void _deleteAllNotifications() {
+    setState(() {
+      notifications = [];
+      totalElements = 0;
+    });
   }
 
   void _scrollListener() {
@@ -105,13 +179,12 @@ class _SirenWindowState extends State<SirenWindow> {
     _periodicUpdateRef = Timer.periodic(
       const Duration(seconds: Generics.DATA_FETCH_INTERVAL),
       (timer) async {
-        try {
-          final fetchedNotifications =
-              await FetchAllNotifications.instance.fetchAllNotifications(
-            page: 0,
-            size: widget.pageSize ?? Generics.PAGE_SIZE,
-          );
-
+        final fetchedNotifications =
+            await FetchAllNotifications.instance.fetchAllNotifications(
+          page: 0,
+          size: widget.pageSize ?? Generics.PAGE_SIZE,
+        );
+        if (fetchedNotifications.isSuccess) {
           if (fetchedNotifications.meta!.totalElements! > totalElements) {
             newNotifications.addAll(
               fetchedNotifications.data as Iterable<NotificationDataType>,
@@ -128,12 +201,28 @@ class _SirenWindowState extends State<SirenWindow> {
             totalPages = fetchedNotifications.meta!.totalPages ?? 0;
             newNotifications = [];
           }
-        } catch (error) {
-          // Handle errors
-          print('Error: $error');
+        } else if (fetchedNotifications.isError) {
+          setState(() {
+            isError = fetchedNotifications.isError;
+          });
+          widget.onFetchNotificationsError
+              ?.call(fetchedNotifications.error ?? ApiErrorDetails());
         }
       },
     );
+  }
+
+  Future<void> markAllNotificationsAsViewed() async {
+    final notificationsMarkedAsViewed =
+        await MarkAllNotificationsAsViewed.markAllNotificationsAsViewed(
+      untilDate: DateTime.now().toUtc().toIso8601String(),
+    );
+
+    if (notificationsMarkedAsViewed.isError) {
+      widget.onMarkAsViewedApiError?.call(
+        notificationsMarkedAsViewed.error ?? ApiErrorDetails(),
+      );
+    }
   }
 
   Future<void> fetchNotifications() async {
@@ -142,34 +231,29 @@ class _SirenWindowState extends State<SirenWindow> {
     });
 
     if (!endReached) {
-      try {
-        final fetchedNotifications =
-            await FetchAllNotifications.instance.fetchAllNotifications(
-          page: currentPage,
-          size: widget.pageSize ?? Generics.PAGE_SIZE,
-        );
-        try {
-          await MarkAllNotificationsAsViewed.markAllNotificationsAsViewed(
-            untilDate: DateTime.now().toUtc().toIso8601String(),
-          );
-        } catch (error) {
-          print('error $error');
-        }
+      final fetchedNotifications =
+          await FetchAllNotifications.instance.fetchAllNotifications(
+        page: currentPage,
+        size: widget.pageSize ?? Generics.PAGE_SIZE,
+      );
+      if (fetchedNotifications.isSuccess) {
+        await markAllNotificationsAsViewed();
         setState(() {
           notifications.addAll(
             fetchedNotifications.data as Iterable<NotificationDataType>,
           );
           isLoading = false;
-          isError = fetchedNotifications.isError;
           totalElements = fetchedNotifications.meta?.totalElements ?? 0;
           totalPages = fetchedNotifications.meta?.totalPages ?? 0;
           updateCurrentPageState();
         });
-      } catch (error) {
+        pollFetchNotifications();
+      } else if (fetchedNotifications.isError) {
         setState(() {
-          isLoading = false;
-          isError = true;
+          isError = fetchedNotifications.isError;
         });
+        widget.onFetchNotificationsError
+            ?.call(fetchedNotifications.error ?? ApiErrorDetails());
       }
     }
   }
@@ -181,44 +265,58 @@ class _SirenWindowState extends State<SirenWindow> {
     });
   }
 
+  Future<void> onBulkDelete() async {
+    final deleteAllResponse = await Siren.deleteNotificationByDate(
+        untilDate: DateTime.now().toUtc().toIso8601String());
+    if (deleteAllResponse.isSuccess) {
+      _deleteAllNotifications();
+    } else if (deleteAllResponse.isError) {
+      widget.onBulkDeletionError
+          ?.call(deleteAllResponse.error ?? ApiErrorDetails());
+    }
+  }
+
   Future<void> deleteNotification(String id) async {
-    await _deleteNotificationById.deleteNotificationById(notificationId: id);
-    setState(() {
-      notifications.removeWhere((notification) => notification.id == id);
-    });
-    totalElements = totalElements - 1;
+    final deletionStatus = await _deleteNotificationById.deleteNotificationById(
+        notificationId: id);
+
+    if (deletionStatus.data == Status.SUCCESS && deletionStatus.isSuccess) {
+      _deleteById(id);
+    } else if (deletionStatus.isError) {
+      widget.onDeletionError?.call(deletionStatus.error ?? ApiErrorDetails());
+    }
   }
 
   void onEndReached() {
-    if (!isLoading) {
+    if (!isLoading && !loadingNextPage) {
       setState(() {
-        isLoading = true;
+        loadingNextPage = true;
       });
 
       Future.delayed(const Duration(seconds: 2), () async {
         await fetchNotifications();
         setState(() {
           isLoading = false;
+          loadingNextPage = false;
         });
       });
     }
   }
 
   Future<void> _markNotificationAsRead(String id) async {
-    try {
-      await _readNotificationById.readNotificationById(notificationId: id);
-      setState(() {
-        final notification = notifications.firstWhere((n) => n.id == id);
-        notification.markAsRead();
-      });
-    } catch (error) {
-      print('error: $error');
+    final readStatus =
+        await _readNotificationById.readNotificationById(notificationId: id);
+    if (readStatus.isSuccess) {
+      _markNotificationAsReadById(id);
+    } else if (readStatus.isError) {
+      widget.onReadError?.call(readStatus.error ?? ApiErrorDetails());
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: widget.windowBackgroundColor ?? Colors.white,
       appBar: widget.showWindowHeader ?? true ? _buildAppBar() : null,
       body: _buildBody(),
     );
@@ -236,27 +334,19 @@ class _SirenWindowState extends State<SirenWindow> {
       iconTheme:
           widget.headerIconTheme ?? const IconThemeData(color: Colors.white),
       actions: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: GestureDetector(
-            onTap: () async {
-              try {
-                await Siren.deleteNotificationByDate(
-                    untilDate: DateTime.now().toUtc().toIso8601String());
-                setState(() {
-                  notifications = [];
-                });
-                totalElements = 0;
-              } catch (error) {
-                print('error $error');
-              }
-            },
-            child: const Text(
-              'Clear All',
-              style: TextStyle(color: Colors.white),
+        if (widget.customHeaderSuffixCTA != null)
+          ...widget.customHeaderSuffixCTA!,
+        if (!(widget.hideClearAll ?? false))
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: GestureDetector(
+              onTap: onBulkDelete,
+              child: const Text(
+                'Clear All',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ),
-        ),
       ],
     );
   }
@@ -276,7 +366,9 @@ class _SirenWindowState extends State<SirenWindow> {
     } else {
       if (notifications.isEmpty && isLoading) {
         return widget.customEmptyWidget ??
-            const Center(child: CircularProgressIndicator());
+            LoaderWidget(
+              progressIndicatorColor: widget.loaderColor,
+            );
       } else if (notifications.isEmpty && !isLoading) {
         return const EmptyWidget();
       } else {
@@ -286,6 +378,7 @@ class _SirenWindowState extends State<SirenWindow> {
           endReached: endReached,
           onRefresh: onRefresh,
           onEndReached: onEndReached,
+          loadingNextPage: loadingNextPage,
           customStyles: widget.customStyles,
           deleteWidget: widget.deleteWidget,
           hideAvatar: widget.hideAvatar,
@@ -294,9 +387,26 @@ class _SirenWindowState extends State<SirenWindow> {
           markAsRead: _markNotificationAsRead,
           buildCardWidget: widget.buildCardWidget,
           onCardClick: widget.onCardClick,
+          loaderColor: widget.loaderColor,
         );
       }
     }
+  }
+}
+
+class LoaderWidget extends StatelessWidget {
+  const LoaderWidget({
+    super.key,
+    this.progressIndicatorColor,
+  });
+  final Color? progressIndicatorColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+        child: CircularProgressIndicator(
+      color: progressIndicatorColor ?? Theme.of(context).colorScheme.primary,
+    ));
   }
 }
 
@@ -307,6 +417,7 @@ class NotificationListView extends StatelessWidget {
     required this.endReached,
     required this.onRefresh,
     required this.onEndReached,
+    required this.loadingNextPage,
     required this.customStyles,
     required this.hideAvatar,
     required this.deleteWidget,
@@ -315,12 +426,14 @@ class NotificationListView extends StatelessWidget {
     required this.markAsRead,
     this.buildCardWidget,
     this.onCardClick,
-    Key? key,
-  }) : super(key: key);
+    this.loaderColor,
+    super.key,
+  });
 
   final List<NotificationDataType> notifications;
   final bool isLoading;
   final bool endReached;
+  final bool loadingNextPage;
   final Future<void> Function() onRefresh;
   final VoidCallback onEndReached;
   final SirenStyleProps? customStyles;
@@ -331,6 +444,7 @@ class NotificationListView extends StatelessWidget {
   final void Function(String) markAsRead;
   final Widget Function(NotificationDataType)? buildCardWidget;
   final void Function(NotificationDataType)? onCardClick;
+  final Color? loaderColor;
 
   @override
   Widget build(BuildContext context) {
@@ -357,7 +471,14 @@ class NotificationListView extends StatelessWidget {
                 );
             return itemWidget;
           } else {
-            return const SizedBox();
+            return loadingNextPage
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: LoaderWidget(
+                      progressIndicatorColor: loaderColor,
+                    ),
+                  )
+                : const SizedBox();
           }
         },
         physics: const AlwaysScrollableScrollPhysics(),

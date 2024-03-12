@@ -1,3 +1,5 @@
+import 'package:siren_flutter_inbox/src/constants/generics.dart';
+
 class ApiResponse {
   ApiResponse({
     this.data,
@@ -65,18 +67,37 @@ class MetaResponse {
 
 class ApiErrorDetails {
   ApiErrorDetails({
-    required this.errorCode,
-    required this.message,
+    this.errorCode,
+    this.message,
   });
 
   factory ApiErrorDetails.fromJson(Map<String, dynamic>? json) {
     return ApiErrorDetails(
       errorCode:
           json?['errorCode'] != null ? (json?['errorCode'] as String) : '',
-      message: json?['message'] != null ? (json?['errorCode'] as String) : '',
+      message: json?['message'] != null ? (json?['message'] as String) : '',
     );
   }
 
-  final String errorCode;
-  final String message;
+  final String? errorCode;
+  final String? message;
+}
+
+class DioResponse {
+  DioResponse({required this.data, this.statusCode});
+
+  final dynamic data;
+  final int? statusCode;
+}
+
+class StreamResponse {
+  StreamResponse(
+    this.response,
+    this.api,
+    this.id,
+  );
+
+  final ApiResponse? response;
+  final StateUpdationApi? api;
+  final String? id;
 }

@@ -8,6 +8,13 @@ class DeleteNotificationById {
   static final DeleteNotificationById instance =
       DeleteNotificationById._internal();
 
+  Status convertJsonToDeletionStatus(dynamic response) {
+    return (response['data']?['status']?.toString() ?? '') ==
+            Status.SUCCESS.name
+        ? Status.SUCCESS
+        : Status.PENDING;
+  }
+
   final ApiClient api = ApiClient(apiProvider());
 
   static final String _apiPath = '${Generics.API_PATH}/notifications';
@@ -15,30 +22,22 @@ class DeleteNotificationById {
   Future<ApiResponse> deleteNotificationById({
     required String notificationId,
   }) async {
-    try {
-      final result = ApiResponse()..isLoading = true;
+    final result = ApiResponse()..isLoading = true;
 
-      final apiResponse = await api.delete(
-        path: '$_apiPath/$notificationId',
-      ) as Map<String, dynamic>;
-      final apiError = ApiResponse.fromJson(apiResponse).error;
+    final apiResponse = await api.delete(
+      path: '$_apiPath/$notificationId',
+    );
+    final deletionStatus = convertJsonToDeletionStatus(apiResponse.data);
 
-      result
-        ..isLoading = false
-        ..isSuccess = apiError?.errorCode.isEmpty ?? true
-        ..isError = apiError?.errorCode.isNotEmpty ?? false
-        ..error = apiError;
+    final apiError = ApiResponse.fromJson(apiResponse.data).error;
 
-      return result;
-    } catch (error) {
-      final result = ApiResponse()
-        ..isLoading = false
-        ..isError = true
-        ..error = ApiErrorDetails(
-          errorCode: '500',
-          message: 'Internal Server Error',
-        );
-      return result;
-    }
+    result
+      ..isLoading = false
+      ..isSuccess = apiResponse.statusCode == 200
+      ..isError = apiResponse.statusCode != 200
+      ..data = deletionStatus
+      ..error = apiError;
+
+    return result;
   }
 }

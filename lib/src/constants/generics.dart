@@ -12,7 +12,7 @@ class Generics {
   static const int PAGE_SIZE = 10;
 }
 
-enum VerificationStatus {
+enum Status {
   PENDING,
   SUCCESS,
   FAILED,
@@ -21,4 +21,12 @@ enum VerificationStatus {
 enum BulkUpdateType {
   MARK_AS_READ,
   MARK_AS_DELETED,
+}
+
+enum StateUpdationApi {
+  READ_BY_ID,
+  READ_ALL,
+  DELETE_BY_ID,
+  DELETE_ALL,
+  VIEW_ALL
 }
