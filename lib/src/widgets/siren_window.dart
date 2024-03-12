@@ -331,7 +331,28 @@ class _SirenWindowState extends State<SirenWindow> {
             appBar: widget.showWindowHeader ?? true
                 ? _buildAppBar(currentTheme)
                 : null,
-            body: _buildBody(currentTheme),
+            body: isError
+                ? RefreshIndicator(
+                    onRefresh: () async {
+                      setState(() {
+                        isError = false;
+                      });
+                      await fetchNotifications();
+                    },
+                    child: ListView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      children: [
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.75,
+                          width: MediaQuery.of(context).size.width,
+                          child: const Center(
+                            child: CustomErrorWidget(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : _buildBody(currentTheme),
           );
         },
       ),
@@ -358,7 +379,7 @@ class _SirenWindowState extends State<SirenWindow> {
       actions: [
         if (widget.customHeaderSuffixCTA != null)
           ...widget.customHeaderSuffixCTA!,
-        if (!(widget.hideClearAll ?? false))
+        if (!(widget.hideClearAll ?? false) && (!isError && !isLoading))
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: GestureDetector(
@@ -392,40 +413,27 @@ class _SirenWindowState extends State<SirenWindow> {
   }
 
   Widget _buildBody(ThemeData theme) {
-    if (isError) {
-      return CustomErrorWidget(
-        onRetry: () {
-          Future.delayed(const Duration(seconds: 2), () async {
-            await fetchNotifications();
-            setState(() {
-              isLoading = false;
-            });
-          });
-        },
-      );
+    if (notifications.isEmpty && isLoading) {
+      return widget.customEmptyWidget ?? const LoaderWidget();
+    } else if (notifications.isEmpty && !isLoading) {
+      return const EmptyWidget();
     } else {
-      if (notifications.isEmpty && isLoading) {
-        return widget.customEmptyWidget ?? const LoaderWidget();
-      } else if (notifications.isEmpty && !isLoading) {
-        return const EmptyWidget();
-      } else {
-        return NotificationListView(
-          notifications: notifications,
-          isLoading: isLoading,
-          endReached: endReached,
-          onRefresh: onRefresh,
-          onEndReached: onEndReached,
-          loadingNextPage: loadingNextPage,
-          customStyles: widget.customStyles,
-          deleteWidget: widget.deleteWidget,
-          hideAvatar: widget.hideAvatar,
-          scrollController: _scrollController,
-          onDelete: deleteNotification,
-          markAsRead: _markNotificationAsRead,
-          buildCardWidget: widget.buildCardWidget,
-          onCardClick: widget.onCardClick,
-        );
-      }
+      return NotificationListView(
+        notifications: notifications,
+        isLoading: isLoading,
+        endReached: endReached,
+        onRefresh: onRefresh,
+        onEndReached: onEndReached,
+        loadingNextPage: loadingNextPage,
+        customStyles: widget.customStyles,
+        deleteWidget: widget.deleteWidget,
+        hideAvatar: widget.hideAvatar,
+        scrollController: _scrollController,
+        onDelete: deleteNotification,
+        markAsRead: _markNotificationAsRead,
+        buildCardWidget: widget.buildCardWidget,
+        onCardClick: widget.onCardClick,
+      );
     }
   }
 }
