@@ -12,6 +12,7 @@ import 'package:siren_flutter_inbox/src/theme/app_theme.dart';
 import 'package:siren_flutter_inbox/src/widgets/card.dart';
 import 'package:siren_flutter_inbox/src/widgets/empty_widget.dart';
 import 'package:siren_flutter_inbox/src/widgets/error_widget.dart';
+import 'package:siren_flutter_inbox/src/widgets/loader_widget.dart';
 
 class SirenWindow extends StatefulWidget {
   const SirenWindow({
@@ -436,10 +437,14 @@ class LoaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: CircularProgressIndicator(
-        color: Theme.of(context).colorScheme.inversePrimary,
-      ),
+    return ListView.builder(
+      itemCount: Generics.PAGE_SIZE,
+      itemBuilder: (context, index) {
+        return const Padding(
+          padding: EdgeInsets.symmetric(vertical: 8.0),
+          child: CardLoaderWidget(),
+        );
+      },
     );
   }
 }
