@@ -37,6 +37,7 @@ class SirenWindow extends StatefulWidget {
     this.onMarkAsViewedApiError,
     this.hideClearAll,
     this.customHeaderSuffixCTA,
+    this.windowBackgroundColor,
   });
 
   final SirenStyleProps? customStyles;
@@ -61,6 +62,7 @@ class SirenWindow extends StatefulWidget {
   final Color? loaderColor;
   final bool? hideClearAll;
   final List<Widget>? customHeaderSuffixCTA;
+  final Color? windowBackgroundColor;
 
   @override
   _SirenWindowState createState() => _SirenWindowState();
@@ -314,6 +316,7 @@ class _SirenWindowState extends State<SirenWindow> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: widget.windowBackgroundColor ?? Colors.white,
       appBar: widget.showWindowHeader ?? true ? _buildAppBar() : null,
       body: _buildBody(),
     );
