@@ -16,10 +16,7 @@ class SirenStyleProps {
     this.headerContainer,
     this.headerTitle,
     this.subHeaderText,
-    this.cardContainer,
-    this.cardIconContainer,
-    this.cardIconRound,
-    this.cardAvatarStyle,
+    this.cardAvatarContainer,
     this.cardContentContainer,
     this.cardTitle,
     this.cardDescription,
@@ -28,16 +25,14 @@ class SirenStyleProps {
     this.dateStyle,
     this.deleteButton,
     this.deleteButtonText,
+    this.cardUnreadColor,
   });
   final BoxDecoration? container;
   final BoxDecoration? contentContainer;
   final BoxDecoration? headerContainer;
   final TextStyle? headerTitle;
   final TextStyle? subHeaderText;
-  final BoxDecoration? cardContainer;
-  final BoxDecoration? cardIconContainer;
-  final BoxDecoration? cardIconRound;
-  final BoxDecoration? cardAvatarStyle;
+  final BoxDecoration? cardAvatarContainer;
   final BoxDecoration? cardContentContainer;
   final TextStyle? cardTitle;
   final TextStyle? cardDescription;
@@ -46,4 +41,5 @@ class SirenStyleProps {
   final TextStyle? dateStyle;
   final BoxDecoration? deleteButton;
   final TextStyle? deleteButtonText;
+  final Color? cardUnreadColor;
 }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:siren_flutter_inbox/src/api/fetch_unviewed_notification_count.dart';
 import 'package:siren_flutter_inbox/src/api/verify_token.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
+import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
 import 'package:siren_flutter_inbox/src/models/api_response.dart';
 
 class SirenNotificationIconWidget extends StatefulWidget {
@@ -13,17 +14,23 @@ class SirenNotificationIconWidget extends StatefulWidget {
     this.darkMode = false,
     this.notificationIcon,
     this.onError,
-    this.realTimeUnviewedCountEnabled = true,
+    this.showIfNewNotificationsAvailable = true,
     this.onTap,
     this.onFetchCountError,
+    this.badgeColor,
+    this.badgeCountTextStyle,
+    this.hideCount,
   });
 
-  final bool? realTimeUnviewedCountEnabled;
+  final bool? showIfNewNotificationsAvailable;
   final bool? darkMode;
   final void Function(ApiErrorDetails)? onError;
   final Widget? notificationIcon;
   final VoidCallback? onTap;
   final void Function(ApiErrorDetails)? onFetchCountError;
+  final Color? badgeColor;
+  final TextStyle? badgeCountTextStyle;
+  final bool? hideCount;
 
   @override
   State<SirenNotificationIconWidget> createState() =>
@@ -41,16 +48,37 @@ class _SirenNotificationIconWidgetState
 
   late Timer _periodicUpdateRef;
 
+  late StreamSubscription<StreamResponse> _subscription;
+
   @override
   void initState() {
     super.initState();
     initialize();
+    _subscribeToStream();
   }
 
   @override
   void dispose() {
     _periodicUpdateRef.cancel();
     super.dispose();
+    _subscription.cancel();
+    SirenDataProvider.instance.dispose();
+  }
+
+  void _subscribeToStream() {
+    _subscription = SirenDataProvider.instance.iconController.stream.listen(
+      (streamResponse) async {
+        if (streamResponse.response?.isSuccess ?? false) {
+          if (streamResponse.api == StateUpdationApi.VIEW_ALL) {
+            final response = await FetchUnviewedNotificationsCount.instance
+                .fetchUnviewedNotificationsCount();
+            setState(() {
+              updateNotificationsCount(response.data);
+            });
+          }
+        }
+      },
+    );
   }
 
   void updateNotificationsCount(dynamic responseData) {
@@ -110,7 +138,7 @@ class _SirenNotificationIconWidgetState
                 Icons.notifications_none_outlined,
                 size: iconSize,
               ),
-          if ((widget.realTimeUnviewedCountEnabled ?? true) &&
+          if ((widget.showIfNewNotificationsAvailable ?? true) &&
               _notificationsCount > 0)
             _getBadge(),
         ],
@@ -123,18 +151,21 @@ class _SirenNotificationIconWidgetState
       right: 0,
       top: iconSize / 12,
       child: Container(
-        padding: const EdgeInsets.all(4),
-        decoration: const BoxDecoration(
+        padding: const EdgeInsets.all(2),
+        decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: Colors.red,
+          color: widget.badgeColor ?? Colors.red,
         ),
-        child: Text(
-          _notificationsCount.toString(), // Badge count
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 10,
-          ),
-        ),
+        child: widget.hideCount ?? false
+            ? null
+            : Text(
+                _notificationsCount.toString(),
+                style: widget.badgeCountTextStyle ??
+                    const TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                    ),
+              ),
       ),
     );
   }
