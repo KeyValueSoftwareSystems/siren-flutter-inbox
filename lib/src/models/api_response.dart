@@ -1,3 +1,5 @@
+import 'package:siren_flutter_inbox/src/constants/generics.dart';
+
 class ApiResponse {
   ApiResponse({
     this.data,
@@ -86,4 +88,16 @@ class DioResponse {
 
   final dynamic data;
   final int? statusCode;
+}
+
+class StreamResponse {
+  StreamResponse(
+    this.response,
+    this.api,
+    this.id,
+  );
+
+  final ApiResponse? response;
+  final StateUpdationApi? api;
+  final String? id;
 }

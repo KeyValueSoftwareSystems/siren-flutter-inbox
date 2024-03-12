@@ -18,9 +18,15 @@ enum Status {
   FAILED,
 }
 
-
-
 enum BulkUpdateType {
   MARK_AS_READ,
   MARK_AS_DELETED,
+}
+
+enum StateUpdationApi {
+  READ_BY_ID,
+  READ_ALL,
+  DELETE_BY_ID,
+  DELETE_ALL,
+  VIEW_ALL
 }
