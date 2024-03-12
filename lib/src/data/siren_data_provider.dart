@@ -8,8 +8,8 @@ class SirenDataProvider {
   }
 
   SirenDataProvider._internal() {
-    _inboxController = StreamController<StreamResponse>();
-    _iconController = StreamController<StreamResponse>();
+    _inboxController = StreamController<StreamResponse>.broadcast();
+    _iconController = StreamController<StreamResponse>.broadcast();
   }
   static final SirenDataProvider instance = SirenDataProvider._internal();
   String userToken = '';
