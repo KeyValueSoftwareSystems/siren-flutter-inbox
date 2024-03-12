@@ -6,6 +6,7 @@ import 'package:siren_flutter_inbox/src/api/delete_notification_by_id.dart';
 import 'package:siren_flutter_inbox/src/api/fetch_all_notification.dart';
 import 'package:siren_flutter_inbox/src/api/mark_all_notifications_as_viewed.dart';
 import 'package:siren_flutter_inbox/src/api/read_notification_by_id.dart';
+import 'package:siren_flutter_inbox/src/constants/colors.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
 import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
 import 'package:siren_flutter_inbox/src/widgets/card.dart';
@@ -324,13 +325,19 @@ class _SirenWindowState extends State<SirenWindow> {
 
   AppBar? _buildAppBar() {
     return AppBar(
-      title: Text(widget.windowHeaderText ?? 'Notifications'),
-      backgroundColor:
-          widget.windowHeaderBackgroundColor ?? const Color(0xFFEB5017),
+      title: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Text(widget.windowHeaderText ?? 'Notifications'),
+      ),
+      backgroundColor: widget.windowHeaderBackgroundColor ?? Colors.white,
       titleTextStyle: widget.windowHeaderTextStyle ??
-          const TextStyle(color: Colors.white, fontSize: 24),
+          const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: Colors.black,
+          ),
       centerTitle: widget.isCenterTitle ?? false,
-      automaticallyImplyLeading: widget.showHeaderBackButton ?? true,
+      automaticallyImplyLeading: widget.showHeaderBackButton ?? false,
       iconTheme:
           widget.headerIconTheme ?? const IconThemeData(color: Colors.white),
       actions: [
@@ -338,12 +345,30 @@ class _SirenWindowState extends State<SirenWindow> {
           ...widget.customHeaderSuffixCTA!,
         if (!(widget.hideClearAll ?? false))
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 24),
             child: GestureDetector(
               onTap: onBulkDelete,
-              child: const Text(
-                'Clear All',
-                style: TextStyle(color: Colors.white),
+              child: const Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 2,
+                    ),
+                    child: Icon(
+                      Icons.clear_all,
+                      color: AppColors.darkGrey,
+                      size: 24,
+                    ),
+                  ),
+                  Text(
+                    'Clear All',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.darkGrey,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

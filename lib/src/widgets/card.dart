@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:siren_flutter_inbox/src/constants/colors.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
 import 'package:siren_flutter_inbox/src/models/notification_model.dart';
 import 'package:siren_flutter_inbox/src/models/ui_models.dart';
@@ -43,29 +44,41 @@ class _CardWidgetState extends State<CardWidget> {
         decoration:
             widget.styles?.container ?? _getDefaultContainerDecoration(),
         child: Padding(
-          padding: const EdgeInsets.only(top: 8),
-          child: Container(
-            decoration: widget.styles?.contentContainer,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (!(widget.cardProps.hideAvatar ?? false))
-                  _buildDefaultAvatarContainer(),
-                Expanded(
-                  child: Container(
-                    decoration: widget.styles?.cardContentContainer,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildHeaderText(),
-                        _buildSubHeaderText(),
-                        _buildBodyText(),
-                        _buildFooterRow(),
-                      ],
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Container(
+              decoration: widget.styles?.contentContainer,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (!(widget.cardProps.hideAvatar ?? false))
+                    _buildDefaultAvatarContainer(),
+                  Expanded(
+                    child: Container(
+                      decoration: widget.styles?.cardContentContainer,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildHeaderText(),
+                            _buildSubHeaderText(),
+                            _buildBodyText(),
+                            _buildFooterRow(),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                  GestureDetector(
+                    onTap: () => widget.onDelete(widget.notification.id ?? ''),
+                    child: widget.deleteWidget ?? _buildDefaultDeleteButton(),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -73,111 +86,136 @@ class _CardWidgetState extends State<CardWidget> {
     );
   }
 
+  BorderSide _getDefaultBorderDecoration() {
+    return BorderSide(
+      color: widget.notification.isRead ?? true
+          ? Colors.transparent
+          : AppColors.lightGrey,
+      width: 0.5,
+    );
+  }
+
   BoxDecoration _getDefaultContainerDecoration() {
     return BoxDecoration(
       border: Border(
-        bottom: BorderSide(
-          color: Colors.blueGrey.withOpacity(0.2),
+        left: BorderSide(
+          color: widget.notification.isRead ?? true
+              ? Colors.transparent
+              : AppColors.secondaryColor,
+          width: 4,
         ),
+        right: _getDefaultBorderDecoration(),
+        top: _getDefaultBorderDecoration(),
       ),
       color: widget.notification.cardColor ??
           (widget.notification.isRead ?? true
               ? null
-              : widget.styles?.cardUnreadColor ?? const Color(0xFFFDEDE7)),
+              : widget.styles?.cardUnreadColor ??
+                  AppColors.secondaryLightColor),
     );
   }
 
   Widget _buildDefaultAvatarContainer() {
-    return Padding(
-      padding: const EdgeInsets.all(8),
-      child: Container(
-        decoration: widget.styles?.cardAvatarContainer,
-        child: CircleAvatar(
-          backgroundImage: widget.notification.message?.avatar?.url != null
-              ? NetworkImage(
-                  widget.notification.message!.avatar!.url!,
-                )
-              : const NetworkImage(
-                  Generics.PLACEHOLDER_IMAGE_URL,
-                ),
-        ),
+    return Container(
+      decoration: widget.styles?.cardAvatarContainer,
+      child: CircleAvatar(
+        radius: 21,
+        backgroundImage: widget.notification.message?.avatar?.url != null
+            ? NetworkImage(
+                widget.notification.message!.avatar!.url!,
+              )
+            : const NetworkImage(
+                Generics.PLACEHOLDER_IMAGE_URL,
+              ),
       ),
     );
   }
 
-  Text _buildHeaderText() {
+  Widget _buildHeaderText() {
     return Text(
-      (widget.notification.message?.header ?? '').toUpperCase(),
+      capitalizeString(widget.notification.message?.header ?? ''),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       style: widget.styles?.cardTitle ??
-          const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-    );
-  }
-
-  Widget _buildSubHeaderText() {
-    return NullableText(
-      text: widget.notification.message?.subHeader,
-      style: widget.styles?.subHeaderText ??
           const TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w400,
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppColors.primaryText,
           ),
     );
   }
 
+  Widget _buildSubHeaderText() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: NullableText(
+        text: widget.notification.message?.subHeader,
+        style: widget.styles?.subHeaderText ??
+            const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: AppColors.primaryText,
+            ),
+      ),
+    );
+  }
+
   Widget _buildBodyText() {
-    return Column(
+    return Text(
+      widget.notification.message?.body ?? '',
+      style: widget.styles?.cardDescription ??
+          const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            color: AppColors.primaryText,
+          ),
+      maxLines: 3,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+
+  Widget _buildFooterRow() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        vertical: 10,
+      ),
+      child: Container(
+        decoration: widget.styles?.cardFooterRow,
+        child: _buildTimestampText(),
+      ),
+    );
+  }
+
+  Widget _buildTimestampText() {
+    return Row(
       children: [
-        const SizedBox(
-          height: 10,
+        const Padding(
+          padding: EdgeInsets.only(right: 2),
+          child: Icon(
+            Icons.access_time_sharp,
+            color: AppColors.primaryText,
+            size: 14,
+          ),
         ),
         Text(
-          widget.notification.message?.body ?? '',
-          style: widget.styles?.cardDescription ??
+          generateElapsedTimeText(
+              DateTime.parse(widget.notification.createdAt ?? '')),
+          style: widget.styles?.dateStyle ??
               const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: AppColors.primaryText,
               ),
-          maxLines: 3,
-          overflow: TextOverflow.ellipsis,
         ),
       ],
     );
   }
 
-  Container _buildFooterRow() {
-    return Container(
-      decoration: widget.styles?.cardFooterRow,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _buildTimestampText(),
-          GestureDetector(
-            onTap: () => widget.onDelete(widget.notification.id ?? ''),
-            child: widget.deleteWidget ?? _buildDefaultDeleteButton(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Text _buildTimestampText() {
-    return Text(
-      generateElapsedTimeText(
-          DateTime.parse(widget.notification.createdAt ?? '')),
-      style: widget.styles?.dateStyle ?? const TextStyle(fontSize: 12),
-    );
-  }
-
   Widget _buildDefaultDeleteButton() {
-    return const Padding(
-      padding: EdgeInsets.all(8),
-      child: Icon(
-        Icons.delete_outline,
-        color: Colors.red,
-        size: 25,
-      ),
+    return const Icon(
+      Icons.close,
+      color: AppColors.primaryGrey,
+      size: 16,
     );
   }
 }
