@@ -72,6 +72,7 @@ class _SirenWindowState extends State<SirenWindow> {
   int currentPage = 0;
   late int totalPages;
   late int totalElements;
+  String? deletingNotificationId;
 
   List<NotificationDataType> notifications = [];
   late final DeleteNotificationById _deleteNotificationById;
@@ -303,7 +304,16 @@ class _SirenWindowState extends State<SirenWindow> {
     );
 
     if (deletionStatus.data == Status.SUCCESS && deletionStatus.isSuccess) {
-      _deleteById(id);
+      setState(() {
+        deletingNotificationId = id;
+      });
+
+      await Future.delayed(const Duration(milliseconds: 500));
+
+      setState(() {
+        deletingNotificationId = null;
+        _deleteById(id);
+      });
     } else if (deletionStatus.isError) {
       widget.onError?.call(deletionStatus.error ?? ApiErrorDetails());
     }
@@ -459,6 +469,7 @@ class _SirenWindowState extends State<SirenWindow> {
         markAsRead: _markNotificationAsRead,
         buildCardWidget: widget.buildCardWidget,
         onCardClick: widget.onCardClick,
+        deletingNotificationId: deletingNotificationId,
       );
     }
   }
@@ -499,6 +510,7 @@ class NotificationListView extends StatelessWidget {
     required this.markAsRead,
     this.buildCardWidget,
     this.onCardClick,
+    this.deletingNotificationId,
     super.key,
   });
 
@@ -516,6 +528,7 @@ class NotificationListView extends StatelessWidget {
   final void Function(String) markAsRead;
   final Widget Function(NotificationDataType)? buildCardWidget;
   final void Function(NotificationDataType)? onCardClick;
+  final String? deletingNotificationId;
 
   @override
   Widget build(BuildContext context) {
@@ -542,7 +555,12 @@ class NotificationListView extends StatelessWidget {
                   deleteWidget: deleteWidget,
                   onDelete: onDelete,
                 );
-            return itemWidget;
+            return AnimatedOpacity(
+              duration: const Duration(milliseconds: 500),
+              opacity:
+                  deletingNotificationId == notifications[index].id ? 0.0 : 1.0,
+              child: itemWidget,
+            );
           } else {
             return loadingNextPage
                 ? Padding(
