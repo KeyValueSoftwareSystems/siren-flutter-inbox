@@ -25,17 +25,27 @@ class VerifyToken {
     final result = ApiResponse()..isLoading = true;
 
     final apiResponse = await api.get(
-      path: '${Generics.API_PATH}/verify-token',
+      path: '${Generics.API_PATH}/verifytoken',
     );
-    final verificationStatus = convertJsonToVerificationStatus(apiResponse.data);
-    final apiError = ApiResponse.fromJson(apiResponse.data).error;
+    if (apiResponse.statusCode != 0 && apiResponse.data != null) {
+      final verificationStatus =
+          convertJsonToVerificationStatus(apiResponse.data);
+      final apiError = ApiResponse.fromJson(apiResponse.data).error;
 
-    result
-      ..isLoading = false
-      ..isSuccess = apiResponse.statusCode == 200
-      ..isError = apiResponse.statusCode != 200
-      ..data = verificationStatus
-      ..error = apiError;
+      result
+        ..isLoading = false
+        ..isSuccess = apiResponse.statusCode == 200
+        ..isError = apiResponse.statusCode != 200
+        ..data = verificationStatus
+        ..error = apiError;
+    } else {
+      result
+        ..isLoading = false
+        ..isSuccess = false
+        ..isError = true
+        ..data = Status.FAILED
+        ..error = Generics.DEFAULT_ERROR;
+    }
 
     return result;
   }

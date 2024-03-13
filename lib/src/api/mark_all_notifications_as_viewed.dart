@@ -18,14 +18,21 @@ class MarkAllNotificationsAsViewed {
       path: Generics.API_PATH,
       data: data,
     );
+    if (apiResponse.statusCode != 0 && apiResponse.data != null) {
+      final apiError = ApiResponse.fromJson(apiResponse.data).error;
 
-    final apiError = ApiResponse.fromJson(apiResponse.data).error;
-
-    result
-      ..isLoading = false
-      ..isSuccess = apiResponse.statusCode == 200
-      ..isError = apiResponse.statusCode != 200
-      ..error = apiError;
+      result
+        ..isLoading = false
+        ..isSuccess = apiResponse.statusCode == 200
+        ..isError = apiResponse.statusCode != 200
+        ..error = apiError;
+    } else {
+     result
+        ..isLoading = false
+        ..isSuccess = false
+        ..isError = true
+        ..error = Generics.DEFAULT_ERROR;
+    }
 
     return result;
   }

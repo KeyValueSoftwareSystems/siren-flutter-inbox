@@ -27,9 +27,15 @@ class ApiClient {
       );
       return DioResponse(data: response.data, statusCode: response.statusCode);
     } on DioException catch (e) {
+      if (e.response == null) {
+        return DioResponse(
+          data: null,
+          statusCode: 0,
+        );
+      }
       return DioResponse(
-        data: e.response?.data,
-        statusCode: e.response?.statusCode,
+        data: e.response?.data ?? 'default',
+        statusCode: e.response?.statusCode ?? 0,
       );
     }
   }
@@ -57,6 +63,12 @@ class ApiClient {
       );
       return DioResponse(data: response.data, statusCode: response.statusCode);
     } on DioException catch (e) {
+      if (e.response == null) {
+        return DioResponse(
+          data: null,
+          statusCode: 0,
+        );
+      }
       return DioResponse(
         data: e.response?.data,
         statusCode: e.response?.statusCode,
@@ -87,6 +99,12 @@ class ApiClient {
       );
       return DioResponse(data: response.data, statusCode: response.statusCode);
     } on DioException catch (e) {
+      if (e.response == null) {
+        return DioResponse(
+          data: null,
+          statusCode: 0,
+        );
+      }
       return DioResponse(
         data: e.response?.data,
         statusCode: e.response?.statusCode,
@@ -112,6 +130,12 @@ class ApiClient {
       );
       return DioResponse(data: response.data, statusCode: response.statusCode);
     } on DioException catch (e) {
+      if (e.response == null) {
+        return DioResponse(
+          data: null,
+          statusCode: 0,
+        );
+      }
       return DioResponse(
         data: e.response?.data,
         statusCode: e.response?.statusCode,

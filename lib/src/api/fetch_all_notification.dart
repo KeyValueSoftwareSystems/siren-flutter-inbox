@@ -37,18 +37,26 @@ class FetchAllNotifications {
       },
     );
 
-    final dataList =
-        ApiResponse.fromJson(apiResponse.data).data as List<dynamic>?;
-    final metaData = ApiResponse.fromJson(apiResponse.data).meta;
-    final apiError = ApiResponse.fromJson(apiResponse.data).error;
+    if (apiResponse.statusCode != 0 && apiResponse.data != null) {
+      final dataList =
+          ApiResponse.fromJson(apiResponse.data).data as List<dynamic>?;
+      final metaData = ApiResponse.fromJson(apiResponse.data).meta;
+      final apiError = ApiResponse.fromJson(apiResponse.data).error;
 
-    result
-      ..isLoading = false
-      ..isSuccess = apiResponse.statusCode == 200
-      ..isError = apiResponse.statusCode != 200
-      ..data = convertJsonToNotificationList(dataList ?? [])
-      ..meta = metaData
-      ..error = apiError;
+      result
+        ..isLoading = false
+        ..isSuccess = apiResponse.statusCode == 200
+        ..isError = apiResponse.statusCode != 200
+        ..data = convertJsonToNotificationList(dataList ?? [])
+        ..meta = metaData
+        ..error = apiError;
+    } else {
+      result
+        ..isLoading = false
+        ..isSuccess = false
+        ..isError = true
+        ..error = Generics.DEFAULT_ERROR;
+    }
 
     return result;
   }
