@@ -39,5 +39,3 @@ enum UpdateEvents {
   DELETE_ALL,
   VIEW_ALL
 }
-
-enum Error

@@ -6,6 +6,7 @@ import 'package:siren_flutter_inbox/src/api/delete_notification_by_id.dart';
 import 'package:siren_flutter_inbox/src/api/fetch_all_notification.dart';
 import 'package:siren_flutter_inbox/src/api/mark_all_notifications_as_viewed.dart';
 import 'package:siren_flutter_inbox/src/api/read_notification_by_id.dart';
+import 'package:siren_flutter_inbox/src/api/verify_token.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
 import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
 import 'package:siren_flutter_inbox/src/theme/app_theme.dart';
@@ -72,7 +73,7 @@ class SirenWindow extends StatefulWidget {
 
 class _SirenWindowState extends State<SirenWindow> {
   late ScrollController _scrollController;
-  bool isLoading = false;
+  bool isLoading = true;
   bool endReached = false;
   bool isError = false;
   bool loadingNextPage = false;
@@ -86,14 +87,17 @@ class _SirenWindowState extends State<SirenWindow> {
   late Timer? _periodicUpdateRef;
   late StreamSubscription<StreamResponse> _subscription;
 
+  ApiResponse _tokenVerificationResponse = ApiResponse()..isLoading;
+  Status _tokenVerificationStatus = Status.PENDING;
+
   @override
   void initState() {
     super.initState();
+    _initialize();
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
     _deleteNotificationById = DeleteNotificationById.instance;
     _readNotificationById = ReadNotificationById.instance;
-    fetchNotifications();
     _subscribeToStream();
   }
 
@@ -105,6 +109,15 @@ class _SirenWindowState extends State<SirenWindow> {
     _subscription.cancel();
     SirenDataProvider.instance.dispose();
     super.dispose();
+  }
+
+  Future<void> _initialize() async {
+    _tokenVerificationResponse = await VerifyToken.instance.verifyToken();
+    _tokenVerificationStatus = _tokenVerificationResponse.data as Status;
+    if (_tokenVerificationResponse.isSuccess &&
+        _tokenVerificationStatus == Status.SUCCESS) {
+      await fetchNotifications();
+    }
   }
 
   void _subscribeToStream() {
