@@ -8,9 +8,11 @@ import 'package:siren_flutter_inbox/src/api/mark_all_notifications_as_viewed.dar
 import 'package:siren_flutter_inbox/src/api/read_notification_by_id.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
 import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
+import 'package:siren_flutter_inbox/src/theme/app_theme.dart';
 import 'package:siren_flutter_inbox/src/widgets/card.dart';
 import 'package:siren_flutter_inbox/src/widgets/empty_widget.dart';
 import 'package:siren_flutter_inbox/src/widgets/error_widget.dart';
+import 'package:siren_flutter_inbox/src/widgets/loader_widget.dart';
 
 class SirenWindow extends StatefulWidget {
   const SirenWindow({
@@ -20,7 +22,6 @@ class SirenWindow extends StatefulWidget {
     this.deleteWidget,
     this.showWindowHeader,
     this.customEmptyWidget,
-    this.windowHeaderBackgroundColor,
     this.windowHeaderText,
     this.windowHeaderTextStyle,
     this.pageSize,
@@ -33,11 +34,12 @@ class SirenWindow extends StatefulWidget {
     this.onDeletionError,
     this.onReadError,
     this.onBulkDeletionError,
-    this.loaderColor,
     this.onMarkAsViewedApiError,
     this.hideClearAll,
     this.customHeaderSuffixCTA,
-    this.windowBackgroundColor,
+    this.isDarkMode,
+    this.customTheme,
+    this.customLoader,
   });
 
   final SirenStyleProps? customStyles;
@@ -45,7 +47,6 @@ class SirenWindow extends StatefulWidget {
   final Widget? deleteWidget;
   final bool? showWindowHeader;
   final Widget? customEmptyWidget;
-  final Color? windowHeaderBackgroundColor;
   final String? windowHeaderText;
   final TextStyle? windowHeaderTextStyle;
   final int? pageSize;
@@ -59,10 +60,11 @@ class SirenWindow extends StatefulWidget {
   final void Function(ApiErrorDetails)? onReadError;
   final void Function(ApiErrorDetails)? onBulkDeletionError;
   final void Function(ApiErrorDetails)? onMarkAsViewedApiError;
-  final Color? loaderColor;
   final bool? hideClearAll;
   final List<Widget>? customHeaderSuffixCTA;
-  final Color? windowBackgroundColor;
+  final bool? isDarkMode;
+  final CustomThemeColors? customTheme;
+  final Widget? customLoader;
 
   @override
   _SirenWindowState createState() => _SirenWindowState();
@@ -278,7 +280,8 @@ class _SirenWindowState extends State<SirenWindow> {
 
   Future<void> deleteNotification(String id) async {
     final deletionStatus = await _deleteNotificationById.deleteNotificationById(
-        notificationId: id);
+      notificationId: id,
+    );
 
     if (deletionStatus.data == Status.SUCCESS && deletionStatus.isSuccess) {
       _deleteById(id);
@@ -315,35 +318,99 @@ class _SirenWindowState extends State<SirenWindow> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: widget.windowBackgroundColor ?? Colors.white,
-      appBar: widget.showWindowHeader ?? true ? _buildAppBar() : null,
-      body: _buildBody(),
+    return Theme(
+      data: widget.customTheme != null
+          ? AppTheme.customTheme(widget.customTheme!)
+          : (widget.isDarkMode ?? false
+              ? AppTheme.darkTheme
+              : AppTheme.lightTheme),
+      child: Builder(
+        builder: (context) {
+          final currentTheme = Theme.of(context);
+
+          return Scaffold(
+            backgroundColor: currentTheme.colorScheme.primary,
+            appBar: widget.showWindowHeader ?? true
+                ? _buildAppBar(currentTheme)
+                : null,
+            body: isError
+                ? RefreshIndicator(
+                    color: currentTheme.colorScheme.secondary,
+                    backgroundColor: currentTheme.colorScheme.primary,
+                    onRefresh: () async {
+                      setState(() {
+                        isError = false;
+                      });
+                      await fetchNotifications();
+                    },
+                    child: ListView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      children: [
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.75,
+                          width: MediaQuery.of(context).size.width,
+                          child: const Center(
+                            child: CustomErrorWidget(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : isLoading
+                    ? const LoaderWidget()
+                    : _buildBody(currentTheme),
+          );
+        },
+      ),
     );
   }
 
-  AppBar? _buildAppBar() {
+  AppBar? _buildAppBar(ThemeData theme) {
     return AppBar(
-      title: Text(widget.windowHeaderText ?? 'Notifications'),
-      backgroundColor:
-          widget.windowHeaderBackgroundColor ?? const Color(0xFFEB5017),
+      title: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Text(widget.windowHeaderText ?? 'Notifications'),
+      ),
+      backgroundColor: theme.colorScheme.primary,
       titleTextStyle: widget.windowHeaderTextStyle ??
-          const TextStyle(color: Colors.white, fontSize: 24),
+          TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: theme.colorScheme.inversePrimary,
+          ),
       centerTitle: widget.isCenterTitle ?? false,
-      automaticallyImplyLeading: widget.showHeaderBackButton ?? true,
+      automaticallyImplyLeading: widget.showHeaderBackButton ?? false,
       iconTheme:
           widget.headerIconTheme ?? const IconThemeData(color: Colors.white),
       actions: [
         if (widget.customHeaderSuffixCTA != null)
           ...widget.customHeaderSuffixCTA!,
-        if (!(widget.hideClearAll ?? false))
+        if (!(widget.hideClearAll ?? false) && (!isError && !isLoading))
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 24),
             child: GestureDetector(
               onTap: onBulkDelete,
-              child: const Text(
-                'Clear All',
-                style: TextStyle(color: Colors.white),
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 2,
+                    ),
+                    child: Icon(
+                      Icons.clear_all,
+                      color: theme.colorScheme.outline,
+                      size: 24,
+                    ),
+                  ),
+                  Text(
+                    'Clear All',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: theme.colorScheme.outline,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -351,45 +418,28 @@ class _SirenWindowState extends State<SirenWindow> {
     );
   }
 
-  Widget _buildBody() {
-    if (isError) {
-      return CustomErrorWidget(
-        onRetry: () {
-          Future.delayed(const Duration(seconds: 2), () async {
-            await fetchNotifications();
-            setState(() {
-              isLoading = false;
-            });
-          });
-        },
-      );
+  Widget _buildBody(ThemeData theme) {
+    if (notifications.isEmpty && isLoading) {
+      return widget.customLoader ?? const LoaderWidget();
+    } else if (notifications.isEmpty && !isLoading) {
+      return widget.customEmptyWidget ?? const EmptyWidget();
     } else {
-      if (notifications.isEmpty && isLoading) {
-        return widget.customEmptyWidget ??
-            LoaderWidget(
-              progressIndicatorColor: widget.loaderColor,
-            );
-      } else if (notifications.isEmpty && !isLoading) {
-        return const EmptyWidget();
-      } else {
-        return NotificationListView(
-          notifications: notifications,
-          isLoading: isLoading,
-          endReached: endReached,
-          onRefresh: onRefresh,
-          onEndReached: onEndReached,
-          loadingNextPage: loadingNextPage,
-          customStyles: widget.customStyles,
-          deleteWidget: widget.deleteWidget,
-          hideAvatar: widget.hideAvatar,
-          scrollController: _scrollController,
-          onDelete: deleteNotification,
-          markAsRead: _markNotificationAsRead,
-          buildCardWidget: widget.buildCardWidget,
-          onCardClick: widget.onCardClick,
-          loaderColor: widget.loaderColor,
-        );
-      }
+      return NotificationListView(
+        notifications: notifications,
+        isLoading: isLoading,
+        endReached: endReached,
+        onRefresh: onRefresh,
+        onEndReached: onEndReached,
+        loadingNextPage: loadingNextPage,
+        customStyles: widget.customStyles,
+        deleteWidget: widget.deleteWidget,
+        hideAvatar: widget.hideAvatar,
+        scrollController: _scrollController,
+        onDelete: deleteNotification,
+        markAsRead: _markNotificationAsRead,
+        buildCardWidget: widget.buildCardWidget,
+        onCardClick: widget.onCardClick,
+      );
     }
   }
 }
@@ -397,16 +447,19 @@ class _SirenWindowState extends State<SirenWindow> {
 class LoaderWidget extends StatelessWidget {
   const LoaderWidget({
     super.key,
-    this.progressIndicatorColor,
   });
-  final Color? progressIndicatorColor;
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: CircularProgressIndicator(
-      color: progressIndicatorColor ?? Theme.of(context).colorScheme.primary,
-    ));
+    return ListView.builder(
+      itemCount: Generics.PAGE_SIZE,
+      itemBuilder: (context, index) {
+        return const Padding(
+          padding: EdgeInsets.symmetric(vertical: 8.0),
+          child: CardLoaderWidget(),
+        );
+      },
+    );
   }
 }
 
@@ -426,7 +479,6 @@ class NotificationListView extends StatelessWidget {
     required this.markAsRead,
     this.buildCardWidget,
     this.onCardClick,
-    this.loaderColor,
     super.key,
   });
 
@@ -444,11 +496,12 @@ class NotificationListView extends StatelessWidget {
   final void Function(String) markAsRead;
   final Widget Function(NotificationDataType)? buildCardWidget;
   final void Function(NotificationDataType)? onCardClick;
-  final Color? loaderColor;
 
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
+      color: Theme.of(context).colorScheme.secondary,
+      backgroundColor: Theme.of(context).colorScheme.primary,
       onRefresh: onRefresh,
       child: ListView.builder(
         itemCount: notifications.length + (endReached ? 0 : 1),
@@ -472,11 +525,9 @@ class NotificationListView extends StatelessWidget {
             return itemWidget;
           } else {
             return loadingNextPage
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: LoaderWidget(
-                      progressIndicatorColor: loaderColor,
-                    ),
+                ? const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8),
+                    child: LoaderWidget(),
                   )
                 : const SizedBox();
           }

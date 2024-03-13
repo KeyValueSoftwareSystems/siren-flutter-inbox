@@ -20,3 +20,12 @@ String generateElapsedTimeText(DateTime targetTime) {
     return years == 1 ? '1 year ago' : '$years years ago';
   }
 }
+
+String capitalizeString(String input) {
+  String capitalizedString = input.split(' ').map(capitalize).join(' ');
+  return capitalizedString;
+}
+
+String capitalize(String word) {
+  return word.isEmpty ? word : word[0].toUpperCase() + word.substring(1);
+}
