@@ -49,7 +49,6 @@ class SirenStyleProps {
     this.dateStyle,
     this.deleteButton,
     this.deleteButtonText,
-    this.cardUnreadColor,
     this.iconStyle,
     this.badgeStyle,
   });
@@ -67,7 +66,28 @@ class SirenStyleProps {
   final TextStyle? dateStyle;
   final BoxDecoration? deleteButton;
   final TextStyle? deleteButtonText;
-  final Color? cardUnreadColor;
   final NotificationIcon? iconStyle;
   final BadgeStyle? badgeStyle;
+}
+
+class CustomThemeColors {
+  CustomThemeColors({
+    this.backgroundColor,
+    this.activeCardBorderColor,
+    this.activeCardColor,
+    this.cardBorder,
+    this.deleteIconColor,
+    this.clearAllIconColor,
+    this.textColor,
+    this.inverseBackground,
+  });
+
+  final Color? backgroundColor;
+  final Color? activeCardBorderColor;
+  final Color? activeCardColor;
+  final Color? cardBorder;
+  final Color? deleteIconColor;
+  final Color? clearAllIconColor;
+  final Color? textColor;
+  final Color? inverseBackground;
 }
