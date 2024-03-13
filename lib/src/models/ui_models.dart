@@ -45,6 +45,8 @@ class SirenStyleProps {
     this.cardDescription,
     this.cardFooterRow,
     this.dateStyle,
+    this.iconStyle,
+    this.badgeStyle,
   });
   final BoxDecoration? container;
   final BoxDecoration? contentContainer;
@@ -56,6 +58,8 @@ class SirenStyleProps {
   final TextStyle? cardDescription;
   final BoxDecoration? cardFooterRow;
   final TextStyle? dateStyle;
+  final NotificationIcon? iconStyle;
+  final BadgeStyle? badgeStyle;
 }
 
 class CustomThemeColors {
