@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:siren_flutter_inbox/src/constants/generics.dart';
 import 'package:siren_flutter_inbox/src/models/notification_model.dart';
 import 'package:siren_flutter_inbox/src/models/ui_models.dart';
 import 'package:siren_flutter_inbox/src/utils/common_utils.dart';
@@ -53,7 +52,7 @@ class _CardWidgetState extends State<CardWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (!(widget.cardProps.hideAvatar ?? false))
-                    _buildDefaultAvatarContainer(),
+                    _buildDefaultAvatarContainer(currentTheme),
                   Expanded(
                     child: Container(
                       decoration: widget.styles?.cardContentContainer,
@@ -115,18 +114,21 @@ class _CardWidgetState extends State<CardWidget> {
     );
   }
 
-  Widget _buildDefaultAvatarContainer() {
+  Widget _buildDefaultAvatarContainer(ThemeData theme) {
+    final avatarUrl = widget.notification.message?.avatar?.url;
     return Container(
       decoration: widget.styles?.cardAvatarContainer,
       child: CircleAvatar(
         radius: 21,
-        backgroundImage: widget.notification.message?.avatar?.url != null
-            ? NetworkImage(
-                widget.notification.message!.avatar!.url!,
-              )
-            : const NetworkImage(
-                Generics.PLACEHOLDER_IMAGE_URL,
-              ),
+        backgroundImage: avatarUrl != null && avatarUrl.isNotEmpty
+            ? NetworkImage(avatarUrl)
+            : null,
+        backgroundColor: (avatarUrl == null || avatarUrl.isEmpty)
+            ? theme.colorScheme.secondary
+            : null,
+        child: (avatarUrl == null || avatarUrl.isEmpty)
+            ? Icon(Icons.person, color: theme.colorScheme.secondaryContainer)
+            : null,
       ),
     );
   }

@@ -39,6 +39,7 @@ class SirenWindow extends StatefulWidget {
     this.customHeaderSuffixCTA,
     this.isDarkMode,
     this.customTheme,
+    this.customLoader,
   });
 
   final SirenStyleProps? customStyles;
@@ -63,6 +64,7 @@ class SirenWindow extends StatefulWidget {
   final List<Widget>? customHeaderSuffixCTA;
   final bool? isDarkMode;
   final CustomThemeColors? customTheme;
+  final Widget? customLoader;
 
   @override
   _SirenWindowState createState() => _SirenWindowState();
@@ -333,6 +335,8 @@ class _SirenWindowState extends State<SirenWindow> {
                 : null,
             body: isError
                 ? RefreshIndicator(
+                    color: currentTheme.colorScheme.secondary,
+                    backgroundColor: currentTheme.colorScheme.primary,
                     onRefresh: () async {
                       setState(() {
                         isError = false;
@@ -352,7 +356,9 @@ class _SirenWindowState extends State<SirenWindow> {
                       ],
                     ),
                   )
-                : _buildBody(currentTheme),
+                : isLoading
+                    ? const LoaderWidget()
+                    : _buildBody(currentTheme),
           );
         },
       ),
@@ -414,9 +420,9 @@ class _SirenWindowState extends State<SirenWindow> {
 
   Widget _buildBody(ThemeData theme) {
     if (notifications.isEmpty && isLoading) {
-      return widget.customEmptyWidget ?? const LoaderWidget();
+      return widget.customLoader ?? const LoaderWidget();
     } else if (notifications.isEmpty && !isLoading) {
-      return const EmptyWidget();
+      return widget.customEmptyWidget ?? const EmptyWidget();
     } else {
       return NotificationListView(
         notifications: notifications,
@@ -494,6 +500,8 @@ class NotificationListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
+      color: Theme.of(context).colorScheme.secondary,
+      backgroundColor: Theme.of(context).colorScheme.primary,
       onRefresh: onRefresh,
       child: ListView.builder(
         itemCount: notifications.length + (endReached ? 0 : 1),
