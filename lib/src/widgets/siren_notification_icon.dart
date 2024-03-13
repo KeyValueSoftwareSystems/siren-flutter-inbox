@@ -1,36 +1,31 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import 'package:siren_flutter_inbox/siren_flutter_inbox.dart';
 import 'package:siren_flutter_inbox/src/api/fetch_unviewed_notification_count.dart';
 import 'package:siren_flutter_inbox/src/api/verify_token.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
 import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
-import 'package:siren_flutter_inbox/src/models/api_response.dart';
 
 class SirenNotificationIconWidget extends StatefulWidget {
   const SirenNotificationIconWidget({
     super.key,
     this.darkMode = false,
-    this.notificationIcon,
     this.onError,
-    this.showIfNewNotificationsAvailable = true,
+    this.notificationIcon,
     this.onTap,
     this.onFetchCountError,
-    this.badgeColor,
-    this.badgeCountTextStyle,
-    this.hideCount,
+    this.customStyles,
   });
 
-  final bool? showIfNewNotificationsAvailable;
   final bool? darkMode;
   final void Function(ApiErrorDetails)? onError;
   final Widget? notificationIcon;
   final VoidCallback? onTap;
   final void Function(ApiErrorDetails)? onFetchCountError;
-  final Color? badgeColor;
-  final TextStyle? badgeCountTextStyle;
-  final bool? hideCount;
+  final SirenStyleProps? customStyles;
 
   @override
   State<SirenNotificationIconWidget> createState() =>
@@ -39,8 +34,6 @@ class SirenNotificationIconWidget extends StatefulWidget {
 
 class _SirenNotificationIconWidgetState
     extends State<SirenNotificationIconWidget> {
-  final iconSize = 40.0;
-
   int _notificationsCount = 0;
 
   ApiResponse _tokenVerificationResponse = ApiResponse()..isLoading;
@@ -53,14 +46,14 @@ class _SirenNotificationIconWidgetState
   @override
   void initState() {
     super.initState();
-    initialize();
+    _initialize();
     _subscribeToStream();
   }
 
   @override
   void dispose() {
-    _periodicUpdateRef.cancel();
     super.dispose();
+    _periodicUpdateRef.cancel();
     _subscription.cancel();
     SirenDataProvider.instance.dispose();
   }
@@ -98,8 +91,8 @@ class _SirenNotificationIconWidgetState
     });
   }
 
-  Future<void> initialize() async {
-    await verifyToken();
+  Future<void> _initialize() async {
+    await _verifyToken();
     if (_tokenVerificationResponse.isSuccess) {
       if (_tokenVerificationStatus == Status.SUCCESS) {
         final response = await FetchUnviewedNotificationsCount.instance
@@ -119,10 +112,9 @@ class _SirenNotificationIconWidgetState
       widget.onError
           ?.call(_tokenVerificationResponse.error ?? ApiErrorDetails());
     }
-    ;
   }
 
-  Future<void> verifyToken() async {
+  Future<void> _verifyToken() async {
     _tokenVerificationResponse = await VerifyToken.instance.verifyToken();
     _tokenVerificationStatus = _tokenVerificationResponse.data as Status;
   }
@@ -133,39 +125,43 @@ class _SirenNotificationIconWidgetState
       onTap: widget.onTap ?? () {},
       child: Stack(
         children: [
-          widget.notificationIcon ??
-              Icon(
-                Icons.notifications_none_outlined,
-                size: iconSize,
-              ),
-          if ((widget.showIfNewNotificationsAvailable ?? true) &&
-              _notificationsCount > 0)
-            _getBadge(),
+          SizedBox(
+            width: widget.customStyles?.iconStyle?.size ?? 40,
+            height: widget.customStyles?.iconStyle?.size ?? 40,
+            child: widget.notificationIcon ??
+                Image.asset(
+                  Generics.BELL_ICON_PATH,
+                  fit: BoxFit.contain,
+                ),
+          ),
+          if (_notificationsCount > 0) _getBadge(),
         ],
       ),
     );
   }
 
   Widget _getBadge() {
+    final badgeStyle = widget.customStyles?.badgeStyle;
     return Positioned(
-      right: 0,
-      top: iconSize / 12,
+      right: badgeStyle?.right ?? 0,
+      top: badgeStyle?.top ?? 0,
       child: Container(
-        padding: const EdgeInsets.all(2),
+        width: badgeStyle?.size ?? 15,
+        height: badgeStyle?.size ?? 15,
+        padding: EdgeInsets.all(badgeStyle?.inset ?? 1),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: widget.badgeColor ?? Colors.red,
+          color: badgeStyle?.background ?? Colors.red,
         ),
-        child: widget.hideCount ?? false
-            ? null
-            : Text(
-                _notificationsCount.toString(),
-                style: widget.badgeCountTextStyle ??
-                    const TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                    ),
-              ),
+        child: Align(
+          child: Text(
+            _notificationsCount > 99 ? '99+' : _notificationsCount.toString(),
+            style: TextStyle(
+              color: badgeStyle?.color ?? Colors.white,
+              fontSize: badgeStyle?.fontSize ?? 8,
+            ),
+          ),
+        ),
       ),
     );
   }

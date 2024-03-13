@@ -34,6 +34,7 @@ linter:
     sort_pub_dependencies: false
     flutter_style_todos: false
     lines_longer_than_80_chars: false
+    constant_identifier_names: false
 
 
     public_member_api_docs: false  # Uncomment to disable the `public_member_api_docs` rule

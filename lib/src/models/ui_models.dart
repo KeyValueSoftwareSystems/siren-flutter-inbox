@@ -9,6 +9,30 @@ class CardProps {
   final bool? showMedia;
 }
 
+class NotificationIcon {
+  NotificationIcon({this.size});
+  final double? size;
+}
+
+class BadgeStyle {
+  BadgeStyle({
+    this.background,
+    this.color,
+    this.fontSize,
+    this.inset,
+    this.size,
+    this.top,
+    this.right,
+  });
+  final Color? background;
+  final Color? color;
+  final double? fontSize;
+  final double? inset;
+  final double? size;
+  final double? top;
+  final double? right;
+}
+
 class SirenStyleProps {
   SirenStyleProps({
     this.container,
@@ -25,6 +49,8 @@ class SirenStyleProps {
     this.dateStyle,
     this.deleteButton,
     this.deleteButtonText,
+    this.iconStyle,
+    this.badgeStyle,
   });
   final BoxDecoration? container;
   final BoxDecoration? contentContainer;
@@ -40,6 +66,8 @@ class SirenStyleProps {
   final TextStyle? dateStyle;
   final BoxDecoration? deleteButton;
   final TextStyle? deleteButtonText;
+  final NotificationIcon? iconStyle;
+  final BadgeStyle? badgeStyle;
 }
 
 class CustomThemeColors {
