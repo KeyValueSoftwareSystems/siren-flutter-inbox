@@ -98,6 +98,6 @@ class StreamResponse {
   );
 
   final ApiResponse? response;
-  final StateUpdationApi? api;
+  final UpdateEvents? api;
   final String? id;
 }

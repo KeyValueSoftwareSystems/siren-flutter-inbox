@@ -112,13 +112,13 @@ class _SirenWindowState extends State<SirenWindow> {
       (streamResponse) {
         if (streamResponse.response?.isSuccess ?? false) {
           switch (streamResponse.api) {
-            case StateUpdationApi.READ_BY_ID:
+            case UpdateEvents.READ_BY_ID:
               _markNotificationAsReadById(streamResponse.id);
-            case StateUpdationApi.READ_ALL:
+            case UpdateEvents.READ_ALL:
               _markAllNotificationsAsRead();
-            case StateUpdationApi.DELETE_BY_ID:
+            case UpdateEvents.DELETE_BY_ID:
               _deleteById(streamResponse.id);
-            case StateUpdationApi.DELETE_ALL:
+            case UpdateEvents.DELETE_ALL:
               _deleteAllNotifications();
             default:
             //handle a default case

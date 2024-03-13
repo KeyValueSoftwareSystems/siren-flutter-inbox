@@ -13,7 +13,7 @@ class Siren {
     final response = await ReadNotificationById.instance
         .readNotificationById(notificationId: id);
     SirenDataProvider.instance.controller.sink
-        .add(StreamResponse(response, StateUpdationApi.READ_BY_ID, id));
+        .add(StreamResponse(response, UpdateEvents.READ_BY_ID, id));
     return response;
   }
 
@@ -27,7 +27,7 @@ class Siren {
     final response =
         await NotificationsBulkUpdate.notificationsBulkUpdate(data: data);
     SirenDataProvider.instance.controller.sink
-        .add(StreamResponse(response, StateUpdationApi.READ_ALL, ''));
+        .add(StreamResponse(response, UpdateEvents.READ_ALL, ''));
     return response;
   }
 
@@ -39,7 +39,7 @@ class Siren {
       untilDate: untilDate,
     );
     SirenDataProvider.instance.controller.sink
-        .add(StreamResponse(response, StateUpdationApi.VIEW_ALL, ''));
+        .add(StreamResponse(response, UpdateEvents.VIEW_ALL, ''));
     return response;
   }
 
@@ -49,7 +49,7 @@ class Siren {
     final response = await DeleteNotificationById.instance
         .deleteNotificationById(notificationId: id);
     SirenDataProvider.instance.controller.sink
-        .add(StreamResponse(response, StateUpdationApi.DELETE_BY_ID, id));
+        .add(StreamResponse(response, UpdateEvents.DELETE_BY_ID, id));
     return response;
   }
 
@@ -63,7 +63,7 @@ class Siren {
     final response =
         await NotificationsBulkUpdate.notificationsBulkUpdate(data: data);
     SirenDataProvider.instance.controller.sink
-        .add(StreamResponse(response, StateUpdationApi.DELETE_ALL, ''));
+        .add(StreamResponse(response, UpdateEvents.DELETE_ALL, ''));
     return response;
   }
 }

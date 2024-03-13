@@ -62,7 +62,7 @@ class _SirenNotificationIconWidgetState
     _subscription = SirenDataProvider.instance.iconController.stream.listen(
       (streamResponse) async {
         if (streamResponse.response?.isSuccess ?? false) {
-          if (streamResponse.api == StateUpdationApi.VIEW_ALL) {
+          if (streamResponse.api == UpdateEvents.VIEW_ALL) {
             final response = await FetchUnviewedNotificationsCount.instance
                 .fetchUnviewedNotificationsCount();
             setState(() {
