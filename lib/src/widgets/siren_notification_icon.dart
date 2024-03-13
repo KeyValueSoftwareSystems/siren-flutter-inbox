@@ -155,7 +155,7 @@ class _SirenNotificationIconWidgetState
         ),
         child: Align(
           child: Text(
-            _notificationsCount.toString(),
+            _notificationsCount > 99 ? '99+' : _notificationsCount.toString(),
             style: TextStyle(
               color: badgeStyle?.color ?? Colors.white,
               fontSize: badgeStyle?.fontSize ?? 8,
