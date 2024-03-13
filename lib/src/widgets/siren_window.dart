@@ -188,17 +188,22 @@ class _SirenWindowState extends State<SirenWindow> {
         );
         if (fetchedNotifications.isSuccess) {
           if (fetchedNotifications.meta!.totalElements! > totalElements) {
+            await markAllNotificationsAsViewed();
             newNotifications.addAll(
               fetchedNotifications.data as Iterable<NotificationDataType>,
             );
-            setState(() {
-              notifications.insertAll(
-                0,
-                newNotifications.take(
-                  fetchedNotifications.meta!.totalElements! - totalElements,
-                ),
+            if (mounted) {
+              setState(
+                () {
+                  notifications.insertAll(
+                    0,
+                    newNotifications.take(
+                      fetchedNotifications.meta!.totalElements! - totalElements,
+                    ),
+                  );
+                },
               );
-            });
+            }
             totalElements = fetchedNotifications.meta!.totalElements ?? 0;
             totalPages = fetchedNotifications.meta!.totalPages ?? 0;
             newNotifications = [];
@@ -356,7 +361,7 @@ class _SirenWindowState extends State<SirenWindow> {
                       ],
                     ),
                   )
-                : isLoading
+                : (isLoading && !loadingNextPage)
                     ? const LoaderWidget()
                     : _buildBody(currentTheme),
           );
@@ -525,9 +530,13 @@ class NotificationListView extends StatelessWidget {
             return itemWidget;
           } else {
             return loadingNextPage
-                ? const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8),
-                    child: LoaderWidget(),
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
                   )
                 : const SizedBox();
           }

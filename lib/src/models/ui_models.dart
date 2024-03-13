@@ -38,36 +38,24 @@ class SirenStyleProps {
     this.container,
     this.contentContainer,
     this.headerContainer,
-    this.headerTitle,
     this.subHeaderText,
     this.cardAvatarContainer,
     this.cardContentContainer,
     this.cardTitle,
     this.cardDescription,
-    this.cardImageStyle,
     this.cardFooterRow,
     this.dateStyle,
-    this.deleteButton,
-    this.deleteButtonText,
-    this.iconStyle,
-    this.badgeStyle,
   });
   final BoxDecoration? container;
   final BoxDecoration? contentContainer;
   final BoxDecoration? headerContainer;
-  final TextStyle? headerTitle;
   final TextStyle? subHeaderText;
   final BoxDecoration? cardAvatarContainer;
   final BoxDecoration? cardContentContainer;
   final TextStyle? cardTitle;
   final TextStyle? cardDescription;
-  final BoxDecoration? cardImageStyle;
   final BoxDecoration? cardFooterRow;
   final TextStyle? dateStyle;
-  final BoxDecoration? deleteButton;
-  final TextStyle? deleteButtonText;
-  final NotificationIcon? iconStyle;
-  final BadgeStyle? badgeStyle;
 }
 
 class CustomThemeColors {
