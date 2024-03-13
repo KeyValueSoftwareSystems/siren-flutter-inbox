@@ -16,7 +16,6 @@ class SirenNotificationIconWidget extends StatefulWidget {
     this.onError,
     this.notificationIcon,
     this.onTap,
-    this.onFetchCountError,
     this.customStyles,
   });
 
@@ -24,7 +23,6 @@ class SirenNotificationIconWidget extends StatefulWidget {
   final void Function(ApiErrorDetails)? onError;
   final Widget? notificationIcon;
   final VoidCallback? onTap;
-  final void Function(ApiErrorDetails)? onFetchCountError;
   final SirenStyleProps? customStyles;
 
   @override
@@ -105,7 +103,7 @@ class _SirenNotificationIconWidgetState
             },
           );
         } else if (response.isError) {
-          widget.onFetchCountError?.call(response.error ?? ApiErrorDetails());
+          widget.onError?.call(response.error ?? ApiErrorDetails());
         }
       }
     } else if (_tokenVerificationResponse.isError) {
