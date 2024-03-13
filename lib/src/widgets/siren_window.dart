@@ -404,7 +404,8 @@ class _SirenWindowState extends State<SirenWindow> {
       actions: [
         if (widget.customHeaderSuffixCTA != null)
           ...widget.customHeaderSuffixCTA!,
-        if (!(widget.hideClearAll ?? false) && (!isError && !isLoading))
+        if (!(widget.hideClearAll ?? false) &&
+            (!isError && !isLoading && notifications.isNotEmpty))
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: GestureDetector(
