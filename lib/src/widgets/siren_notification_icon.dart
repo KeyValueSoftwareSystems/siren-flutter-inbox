@@ -8,13 +8,8 @@ import 'package:siren_flutter_inbox/src/api/fetch_unviewed_notification_count.da
 import 'package:siren_flutter_inbox/src/api/verify_token.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
 import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
-import 'package:siren_flutter_inbox/src/models/api_response.dart';
-import 'package:siren_flutter_inbox/src/models/ui_models.dart';
-
 
 class SirenNotificationIconWidget extends StatefulWidget {
-
-  
   const SirenNotificationIconWidget({
     super.key,
     this.darkMode = false,
@@ -51,14 +46,14 @@ class _SirenNotificationIconWidgetState
   @override
   void initState() {
     super.initState();
-    initialize();
+    _initialize();
     _subscribeToStream();
   }
 
   @override
   void dispose() {
-    _periodicUpdateRef.cancel();
     super.dispose();
+    _periodicUpdateRef.cancel();
     _subscription.cancel();
     SirenDataProvider.instance.dispose();
   }
@@ -96,8 +91,8 @@ class _SirenNotificationIconWidgetState
     });
   }
 
-  Future<void> initialize() async {
-    await verifyToken();
+  Future<void> _initialize() async {
+    await _verifyToken();
     if (_tokenVerificationResponse.isSuccess) {
       if (_tokenVerificationStatus == Status.SUCCESS) {
         final response = await FetchUnviewedNotificationsCount.instance
@@ -119,7 +114,7 @@ class _SirenNotificationIconWidgetState
     }
   }
 
-  Future<void> verifyToken() async {
+  Future<void> _verifyToken() async {
     _tokenVerificationResponse = await VerifyToken.instance.verifyToken();
     _tokenVerificationStatus = _tokenVerificationResponse.data as Status;
   }
@@ -148,8 +143,8 @@ class _SirenNotificationIconWidgetState
   Widget _getBadge() {
     final badgeStyle = widget.customStyles?.badgeStyle;
     return Positioned(
-      right: 0,
-      top: 0,
+      right: badgeStyle?.right ?? 0,
+      top: badgeStyle?.top ?? 0,
       child: Container(
         width: badgeStyle?.size ?? 15,
         height: badgeStyle?.size ?? 15,

@@ -10,23 +10,27 @@ class CardProps {
 }
 
 class NotificationIcon {
-  NotificationIcon({this.size = 40});
+  NotificationIcon({this.size});
   final double? size;
 }
 
 class BadgeStyle {
   BadgeStyle({
-    this.background = Colors.red,
-    this.color = Colors.white,
-    this.fontSize = 8,
-    this.inset = 1,
-    this.size = 15,
+    this.background,
+    this.color,
+    this.fontSize,
+    this.inset,
+    this.size,
+    this.top,
+    this.right,
   });
   final Color? background;
   final Color? color;
   final double? fontSize;
   final double? inset;
   final double? size;
+  final double? top;
+  final double? right;
 }
 
 class SirenStyleProps {
