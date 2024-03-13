@@ -69,6 +69,7 @@ class ApiErrorDetails {
   ApiErrorDetails({
     this.errorCode,
     this.message,
+    this.errorType,
   });
 
   factory ApiErrorDetails.fromJson(Map<String, dynamic>? json) {
@@ -79,8 +80,9 @@ class ApiErrorDetails {
     );
   }
 
-  final String? errorCode;
-  final String? message;
+  String? errorCode;
+  String? message;
+  ErrorTypes? errorType;
 }
 
 class DioResponse {

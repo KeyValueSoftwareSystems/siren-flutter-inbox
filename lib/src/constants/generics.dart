@@ -16,8 +16,10 @@ class Generics {
       'packages/siren_flutter_inbox/assets/images/bell.png';
 
   static final DEFAULT_ERROR = ApiErrorDetails(
-    errorCode: 'DEFAULT',
-    message: 'default error message',
+    errorType: ErrorTypes.DEFAULT_ERROR,
+    errorCode: 'INTERNAL SERVER ERROR',
+    message:
+        'Oops something went wrong, if issue persist please contact Siren Team',
   );
 }
 
@@ -32,10 +34,14 @@ enum BulkUpdateType {
   MARK_AS_DELETED,
 }
 
-enum UpdateEvents {
-  READ_BY_ID,
-  READ_ALL,
-  DELETE_BY_ID,
-  DELETE_ALL,
-  VIEW_ALL
+enum UpdateEvents { READ_BY_ID, READ_ALL, DELETE_BY_ID, DELETE_ALL, VIEW_ALL }
+
+enum ErrorTypes {
+  DEFAULT_ERROR,
+  AUTHENTICATION_ERROR,
+  FETCH_COUNT_ERROR,
+  NOTIFICATION_FETCH_ERROR,
+  NOTIFICATION_READ_ERROR,
+  NOTIFICATION_DELETE_ERROR,
+  UPDATE_VIEWED_ERROR,
 }

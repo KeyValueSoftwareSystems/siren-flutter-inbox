@@ -23,6 +23,8 @@ class VerifyToken {
 
   Future<ApiResponse> verifyToken() async {
     final result = ApiResponse()..isLoading = true;
+    final apiError = ApiErrorDetails()
+      ..errorType = ErrorTypes.AUTHENTICATION_ERROR;
 
     final apiResponse = await api.get(
       path: '${Generics.API_PATH}/verify-token',
@@ -30,7 +32,9 @@ class VerifyToken {
     if (apiResponse.statusCode != 0 && apiResponse.data != null) {
       final verificationStatus =
           convertJsonToVerificationStatus(apiResponse.data);
-      final apiError = ApiResponse.fromJson(apiResponse.data).error;
+      apiError
+        ..errorCode = ApiResponse.fromJson(apiResponse.data).error?.errorCode
+        ..message = ApiResponse.fromJson(apiResponse.data).error?.message;
 
       result
         ..isLoading = false

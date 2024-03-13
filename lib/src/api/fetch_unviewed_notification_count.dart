@@ -19,6 +19,9 @@ class FetchUnviewedNotificationsCount {
 
   Future<ApiResponse> fetchUnviewedNotificationsCount() async {
     final result = ApiResponse()..isLoading = true;
+     final apiError = ApiErrorDetails()
+      ..errorType = ErrorTypes.FETCH_COUNT_ERROR;
+
     final apiResponse = await api.get(
       path: Generics.API_PATH,
     );
@@ -27,6 +30,9 @@ class FetchUnviewedNotificationsCount {
       final data =
           ApiResponse.fromJson(apiResponse.data).data as Map<String, dynamic>;
       final notificationCount = UnviewedNotificationsCountModel.fromJson(data);
+      apiError
+        ..errorCode = ApiResponse.fromJson(apiResponse.data).error?.errorCode
+        ..message = ApiResponse.fromJson(apiResponse.data).error?.message;
       count = notificationCount.totalUnviewed;
       result
         ..isLoading = false
