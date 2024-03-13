@@ -15,6 +15,7 @@ class AppTheme {
           inversePrimary: Colors.black,
           tertiaryContainer: AppColors.primary400,
           onTertiary: Colors.white,
+          onPrimary: Colors.white,
         ),
   );
 
@@ -30,6 +31,7 @@ class AppTheme {
           inversePrimary: Colors.white,
           tertiaryContainer: AppColors.primary400,
           onTertiary: Colors.black,
+          onPrimary: Colors.black,
         ),
   );
 
@@ -46,6 +48,7 @@ class AppTheme {
             inversePrimary: customColors.inverseBackground,
             tertiaryContainer: customColors.badgeBackgroundColor,
             onTertiary: customColors.badgeColor,
+            onPrimary: customColors.iconColor,
           ),
     );
   }

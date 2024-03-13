@@ -132,17 +132,25 @@ class _SirenNotificationIconWidgetState
               : AppTheme.lightTheme),
       child: Builder(
         builder: (context) {
+          final size = widget.customStyles?.iconStyle?.size ?? 40;
+          final currentTheme = Theme.of(context);
           return GestureDetector(
             onTap: widget.onTap ?? () {},
             child: Stack(
               children: [
                 SizedBox(
-                  width: widget.customStyles?.iconStyle?.size ?? 40,
-                  height: widget.customStyles?.iconStyle?.size ?? 40,
+                  width: size,
+                  height: size,
                   child: widget.notificationIcon ??
-                      Image.asset(
-                        Generics.BELL_ICON_PATH,
-                        fit: BoxFit.contain,
+                      // TODO can remove this png later
+                      // Image.asset(
+                      //   Generics.BELL_ICON_PATH,
+                      //   fit: BoxFit.contain,
+                      // ),
+                      Icon(
+                        Icons.notifications_none_outlined,
+                        size: size,
+                        color: currentTheme.colorScheme.onPrimary,
                       ),
                 ),
                 if (_notificationsCount > 0) _getBadge(context),

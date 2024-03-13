@@ -78,6 +78,7 @@ class CustomThemeColors {
     this.inverseBackground,
     this.badgeBackgroundColor,
     this.badgeColor,
+    this.iconColor,
   });
 
   final Color? backgroundColor;
@@ -90,4 +91,5 @@ class CustomThemeColors {
   final Color? inverseBackground;
   final Color? badgeBackgroundColor;
   final Color? badgeColor;
+  final Color? iconColor;
 }
