@@ -31,11 +31,7 @@ class SirenWindow extends StatefulWidget {
     this.isCenterTitle,
     this.buildCardWidget,
     this.onCardClick,
-    this.onFetchNotificationsError,
-    this.onDeletionError,
-    this.onReadError,
-    this.onBulkDeletionError,
-    this.onMarkAsViewedApiError,
+    this.onError,
     this.hideClearAll,
     this.customHeaderSuffixCTA,
     this.isDarkMode,
@@ -56,11 +52,7 @@ class SirenWindow extends StatefulWidget {
   final bool? isCenterTitle;
   final Widget Function(NotificationDataType)? buildCardWidget;
   final void Function(NotificationDataType)? onCardClick;
-  final void Function(ApiErrorDetails)? onFetchNotificationsError;
-  final void Function(ApiErrorDetails)? onDeletionError;
-  final void Function(ApiErrorDetails)? onReadError;
-  final void Function(ApiErrorDetails)? onBulkDeletionError;
-  final void Function(ApiErrorDetails)? onMarkAsViewedApiError;
+  final void Function(ApiErrorDetails)? onError;
   final bool? hideClearAll;
   final List<Widget>? customHeaderSuffixCTA;
   final bool? isDarkMode;
@@ -117,6 +109,12 @@ class _SirenWindowState extends State<SirenWindow> {
     if (_tokenVerificationResponse.isSuccess &&
         _tokenVerificationStatus == Status.SUCCESS) {
       await fetchNotifications();
+    } else if (_tokenVerificationResponse.isError) {
+      setState(() {
+        isError = true;
+      });
+      widget.onError
+          ?.call(_tokenVerificationResponse.error ?? ApiErrorDetails());
     }
   }
 
@@ -136,6 +134,9 @@ class _SirenWindowState extends State<SirenWindow> {
             default:
             //handle a default case
           }
+        } else if (streamResponse.response?.isError ?? false) {
+          widget.onError
+              ?.call(streamResponse.response?.error ?? ApiErrorDetails());
         }
       },
     );
@@ -225,8 +226,7 @@ class _SirenWindowState extends State<SirenWindow> {
           setState(() {
             isError = fetchedNotifications.isError;
           });
-          widget.onFetchNotificationsError
-              ?.call(fetchedNotifications.error ?? ApiErrorDetails());
+          widget.onError?.call(fetchedNotifications.error ?? ApiErrorDetails());
         }
       },
     );
@@ -239,7 +239,7 @@ class _SirenWindowState extends State<SirenWindow> {
     );
 
     if (notificationsMarkedAsViewed.isError) {
-      widget.onMarkAsViewedApiError?.call(
+      widget.onError?.call(
         notificationsMarkedAsViewed.error ?? ApiErrorDetails(),
       );
     }
@@ -272,8 +272,10 @@ class _SirenWindowState extends State<SirenWindow> {
         setState(() {
           isError = fetchedNotifications.isError;
         });
-        widget.onFetchNotificationsError
-            ?.call(fetchedNotifications.error ?? ApiErrorDetails());
+        //initialized to avoid LateInitializationError.
+        _periodicUpdateRef =
+            Timer.periodic(const Duration(seconds: 1), (timer) {});
+        widget.onError?.call(fetchedNotifications.error ?? ApiErrorDetails());
       }
     }
   }
@@ -291,8 +293,7 @@ class _SirenWindowState extends State<SirenWindow> {
     if (deleteAllResponse.isSuccess) {
       _deleteAllNotifications();
     } else if (deleteAllResponse.isError) {
-      widget.onBulkDeletionError
-          ?.call(deleteAllResponse.error ?? ApiErrorDetails());
+      widget.onError?.call(deleteAllResponse.error ?? ApiErrorDetails());
     }
   }
 
@@ -304,7 +305,7 @@ class _SirenWindowState extends State<SirenWindow> {
     if (deletionStatus.data == Status.SUCCESS && deletionStatus.isSuccess) {
       _deleteById(id);
     } else if (deletionStatus.isError) {
-      widget.onDeletionError?.call(deletionStatus.error ?? ApiErrorDetails());
+      widget.onError?.call(deletionStatus.error ?? ApiErrorDetails());
     }
   }
 
@@ -330,7 +331,7 @@ class _SirenWindowState extends State<SirenWindow> {
     if (readStatus.isSuccess) {
       _markNotificationAsReadById(id);
     } else if (readStatus.isError) {
-      widget.onReadError?.call(readStatus.error ?? ApiErrorDetails());
+      widget.onError?.call(readStatus.error ?? ApiErrorDetails());
     }
   }
 
