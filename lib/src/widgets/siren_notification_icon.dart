@@ -126,7 +126,7 @@ class _SirenNotificationIconWidgetState
   Widget build(BuildContext context) {
     return Theme(
       data: widget.customTheme != null
-          ? AppTheme.customTheme(widget.customTheme!)
+          ? AppTheme.customTheme(widget.customTheme!, isDarkMode: widget.darkMode ?? false)
           : (widget.darkMode ?? false
               ? AppTheme.darkTheme
               : AppTheme.lightTheme),
