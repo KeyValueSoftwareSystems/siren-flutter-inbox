@@ -16,16 +16,12 @@ class NotificationIcon {
 
 class BadgeStyle {
   BadgeStyle({
-    this.background,
-    this.color,
     this.fontSize,
     this.inset,
     this.size,
     this.top,
     this.right,
   });
-  final Color? background;
-  final Color? color;
   final double? fontSize;
   final double? inset;
   final double? size;
@@ -80,6 +76,8 @@ class CustomThemeColors {
     this.clearAllIconColor,
     this.textColor,
     this.inverseBackground,
+    this.badgeBackgroundColor,
+    this.badgeColor,
   });
 
   final Color? backgroundColor;
@@ -90,4 +88,6 @@ class CustomThemeColors {
   final Color? clearAllIconColor;
   final Color? textColor;
   final Color? inverseBackground;
+  final Color? badgeBackgroundColor;
+  final Color? badgeColor;
 }

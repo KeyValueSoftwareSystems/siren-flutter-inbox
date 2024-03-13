@@ -13,6 +13,8 @@ class AppTheme {
           outline: AppColors.grey500,
           tertiary: AppColors.grey700,
           inversePrimary: Colors.black,
+          tertiaryContainer: AppColors.primary400,
+          onTertiary: Colors.white,
         ),
   );
 
@@ -26,6 +28,8 @@ class AppTheme {
           outline: AppColors.grey500Complementary,
           tertiary: AppColors.grey700Complementary,
           inversePrimary: Colors.white,
+          tertiaryContainer: AppColors.primary400,
+          onTertiary: Colors.black,
         ),
   );
 
@@ -40,6 +44,8 @@ class AppTheme {
             outline: customColors.clearAllIconColor,
             tertiary: customColors.textColor,
             inversePrimary: customColors.inverseBackground,
+            tertiaryContainer: customColors.badgeBackgroundColor,
+            onTertiary: customColors.badgeColor,
           ),
     );
   }

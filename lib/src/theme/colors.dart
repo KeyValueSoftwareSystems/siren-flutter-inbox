@@ -4,6 +4,7 @@ class AppColors {
   const AppColors._();
   //light mode colors
   static const Color primary200 = Color(0xFFFA9874);
+  static const Color primary400 = Color(0xFFF56630);
   static const Color primary50 = Color(0xFFFFECE5);
   static const Color grey300 = Color(0xFFD0D5DD);
   static const Color grey400 = Color(0xFF98A2B3);
