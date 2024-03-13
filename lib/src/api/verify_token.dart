@@ -25,7 +25,7 @@ class VerifyToken {
     final result = ApiResponse()..isLoading = true;
 
     final apiResponse = await api.get(
-      path: '${Generics.API_PATH}/verifytoken',
+      path: '${Generics.API_PATH}/verify-token',
     );
     if (apiResponse.statusCode != 0 && apiResponse.data != null) {
       final verificationStatus =
