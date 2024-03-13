@@ -17,4 +17,7 @@ class AppColors {
   static const Color grey400Complementary = Color.fromARGB(255, 224, 215, 213);
   static const Color grey500Complementary = Color.fromARGB(255, 170, 160, 159);
   static const Color grey700Complementary = Colors.white;
+
+  //empty state
+  static const Color emptyWidgetBg = Color(0xFFF7F9FC);
 }
