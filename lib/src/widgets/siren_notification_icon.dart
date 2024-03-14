@@ -8,6 +8,7 @@ import 'package:siren_flutter_inbox/src/api/fetch_unviewed_notification_count.da
 import 'package:siren_flutter_inbox/src/api/verify_token.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
 import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
+import 'package:siren_flutter_inbox/src/theme/app_theme.dart';
 
 class SirenNotificationIconWidget extends StatefulWidget {
   const SirenNotificationIconWidget({
@@ -18,6 +19,7 @@ class SirenNotificationIconWidget extends StatefulWidget {
     this.onTap,
     this.onFetchCountError,
     this.customStyles,
+    this.customTheme,
   });
 
   final bool? darkMode;
@@ -26,6 +28,7 @@ class SirenNotificationIconWidget extends StatefulWidget {
   final VoidCallback? onTap;
   final void Function(ApiErrorDetails)? onFetchCountError;
   final SirenStyleProps? customStyles;
+  final CustomThemeColors? customTheme;
 
   @override
   State<SirenNotificationIconWidget> createState() =>
@@ -121,44 +124,64 @@ class _SirenNotificationIconWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onTap ?? () {},
-      child: Stack(
-        children: [
-          SizedBox(
-            width: widget.customStyles?.iconStyle?.size ?? 40,
-            height: widget.customStyles?.iconStyle?.size ?? 40,
-            child: widget.notificationIcon ??
-                Image.asset(
-                  Generics.BELL_ICON_PATH,
-                  fit: BoxFit.contain,
+    return Theme(
+      data: widget.customTheme != null
+          ? AppTheme.customTheme(widget.customTheme!, isDarkMode: widget.darkMode ?? false)
+          : (widget.darkMode ?? false
+              ? AppTheme.darkTheme
+              : AppTheme.lightTheme),
+      child: Builder(
+        builder: (context) {
+          final size = widget.customStyles?.iconStyle?.size ?? 35;
+          final currentTheme = Theme.of(context);
+          return GestureDetector(
+            onTap: widget.onTap ?? () {},
+            child: Stack(
+              children: [
+                SizedBox(
+                  width: size,
+                  height: size,
+                  child: widget.notificationIcon ??
+                      // TODO can remove this png later
+                      // Image.asset(
+                      //   Generics.BELL_ICON_PATH,
+                      //   fit: BoxFit.contain,
+                      // ),
+                      Icon(
+                        Icons.notifications_none_outlined,
+                        size: size,
+                        color: currentTheme.colorScheme.onPrimary,
+                      ),
                 ),
-          ),
-          if (_notificationsCount > 0) _getBadge(),
-        ],
+                if (_notificationsCount > 0) _getBadge(context),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
 
-  Widget _getBadge() {
+  Widget _getBadge(BuildContext context) {
     final badgeStyle = widget.customStyles?.badgeStyle;
+    final currentTheme = Theme.of(context);
     return Positioned(
-      right: badgeStyle?.right ?? 0,
+      right: badgeStyle?.right ?? 2,
       top: badgeStyle?.top ?? 0,
       child: Container(
-        width: badgeStyle?.size ?? 15,
-        height: badgeStyle?.size ?? 15,
+        width: badgeStyle?.size ?? 18,
+        height: badgeStyle?.size ?? 18,
         padding: EdgeInsets.all(badgeStyle?.inset ?? 1),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: badgeStyle?.background ?? Colors.red,
+          color: currentTheme.colorScheme.tertiaryContainer,
         ),
         child: Align(
           child: Text(
             _notificationsCount > 99 ? '99+' : _notificationsCount.toString(),
             style: TextStyle(
-              color: badgeStyle?.color ?? Colors.white,
-              fontSize: badgeStyle?.fontSize ?? 8,
+              color: currentTheme.colorScheme.onTertiary,
+              fontSize: badgeStyle?.fontSize ?? 10,
             ),
           ),
         ),

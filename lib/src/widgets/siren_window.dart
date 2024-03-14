@@ -320,7 +320,7 @@ class _SirenWindowState extends State<SirenWindow> {
   Widget build(BuildContext context) {
     return Theme(
       data: widget.customTheme != null
-          ? AppTheme.customTheme(widget.customTheme!)
+          ? AppTheme.customTheme(widget.customTheme!, isDarkMode: widget.isDarkMode ?? false)
           : (widget.isDarkMode ?? false
               ? AppTheme.darkTheme
               : AppTheme.lightTheme),

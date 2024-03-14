@@ -13,6 +13,9 @@ class AppTheme {
           outline: AppColors.grey500,
           tertiary: AppColors.grey700,
           inversePrimary: Colors.black,
+          tertiaryContainer: AppColors.primary400,
+          onTertiary: Colors.white,
+          onPrimary: Colors.white,
         ),
   );
 
@@ -26,11 +29,28 @@ class AppTheme {
           outline: AppColors.grey500Complementary,
           tertiary: AppColors.grey700Complementary,
           inversePrimary: Colors.white,
+          tertiaryContainer: AppColors.primary400,
+          onTertiary: Colors.black,
+          onPrimary: Colors.black,
         ),
   );
 
-  static ThemeData customTheme(CustomThemeColors customColors) {
-    return ThemeData.light().copyWith(
+  static ThemeData customTheme(CustomThemeColors customColors, {bool isDarkMode = false}) {
+    return  isDarkMode ? ThemeData.dark().copyWith(
+      colorScheme: ThemeData.dark().colorScheme.copyWith(
+            primary: customColors.backgroundColor,
+            secondary: customColors.activeCardBorderColor,
+            secondaryContainer: customColors.activeCardColor,
+            surfaceTint: customColors.cardBorder,
+            outlineVariant: customColors.deleteIconColor,
+            outline: customColors.clearAllIconColor,
+            tertiary: customColors.textColor,
+            inversePrimary: customColors.windowTitleColor,
+            tertiaryContainer: customColors.badgeBackgroundColor,
+            onTertiary: customColors.badgeColor,
+            onPrimary: customColors.iconColor,
+          ),
+    ): ThemeData.light().copyWith(
       colorScheme: ThemeData.light().colorScheme.copyWith(
             primary: customColors.backgroundColor,
             secondary: customColors.activeCardBorderColor,
@@ -39,7 +59,10 @@ class AppTheme {
             outlineVariant: customColors.deleteIconColor,
             outline: customColors.clearAllIconColor,
             tertiary: customColors.textColor,
-            inversePrimary: customColors.inverseBackground,
+            inversePrimary: customColors.windowTitleColor,
+            tertiaryContainer: customColors.badgeBackgroundColor,
+            onTertiary: customColors.badgeColor,
+            onPrimary: customColors.iconColor,
           ),
     );
   }
