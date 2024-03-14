@@ -289,6 +289,12 @@ class _SirenWindowState extends State<SirenWindow> {
   }
 
   Future<void> onRefresh() async {
+    setState(() {
+      notifications = [];
+      totalElements = 0;
+      isLoading = true;
+      currentPage = 0;
+    });
     await fetchNotifications();
     setState(() {
       isLoading = false;

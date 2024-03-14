@@ -37,6 +37,7 @@ class FetchAllNotifications {
       queryParameters: {
         'page': page,
         'size': size,
+        'sort': 'createdAt',
       },
     );
 
