@@ -8,6 +8,13 @@ class ApiClient {
   // dio instance
   final Dio _api;
 
+  bool isServerError(Response<dynamic>? response) {
+    return response == null ||
+        (response.statusCode != null &&
+            response.statusCode! >= 500 &&
+            response.statusCode! < 600);
+  }
+
   // Get API
   Future<DioResponse> get({
     String? path,
@@ -27,9 +34,15 @@ class ApiClient {
       );
       return DioResponse(data: response.data, statusCode: response.statusCode);
     } on DioException catch (e) {
+      if (isServerError(e.response)) {
+        return DioResponse(
+          data: null,
+          statusCode: 0,
+        );
+      }
       return DioResponse(
-        data: e.response?.data,
-        statusCode: e.response?.statusCode,
+        data: e.response?.data ?? '',
+        statusCode: e.response?.statusCode ?? 0,
       );
     }
   }
@@ -57,9 +70,15 @@ class ApiClient {
       );
       return DioResponse(data: response.data, statusCode: response.statusCode);
     } on DioException catch (e) {
+      if (isServerError(e.response)) {
+        return DioResponse(
+          data: null,
+          statusCode: 0,
+        );
+      }
       return DioResponse(
-        data: e.response?.data,
-        statusCode: e.response?.statusCode,
+        data: e.response?.data ?? '',
+        statusCode: e.response?.statusCode ?? 0,
       );
     }
   }
@@ -87,9 +106,15 @@ class ApiClient {
       );
       return DioResponse(data: response.data, statusCode: response.statusCode);
     } on DioException catch (e) {
+      if (isServerError(e.response)) {
+        return DioResponse(
+          data: null,
+          statusCode: 0,
+        );
+      }
       return DioResponse(
-        data: e.response?.data,
-        statusCode: e.response?.statusCode,
+        data: e.response?.data ?? '',
+        statusCode: e.response?.statusCode ?? 0,
       );
     }
   }
@@ -112,9 +137,15 @@ class ApiClient {
       );
       return DioResponse(data: response.data, statusCode: response.statusCode);
     } on DioException catch (e) {
+      if (isServerError(e.response)) {
+        return DioResponse(
+          data: null,
+          statusCode: 0,
+        );
+      }
       return DioResponse(
-        data: e.response?.data,
-        statusCode: e.response?.statusCode,
+        data: e.response?.data ?? '',
+        statusCode: e.response?.statusCode ?? 0,
       );
     }
   }

@@ -5,7 +5,9 @@ import 'package:siren_flutter_inbox/siren_flutter_inbox.dart';
 import 'package:siren_flutter_inbox/src/api/delete_notification_by_id.dart';
 import 'package:siren_flutter_inbox/src/api/fetch_all_notification.dart';
 import 'package:siren_flutter_inbox/src/api/mark_all_notifications_as_viewed.dart';
+import 'package:siren_flutter_inbox/src/api/notifications_bulk_update.dart';
 import 'package:siren_flutter_inbox/src/api/read_notification_by_id.dart';
+import 'package:siren_flutter_inbox/src/api/verify_token.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
 import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
 import 'package:siren_flutter_inbox/src/theme/app_theme.dart';
@@ -30,11 +32,7 @@ class SirenWindow extends StatefulWidget {
     this.isCenterTitle,
     this.buildCardWidget,
     this.onCardClick,
-    this.onFetchNotificationsError,
-    this.onDeletionError,
-    this.onReadError,
-    this.onBulkDeletionError,
-    this.onMarkAsViewedApiError,
+    this.onError,
     this.hideClearAll,
     this.customHeaderSuffixCTA,
     this.isDarkMode,
@@ -55,11 +53,7 @@ class SirenWindow extends StatefulWidget {
   final bool? isCenterTitle;
   final Widget Function(NotificationDataType)? buildCardWidget;
   final void Function(NotificationDataType)? onCardClick;
-  final void Function(ApiErrorDetails)? onFetchNotificationsError;
-  final void Function(ApiErrorDetails)? onDeletionError;
-  final void Function(ApiErrorDetails)? onReadError;
-  final void Function(ApiErrorDetails)? onBulkDeletionError;
-  final void Function(ApiErrorDetails)? onMarkAsViewedApiError;
+  final void Function(ApiErrorDetails)? onError;
   final bool? hideClearAll;
   final List<Widget>? customHeaderSuffixCTA;
   final bool? isDarkMode;
@@ -72,13 +66,14 @@ class SirenWindow extends StatefulWidget {
 
 class _SirenWindowState extends State<SirenWindow> {
   late ScrollController _scrollController;
-  bool isLoading = false;
+  bool isLoading = true;
   bool endReached = false;
   bool isError = false;
   bool loadingNextPage = false;
   int currentPage = 0;
   late int totalPages;
   late int totalElements;
+  String? deletingNotificationId;
 
   List<NotificationDataType> notifications = [];
   late final DeleteNotificationById _deleteNotificationById;
@@ -86,14 +81,17 @@ class _SirenWindowState extends State<SirenWindow> {
   late Timer? _periodicUpdateRef;
   late StreamSubscription<StreamResponse> _subscription;
 
+  ApiResponse _tokenVerificationResponse = ApiResponse()..isLoading;
+  Status _tokenVerificationStatus = Status.PENDING;
+
   @override
   void initState() {
     super.initState();
+    _initialize();
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
     _deleteNotificationById = DeleteNotificationById.instance;
     _readNotificationById = ReadNotificationById.instance;
-    fetchNotifications();
     _subscribeToStream();
   }
 
@@ -107,22 +105,40 @@ class _SirenWindowState extends State<SirenWindow> {
     super.dispose();
   }
 
+  Future<void> _initialize() async {
+    _tokenVerificationResponse = await VerifyToken.instance.verifyToken();
+    _tokenVerificationStatus = _tokenVerificationResponse.data as Status;
+    if (_tokenVerificationResponse.isSuccess &&
+        _tokenVerificationStatus == Status.SUCCESS) {
+      await fetchNotifications();
+    } else if (_tokenVerificationResponse.isError) {
+      setState(() {
+        isError = true;
+      });
+      widget.onError
+          ?.call(_tokenVerificationResponse.error ?? ApiErrorDetails());
+    }
+  }
+
   void _subscribeToStream() {
     _subscription = SirenDataProvider.instance.controller.stream.listen(
       (streamResponse) {
         if (streamResponse.response?.isSuccess ?? false) {
           switch (streamResponse.api) {
-            case StateUpdationApi.READ_BY_ID:
+            case UpdateEvents.READ_BY_ID:
               _markNotificationAsReadById(streamResponse.id);
-            case StateUpdationApi.READ_ALL:
+            case UpdateEvents.READ_ALL:
               _markAllNotificationsAsRead();
-            case StateUpdationApi.DELETE_BY_ID:
+            case UpdateEvents.DELETE_BY_ID:
               _deleteById(streamResponse.id);
-            case StateUpdationApi.DELETE_ALL:
+            case UpdateEvents.DELETE_ALL:
               _deleteAllNotifications();
             default:
             //handle a default case
           }
+        } else if (streamResponse.response?.isError ?? false) {
+          widget.onError
+              ?.call(streamResponse.response?.error ?? ApiErrorDetails());
         }
       },
     );
@@ -188,17 +204,22 @@ class _SirenWindowState extends State<SirenWindow> {
         );
         if (fetchedNotifications.isSuccess) {
           if (fetchedNotifications.meta!.totalElements! > totalElements) {
+            await markAllNotificationsAsViewed();
             newNotifications.addAll(
               fetchedNotifications.data as Iterable<NotificationDataType>,
             );
-            setState(() {
-              notifications.insertAll(
-                0,
-                newNotifications.take(
-                  fetchedNotifications.meta!.totalElements! - totalElements,
-                ),
+            if (mounted) {
+              setState(
+                () {
+                  notifications.insertAll(
+                    0,
+                    newNotifications.take(
+                      fetchedNotifications.meta!.totalElements! - totalElements,
+                    ),
+                  );
+                },
               );
-            });
+            }
             totalElements = fetchedNotifications.meta!.totalElements ?? 0;
             totalPages = fetchedNotifications.meta!.totalPages ?? 0;
             newNotifications = [];
@@ -207,8 +228,7 @@ class _SirenWindowState extends State<SirenWindow> {
           setState(() {
             isError = fetchedNotifications.isError;
           });
-          widget.onFetchNotificationsError
-              ?.call(fetchedNotifications.error ?? ApiErrorDetails());
+          widget.onError?.call(fetchedNotifications.error ?? ApiErrorDetails());
         }
       },
     );
@@ -221,16 +241,22 @@ class _SirenWindowState extends State<SirenWindow> {
     );
 
     if (notificationsMarkedAsViewed.isError) {
-      widget.onMarkAsViewedApiError?.call(
+      widget.onError?.call(
         notificationsMarkedAsViewed.error ?? ApiErrorDetails(),
       );
     }
   }
 
   Future<void> fetchNotifications() async {
-    setState(() {
-      isLoading = true;
-    });
+    if (notifications.isEmpty) {
+      setState(() {
+        isLoading = true;
+      });
+    } else {
+      setState(() {
+        loadingNextPage = true;
+      });
+    }
 
     if (!endReached) {
       final fetchedNotifications =
@@ -254,13 +280,21 @@ class _SirenWindowState extends State<SirenWindow> {
         setState(() {
           isError = fetchedNotifications.isError;
         });
-        widget.onFetchNotificationsError
-            ?.call(fetchedNotifications.error ?? ApiErrorDetails());
+        //initialized to avoid LateInitializationError.
+        _periodicUpdateRef =
+            Timer.periodic(const Duration(seconds: 1), (timer) {});
+        widget.onError?.call(fetchedNotifications.error ?? ApiErrorDetails());
       }
     }
   }
 
   Future<void> onRefresh() async {
+    setState(() {
+      notifications = [];
+      totalElements = 0;
+      isLoading = true;
+      currentPage = 0;
+    });
     await fetchNotifications();
     setState(() {
       isLoading = false;
@@ -268,13 +302,18 @@ class _SirenWindowState extends State<SirenWindow> {
   }
 
   Future<void> onBulkDelete() async {
-    final deleteAllResponse = await Siren.deleteNotificationByDate(
-        untilDate: DateTime.now().toUtc().toIso8601String());
+    final data = {
+      'until': DateTime.now().toUtc().toIso8601String(),
+      'operation': BulkUpdateType.MARK_AS_DELETED.name,
+    };
+    final deleteAllResponse =
+        await NotificationsBulkUpdate.notificationsBulkUpdate(
+      data: data,
+    );
     if (deleteAllResponse.isSuccess) {
       _deleteAllNotifications();
     } else if (deleteAllResponse.isError) {
-      widget.onBulkDeletionError
-          ?.call(deleteAllResponse.error ?? ApiErrorDetails());
+      widget.onError?.call(deleteAllResponse.error ?? ApiErrorDetails());
     }
   }
 
@@ -284,9 +323,18 @@ class _SirenWindowState extends State<SirenWindow> {
     );
 
     if (deletionStatus.data == Status.SUCCESS && deletionStatus.isSuccess) {
-      _deleteById(id);
+      setState(() {
+        deletingNotificationId = id;
+      });
+
+      await Future.delayed(const Duration(milliseconds: 500));
+
+      setState(() {
+        deletingNotificationId = null;
+        _deleteById(id);
+      });
     } else if (deletionStatus.isError) {
-      widget.onDeletionError?.call(deletionStatus.error ?? ApiErrorDetails());
+      widget.onError?.call(deletionStatus.error ?? ApiErrorDetails());
     }
   }
 
@@ -312,7 +360,7 @@ class _SirenWindowState extends State<SirenWindow> {
     if (readStatus.isSuccess) {
       _markNotificationAsReadById(id);
     } else if (readStatus.isError) {
-      widget.onReadError?.call(readStatus.error ?? ApiErrorDetails());
+      widget.onError?.call(readStatus.error ?? ApiErrorDetails());
     }
   }
 
@@ -356,7 +404,7 @@ class _SirenWindowState extends State<SirenWindow> {
                       ],
                     ),
                   )
-                : isLoading
+                : (isLoading && !loadingNextPage)
                     ? const LoaderWidget()
                     : _buildBody(currentTheme),
           );
@@ -385,7 +433,8 @@ class _SirenWindowState extends State<SirenWindow> {
       actions: [
         if (widget.customHeaderSuffixCTA != null)
           ...widget.customHeaderSuffixCTA!,
-        if (!(widget.hideClearAll ?? false) && (!isError && !isLoading))
+        if (!(widget.hideClearAll ?? false) &&
+            (!isError && !isLoading && notifications.isNotEmpty))
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: GestureDetector(
@@ -439,6 +488,7 @@ class _SirenWindowState extends State<SirenWindow> {
         markAsRead: _markNotificationAsRead,
         buildCardWidget: widget.buildCardWidget,
         onCardClick: widget.onCardClick,
+        deletingNotificationId: deletingNotificationId,
       );
     }
   }
@@ -479,6 +529,7 @@ class NotificationListView extends StatelessWidget {
     required this.markAsRead,
     this.buildCardWidget,
     this.onCardClick,
+    this.deletingNotificationId,
     super.key,
   });
 
@@ -496,6 +547,7 @@ class NotificationListView extends StatelessWidget {
   final void Function(String) markAsRead;
   final Widget Function(NotificationDataType)? buildCardWidget;
   final void Function(NotificationDataType)? onCardClick;
+  final String? deletingNotificationId;
 
   @override
   Widget build(BuildContext context) {
@@ -522,12 +574,21 @@ class NotificationListView extends StatelessWidget {
                   deleteWidget: deleteWidget,
                   onDelete: onDelete,
                 );
-            return itemWidget;
+            return AnimatedOpacity(
+              duration: const Duration(milliseconds: 500),
+              opacity:
+                  deletingNotificationId == notifications[index].id ? 0.0 : 1.0,
+              child: itemWidget,
+            );
           } else {
             return loadingNextPage
-                ? const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8),
-                    child: LoaderWidget(),
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
                   )
                 : const SizedBox();
           }

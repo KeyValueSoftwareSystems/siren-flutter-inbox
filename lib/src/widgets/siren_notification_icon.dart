@@ -17,7 +17,6 @@ class SirenNotificationIconWidget extends StatefulWidget {
     this.onError,
     this.notificationIcon,
     this.onTap,
-    this.onFetchCountError,
     this.customStyles,
     this.customTheme,
   });
@@ -26,7 +25,6 @@ class SirenNotificationIconWidget extends StatefulWidget {
   final void Function(ApiErrorDetails)? onError;
   final Widget? notificationIcon;
   final VoidCallback? onTap;
-  final void Function(ApiErrorDetails)? onFetchCountError;
   final SirenStyleProps? customStyles;
   final CustomThemeColors? customTheme;
 
@@ -65,7 +63,7 @@ class _SirenNotificationIconWidgetState
     _subscription = SirenDataProvider.instance.iconController.stream.listen(
       (streamResponse) async {
         if (streamResponse.response?.isSuccess ?? false) {
-          if (streamResponse.api == StateUpdationApi.VIEW_ALL) {
+          if (streamResponse.api == UpdateEvents.VIEW_ALL) {
             final response = await FetchUnviewedNotificationsCount.instance
                 .fetchUnviewedNotificationsCount();
             setState(() {
@@ -108,7 +106,7 @@ class _SirenNotificationIconWidgetState
             },
           );
         } else if (response.isError) {
-          widget.onFetchCountError?.call(response.error ?? ApiErrorDetails());
+          widget.onError?.call(response.error ?? ApiErrorDetails());
         }
       }
     } else if (_tokenVerificationResponse.isError) {

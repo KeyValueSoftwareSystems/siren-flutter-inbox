@@ -1,3 +1,4 @@
+import 'package:siren_flutter_inbox/siren_flutter_inbox.dart';
 import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
 
 class Generics {
@@ -11,7 +12,15 @@ class Generics {
   static const String PLACEHOLDER_IMAGE_URL = 'https://picsum.photos/200/300';
   static const int PAGE_SIZE = 10;
 
-  static const BELL_ICON_PATH = 'packages/siren_flutter_inbox/assets/images/bell.png';
+  static const BELL_ICON_PATH =
+      'packages/siren_flutter_inbox/assets/images/bell.png';
+
+  static final DEFAULT_ERROR = ApiErrorDetails(
+    errorType: ErrorTypes.DEFAULT_ERROR,
+    errorCode: 'INTERNAL SERVER ERROR',
+    message:
+        'Oops something went wrong, if issue persist please contact Siren Team',
+  );
 }
 
 enum Status {
@@ -25,10 +34,14 @@ enum BulkUpdateType {
   MARK_AS_DELETED,
 }
 
-enum StateUpdationApi {
-  READ_BY_ID,
-  READ_ALL,
-  DELETE_BY_ID,
-  DELETE_ALL,
-  VIEW_ALL
+enum UpdateEvents { READ_BY_ID, READ_ALL, DELETE_BY_ID, DELETE_ALL, VIEW_ALL }
+
+enum ErrorTypes {
+  DEFAULT_ERROR,
+  AUTHENTICATION_ERROR,
+  FETCH_COUNT_ERROR,
+  NOTIFICATION_FETCH_ERROR,
+  NOTIFICATION_READ_ERROR,
+  NOTIFICATION_DELETE_ERROR,
+  UPDATE_VIEWED_ERROR,
 }

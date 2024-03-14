@@ -19,22 +19,36 @@ class FetchUnviewedNotificationsCount {
 
   Future<ApiResponse> fetchUnviewedNotificationsCount() async {
     final result = ApiResponse()..isLoading = true;
+    final apiError = ApiErrorDetails()
+      ..errorType = ErrorTypes.FETCH_COUNT_ERROR;
+
     final apiResponse = await api.get(
       path: Generics.API_PATH,
     );
-
-    var count = 0;
-    final data =
-        ApiResponse.fromJson(apiResponse.data).data as Map<String, dynamic>;
-    final notificationCount = UnviewedNotificationsCountModel.fromJson(data);
-    count = notificationCount.totalUnviewed;
-    result
-      ..isLoading = false
-      ..isSuccess = apiResponse.statusCode == 200
-      ..isError = apiResponse.statusCode != 200
-      ..data = count
-      ..meta = null
-      ..error = null;
+    if (apiResponse.statusCode != 0 && apiResponse.data != null) {
+      var count = 0;
+      final data =
+          ApiResponse.fromJson(apiResponse.data).data as Map<String, dynamic>?;
+      final notificationCount =
+          UnviewedNotificationsCountModel.fromJson(data ?? {});
+      apiError
+        ..errorCode = ApiResponse.fromJson(apiResponse.data).error?.errorCode
+        ..message = ApiResponse.fromJson(apiResponse.data).error?.message;
+      count = notificationCount.totalUnviewed;
+      result
+        ..isLoading = false
+        ..isSuccess = apiResponse.statusCode == 200
+        ..isError = apiResponse.statusCode != 200
+        ..data = count
+        ..meta = null
+        ..error = apiError;
+    } else {
+      result
+        ..isLoading = false
+        ..isSuccess = false
+        ..isError = true
+        ..error = Generics.DEFAULT_ERROR;
+    }
     return result;
   }
 }

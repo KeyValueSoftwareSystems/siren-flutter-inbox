@@ -22,6 +22,7 @@ class ApiResponse {
   bool isLoading = true;
   bool isSuccess = false;
   bool isError = false;
+  dynamic rawResponse;
 
   late dynamic data;
   late ApiErrorDetails? error;
@@ -69,6 +70,7 @@ class ApiErrorDetails {
   ApiErrorDetails({
     this.errorCode,
     this.message,
+    this.errorType,
   });
 
   factory ApiErrorDetails.fromJson(Map<String, dynamic>? json) {
@@ -79,8 +81,9 @@ class ApiErrorDetails {
     );
   }
 
-  final String? errorCode;
-  final String? message;
+  String? errorCode;
+  String? message;
+  ErrorTypes? errorType;
 }
 
 class DioResponse {
@@ -98,6 +101,6 @@ class StreamResponse {
   );
 
   final ApiResponse? response;
-  final StateUpdationApi? api;
+  final UpdateEvents? api;
   final String? id;
 }

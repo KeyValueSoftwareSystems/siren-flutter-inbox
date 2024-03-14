@@ -9,6 +9,8 @@ class MarkAllNotificationsAsViewed {
   }) async {
     final api = ApiClient(apiProvider());
     final result = ApiResponse()..isLoading;
+    final apiError = ApiErrorDetails()
+      ..errorType = ErrorTypes.UPDATE_VIEWED_ERROR;
 
     final data = {
       'lastOpenedAt': untilDate,
@@ -18,14 +20,24 @@ class MarkAllNotificationsAsViewed {
       path: Generics.API_PATH,
       data: data,
     );
-
-    final apiError = ApiResponse.fromJson(apiResponse.data).error;
-
-    result
-      ..isLoading = false
-      ..isSuccess = apiResponse.statusCode == 200
-      ..isError = apiResponse.statusCode != 200
-      ..error = apiError;
+    if (apiResponse.statusCode != 0 && apiResponse.data != null) {
+      apiError
+        ..errorCode = ApiResponse.fromJson(apiResponse.data).error?.errorCode
+        ..message = ApiResponse.fromJson(apiResponse.data).error?.message;
+      result
+        ..isLoading = false
+        ..isSuccess = apiResponse.statusCode == 200
+        ..isError = apiResponse.statusCode != 200
+        ..rawResponse = apiResponse
+        ..error = apiError;
+    } else {
+      result
+        ..isLoading = false
+        ..isSuccess = false
+        ..isError = true
+        ..rawResponse = apiResponse
+        ..error = Generics.DEFAULT_ERROR;
+    }
 
     return result;
   }

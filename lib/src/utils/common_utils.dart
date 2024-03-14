@@ -21,11 +21,3 @@ String generateElapsedTimeText(DateTime targetTime) {
   }
 }
 
-String capitalizeString(String input) {
-  String capitalizedString = input.split(' ').map(capitalize).join(' ');
-  return capitalizedString;
-}
-
-String capitalize(String word) {
-  return word.isEmpty ? word : word[0].toUpperCase() + word.substring(1);
-}

@@ -135,7 +135,7 @@ class _CardWidgetState extends State<CardWidget> {
 
   Widget _buildHeaderText(ThemeData theme) {
     return Text(
-      capitalizeString(widget.notification.message?.header ?? ''),
+      widget.notification.message?.header ?? '',
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       style: widget.styles?.cardTitle ??

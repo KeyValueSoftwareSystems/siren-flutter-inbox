@@ -23,20 +23,33 @@ class DeleteNotificationById {
     required String notificationId,
   }) async {
     final result = ApiResponse()..isLoading = true;
+    final apiError = ApiErrorDetails()
+      ..errorType = ErrorTypes.NOTIFICATION_DELETE_ERROR;
 
     final apiResponse = await api.delete(
       path: '$_apiPath/$notificationId',
     );
-    final deletionStatus = convertJsonToDeletionStatus(apiResponse.data);
+    if (apiResponse.statusCode != 0 && apiResponse.data != null) {
+      final deletionStatus = convertJsonToDeletionStatus(apiResponse.data);
 
-    final apiError = ApiResponse.fromJson(apiResponse.data).error;
-
-    result
-      ..isLoading = false
-      ..isSuccess = apiResponse.statusCode == 200
-      ..isError = apiResponse.statusCode != 200
-      ..data = deletionStatus
-      ..error = apiError;
+      apiError
+        ..errorCode = ApiResponse.fromJson(apiResponse.data).error?.errorCode
+        ..message = ApiResponse.fromJson(apiResponse.data).error?.message;
+      result
+        ..isLoading = false
+        ..isSuccess = apiResponse.statusCode == 200
+        ..isError = apiResponse.statusCode != 200
+        ..data = deletionStatus
+        ..rawResponse = apiResponse
+        ..error = apiError;
+    } else {
+      result
+        ..isLoading = false
+        ..isSuccess = false
+        ..isError = true
+        ..rawResponse = apiResponse
+        ..error = Generics.DEFAULT_ERROR;
+    }
 
     return result;
   }

@@ -29,26 +29,41 @@ class FetchAllNotifications {
     bool? isRead,
   }) async {
     final result = ApiResponse()..isLoading = true;
+    final apiError = ApiErrorDetails()
+      ..errorType = ErrorTypes.NOTIFICATION_FETCH_ERROR;
+
     final apiResponse = await api.get(
       path: _apiPath,
       queryParameters: {
         'page': page,
         'size': size,
+        'sort': 'createdAt',
       },
     );
 
-    final dataList =
-        ApiResponse.fromJson(apiResponse.data).data as List<dynamic>?;
-    final metaData = ApiResponse.fromJson(apiResponse.data).meta;
-    final apiError = ApiResponse.fromJson(apiResponse.data).error;
-
-    result
-      ..isLoading = false
-      ..isSuccess = apiResponse.statusCode == 200
-      ..isError = apiResponse.statusCode != 200
-      ..data = convertJsonToNotificationList(dataList ?? [])
-      ..meta = metaData
-      ..error = apiError;
+    if (apiResponse.statusCode != 0 && apiResponse.data != null) {
+      final dataList =
+          ApiResponse.fromJson(apiResponse.data).data as List<dynamic>?;
+      final metaData = ApiResponse.fromJson(apiResponse.data).meta;
+      apiError
+        ..errorCode = ApiResponse.fromJson(apiResponse.data).error?.errorCode
+        ..message = ApiResponse.fromJson(apiResponse.data).error?.message;
+      result
+        ..isLoading = false
+        ..isSuccess = apiResponse.statusCode == 200
+        ..isError = apiResponse.statusCode != 200
+        ..data = convertJsonToNotificationList(dataList ?? [])
+        ..meta = metaData
+        ..rawResponse = apiResponse
+        ..error = apiError;
+    } else {
+      result
+        ..isLoading = false
+        ..isSuccess = false
+        ..isError = true
+        ..rawResponse = apiResponse
+        ..error = Generics.DEFAULT_ERROR;
+    }
 
     return result;
   }

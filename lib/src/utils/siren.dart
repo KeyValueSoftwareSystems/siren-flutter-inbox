@@ -7,17 +7,17 @@ import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
 import 'package:siren_flutter_inbox/src/models/api_response.dart';
 
 class Siren {
-  static Future<ApiResponse> markAsRead({
+  static Future markAsRead({
     required String id,
   }) async {
     final response = await ReadNotificationById.instance
         .readNotificationById(notificationId: id);
     SirenDataProvider.instance.controller.sink
-        .add(StreamResponse(response, StateUpdationApi.READ_BY_ID, id));
-    return response;
+        .add(StreamResponse(response, UpdateEvents.READ_BY_ID, id));
+    return response.rawResponse;
   }
 
-  static Future<ApiResponse> markNotificationsAsReadByDate({
+  static Future markNotificationsAsReadByDate({
     required String untilDate,
   }) async {
     final data = {
@@ -27,11 +27,11 @@ class Siren {
     final response =
         await NotificationsBulkUpdate.notificationsBulkUpdate(data: data);
     SirenDataProvider.instance.controller.sink
-        .add(StreamResponse(response, StateUpdationApi.READ_ALL, ''));
-    return response;
+        .add(StreamResponse(response, UpdateEvents.READ_ALL, ''));
+    return response.rawResponse;
   }
 
-  static Future<ApiResponse> markNotificationsAsViewed({
+  static Future markNotificationsAsViewed({
     required String untilDate,
   }) async {
     final response =
@@ -39,21 +39,21 @@ class Siren {
       untilDate: untilDate,
     );
     SirenDataProvider.instance.controller.sink
-        .add(StreamResponse(response, StateUpdationApi.VIEW_ALL, ''));
-    return response;
+        .add(StreamResponse(response, UpdateEvents.VIEW_ALL, ''));
+    return response.rawResponse;
   }
 
-  static Future<ApiResponse> deleteNotification({
+  static Future deleteNotification({
     required String id,
   }) async {
     final response = await DeleteNotificationById.instance
         .deleteNotificationById(notificationId: id);
     SirenDataProvider.instance.controller.sink
-        .add(StreamResponse(response, StateUpdationApi.DELETE_BY_ID, id));
-    return response;
+        .add(StreamResponse(response, UpdateEvents.DELETE_BY_ID, id));
+    return response.rawResponse;
   }
 
-  static Future<ApiResponse> deleteNotificationByDate({
+  static Future deleteNotificationByDate({
     required String untilDate,
   }) async {
     final data = {
@@ -63,7 +63,7 @@ class Siren {
     final response =
         await NotificationsBulkUpdate.notificationsBulkUpdate(data: data);
     SirenDataProvider.instance.controller.sink
-        .add(StreamResponse(response, StateUpdationApi.DELETE_ALL, ''));
-    return response;
+        .add(StreamResponse(response, UpdateEvents.DELETE_ALL, ''));
+    return response.rawResponse;
   }
 }
