@@ -132,7 +132,7 @@ class _SirenNotificationIconWidgetState
               : AppTheme.lightTheme),
       child: Builder(
         builder: (context) {
-          final size = widget.customStyles?.iconStyle?.size ?? 40;
+          final size = widget.customStyles?.iconStyle?.size ?? 35;
           final currentTheme = Theme.of(context);
           return GestureDetector(
             onTap: widget.onTap ?? () {},
@@ -166,11 +166,11 @@ class _SirenNotificationIconWidgetState
     final badgeStyle = widget.customStyles?.badgeStyle;
     final currentTheme = Theme.of(context);
     return Positioned(
-      right: badgeStyle?.right ?? 0,
+      right: badgeStyle?.right ?? 2,
       top: badgeStyle?.top ?? 0,
       child: Container(
-        width: badgeStyle?.size ?? 15,
-        height: badgeStyle?.size ?? 15,
+        width: badgeStyle?.size ?? 18,
+        height: badgeStyle?.size ?? 18,
         padding: EdgeInsets.all(badgeStyle?.inset ?? 1),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
@@ -181,7 +181,7 @@ class _SirenNotificationIconWidgetState
             _notificationsCount > 99 ? '99+' : _notificationsCount.toString(),
             style: TextStyle(
               color: currentTheme.colorScheme.onTertiary,
-              fontSize: badgeStyle?.fontSize ?? 8,
+              fontSize: badgeStyle?.fontSize ?? 10,
             ),
           ),
         ),

@@ -75,7 +75,7 @@ class CustomThemeColors {
     this.deleteIconColor,
     this.clearAllIconColor,
     this.textColor,
-    this.inverseBackground,
+    this.windowTitleColor,
     this.badgeBackgroundColor,
     this.badgeColor,
     this.iconColor,
@@ -88,7 +88,7 @@ class CustomThemeColors {
   final Color? deleteIconColor;
   final Color? clearAllIconColor;
   final Color? textColor;
-  final Color? inverseBackground;
+  final Color? windowTitleColor;
   final Color? badgeBackgroundColor;
   final Color? badgeColor;
   final Color? iconColor;
