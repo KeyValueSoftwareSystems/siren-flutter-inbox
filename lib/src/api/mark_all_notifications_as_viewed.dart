@@ -28,12 +28,14 @@ class MarkAllNotificationsAsViewed {
         ..isLoading = false
         ..isSuccess = apiResponse.statusCode == 200
         ..isError = apiResponse.statusCode != 200
+        ..rawResponse = apiResponse
         ..error = apiError;
     } else {
       result
         ..isLoading = false
         ..isSuccess = false
         ..isError = true
+        ..rawResponse = apiResponse
         ..error = Generics.DEFAULT_ERROR;
     }
 

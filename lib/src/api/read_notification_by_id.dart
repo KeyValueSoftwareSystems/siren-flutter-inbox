@@ -26,19 +26,21 @@ class ReadNotificationById {
       },
     );
     if (apiResponse.statusCode != 0 && apiResponse.data != null) {
-       apiError
+      apiError
         ..errorCode = ApiResponse.fromJson(apiResponse.data).error?.errorCode
         ..message = ApiResponse.fromJson(apiResponse.data).error?.message;
       result
         ..isLoading = false
         ..isSuccess = apiResponse.statusCode == 200
         ..isError = apiResponse.statusCode != 200
+        ..rawResponse = apiResponse
         ..error = apiError;
     } else {
       result
         ..isLoading = false
         ..isSuccess = false
         ..isError = true
+        ..rawResponse = apiResponse
         ..error = Generics.DEFAULT_ERROR;
     }
     return result;

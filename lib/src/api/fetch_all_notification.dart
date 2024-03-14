@@ -29,7 +29,7 @@ class FetchAllNotifications {
     bool? isRead,
   }) async {
     final result = ApiResponse()..isLoading = true;
-     final apiError = ApiErrorDetails()
+    final apiError = ApiErrorDetails()
       ..errorType = ErrorTypes.NOTIFICATION_FETCH_ERROR;
 
     final apiResponse = await api.get(
@@ -44,7 +44,7 @@ class FetchAllNotifications {
       final dataList =
           ApiResponse.fromJson(apiResponse.data).data as List<dynamic>?;
       final metaData = ApiResponse.fromJson(apiResponse.data).meta;
-apiError
+      apiError
         ..errorCode = ApiResponse.fromJson(apiResponse.data).error?.errorCode
         ..message = ApiResponse.fromJson(apiResponse.data).error?.message;
       result
@@ -53,12 +53,14 @@ apiError
         ..isError = apiResponse.statusCode != 200
         ..data = convertJsonToNotificationList(dataList ?? [])
         ..meta = metaData
+        ..rawResponse = apiResponse
         ..error = apiError;
     } else {
       result
         ..isLoading = false
         ..isSuccess = false
         ..isError = true
+        ..rawResponse = apiResponse
         ..error = Generics.DEFAULT_ERROR;
     }
 

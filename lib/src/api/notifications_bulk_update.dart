@@ -10,7 +10,7 @@ class NotificationsBulkUpdate {
     final api = ApiClient(apiProvider());
     final apiPath = '${Generics.API_PATH}/notifications/bulk-update';
     final result = ApiResponse()..isLoading;
-     final apiError = ApiErrorDetails()
+    final apiError = ApiErrorDetails()
       ..errorType = ErrorTypes.NOTIFICATION_DELETE_ERROR;
 
     final apiResponse = await api.post(
@@ -26,12 +26,14 @@ class NotificationsBulkUpdate {
         ..isLoading = false
         ..isSuccess = apiResponse.statusCode == 200
         ..isError = apiResponse.statusCode != 200
+        ..rawResponse = apiResponse
         ..error = apiError;
     } else {
       result
         ..isLoading = false
         ..isSuccess = false
         ..isError = true
+        ..rawResponse = apiResponse
         ..error = Generics.DEFAULT_ERROR;
     }
 

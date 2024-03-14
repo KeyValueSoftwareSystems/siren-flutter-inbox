@@ -27,7 +27,10 @@ class ApiClient {
       );
       return DioResponse(data: response.data, statusCode: response.statusCode);
     } on DioException catch (e) {
-      if (e.response == null) {
+      if (e.response == null ||
+          (e.response?.statusCode != null &&
+              e.response!.statusCode! >= 500 &&
+              e.response!.statusCode! < 600)) {
         return DioResponse(
           data: null,
           statusCode: 0,
@@ -63,7 +66,10 @@ class ApiClient {
       );
       return DioResponse(data: response.data, statusCode: response.statusCode);
     } on DioException catch (e) {
-      if (e.response == null) {
+       if (e.response == null ||
+          (e.response?.statusCode != null &&
+              e.response!.statusCode! >= 500 &&
+              e.response!.statusCode! < 600)) {
         return DioResponse(
           data: null,
           statusCode: 0,
@@ -99,7 +105,10 @@ class ApiClient {
       );
       return DioResponse(data: response.data, statusCode: response.statusCode);
     } on DioException catch (e) {
-      if (e.response == null) {
+       if (e.response == null ||
+          (e.response?.statusCode != null &&
+              e.response!.statusCode! >= 500 &&
+              e.response!.statusCode! < 600)) {
         return DioResponse(
           data: null,
           statusCode: 0,
@@ -130,7 +139,10 @@ class ApiClient {
       );
       return DioResponse(data: response.data, statusCode: response.statusCode);
     } on DioException catch (e) {
-      if (e.response == null) {
+       if (e.response == null ||
+          (e.response?.statusCode != null &&
+              e.response!.statusCode! >= 500 &&
+              e.response!.statusCode! < 600)) {
         return DioResponse(
           data: null,
           statusCode: 0,

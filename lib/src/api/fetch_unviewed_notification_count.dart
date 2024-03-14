@@ -29,7 +29,8 @@ class FetchUnviewedNotificationsCount {
       var count = 0;
       final data =
           ApiResponse.fromJson(apiResponse.data).data as Map<String, dynamic>?;
-      final notificationCount = UnviewedNotificationsCountModel.fromJson(data ?? {});
+      final notificationCount =
+          UnviewedNotificationsCountModel.fromJson(data ?? {});
       apiError
         ..errorCode = ApiResponse.fromJson(apiResponse.data).error?.errorCode
         ..message = ApiResponse.fromJson(apiResponse.data).error?.message;

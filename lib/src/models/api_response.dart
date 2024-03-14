@@ -22,6 +22,7 @@ class ApiResponse {
   bool isLoading = true;
   bool isSuccess = false;
   bool isError = false;
+  dynamic rawResponse;
 
   late dynamic data;
   late ApiErrorDetails? error;

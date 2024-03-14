@@ -40,12 +40,14 @@ class DeleteNotificationById {
         ..isSuccess = apiResponse.statusCode == 200
         ..isError = apiResponse.statusCode != 200
         ..data = deletionStatus
+        ..rawResponse = apiResponse
         ..error = apiError;
     } else {
       result
         ..isLoading = false
         ..isSuccess = false
         ..isError = true
+        ..rawResponse = apiResponse
         ..error = Generics.DEFAULT_ERROR;
     }
 

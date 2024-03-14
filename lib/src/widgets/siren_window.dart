@@ -5,6 +5,7 @@ import 'package:siren_flutter_inbox/siren_flutter_inbox.dart';
 import 'package:siren_flutter_inbox/src/api/delete_notification_by_id.dart';
 import 'package:siren_flutter_inbox/src/api/fetch_all_notification.dart';
 import 'package:siren_flutter_inbox/src/api/mark_all_notifications_as_viewed.dart';
+import 'package:siren_flutter_inbox/src/api/notifications_bulk_update.dart';
 import 'package:siren_flutter_inbox/src/api/read_notification_by_id.dart';
 import 'package:siren_flutter_inbox/src/api/verify_token.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
@@ -295,8 +296,14 @@ class _SirenWindowState extends State<SirenWindow> {
   }
 
   Future<void> onBulkDelete() async {
-    final deleteAllResponse = await Siren.deleteNotificationByDate(
-        untilDate: DateTime.now().toUtc().toIso8601String());
+    final data = {
+      'until': DateTime.now().toUtc().toIso8601String(),
+      'operation': BulkUpdateType.MARK_AS_DELETED.name,
+    };
+    final deleteAllResponse =
+        await NotificationsBulkUpdate.notificationsBulkUpdate(
+      data: data,
+    );
     if (deleteAllResponse.isSuccess) {
       _deleteAllNotifications();
     } else if (deleteAllResponse.isError) {
