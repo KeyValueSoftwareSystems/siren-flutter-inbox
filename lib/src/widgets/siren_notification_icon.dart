@@ -62,17 +62,39 @@ class _SirenNotificationIconWidgetState
   void _subscribeToStream() {
     _subscription = SirenDataProvider.instance.iconController.stream.listen(
       (streamResponse) async {
+        if (streamResponse.api == UpdateEvents.PARAMS_CHANGED) {
+          await _reset();
+          return;
+        }
         if (streamResponse.response?.isSuccess ?? false) {
-          if (streamResponse.api == UpdateEvents.VIEW_ALL) {
-            final response = await FetchUnviewedNotificationsCount.instance
-                .fetchUnviewedNotificationsCount();
-            setState(() {
-              updateNotificationsCount(response.data);
-            });
+          switch (streamResponse.api) {
+            case UpdateEvents.VIEW_ALL:
+              {
+                await _markAllNotificationsAsViewed();
+              }
+
+            default:
           }
         }
       },
     );
+  }
+
+  Future<void> _reset() async {
+    _notificationsCount = 0;
+    _tokenVerificationStatus = Status.PENDING;
+    _periodicUpdateRef.cancel();
+    await _initialize();
+  }
+
+  Future<void> _markAllNotificationsAsViewed() async {
+    final response = await FetchUnViewedNotificationsCount.instance
+        .fetchUnViewedNotificationsCount();
+    if (mounted) {
+      setState(() {
+        updateNotificationsCount(response.data);
+      });
+    }
   }
 
   void updateNotificationsCount(dynamic responseData) {
@@ -81,14 +103,16 @@ class _SirenNotificationIconWidgetState
     }
   }
 
-  void _startRealTimeUnviewedCountFetch() {
+  void _startRealTimeUnViewedCountFetch() {
     _periodicUpdateRef = Timer.periodic(
         const Duration(seconds: Generics.DATA_FETCH_INTERVAL), (timer) async {
-      final response = await FetchUnviewedNotificationsCount.instance
-          .fetchUnviewedNotificationsCount();
-      setState(() {
-        updateNotificationsCount(response.data);
-      });
+      final response = await FetchUnViewedNotificationsCount.instance
+          .fetchUnViewedNotificationsCount();
+      if (mounted) {
+        setState(() {
+          updateNotificationsCount(response.data);
+        });
+      }
     });
   }
 
@@ -96,15 +120,17 @@ class _SirenNotificationIconWidgetState
     await _verifyToken();
     if (_tokenVerificationResponse.isSuccess) {
       if (_tokenVerificationStatus == Status.SUCCESS) {
-        final response = await FetchUnviewedNotificationsCount.instance
-            .fetchUnviewedNotificationsCount();
+        final response = await FetchUnViewedNotificationsCount.instance
+            .fetchUnViewedNotificationsCount();
         if (response.isSuccess) {
-          _startRealTimeUnviewedCountFetch();
-          setState(
-            () {
-              updateNotificationsCount(response.data);
-            },
-          );
+          _startRealTimeUnViewedCountFetch();
+          if (mounted) {
+            setState(
+              () {
+                updateNotificationsCount(response.data);
+              },
+            );
+          }
         } else if (response.isError) {
           widget.onError?.call(response.error ?? ApiErrorDetails());
         }

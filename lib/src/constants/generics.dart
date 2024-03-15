@@ -34,7 +34,14 @@ enum BulkUpdateType {
   MARK_AS_DELETED,
 }
 
-enum UpdateEvents { READ_BY_ID, READ_ALL, DELETE_BY_ID, DELETE_ALL, VIEW_ALL }
+enum UpdateEvents {
+  READ_BY_ID,
+  READ_ALL,
+  DELETE_BY_ID,
+  DELETE_ALL,
+  VIEW_ALL,
+  PARAMS_CHANGED
+}
 
 enum ErrorTypes {
   DEFAULT_ERROR,

@@ -1,7 +1,9 @@
 library siren_flutter_inbox;
 
 import 'package:flutter/material.dart';
+import 'package:siren_flutter_inbox/src/constants/generics.dart';
 import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
+import 'package:siren_flutter_inbox/src/models/api_response.dart';
 
 export 'package:siren_flutter_inbox/src/models/api_response.dart';
 export 'package:siren_flutter_inbox/src/models/notification_model.dart';
@@ -10,7 +12,7 @@ export 'package:siren_flutter_inbox/src/utils/siren.dart';
 export 'package:siren_flutter_inbox/src/widgets/siren_notification_icon.dart';
 export 'package:siren_flutter_inbox/src/widgets/siren_window.dart';
 
-class SirenProvider extends StatelessWidget {
+class SirenProvider extends StatefulWidget {
   SirenProvider({
     required this.userToken,
     required this.recipientId,
@@ -25,7 +27,26 @@ class SirenProvider extends StatelessWidget {
   final Widget child;
 
   @override
+  State<SirenProvider> createState() => _SirenProviderState();
+}
+
+class _SirenProviderState extends State<SirenProvider> {
+  @override
+  void didUpdateWidget(SirenProvider oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.userToken != widget.userToken ||
+        oldWidget.recipientId != widget.recipientId) {
+      SirenDataProvider.instance.updateParams(
+        userToken: widget.userToken,
+        recipientId: widget.recipientId,
+      );
+      SirenDataProvider.instance.iconController.sink
+          .add(StreamResponse(null, UpdateEvents.PARAMS_CHANGED, ''));
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return child;
+    return widget.child;
   }
 }
