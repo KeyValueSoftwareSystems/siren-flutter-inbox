@@ -204,7 +204,7 @@ class _SirenInboxState extends State<SirenInbox> {
     }
   }
 
-  void pollFetchNotifications() {
+  void updateNewNotifications() {
     late var newNotifications = <NotificationDataType>[];
     _periodicUpdateRef = Timer.periodic(
       const Duration(seconds: Generics.DATA_FETCH_INTERVAL),
@@ -287,7 +287,7 @@ class _SirenInboxState extends State<SirenInbox> {
           totalPages = fetchedNotifications.meta?.totalPages ?? 0;
           updateCurrentPageState();
         });
-        pollFetchNotifications();
+        updateNewNotifications();
       } else if (fetchedNotifications.isError) {
         setState(() {
           isError = fetchedNotifications.isError;
