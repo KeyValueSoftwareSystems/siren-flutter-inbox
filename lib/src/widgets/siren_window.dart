@@ -22,43 +22,45 @@ class SirenWindow extends StatefulWidget {
     this.customStyles,
     this.hideAvatar,
     this.deleteWidget,
-    this.showWindowHeader,
-    this.customEmptyWidget,
-    this.windowHeaderText,
+    this.hideHeader,
+    this.listEmptyComponent,
+    this.title,
     this.windowHeaderTextStyle,
     this.pageSize,
     this.showHeaderBackButton,
     this.headerIconTheme,
     this.isCenterTitle,
-    this.buildCardWidget,
-    this.onCardClick,
+    this.customNotificationCard,
+    this.onNotificationCardClick,
     this.onError,
     this.hideClearAll,
     this.customHeaderSuffixCTA,
-    this.isDarkMode,
-    this.customTheme,
+    this.darkMode,
+    this.theme,
     this.customLoader,
+    this.customErrorWidget,
   });
 
   final SirenStyleProps? customStyles;
   final bool? hideAvatar;
   final Widget? deleteWidget;
-  final bool? showWindowHeader;
-  final Widget? customEmptyWidget;
-  final String? windowHeaderText;
+  final bool? hideHeader;
+  final Widget? listEmptyComponent;
+  final String? title;
   final TextStyle? windowHeaderTextStyle;
   final int? pageSize;
   final bool? showHeaderBackButton;
   final IconThemeData? headerIconTheme;
   final bool? isCenterTitle;
-  final Widget Function(NotificationDataType)? buildCardWidget;
-  final void Function(NotificationDataType)? onCardClick;
+  final Widget Function(NotificationDataType)? customNotificationCard;
+  final void Function(NotificationDataType)? onNotificationCardClick;
   final void Function(ApiErrorDetails)? onError;
   final bool? hideClearAll;
   final List<Widget>? customHeaderSuffixCTA;
-  final bool? isDarkMode;
-  final CustomThemeColors? customTheme;
+  final bool? darkMode;
+  final CustomThemeColors? theme;
   final Widget? customLoader;
+  final Widget? customErrorWidget;
 
   @override
   _SirenWindowState createState() => _SirenWindowState();
@@ -290,9 +292,9 @@ class _SirenWindowState extends State<SirenWindow> {
 
   Future<void> onRefresh() async {
     setState(() {
+      isLoading = true;
       notifications = [];
       totalElements = 0;
-      isLoading = true;
       currentPage = 0;
     });
     await fetchNotifications();
@@ -367,9 +369,10 @@ class _SirenWindowState extends State<SirenWindow> {
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: widget.customTheme != null
-          ? AppTheme.customTheme(widget.customTheme!, isDarkMode: widget.isDarkMode ?? false)
-          : (widget.isDarkMode ?? false
+      data: widget.theme != null
+          ? AppTheme.customTheme(widget.theme!,
+              isDarkMode: widget.darkMode ?? false)
+          : (widget.darkMode ?? false
               ? AppTheme.darkTheme
               : AppTheme.lightTheme),
       child: Builder(
@@ -378,9 +381,8 @@ class _SirenWindowState extends State<SirenWindow> {
 
           return Scaffold(
             backgroundColor: currentTheme.colorScheme.primary,
-            appBar: widget.showWindowHeader ?? true
-                ? _buildAppBar(currentTheme)
-                : null,
+            appBar:
+                widget.hideHeader ?? false ? null : _buildAppBar(currentTheme),
             body: isError
                 ? RefreshIndicator(
                     color: currentTheme.colorScheme.secondary,
@@ -417,7 +419,7 @@ class _SirenWindowState extends State<SirenWindow> {
     return AppBar(
       title: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Text(widget.windowHeaderText ?? 'Notifications'),
+        child: Text(widget.title ?? 'Notifications'),
       ),
       backgroundColor: theme.colorScheme.primary,
       titleTextStyle: widget.windowHeaderTextStyle ??
@@ -471,7 +473,7 @@ class _SirenWindowState extends State<SirenWindow> {
     if (notifications.isEmpty && isLoading) {
       return widget.customLoader ?? const LoaderWidget();
     } else if (notifications.isEmpty && !isLoading) {
-      return widget.customEmptyWidget ?? const EmptyWidget();
+      return widget.listEmptyComponent ?? const EmptyWidget();
     } else {
       return NotificationListView(
         notifications: notifications,
@@ -486,9 +488,10 @@ class _SirenWindowState extends State<SirenWindow> {
         scrollController: _scrollController,
         onDelete: deleteNotification,
         markAsRead: _markNotificationAsRead,
-        buildCardWidget: widget.buildCardWidget,
-        onCardClick: widget.onCardClick,
+        customNotificationCard: widget.customNotificationCard,
+        onNotificationCardClick: widget.onNotificationCardClick,
         deletingNotificationId: deletingNotificationId,
+        customLoader: widget.customLoader,
       );
     }
   }
@@ -527,9 +530,10 @@ class NotificationListView extends StatelessWidget {
     required this.scrollController,
     required this.onDelete,
     required this.markAsRead,
-    this.buildCardWidget,
-    this.onCardClick,
+    this.customNotificationCard,
+    this.onNotificationCardClick,
     this.deletingNotificationId,
+    this.customLoader,
     super.key,
   });
 
@@ -545,9 +549,10 @@ class NotificationListView extends StatelessWidget {
   final ScrollController scrollController;
   final Future<void> Function(String) onDelete;
   final void Function(String) markAsRead;
-  final Widget Function(NotificationDataType)? buildCardWidget;
-  final void Function(NotificationDataType)? onCardClick;
+  final Widget Function(NotificationDataType)? customNotificationCard;
+  final void Function(NotificationDataType)? onNotificationCardClick;
   final String? deletingNotificationId;
+  final Widget? customLoader;
 
   @override
   Widget build(BuildContext context) {
@@ -559,21 +564,22 @@ class NotificationListView extends StatelessWidget {
         itemCount: notifications.length + (endReached ? 0 : 1),
         itemBuilder: (context, index) {
           if (index < notifications.length) {
-            final itemWidget = buildCardWidget?.call(notifications[index]) ??
-                CardWidget(
-                  onTap: (notification) {
-                    markAsRead(notifications[index].id ?? '');
-                    onCardClick?.call(notifications[index]);
-                  },
-                  notification: notifications[index],
-                  cardProps: CardProps(
-                    hideAvatar: hideAvatar,
-                    showMedia: true,
-                  ),
-                  styles: customStyles,
-                  deleteWidget: deleteWidget,
-                  onDelete: onDelete,
-                );
+            final itemWidget =
+                customNotificationCard?.call(notifications[index]) ??
+                    CardWidget(
+                      onTap: (notification) {
+                        markAsRead(notifications[index].id ?? '');
+                        onNotificationCardClick?.call(notifications[index]);
+                      },
+                      notification: notifications[index],
+                      cardProps: CardProps(
+                        hideAvatar: hideAvatar,
+                        showMedia: true,
+                      ),
+                      styles: customStyles,
+                      deleteWidget: deleteWidget,
+                      onDelete: onDelete,
+                    );
             return AnimatedOpacity(
               duration: const Duration(milliseconds: 500),
               opacity:
