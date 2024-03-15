@@ -16,8 +16,8 @@ import 'package:siren_flutter_inbox/src/widgets/empty_widget.dart';
 import 'package:siren_flutter_inbox/src/widgets/error_widget.dart';
 import 'package:siren_flutter_inbox/src/widgets/loader_widget.dart';
 
-class SirenWindow extends StatefulWidget {
-  const SirenWindow({
+class SirenInbox extends StatefulWidget {
+  const SirenInbox({
     super.key,
     this.customStyles,
     this.hideAvatar,
@@ -63,10 +63,10 @@ class SirenWindow extends StatefulWidget {
   final Widget? customHeader;
 
   @override
-  _SirenWindowState createState() => _SirenWindowState();
+  _SirenInboxState createState() => _SirenInboxState();
 }
 
-class _SirenWindowState extends State<SirenWindow> {
+class _SirenInboxState extends State<SirenInbox> {
   late ScrollController _scrollController;
   bool isLoading = true;
   bool endReached = false;
