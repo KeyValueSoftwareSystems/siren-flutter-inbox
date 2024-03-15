@@ -301,6 +301,7 @@ class _SirenWindowState extends State<SirenWindow> {
     setState(() {
       isLoading = true;
       notifications = [];
+      endReached = false;
       totalElements = 0;
       currentPage = 0;
     });
