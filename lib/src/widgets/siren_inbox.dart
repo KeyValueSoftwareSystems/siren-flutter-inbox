@@ -25,7 +25,7 @@ class SirenInbox extends StatefulWidget {
     this.hideHeader,
     this.listEmptyComponent,
     this.title,
-    this.windowHeaderTextStyle,
+    this.headerTextStyle,
     this.pageSize,
     this.showHeaderBackButton,
     this.headerIconTheme,
@@ -47,7 +47,7 @@ class SirenInbox extends StatefulWidget {
   final bool? hideHeader;
   final Widget? listEmptyComponent;
   final String? title;
-  final TextStyle? windowHeaderTextStyle;
+  final TextStyle? headerTextStyle;
   final int? pageSize;
   final bool? showHeaderBackButton;
   final IconThemeData? headerIconTheme;
@@ -425,8 +425,14 @@ class _SirenInboxState extends State<SirenInbox> {
 
   Widget _buildCustomAppBar(ThemeData theme, double appBarHeight) {
     return Container(
+      decoration: BoxDecoration(
+          color: theme.colorScheme.primary,
+          border: Border(
+            bottom: BorderSide(
+              color: theme.colorScheme.surfaceTint,
+            ),
+          )),
       height: appBarHeight,
-      color: theme.colorScheme.primary,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Row(
@@ -436,7 +442,7 @@ class _SirenInboxState extends State<SirenInbox> {
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: Text(
                 widget.title ?? 'Notifications',
-                style: widget.windowHeaderTextStyle ??
+                style: widget.headerTextStyle ??
                     TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
