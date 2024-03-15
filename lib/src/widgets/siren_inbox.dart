@@ -25,10 +25,10 @@ class SirenInbox extends StatefulWidget {
     this.hideHeader,
     this.listEmptyComponent,
     this.title,
-    this.headerTextStyle,
+    this.defaultHeaderTextStyle,
     this.pageSize,
-    this.showHeaderBackButton,
-    this.headerIconTheme,
+    this.showDefaultHeaderBackButton,
+    this.defaultBackButton,
     this.isCenterTitle,
     this.customNotificationCard,
     this.onNotificationCardClick,
@@ -39,6 +39,7 @@ class SirenInbox extends StatefulWidget {
     this.customLoader,
     this.customErrorWidget,
     this.customHeader,
+    this.handleBackNavigation,
   });
 
   final SirenStyleProps? customStyles;
@@ -47,10 +48,10 @@ class SirenInbox extends StatefulWidget {
   final bool? hideHeader;
   final Widget? listEmptyComponent;
   final String? title;
-  final TextStyle? headerTextStyle;
+  final TextStyle? defaultHeaderTextStyle;
   final int? pageSize;
-  final bool? showHeaderBackButton;
-  final IconThemeData? headerIconTheme;
+  final bool? showDefaultHeaderBackButton;
+  final Icon? defaultBackButton;
   final bool? isCenterTitle;
   final Widget Function(NotificationDataType)? customNotificationCard;
   final void Function(NotificationDataType)? onNotificationCardClick;
@@ -61,6 +62,7 @@ class SirenInbox extends StatefulWidget {
   final Widget? customLoader;
   final Widget? customErrorWidget;
   final Widget? customHeader;
+  final void Function()? handleBackNavigation;
 
   @override
   _SirenInboxState createState() => _SirenInboxState();
@@ -433,24 +435,44 @@ class _SirenInboxState extends State<SirenInbox> {
             ),
           )),
       height: appBarHeight,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Text(
-                widget.title ?? 'Notifications',
-                style: widget.headerTextStyle ??
-                    TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: theme.colorScheme.inversePrimary,
-                    ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              if (widget.showDefaultHeaderBackButton ?? false)
+                IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    if (widget.handleBackNavigation != null) {
+                      widget.handleBackNavigation?.call();
+                    }
+                  },
+                  icon: widget.defaultBackButton ??
+                      const Icon(Icons.arrow_back_ios),
+                ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal:
+                      widget.showDefaultHeaderBackButton ?? false ? 2 : 24,
+                ),
+                child: Text(
+                  widget.title ?? 'Notifications',
+                  style: widget.defaultHeaderTextStyle ??
+                      TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: theme.colorScheme.inversePrimary,
+                      ),
+                ),
               ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              right: 24,
             ),
-            Row(
+            child: Row(
               children: [
                 if (!(widget.hideClearAll ?? false) &&
                     (!isError && !isLoading && notifications.isNotEmpty))
@@ -479,8 +501,8 @@ class _SirenInboxState extends State<SirenInbox> {
                   ),
               ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
