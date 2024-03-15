@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -150,7 +150,10 @@ class _SirenNotificationIconWidgetState
   Widget build(BuildContext context) {
     return Theme(
       data: widget.customTheme != null
-          ? AppTheme.customTheme(widget.customTheme!, isDarkMode: widget.darkMode ?? false)
+          ? AppTheme.customTheme(
+              widget.customTheme!,
+              isDarkMode: widget.darkMode ?? false,
+            )
           : (widget.darkMode ?? false
               ? AppTheme.darkTheme
               : AppTheme.lightTheme),
