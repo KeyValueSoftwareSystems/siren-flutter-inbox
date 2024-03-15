@@ -34,11 +34,11 @@ class SirenWindow extends StatefulWidget {
     this.onNotificationCardClick,
     this.onError,
     this.hideClearAll,
-    this.customHeaderSuffixCTA,
     this.darkMode,
     this.theme,
     this.customLoader,
     this.customErrorWidget,
+    this.customHeader,
   });
 
   final SirenStyleProps? customStyles;
@@ -56,11 +56,11 @@ class SirenWindow extends StatefulWidget {
   final void Function(NotificationDataType)? onNotificationCardClick;
   final void Function(ApiErrorDetails)? onError;
   final bool? hideClearAll;
-  final List<Widget>? customHeaderSuffixCTA;
   final bool? darkMode;
   final CustomThemeColors? theme;
   final Widget? customLoader;
   final Widget? customErrorWidget;
+  final Widget? customHeader;
 
   @override
   _SirenWindowState createState() => _SirenWindowState();
@@ -143,6 +143,13 @@ class _SirenWindowState extends State<SirenWindow> {
               ?.call(streamResponse.response?.error ?? ApiErrorDetails());
         }
       },
+    );
+  }
+
+  PreferredSize _buildAppBar(ThemeData theme) {
+    return PreferredSize(
+      preferredSize: const Size.fromHeight(kToolbarHeight),
+      child: widget.customHeader ?? _buildCustomAppBar(theme, kToolbarHeight),
     );
   }
 
@@ -415,57 +422,59 @@ class _SirenWindowState extends State<SirenWindow> {
     );
   }
 
-  AppBar? _buildAppBar(ThemeData theme) {
-    return AppBar(
-      title: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Text(widget.title ?? 'Notifications'),
-      ),
-      backgroundColor: theme.colorScheme.primary,
-      titleTextStyle: widget.windowHeaderTextStyle ??
-          TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: theme.colorScheme.inversePrimary,
-          ),
-      centerTitle: widget.isCenterTitle ?? false,
-      automaticallyImplyLeading: widget.showHeaderBackButton ?? false,
-      iconTheme:
-          widget.headerIconTheme ?? const IconThemeData(color: Colors.white),
-      actions: [
-        if (widget.customHeaderSuffixCTA != null)
-          ...widget.customHeaderSuffixCTA!,
-        if (!(widget.hideClearAll ?? false) &&
-            (!isError && !isLoading && notifications.isNotEmpty))
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: GestureDetector(
-              onTap: onBulkDelete,
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 2,
+  Widget _buildCustomAppBar(ThemeData theme, double appBarHeight) {
+    return Container(
+      height: appBarHeight,
+      color: theme.colorScheme.primary,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Text(
+                widget.title ?? 'Notifications',
+                style: widget.windowHeaderTextStyle ??
+                    TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: theme.colorScheme.inversePrimary,
                     ),
-                    child: Icon(
-                      Icons.clear_all,
-                      color: theme.colorScheme.outline,
-                      size: 24,
-                    ),
-                  ),
-                  Text(
-                    'Clear All',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: theme.colorScheme.outline,
-                    ),
-                  ),
-                ],
               ),
             ),
-          ),
-      ],
+            Row(
+              children: [
+                if (!(widget.hideClearAll ?? false) &&
+                    (!isError && !isLoading && notifications.isNotEmpty))
+                  GestureDetector(
+                    onTap: onBulkDelete,
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 2),
+                          child: Icon(
+                            Icons.clear_all,
+                            color: theme.colorScheme.outline,
+                            size: 24,
+                          ),
+                        ),
+                        Text(
+                          'Clear All',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: theme.colorScheme.outline,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 
