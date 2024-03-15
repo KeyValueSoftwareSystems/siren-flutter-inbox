@@ -17,30 +17,30 @@ import 'package:siren_flutter_inbox/src/widgets/error_widget.dart';
 import 'package:siren_flutter_inbox/src/widgets/loader_widget.dart';
 
 class SirenInbox extends StatefulWidget {
-  const SirenInbox({
-    super.key,
-    this.customStyles,
-    this.hideAvatar,
-    this.deleteWidget,
-    this.hideHeader,
-    this.listEmptyComponent,
-    this.title,
-    this.defaultHeaderTextStyle,
-    this.pageSize,
-    this.showDefaultHeaderBackButton,
-    this.defaultBackButton,
-    this.isCenterTitle,
-    this.customNotificationCard,
-    this.onNotificationCardClick,
-    this.onError,
-    this.hideClearAll,
-    this.darkMode,
-    this.theme,
-    this.customLoader,
-    this.customErrorWidget,
-    this.customHeader,
-    this.handleBackNavigation,
-  });
+  const SirenInbox(
+      {super.key,
+      this.customStyles,
+      this.hideAvatar,
+      this.deleteWidget,
+      this.hideHeader,
+      this.listEmptyComponent,
+      this.title,
+      this.defaultHeaderTextStyle,
+      this.pageSize,
+      this.showDefaultHeaderBackButton,
+      this.defaultBackButton,
+      this.isCenterTitle,
+      this.customNotificationCard,
+      this.onNotificationCardClick,
+      this.onError,
+      this.hideClearAll,
+      this.darkMode,
+      this.theme,
+      this.customLoader,
+      this.customErrorWidget,
+      this.customHeader,
+      this.handleBackNavigation,
+      this.turnOffMarkAsRead});
 
   final SirenStyleProps? customStyles;
   final bool? hideAvatar;
@@ -63,6 +63,7 @@ class SirenInbox extends StatefulWidget {
   final Widget? customErrorWidget;
   final Widget? customHeader;
   final void Function()? handleBackNavigation;
+  final bool? turnOffMarkAsRead;
 
   @override
   _SirenInboxState createState() => _SirenInboxState();
@@ -530,6 +531,7 @@ class _SirenInboxState extends State<SirenInbox> {
         onNotificationCardClick: widget.onNotificationCardClick,
         deletingNotificationId: deletingNotificationId,
         customLoader: widget.customLoader,
+        turnOffMarkAsRead: widget.turnOffMarkAsRead,
       );
     }
   }
@@ -572,6 +574,7 @@ class NotificationListView extends StatelessWidget {
     this.onNotificationCardClick,
     this.deletingNotificationId,
     this.customLoader,
+    this.turnOffMarkAsRead,
     super.key,
   });
 
@@ -591,6 +594,7 @@ class NotificationListView extends StatelessWidget {
   final void Function(NotificationDataType)? onNotificationCardClick;
   final String? deletingNotificationId;
   final Widget? customLoader;
+  final bool? turnOffMarkAsRead;
 
   @override
   Widget build(BuildContext context) {
@@ -606,7 +610,9 @@ class NotificationListView extends StatelessWidget {
                 customNotificationCard?.call(notifications[index]) ??
                     CardWidget(
                       onTap: (notification) {
-                        markAsRead(notifications[index].id ?? '');
+                        if (!(turnOffMarkAsRead ?? false)) {
+                          markAsRead(notifications[index].id ?? '');
+                        }
                         onNotificationCardClick?.call(notifications[index]);
                       },
                       notification: notifications[index],
