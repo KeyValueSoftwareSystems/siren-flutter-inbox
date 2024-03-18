@@ -42,6 +42,8 @@ class _SirenProviderState extends State<SirenProvider> {
       );
       SirenDataProvider.instance.iconController.sink
           .add(StreamResponse(null, UpdateEvents.PARAMS_CHANGED, ''));
+      SirenDataProvider.instance.inboxController.sink
+          .add(StreamResponse(null, UpdateEvents.PARAMS_CHANGED, ''));
     }
   }
 

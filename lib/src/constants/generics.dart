@@ -37,7 +37,8 @@ enum UpdateEvents {
   DELETE_BY_ID,
   DELETE_ALL,
   VIEW_ALL,
-  PARAMS_CHANGED
+  PARAMS_CHANGED,
+  TOKEN_VERIFIED,
 }
 
 enum ErrorTypes {
