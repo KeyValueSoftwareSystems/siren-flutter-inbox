@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:siren_flutter_inbox/siren_flutter_inbox.dart';
 import 'package:siren_flutter_inbox/src/widgets/card.dart';
 
-class NotificationListView extends StatelessWidget {
+class NotificationListView extends StatefulWidget {
   const NotificationListView({
     required this.notifications,
     required this.isLoading,
@@ -43,41 +43,69 @@ class NotificationListView extends StatelessWidget {
   final bool? disableAutoMarkAsRead;
 
   @override
+  _NotificationListViewState createState() => _NotificationListViewState();
+}
+
+class _NotificationListViewState extends State<NotificationListView> {
+  final GlobalKey _listViewKey = GlobalKey();
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
+    super.initState();
+  }
+
+  void _afterLayout(_) {
+    _getPositions();
+  }
+
+  void _getPositions() {
+    final renderObject = _listViewKey.currentContext?.findRenderObject();
+    final deviceHeight = MediaQuery.of(context).size.height;
+    if (renderObject is RenderBox) {
+      final renderBox = renderObject;
+      final position = renderBox.localToGlobal(Offset.zero);
+      if (position.dy < deviceHeight) {
+        widget.onEndReached();
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
       color: Theme.of(context).colorScheme.secondary,
       backgroundColor: Theme.of(context).colorScheme.primary,
-      onRefresh: onRefresh,
+      onRefresh: widget.onRefresh,
       child: ListView.builder(
-        itemCount: notifications.length + (endReached ? 0 : 1),
+        key: _listViewKey,
+        itemCount: widget.notifications.length + (widget.endReached ? 0 : 1),
         itemBuilder: (context, index) {
-          if (index < notifications.length) {
-            final itemWidget =
-                customNotificationCard?.call(notifications[index]) ??
-                    CardWidget(
-                      onTap: (notification) {
-                        if (!(disableAutoMarkAsRead ?? false)) {
-                          markAsRead(notifications[index].id ?? '');
-                        }
-                        onNotificationCardClick?.call(notifications[index]);
-                      },
-                      notification: notifications[index],
-                      cardProps: CardProps(
-                        hideAvatar: hideAvatar,
-                        showMedia: true,
-                      ),
-                      styles: customStyles,
-                      deleteWidget: deleteWidget,
-                      onDelete: onDelete,
-                    );
+          if (index < widget.notifications.length) {
+            final itemWidget = widget.customNotificationCard?.call(widget.notifications[index]) ??
+                CardWidget(
+                  onTap: (notification) {
+                    if (!(widget.disableAutoMarkAsRead ?? false)) {
+                      widget.markAsRead(widget.notifications[index].id ?? '');
+                    }
+                    widget.onNotificationCardClick?.call(widget.notifications[index]);
+                  },
+                  notification: widget.notifications[index],
+                  cardProps: CardProps(
+                    hideAvatar: widget.hideAvatar,
+                    showMedia: true,
+                  ),
+                  styles: widget.customStyles,
+                  deleteWidget: widget.deleteWidget,
+                  onDelete: widget.onDelete,
+                );
             return AnimatedOpacity(
               duration: const Duration(milliseconds: 500),
-              opacity:
-                  deletingNotificationId == notifications[index].id ? 0.0 : 1.0,
+              opacity: widget.deletingNotificationId == widget.notifications[index].id ? 0.0 : 1.0,
               child: itemWidget,
             );
           } else {
-            return loadingNextPage
+            return widget.loadingNextPage
                 ? Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Center(
@@ -90,7 +118,7 @@ class NotificationListView extends StatelessWidget {
           }
         },
         physics: const AlwaysScrollableScrollPhysics(),
-        controller: scrollController,
+        controller: widget.scrollController,
       ),
     );
   }
