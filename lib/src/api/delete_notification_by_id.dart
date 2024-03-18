@@ -8,6 +8,13 @@ class DeleteNotificationById {
   static final DeleteNotificationById instance =
       DeleteNotificationById._internal();
 
+  Status convertJsonToDeletionStatus(dynamic response) {
+    return (response['data']?['status']?.toString() ?? '') ==
+            Status.SUCCESS.name
+        ? Status.SUCCESS
+        : Status.PENDING;
+  }
+
   final ApiClient api = ApiClient(apiProvider());
 
   static final String _apiPath = '${Generics.API_PATH}/notifications';
@@ -15,30 +22,35 @@ class DeleteNotificationById {
   Future<ApiResponse> deleteNotificationById({
     required String notificationId,
   }) async {
-    try {
-      final result = ApiResponse()..isLoading = true;
+    final result = ApiResponse()..isLoading = true;
+    final apiError = ApiErrorDetails()
+      ..errorType = ErrorTypes.NOTIFICATION_DELETE_ERROR;
 
-      final apiResponse = await api.delete(
-        path: '$_apiPath/$notificationId',
-      ) as Map<String, dynamic>;
-      final apiError = ApiResponse.fromJson(apiResponse).error;
+    final apiResponse = await api.delete(
+      path: '$_apiPath/$notificationId',
+    );
+    if (apiResponse.statusCode != 0 && apiResponse.data != null) {
+      final deletionStatus = convertJsonToDeletionStatus(apiResponse.data);
 
+      apiError
+        ..errorCode = ApiResponse.fromJson(apiResponse.data).error?.errorCode
+        ..message = ApiResponse.fromJson(apiResponse.data).error?.message;
       result
         ..isLoading = false
-        ..isSuccess = apiError?.errorCode.isEmpty ?? true
-        ..isError = apiError?.errorCode.isNotEmpty ?? false
+        ..isSuccess = apiResponse.statusCode == 200
+        ..isError = apiResponse.statusCode != 200
+        ..data = deletionStatus
+        ..rawResponse = apiResponse
         ..error = apiError;
-
-      return result;
-    } catch (error) {
-      final result = ApiResponse()
+    } else {
+      result
         ..isLoading = false
+        ..isSuccess = false
         ..isError = true
-        ..error = ApiErrorDetails(
-          errorCode: '500',
-          message: 'Internal Server Error',
-        );
-      return result;
+        ..rawResponse = apiResponse
+        ..error = Generics.DEFAULT_ERROR;
     }
+
+    return result;
   }
 }

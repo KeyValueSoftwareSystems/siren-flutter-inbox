@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:dio/dio.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
 
 import 'package:siren_flutter_inbox/src/models/api_response.dart';
@@ -8,44 +7,48 @@ import 'package:siren_flutter_inbox/src/models/unviewed_notification_count_model
 import 'package:siren_flutter_inbox/src/services/api_client.dart';
 import 'package:siren_flutter_inbox/src/services/network_service.dart';
 
-class FetchUnviewedNotificationsCount {
-  factory FetchUnviewedNotificationsCount() {
+class FetchUnViewedNotificationsCount {
+  factory FetchUnViewedNotificationsCount() {
     return instance;
   }
-  FetchUnviewedNotificationsCount._internal();
-  static final FetchUnviewedNotificationsCount instance =
-      FetchUnviewedNotificationsCount._internal();
+  FetchUnViewedNotificationsCount._internal();
+  static final FetchUnViewedNotificationsCount instance =
+      FetchUnViewedNotificationsCount._internal();
 
   ApiClient api = NetworkService.instance.api;
 
-  Future<ApiResponse> fetchUnviewedNotificationsCount() async {
-    try {
-      final result = ApiResponse()..isLoading = true;
-      final apiResponse = await api.get(
-        path: Generics.API_PATH,
-      );
+  Future<ApiResponse> fetchUnViewedNotificationsCount() async {
+    final result = ApiResponse()..isLoading = true;
+    final apiError = ApiErrorDetails()
+      ..errorType = ErrorTypes.FETCH_COUNT_ERROR;
 
+    final apiResponse = await api.get(
+      path: Generics.API_PATH,
+    );
+    if (apiResponse.statusCode != 0 && apiResponse.data != null) {
       var count = 0;
       final data =
-          ApiResponse.fromJson(apiResponse).data as Map<String, dynamic>;
-      final notificationCount = UnviewedNotificationsCountModel.fromJson(data);
-      count = notificationCount.totalUnviewed;
+          ApiResponse.fromJson(apiResponse.data).data as Map<String, dynamic>?;
+      final notificationCount =
+          UnViewedNotificationsCountModel.fromJson(data ?? {});
+      apiError
+        ..errorCode = ApiResponse.fromJson(apiResponse.data).error?.errorCode
+        ..message = ApiResponse.fromJson(apiResponse.data).error?.message;
+      count = notificationCount.totalUnViewed;
       result
         ..isLoading = false
-        ..isSuccess = true
+        ..isSuccess = apiResponse.statusCode == 200
+        ..isError = apiResponse.statusCode != 200
         ..data = count
         ..meta = null
-        ..error = null;
-      return result;
-    } on DioException catch (error) {
-      final result = ApiResponse()
+        ..error = apiError;
+    } else {
+      result
         ..isLoading = false
+        ..isSuccess = false
         ..isError = true
-        ..error = ApiErrorDetails(
-          errorCode: error.response?.statusCode?.toString() ?? '500',
-          message: 'Internal Server Error',
-        );
-      return result;
+        ..error = Generics.DEFAULT_ERROR;
     }
+    return result;
   }
 }

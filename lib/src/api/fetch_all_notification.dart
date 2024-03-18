@@ -28,37 +28,43 @@ class FetchAllNotifications {
     int? size,
     bool? isRead,
   }) async {
-    try {
-      final result = ApiResponse()..isLoading = true;
-      final apiResponse = await api.get(
-        path: _apiPath,
-        queryParameters: {
-          'page': page,
-          'size': size,
-        },
-      ) as Map<String, dynamic>;
+    final result = ApiResponse()..isLoading = true;
+    final apiError = ApiErrorDetails()
+      ..errorType = ErrorTypes.NOTIFICATION_FETCH_ERROR;
 
-      final dataList = ApiResponse.fromJson(apiResponse).data as List<dynamic>;
-      final metaData = ApiResponse.fromJson(apiResponse).meta;
-      final apiError = ApiResponse.fromJson(apiResponse).error;
+    final apiResponse = await api.get(
+      path: _apiPath,
+      queryParameters: {
+        'page': page,
+        'size': size,
+        'sort': 'createdAt',
+      },
+    );
 
+    if (apiResponse.statusCode != 0 && apiResponse.data != null) {
+      final dataList =
+          ApiResponse.fromJson(apiResponse.data).data as List<dynamic>?;
+      final metaData = ApiResponse.fromJson(apiResponse.data).meta;
+      apiError
+        ..errorCode = ApiResponse.fromJson(apiResponse.data).error?.errorCode
+        ..message = ApiResponse.fromJson(apiResponse.data).error?.message;
       result
         ..isLoading = false
-        ..isSuccess = true
-        ..data = convertJsonToNotificationList(dataList)
+        ..isSuccess = apiResponse.statusCode == 200
+        ..isError = apiResponse.statusCode != 200
+        ..data = convertJsonToNotificationList(dataList ?? [])
         ..meta = metaData
+        ..rawResponse = apiResponse
         ..error = apiError;
-
-      return result;
-    } catch (error) {
-      final result = ApiResponse()
+    } else {
+      result
         ..isLoading = false
+        ..isSuccess = false
         ..isError = true
-        ..error = ApiErrorDetails(
-          errorCode: '500',
-          message: 'Internal Server Error',
-        );
-      return result;
+        ..rawResponse = apiResponse
+        ..error = Generics.DEFAULT_ERROR;
     }
+
+    return result;
   }
 }

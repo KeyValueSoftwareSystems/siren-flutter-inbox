@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
+import 'package:siren_flutter_inbox/src/models/api_response.dart';
 
 class ApiClient {
   // injecting dio instance
@@ -7,8 +8,15 @@ class ApiClient {
   // dio instance
   final Dio _api;
 
+  bool isServerError(Response<dynamic>? response) {
+    return response == null ||
+        (response.statusCode != null &&
+            response.statusCode! >= 500 &&
+            response.statusCode! < 600);
+  }
+
   // Get API
-  Future<dynamic> get({
+  Future<DioResponse> get({
     String? path,
     Map<String, dynamic>? queryParameters,
     Options? options,
@@ -24,14 +32,23 @@ class ApiClient {
         cancelToken: cancelToken,
         onReceiveProgress: onReceiveProgress,
       );
-      return response.data;
-    } on DioException {
-      rethrow;
+      return DioResponse(data: response.data, statusCode: response.statusCode);
+    } on DioException catch (e) {
+      if (isServerError(e.response)) {
+        return DioResponse(
+          data: null,
+          statusCode: 0,
+        );
+      }
+      return DioResponse(
+        data: e.response?.data ?? '',
+        statusCode: e.response?.statusCode ?? 0,
+      );
     }
   }
 
   // Post API
-  Future<dynamic> post({
+  Future<DioResponse> post({
     String? path,
     dynamic data,
     Map<String, dynamic>? queryParameters,
@@ -51,14 +68,23 @@ class ApiClient {
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
       );
-      return response;
-    } on DioException {
-      rethrow;
+      return DioResponse(data: response.data, statusCode: response.statusCode);
+    } on DioException catch (e) {
+      if (isServerError(e.response)) {
+        return DioResponse(
+          data: null,
+          statusCode: 0,
+        );
+      }
+      return DioResponse(
+        data: e.response?.data ?? '',
+        statusCode: e.response?.statusCode ?? 0,
+      );
     }
   }
 
   // Patch API
-  Future<dynamic> patch({
+  Future<DioResponse> patch({
     String? path,
     dynamic data,
     Map<String, dynamic>? queryParameters,
@@ -78,39 +104,23 @@ class ApiClient {
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
       );
-      return response.data;
-    } on DioException {
-      rethrow;
-    }
-  }
-
-  // Put API
-  Future<dynamic> put({
-    dynamic data,
-    Map<String, dynamic>? queryParameters,
-    Options? options,
-    CancelToken? cancelToken,
-    ProgressCallback? onSendProgress,
-    ProgressCallback? onReceiveProgress,
-  }) async {
-    try {
-      final response = await _api.put(
-        'TODO ADD BASE URL',
-        data: data,
-        queryParameters: queryParameters,
-        options: options,
-        cancelToken: cancelToken,
-        onSendProgress: onSendProgress,
-        onReceiveProgress: onReceiveProgress,
+      return DioResponse(data: response.data, statusCode: response.statusCode);
+    } on DioException catch (e) {
+      if (isServerError(e.response)) {
+        return DioResponse(
+          data: null,
+          statusCode: 0,
+        );
+      }
+      return DioResponse(
+        data: e.response?.data ?? '',
+        statusCode: e.response?.statusCode ?? 0,
       );
-      return response.data;
-    } catch (e) {
-      rethrow;
     }
   }
 
   // Delete API
-  Future<dynamic> delete({
+  Future<DioResponse> delete({
     String? path,
     Map<String, dynamic>? queryParameters,
     Options? options,
@@ -125,9 +135,18 @@ class ApiClient {
         options: options,
         cancelToken: cancelToken,
       );
-      return response;
-    } catch (e) {
-      rethrow;
+      return DioResponse(data: response.data, statusCode: response.statusCode);
+    } on DioException catch (e) {
+      if (isServerError(e.response)) {
+        return DioResponse(
+          data: null,
+          statusCode: 0,
+        );
+      }
+      return DioResponse(
+        data: e.response?.data ?? '',
+        statusCode: e.response?.statusCode ?? 0,
+      );
     }
   }
 }
