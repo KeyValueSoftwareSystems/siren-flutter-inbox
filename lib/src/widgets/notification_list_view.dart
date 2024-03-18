@@ -78,17 +78,19 @@ class _NotificationListViewState extends State<NotificationListView> {
       backgroundColor: Theme.of(context).colorScheme.primary,
       onRefresh: widget.onRefresh,
       child: ListView.builder(
-        key: _listViewKey,
         itemCount: widget.notifications.length + (widget.endReached ? 0 : 1),
         itemBuilder: (context, index) {
           if (index < widget.notifications.length) {
-            final itemWidget = widget.customNotificationCard?.call(widget.notifications[index]) ??
+            final isLastIndex = index == widget.notifications.length - 1;
+            final itemWidget = widget.customNotificationCard
+                    ?.call(widget.notifications[index]) ??
                 CardWidget(
                   onTap: (notification) {
                     if (!(widget.disableAutoMarkAsRead ?? false)) {
                       widget.markAsRead(widget.notifications[index].id ?? '');
                     }
-                    widget.onNotificationCardClick?.call(widget.notifications[index]);
+                    widget.onNotificationCardClick
+                        ?.call(widget.notifications[index]);
                   },
                   notification: widget.notifications[index],
                   cardProps: CardProps(
@@ -100,8 +102,12 @@ class _NotificationListViewState extends State<NotificationListView> {
                   onDelete: widget.onDelete,
                 );
             return AnimatedOpacity(
+              key: isLastIndex ? _listViewKey : null,
               duration: const Duration(milliseconds: 500),
-              opacity: widget.deletingNotificationId == widget.notifications[index].id ? 0.0 : 1.0,
+              opacity: widget.deletingNotificationId ==
+                      widget.notifications[index].id
+                  ? 0.0
+                  : 1.0,
               child: itemWidget,
             );
           } else {

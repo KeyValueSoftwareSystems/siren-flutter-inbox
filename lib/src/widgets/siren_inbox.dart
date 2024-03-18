@@ -115,11 +115,13 @@ class _SirenInboxState extends State<SirenInbox> {
         _tokenVerificationStatus == Status.SUCCESS) {
       await fetchNotifications();
     } else if (_tokenVerificationResponse.isError) {
-      setState(() {
-        isError = true;
-      });
-      widget.onError
-          ?.call(_tokenVerificationResponse.error ?? ApiErrorDetails());
+      if (mounted) {
+        setState(() {
+          isError = true;
+        });
+        widget.onError
+            ?.call(_tokenVerificationResponse.error ?? ApiErrorDetails());
+      }
     }
   }
 
@@ -130,14 +132,17 @@ class _SirenInboxState extends State<SirenInbox> {
           switch (streamResponse.api) {
             case UpdateEvents.READ_BY_ID:
               _markNotificationAsReadById(streamResponse.id);
+              break;
             case UpdateEvents.READ_ALL:
               _markAllNotificationsAsRead();
+              break;
             case UpdateEvents.DELETE_BY_ID:
               _deleteById(streamResponse.id);
+              break;
             case UpdateEvents.DELETE_ALL:
               _deleteAllNotifications();
+              break;
             default:
-            //handle a default case
           }
         } else if (streamResponse.response?.isError ?? false) {
           widget.onError
@@ -155,32 +160,40 @@ class _SirenInboxState extends State<SirenInbox> {
   }
 
   void _markNotificationAsReadById(String? notificationId) {
-    setState(() {
-      notifications.firstWhere((n) => n.id == notificationId).markAsRead();
-    });
+    if (mounted) {
+      setState(() {
+        notifications.firstWhere((n) => n.id == notificationId).markAsRead();
+      });
+    }
   }
 
   void _markAllNotificationsAsRead() {
-    setState(() {
-      for (final notification in notifications) {
-        notification.markAsRead();
-      }
-    });
+    if (mounted) {
+      setState(() {
+        for (final notification in notifications) {
+          notification.markAsRead();
+        }
+      });
+    }
   }
 
   void _deleteById(String? notificationId) {
-    setState(() {
-      notifications
-          .removeWhere((notification) => notification.id == notificationId);
-      totalElements = totalElements - 1;
-    });
+    if (mounted) {
+      setState(() {
+        notifications
+            .removeWhere((notification) => notification.id == notificationId);
+        totalElements = totalElements - 1;
+      });
+    }
   }
 
   void _deleteAllNotifications() {
-    setState(() {
-      notifications = [];
-      totalElements = 0;
-    });
+    if (mounted) {
+      setState(() {
+        notifications = [];
+        totalElements = 0;
+      });
+    }
   }
 
   void _scrollListener() {
@@ -235,9 +248,11 @@ class _SirenInboxState extends State<SirenInbox> {
             newNotifications = [];
           }
         } else if (fetchedNotifications.isError) {
-          setState(() {
-            isError = fetchedNotifications.isError;
-          });
+          if (mounted) {
+            setState(() {
+              isError = fetchedNotifications.isError;
+            });
+          }
           widget.onError?.call(fetchedNotifications.error ?? ApiErrorDetails());
         }
       },
@@ -258,58 +273,64 @@ class _SirenInboxState extends State<SirenInbox> {
   }
 
   Future<void> fetchNotifications() async {
-    if (notifications.isEmpty) {
-      setState(() {
-        isLoading = true;
-      });
-    } else {
-      setState(() {
-        loadingNextPage = true;
-      });
-    }
+    if (mounted) {
+      if (notifications.isEmpty) {
+        setState(() {
+          isLoading = true;
+        });
+      } else {
+        setState(() {
+          loadingNextPage = true;
+        });
+      }
 
-    if (!endReached) {
-      final fetchedNotifications =
-          await FetchAllNotifications.instance.fetchAllNotifications(
-        page: currentPage,
-        size: Generics.PAGE_SIZE,
-      );
-      if (fetchedNotifications.isSuccess) {
-        await markAllNotificationsAsViewed();
-        setState(() {
-          notifications.addAll(
-            fetchedNotifications.data as Iterable<NotificationDataType>,
-          );
-          isLoading = false;
-          totalElements = fetchedNotifications.meta?.totalElements ?? 0;
-          totalPages = fetchedNotifications.meta?.totalPages ?? 0;
-          updateCurrentPageState();
-        });
-        fetchNewNotifications();
-      } else if (fetchedNotifications.isError) {
-        setState(() {
-          isError = fetchedNotifications.isError;
-        });
-        //initialized to avoid LateInitializationError.
-        _periodicUpdateRef =
-            Timer.periodic(const Duration(seconds: 1), (timer) {});
-        widget.onError?.call(fetchedNotifications.error ?? ApiErrorDetails());
+      if (!endReached) {
+        final fetchedNotifications =
+            await FetchAllNotifications.instance.fetchAllNotifications(
+          page: currentPage,
+          size: Generics.PAGE_SIZE,
+        );
+        if (fetchedNotifications.isSuccess) {
+          await markAllNotificationsAsViewed();
+          setState(() {
+            notifications.addAll(
+              fetchedNotifications.data as Iterable<NotificationDataType>,
+            );
+            isLoading = false;
+            totalElements = fetchedNotifications.meta?.totalElements ?? 0;
+            totalPages = fetchedNotifications.meta?.totalPages ?? 0;
+            updateCurrentPageState();
+          });
+          fetchNewNotifications();
+        } else if (fetchedNotifications.isError) {
+          if (mounted) {
+            setState(() {
+              isError = fetchedNotifications.isError;
+            });
+          }
+          //initialized to avoid LateInitializationError.
+          _periodicUpdateRef =
+              Timer.periodic(const Duration(seconds: 1), (timer) {});
+          widget.onError?.call(fetchedNotifications.error ?? ApiErrorDetails());
+        }
       }
     }
   }
 
   Future<void> onRefresh() async {
-    setState(() {
-      isLoading = true;
-      notifications = [];
-      endReached = false;
-      totalElements = 0;
-      currentPage = 0;
-    });
-    await fetchNotifications();
-    setState(() {
-      isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        isLoading = true;
+        notifications = [];
+        endReached = false;
+        totalElements = 0;
+        currentPage = 0;
+      });
+      await fetchNotifications();
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   Future<void> onBulkDelete() async {
@@ -334,16 +355,20 @@ class _SirenInboxState extends State<SirenInbox> {
     );
 
     if (deletionStatus.data == Status.SUCCESS && deletionStatus.isSuccess) {
-      setState(() {
-        deletingNotificationId = id;
-      });
+      if (mounted) {
+        setState(() {
+          deletingNotificationId = id;
+        });
+      }
 
       await Future.delayed(const Duration(milliseconds: 500));
 
-      setState(() {
-        deletingNotificationId = null;
-        _deleteById(id);
-      });
+      if (mounted) {
+        setState(() {
+          deletingNotificationId = null;
+          _deleteById(id);
+        });
+      }
     } else if (deletionStatus.isError) {
       widget.onError?.call(deletionStatus.error ?? ApiErrorDetails());
     }
@@ -351,16 +376,20 @@ class _SirenInboxState extends State<SirenInbox> {
 
   void onEndReached() {
     if (!isLoading && !loadingNextPage) {
-      setState(() {
-        loadingNextPage = true;
-      });
+      if (mounted) {
+        setState(() {
+          loadingNextPage = true;
+        });
+      }
 
       Future.delayed(const Duration(seconds: 2), () async {
         await fetchNotifications();
-        setState(() {
-          isLoading = false;
-          loadingNextPage = false;
-        });
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+            loadingNextPage = false;
+          });
+        }
       });
     }
   }
@@ -397,10 +426,12 @@ class _SirenInboxState extends State<SirenInbox> {
                     color: currentTheme.colorScheme.secondary,
                     backgroundColor: currentTheme.colorScheme.primary,
                     onRefresh: () async {
-                      setState(() {
-                        isError = false;
-                      });
-                      await fetchNotifications();
+                      if (mounted) {
+                        setState(() {
+                          isError = false;
+                        });
+                        await fetchNotifications();
+                      }
                     },
                     child: ListView(
                       physics: const AlwaysScrollableScrollPhysics(),
