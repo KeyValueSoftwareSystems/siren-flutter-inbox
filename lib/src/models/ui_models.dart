@@ -9,9 +9,18 @@ class CardProps {
   final bool? showMedia;
 }
 
-class NotificationIcon {
-  NotificationIcon({this.size});
+class IconStyle {
+  IconStyle({this.size});
   final double? size;
+}
+
+class DefaultIconStyle {
+  static double get defaultFontSize => 10;
+  static double get defaultInset => 1;
+  static double get defaultSize => 18;
+  static double get defaultTop => 0;
+  static double get defaultRight => 2;
+  static double get iconSize => 35;
 }
 
 class BadgeStyle {
@@ -54,7 +63,7 @@ class SirenStyleProps {
   final TextStyle? cardDescription;
   final BoxDecoration? cardFooterRow;
   final TextStyle? dateStyle;
-  final NotificationIcon? iconStyle;
+  final IconStyle? iconStyle;
   final BadgeStyle? badgeStyle;
 }
 

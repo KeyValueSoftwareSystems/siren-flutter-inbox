@@ -12,9 +12,6 @@ class Generics {
   static const String PLACEHOLDER_IMAGE_URL = 'https://picsum.photos/200/300';
   static const int PAGE_SIZE = 10;
 
-  static const BELL_ICON_PATH =
-      'packages/siren_flutter_inbox/assets/images/bell.png';
-
   static final DEFAULT_ERROR = ApiErrorDetails(
     errorType: ErrorTypes.DEFAULT_ERROR,
     errorCode: 'INTERNAL SERVER ERROR',

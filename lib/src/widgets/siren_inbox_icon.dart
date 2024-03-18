@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -10,31 +9,31 @@ import 'package:siren_flutter_inbox/src/constants/generics.dart';
 import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
 import 'package:siren_flutter_inbox/src/theme/app_theme.dart';
 
-class SirenNotificationIconWidget extends StatefulWidget {
-  const SirenNotificationIconWidget({
+class SirenInboxIcon extends StatefulWidget {
+  const SirenInboxIcon({
     super.key,
-    this.darkMode = false,
-    this.onError,
-    this.notificationIcon,
-    this.onTap,
     this.customStyles,
-    this.customTheme,
+    this.theme,
+    this.darkMode = false,
+    this.disabled = false,
+    this.notificationIcon,
+    this.onError,
+    this.onTap,
   });
 
-  final bool? darkMode;
-  final void Function(ApiErrorDetails)? onError;
-  final Widget? notificationIcon;
-  final VoidCallback? onTap;
+  final bool darkMode;
+  final bool disabled;
+  final CustomThemeColors? theme;
   final SirenStyleProps? customStyles;
-  final CustomThemeColors? customTheme;
+  final void Function(ApiErrorDetails)? onError;
+  final VoidCallback? onTap;
+  final Widget? notificationIcon;
 
   @override
-  State<SirenNotificationIconWidget> createState() =>
-      _SirenNotificationIconWidgetState();
+  State<SirenInboxIcon> createState() => _SirenInboxIconState();
 }
 
-class _SirenNotificationIconWidgetState
-    extends State<SirenNotificationIconWidget> {
+class _SirenInboxIconState extends State<SirenInboxIcon> {
   int _notificationsCount = 0;
 
   ApiResponse _tokenVerificationResponse = ApiResponse()..isLoading;
@@ -72,7 +71,7 @@ class _SirenNotificationIconWidgetState
               {
                 await _markAllNotificationsAsViewed();
               }
-
+            // ignore: no_default_cases
             default:
           }
         }
@@ -92,12 +91,12 @@ class _SirenNotificationIconWidgetState
         .fetchUnViewedNotificationsCount();
     if (mounted) {
       setState(() {
-        updateNotificationsCount(response.data);
+        _updateNotificationsCount(response.data);
       });
     }
   }
 
-  void updateNotificationsCount(dynamic responseData) {
+  void _updateNotificationsCount(dynamic responseData) {
     if (responseData != null && responseData is int) {
       _notificationsCount = responseData;
     }
@@ -110,7 +109,7 @@ class _SirenNotificationIconWidgetState
           .fetchUnViewedNotificationsCount();
       if (mounted) {
         setState(() {
-          updateNotificationsCount(response.data);
+          _updateNotificationsCount(response.data);
         });
       }
     });
@@ -127,7 +126,7 @@ class _SirenNotificationIconWidgetState
           if (mounted) {
             setState(
               () {
-                updateNotificationsCount(response.data);
+                _updateNotificationsCount(response.data);
               },
             );
           }
@@ -149,39 +148,36 @@ class _SirenNotificationIconWidgetState
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: widget.customTheme != null
+      data: widget.theme != null
           ? AppTheme.customTheme(
-              widget.customTheme!,
-              isDarkMode: widget.darkMode ?? false,
+              widget.theme!,
+              isDarkMode: widget.darkMode,
             )
-          : (widget.darkMode ?? false
-              ? AppTheme.darkTheme
-              : AppTheme.lightTheme),
+          : (widget.darkMode ? AppTheme.darkTheme : AppTheme.lightTheme),
       child: Builder(
         builder: (context) {
-          final size = widget.customStyles?.iconStyle?.size ?? 35;
+          final size =
+              widget.customStyles?.iconStyle?.size ?? DefaultIconStyle.iconSize;
           final currentTheme = Theme.of(context);
-          return GestureDetector(
-            onTap: widget.onTap ?? () {},
-            child: Stack(
-              children: [
-                SizedBox(
-                  width: size,
-                  height: size,
-                  child: widget.notificationIcon ??
-                      // TODO can remove this png later
-                      // Image.asset(
-                      //   Generics.BELL_ICON_PATH,
-                      //   fit: BoxFit.contain,
-                      // ),
-                      Icon(
-                        Icons.notifications_none_outlined,
-                        size: size,
-                        color: currentTheme.colorScheme.onPrimary,
-                      ),
-                ),
-                if (_notificationsCount > 0) _getBadge(context),
-              ],
+          return IgnorePointer(
+            ignoring: widget.disabled,
+            child: GestureDetector(
+              onTap: widget.onTap ?? () {},
+              child: Stack(
+                children: [
+                  SizedBox(
+                    width: size,
+                    height: size,
+                    child: widget.notificationIcon ??
+                        Icon(
+                          Icons.notifications_none_outlined,
+                          size: size,
+                          color: currentTheme.colorScheme.onPrimary,
+                        ),
+                  ),
+                  if (_notificationsCount > 0) _getBadge(context),
+                ],
+              ),
             ),
           );
         },
@@ -193,12 +189,13 @@ class _SirenNotificationIconWidgetState
     final badgeStyle = widget.customStyles?.badgeStyle;
     final currentTheme = Theme.of(context);
     return Positioned(
-      right: badgeStyle?.right ?? 2,
-      top: badgeStyle?.top ?? 0,
+      right: badgeStyle?.right ?? DefaultIconStyle.defaultRight,
+      top: badgeStyle?.top ?? DefaultIconStyle.defaultTop,
       child: Container(
-        width: badgeStyle?.size ?? 18,
-        height: badgeStyle?.size ?? 18,
-        padding: EdgeInsets.all(badgeStyle?.inset ?? 1),
+        width: badgeStyle?.size ?? DefaultIconStyle.defaultSize,
+        height: badgeStyle?.size ?? DefaultIconStyle.defaultSize,
+        padding:
+            EdgeInsets.all(badgeStyle?.inset ?? DefaultIconStyle.defaultInset),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: currentTheme.colorScheme.tertiaryContainer,
@@ -208,7 +205,8 @@ class _SirenNotificationIconWidgetState
             _notificationsCount > 99 ? '99+' : _notificationsCount.toString(),
             style: TextStyle(
               color: currentTheme.colorScheme.onTertiary,
-              fontSize: badgeStyle?.fontSize ?? 10,
+              fontSize:
+                  badgeStyle?.fontSize ?? DefaultIconStyle.defaultFontSize,
             ),
           ),
         ),
