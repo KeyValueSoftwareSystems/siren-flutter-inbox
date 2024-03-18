@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:siren_flutter_inbox/src/constants/strings.dart';
 
 class CustomErrorWidget extends StatelessWidget {
   const CustomErrorWidget({
@@ -23,7 +24,7 @@ class CustomErrorWidget extends StatelessWidget {
                 vertical: 12,
               ),
               child: Text(
-                'Oops, something happened',
+                Strings.error_title,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -32,7 +33,7 @@ class CustomErrorWidget extends StatelessWidget {
               ),
             ),
             Text(
-              'Could not load the notifications. Please refresh the page.',
+              Strings.error_desc,
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,

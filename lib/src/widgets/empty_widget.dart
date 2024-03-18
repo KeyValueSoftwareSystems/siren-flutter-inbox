@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:siren_flutter_inbox/src/constants/strings.dart';
 import 'package:siren_flutter_inbox/src/theme/colors.dart';
 
 class EmptyWidget extends StatelessWidget {
@@ -22,7 +23,7 @@ class EmptyWidget extends StatelessWidget {
                 vertical: 12,
               ),
               child: Text(
-                'No new notifications',
+                Strings.empty_title,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -31,7 +32,7 @@ class EmptyWidget extends StatelessWidget {
               ),
             ),
             Text(
-              'Check back later for updates and alerts.',
+              Strings.empty_desc,
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
