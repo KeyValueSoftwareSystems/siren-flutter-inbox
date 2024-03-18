@@ -121,7 +121,7 @@ class _SirenWindowState extends State<SirenWindow> {
   }
 
   void _subscribeToStream() {
-    _subscription = SirenDataProvider.instance.controller.stream.listen(
+    _subscription = SirenDataProvider.instance.inboxController.stream.listen(
       (streamResponse) {
         if (streamResponse.response?.isSuccess ?? false) {
           switch (streamResponse.api) {
