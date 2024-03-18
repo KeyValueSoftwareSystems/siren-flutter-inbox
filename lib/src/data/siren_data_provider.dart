@@ -18,7 +18,7 @@ class SirenDataProvider {
   late StreamController<StreamResponse> _inboxController;
   late StreamController<StreamResponse> _iconController;
 
-  StreamController<StreamResponse> get controller => _inboxController;
+  StreamController<StreamResponse> get inboxController => _inboxController;
 
   StreamController<StreamResponse> get iconController => _iconController;
 

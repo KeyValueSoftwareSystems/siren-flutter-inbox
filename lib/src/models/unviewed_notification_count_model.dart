@@ -1,11 +1,11 @@
-class UnviewedNotificationsCountModel {
-  UnviewedNotificationsCountModel({required this.totalUnviewed});
+class UnViewedNotificationsCountModel {
+  UnViewedNotificationsCountModel({required this.totalUnViewed});
 
-  factory UnviewedNotificationsCountModel.fromJson(Map<String, dynamic> map) {
-    return UnviewedNotificationsCountModel(
-      totalUnviewed: map['totalUnviewed'] !=null ? map['totalUnviewed'] as int : 0,
+  factory UnViewedNotificationsCountModel.fromJson(Map<String, dynamic> map) {
+    return UnViewedNotificationsCountModel(
+      totalUnViewed: map['totalUnviewed'] !=null ? map['totalUnviewed'] as int : 0,
     );
   }
 
-  int totalUnviewed;
+  int totalUnViewed;
 }

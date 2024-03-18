@@ -7,17 +7,17 @@ import 'package:siren_flutter_inbox/src/models/unviewed_notification_count_model
 import 'package:siren_flutter_inbox/src/services/api_client.dart';
 import 'package:siren_flutter_inbox/src/services/network_service.dart';
 
-class FetchUnviewedNotificationsCount {
-  factory FetchUnviewedNotificationsCount() {
+class FetchUnViewedNotificationsCount {
+  factory FetchUnViewedNotificationsCount() {
     return instance;
   }
-  FetchUnviewedNotificationsCount._internal();
-  static final FetchUnviewedNotificationsCount instance =
-      FetchUnviewedNotificationsCount._internal();
+  FetchUnViewedNotificationsCount._internal();
+  static final FetchUnViewedNotificationsCount instance =
+      FetchUnViewedNotificationsCount._internal();
 
   ApiClient api = NetworkService.instance.api;
 
-  Future<ApiResponse> fetchUnviewedNotificationsCount() async {
+  Future<ApiResponse> fetchUnViewedNotificationsCount() async {
     final result = ApiResponse()..isLoading = true;
     final apiError = ApiErrorDetails()
       ..errorType = ErrorTypes.FETCH_COUNT_ERROR;
@@ -30,11 +30,11 @@ class FetchUnviewedNotificationsCount {
       final data =
           ApiResponse.fromJson(apiResponse.data).data as Map<String, dynamic>?;
       final notificationCount =
-          UnviewedNotificationsCountModel.fromJson(data ?? {});
+          UnViewedNotificationsCountModel.fromJson(data ?? {});
       apiError
         ..errorCode = ApiResponse.fromJson(apiResponse.data).error?.errorCode
         ..message = ApiResponse.fromJson(apiResponse.data).error?.message;
-      count = notificationCount.totalUnviewed;
+      count = notificationCount.totalUnViewed;
       result
         ..isLoading = false
         ..isSuccess = apiResponse.statusCode == 200

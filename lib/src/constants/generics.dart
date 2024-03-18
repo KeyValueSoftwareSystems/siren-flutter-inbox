@@ -12,9 +12,6 @@ class Generics {
   static const String PLACEHOLDER_IMAGE_URL = 'https://picsum.photos/200/300';
   static const int PAGE_SIZE = 10;
 
-  static const BELL_ICON_PATH =
-      'packages/siren_flutter_inbox/assets/images/bell.png';
-
   static final DEFAULT_ERROR = ApiErrorDetails(
     errorType: ErrorTypes.DEFAULT_ERROR,
     errorCode: 'INTERNAL SERVER ERROR',
@@ -34,7 +31,14 @@ enum BulkUpdateType {
   MARK_AS_DELETED,
 }
 
-enum UpdateEvents { READ_BY_ID, READ_ALL, DELETE_BY_ID, DELETE_ALL, VIEW_ALL }
+enum UpdateEvents {
+  READ_BY_ID,
+  READ_ALL,
+  DELETE_BY_ID,
+  DELETE_ALL,
+  VIEW_ALL,
+  PARAMS_CHANGED
+}
 
 enum ErrorTypes {
   DEFAULT_ERROR,
