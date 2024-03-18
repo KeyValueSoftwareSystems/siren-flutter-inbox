@@ -1,4 +1,5 @@
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
+import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
 import 'package:siren_flutter_inbox/src/models/api_response.dart';
 import 'package:siren_flutter_inbox/src/models/notification_model.dart';
 import 'package:siren_flutter_inbox/src/services/api_client.dart';
@@ -10,7 +11,8 @@ class FetchAllNotifications {
       FetchAllNotifications._internal();
   final ApiClient api = ApiClient(apiProvider());
 
-  static final String _apiPath = '${Generics.API_PATH}/notifications';
+  static final String _apiPath =
+      '${Generics.V2}${Generics.BASE_URL}${SirenDataProvider.instance.recipientId}/notifications';
 
   List<NotificationDataType> convertJsonToNotificationList(
     List<dynamic> dataList,

@@ -16,6 +16,7 @@ class SirenDataProvider {
   static final SirenDataProvider instance = SirenDataProvider._internal();
   String userToken = '';
   String recipientId = '';
+  int _retryCount = 0;
 
   Status _tokenVerificationStatus = Status.PENDING;
   ApiResponse _tokenVerificationResponse = ApiResponse()..isLoading;
@@ -36,12 +37,14 @@ class SirenDataProvider {
     instance.userToken = userToken;
     instance.recipientId = recipientId;
     _tokenVerificationStatus = Status.PENDING;
+    _retryCount = 0;
     _verifyToken();
   }
 
   Future<void> _verifyToken() async {
     _tokenVerificationResponse = await VerifyToken.instance.verifyToken();
     if (_tokenVerificationResponse.isSuccess) {
+      _retryCount = 0;
       _tokenVerificationStatus = _tokenVerificationResponse.data as Status;
       SirenDataProvider.instance.iconController.sink.add(
         StreamResponse(
@@ -58,7 +61,15 @@ class SirenDataProvider {
         ),
       );
     } else {
-      _tokenVerificationStatus = Status.FAILED;
+      if (_retryCount < Generics.MAX_RETRIES &&
+          _tokenVerificationStatus != Status.SUCCESS) {
+        _tokenVerificationStatus = Status.FAILED;
+        _retryCount++;
+        Future.delayed(
+          const Duration(seconds: Generics.DATA_FETCH_INTERVAL),
+          _verifyToken,
+        );
+      }
     }
   }
 

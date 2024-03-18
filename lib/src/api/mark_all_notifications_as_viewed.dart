@@ -1,4 +1,5 @@
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
+import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
 import 'package:siren_flutter_inbox/src/models/api_response.dart';
 import 'package:siren_flutter_inbox/src/services/api_client.dart';
 import 'package:siren_flutter_inbox/src/services/api_provider.dart';
@@ -17,7 +18,8 @@ class MarkAllNotificationsAsViewed {
     };
 
     final apiResponse = await api.patch(
-      path: Generics.API_PATH,
+      path:
+          '${Generics.V2}${Generics.BASE_URL}${SirenDataProvider.instance.recipientId}',
       data: data,
     );
     if (apiResponse.statusCode != 0 && apiResponse.data != null) {

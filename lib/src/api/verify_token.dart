@@ -1,4 +1,5 @@
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
+import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
 import 'package:siren_flutter_inbox/src/models/api_response.dart';
 import 'package:siren_flutter_inbox/src/services/api_client.dart';
 import 'package:siren_flutter_inbox/src/services/api_provider.dart';
@@ -27,7 +28,8 @@ class VerifyToken {
       ..errorType = ErrorTypes.AUTHENTICATION_ERROR;
 
     final apiResponse = await api.get(
-      path: '${Generics.API_PATH}/verify-token',
+      path:
+          '${Generics.V2}${Generics.BASE_URL}${SirenDataProvider.instance.recipientId}/verify-token',
     );
     if (apiResponse.statusCode != 0 && apiResponse.data != null) {
       final verificationStatus =
