@@ -17,29 +17,30 @@ import 'package:siren_flutter_inbox/src/widgets/loader_widget.dart';
 import 'package:siren_flutter_inbox/src/widgets/notification_list_view.dart';
 
 class SirenInbox extends StatefulWidget {
-  const SirenInbox(
-      {super.key,
-      this.customStyles,
-      this.hideAvatar,
-      this.deleteWidget,
-      this.hideHeader,
-      this.listEmptyComponent,
-      this.title,
-      this.defaultHeaderTextStyle,
-      this.showDefaultHeaderBackButton,
-      this.defaultBackButton,
-      this.isCenterTitle,
-      this.customNotificationCard,
-      this.onNotificationCardClick,
-      this.onError,
-      this.hideClearAll,
-      this.darkMode,
-      this.theme,
-      this.customLoader,
-      this.customErrorWidget,
-      this.customHeader,
-      this.handleBackNavigation,
-      this.disableAutoMarkAsRead});
+  const SirenInbox({
+    super.key,
+    this.customStyles,
+    this.hideAvatar,
+    this.deleteWidget,
+    this.hideHeader,
+    this.listEmptyComponent,
+    this.title,
+    this.defaultHeaderTextStyle,
+    this.showDefaultHeaderBackButton,
+    this.defaultBackButton,
+    this.isCenterTitle,
+    this.customNotificationCard,
+    this.onNotificationCardClick,
+    this.onError,
+    this.hideClearAll,
+    this.darkMode,
+    this.theme,
+    this.customLoader,
+    this.customErrorWidget,
+    this.customHeader,
+    this.handleBackNavigation,
+    this.disableAutoMarkAsRead,
+  });
 
   final SirenStyleProps? customStyles;
   final bool? hideAvatar;
@@ -64,7 +65,7 @@ class SirenInbox extends StatefulWidget {
   final bool? disableAutoMarkAsRead;
 
   @override
-  _SirenInboxState createState() => _SirenInboxState();
+  State<SirenInbox> createState() => _SirenInboxState();
 }
 
 class _SirenInboxState extends State<SirenInbox> {
@@ -132,16 +133,13 @@ class _SirenInboxState extends State<SirenInbox> {
           switch (streamResponse.api) {
             case UpdateEvents.READ_BY_ID:
               _markNotificationAsReadById(streamResponse.id);
-              break;
             case UpdateEvents.READ_ALL:
               _markAllNotificationsAsRead();
-              break;
             case UpdateEvents.DELETE_BY_ID:
               _deleteById(streamResponse.id);
-              break;
             case UpdateEvents.DELETE_ALL:
               _deleteAllNotifications();
-              break;
+            // ignore: no_default_cases
             default:
           }
         } else if (streamResponse.response?.isError ?? false) {
@@ -408,8 +406,10 @@ class _SirenInboxState extends State<SirenInbox> {
   Widget build(BuildContext context) {
     return Theme(
       data: widget.theme != null
-          ? AppTheme.customTheme(widget.theme!,
-              isDarkMode: widget.darkMode ?? false)
+          ? AppTheme.customTheme(
+              widget.theme!,
+              isDarkMode: widget.darkMode ?? false,
+            )
           : (widget.darkMode ?? false
               ? AppTheme.darkTheme
               : AppTheme.lightTheme),
@@ -458,12 +458,13 @@ class _SirenInboxState extends State<SirenInbox> {
   Widget _buildCustomAppBar(ThemeData theme, double appBarHeight) {
     return Container(
       decoration: BoxDecoration(
-          color: theme.colorScheme.primary,
-          border: Border(
-            bottom: BorderSide(
-              color: theme.colorScheme.surfaceTint,
-            ),
-          )),
+        color: theme.colorScheme.primary,
+        border: Border(
+          bottom: BorderSide(
+            color: theme.colorScheme.surfaceTint,
+          ),
+        ),
+      ),
       height: appBarHeight,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -577,7 +578,7 @@ class LoaderWidget extends StatelessWidget {
       itemCount: Generics.PAGE_SIZE,
       itemBuilder: (context, index) {
         return const Padding(
-          padding: EdgeInsets.symmetric(vertical: 8.0),
+          padding: EdgeInsets.symmetric(vertical: 8),
           child: CardLoaderWidget(),
         );
       },

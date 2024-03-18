@@ -4,9 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
 
 Dio apiProvider() {
-  final _dio = Dio();
+  final dio = Dio();
   // ignore: cascade_invocations
-  _dio
+  dio
     ..options.connectTimeout = const Duration(seconds: 10)
     ..options.receiveTimeout = const Duration(seconds: 3)
     ..interceptors.add(
@@ -34,7 +34,8 @@ Dio apiProvider() {
         /**
          * onError interceptor - called on error
          */
-        onError: (DioException dioError, ErrorInterceptorHandler handler) async {
+        onError:
+            (DioException dioError, ErrorInterceptorHandler handler) async {
           if (dioError.error is SocketException) {
             // HANDLE ERROR
           }
@@ -43,12 +44,12 @@ Dio apiProvider() {
       ),
     );
   if (kDebugMode) {
-    _dio.interceptors.add(
+    dio.interceptors.add(
       LogInterceptor(
         responseBody: true,
         requestBody: true,
       ),
     );
   }
-  return _dio;
+  return dio;
 }

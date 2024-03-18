@@ -35,35 +35,40 @@ class AppTheme {
         ),
   );
 
-  static ThemeData customTheme(CustomThemeColors customColors, {bool isDarkMode = false}) {
-    return  isDarkMode ? ThemeData.dark().copyWith(
-      colorScheme: ThemeData.dark().colorScheme.copyWith(
-            primary: customColors.backgroundColor,
-            secondary: customColors.activeCardBorderColor,
-            secondaryContainer: customColors.activeCardColor,
-            surfaceTint: customColors.cardBorder,
-            outlineVariant: customColors.deleteIconColor,
-            outline: customColors.clearAllIconColor,
-            tertiary: customColors.textColor,
-            inversePrimary: customColors.windowTitleColor,
-            tertiaryContainer: customColors.badgeBackgroundColor,
-            onTertiary: customColors.badgeColor,
-            onPrimary: customColors.iconColor,
-          ),
-    ): ThemeData.light().copyWith(
-      colorScheme: ThemeData.light().colorScheme.copyWith(
-            primary: customColors.backgroundColor,
-            secondary: customColors.activeCardBorderColor,
-            secondaryContainer: customColors.activeCardColor,
-            surfaceTint: customColors.cardBorder,
-            outlineVariant: customColors.deleteIconColor,
-            outline: customColors.clearAllIconColor,
-            tertiary: customColors.textColor,
-            inversePrimary: customColors.windowTitleColor,
-            tertiaryContainer: customColors.badgeBackgroundColor,
-            onTertiary: customColors.badgeColor,
-            onPrimary: customColors.iconColor,
-          ),
-    );
+  static ThemeData customTheme(
+    CustomThemeColors customColors, {
+    bool isDarkMode = false,
+  }) {
+    return isDarkMode
+        ? ThemeData.dark().copyWith(
+            colorScheme: ThemeData.dark().colorScheme.copyWith(
+                  primary: customColors.backgroundColor,
+                  secondary: customColors.activeCardBorderColor,
+                  secondaryContainer: customColors.activeCardColor,
+                  surfaceTint: customColors.cardBorder,
+                  outlineVariant: customColors.deleteIconColor,
+                  outline: customColors.clearAllIconColor,
+                  tertiary: customColors.textColor,
+                  inversePrimary: customColors.windowTitleColor,
+                  tertiaryContainer: customColors.badgeBackgroundColor,
+                  onTertiary: customColors.badgeColor,
+                  onPrimary: customColors.iconColor,
+                ),
+          )
+        : ThemeData.light().copyWith(
+            colorScheme: ThemeData.light().colorScheme.copyWith(
+                  primary: customColors.backgroundColor,
+                  secondary: customColors.activeCardBorderColor,
+                  secondaryContainer: customColors.activeCardColor,
+                  surfaceTint: customColors.cardBorder,
+                  outlineVariant: customColors.deleteIconColor,
+                  outline: customColors.clearAllIconColor,
+                  tertiary: customColors.textColor,
+                  inversePrimary: customColors.windowTitleColor,
+                  tertiaryContainer: customColors.badgeBackgroundColor,
+                  onTertiary: customColors.badgeColor,
+                  onPrimary: customColors.iconColor,
+                ),
+          );
   }
 }

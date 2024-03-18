@@ -47,7 +47,7 @@ class FetchUnViewedNotificationsCount {
         ..isLoading = false
         ..isSuccess = false
         ..isError = true
-        ..error = Generics.DEFAULT_ERROR;
+        ..error = Generics.defaultError;
     }
     return result;
   }

@@ -12,7 +12,7 @@ class Generics {
   static const String PLACEHOLDER_IMAGE_URL = 'https://picsum.photos/200/300';
   static const int PAGE_SIZE = 10;
 
-  static final DEFAULT_ERROR = ApiErrorDetails(
+  static final defaultError = ApiErrorDetails(
     errorType: ErrorTypes.DEFAULT_ERROR,
     errorCode: 'INTERNAL SERVER ERROR',
     message:

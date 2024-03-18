@@ -5,15 +5,15 @@ import 'package:siren_flutter_inbox/src/utils/common_utils.dart';
 import 'package:siren_flutter_inbox/src/widgets/common/nullable_text.dart';
 
 class CardWidget extends StatefulWidget {
-  const CardWidget(
-      {required this.onTap,
-      required this.notification,
-      required this.cardProps,
-      required this.styles,
-      required this.onDelete,
-      Key? key,
-      this.deleteWidget})
-      : super(key: key);
+  const CardWidget({
+    required this.onTap,
+    required this.notification,
+    required this.cardProps,
+    required this.styles,
+    required this.onDelete,
+    super.key,
+    this.deleteWidget,
+  });
   final Function onTap;
   final NotificationDataType notification;
   final CardProps cardProps;
@@ -22,7 +22,7 @@ class CardWidget extends StatefulWidget {
   final Widget? deleteWidget;
 
   @override
-  _CardWidgetState createState() => _CardWidgetState();
+  State<CardWidget> createState() => _CardWidgetState();
 }
 
 class _CardWidgetState extends State<CardWidget> {
