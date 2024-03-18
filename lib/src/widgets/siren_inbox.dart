@@ -11,60 +11,63 @@ import 'package:siren_flutter_inbox/src/api/verify_token.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
 import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
 import 'package:siren_flutter_inbox/src/theme/app_theme.dart';
-import 'package:siren_flutter_inbox/src/widgets/card.dart';
 import 'package:siren_flutter_inbox/src/widgets/empty_widget.dart';
 import 'package:siren_flutter_inbox/src/widgets/error_widget.dart';
 import 'package:siren_flutter_inbox/src/widgets/loader_widget.dart';
+import 'package:siren_flutter_inbox/src/widgets/notification_list_view.dart';
 
-class SirenWindow extends StatefulWidget {
-  const SirenWindow({
-    super.key,
-    this.customStyles,
-    this.hideAvatar,
-    this.deleteWidget,
-    this.showWindowHeader,
-    this.customEmptyWidget,
-    this.windowHeaderText,
-    this.windowHeaderTextStyle,
-    this.pageSize,
-    this.showHeaderBackButton,
-    this.headerIconTheme,
-    this.isCenterTitle,
-    this.buildCardWidget,
-    this.onCardClick,
-    this.onError,
-    this.hideClearAll,
-    this.customHeaderSuffixCTA,
-    this.isDarkMode,
-    this.customTheme,
-    this.customLoader,
-  });
+class SirenInbox extends StatefulWidget {
+  const SirenInbox(
+      {super.key,
+      this.customStyles,
+      this.hideAvatar,
+      this.deleteWidget,
+      this.hideHeader,
+      this.listEmptyComponent,
+      this.title,
+      this.defaultHeaderTextStyle,
+      this.showDefaultHeaderBackButton,
+      this.defaultBackButton,
+      this.isCenterTitle,
+      this.customNotificationCard,
+      this.onNotificationCardClick,
+      this.onError,
+      this.hideClearAll,
+      this.darkMode,
+      this.theme,
+      this.customLoader,
+      this.customErrorWidget,
+      this.customHeader,
+      this.handleBackNavigation,
+      this.disableAutoMarkAsRead});
 
   final SirenStyleProps? customStyles;
   final bool? hideAvatar;
   final Widget? deleteWidget;
-  final bool? showWindowHeader;
-  final Widget? customEmptyWidget;
-  final String? windowHeaderText;
-  final TextStyle? windowHeaderTextStyle;
-  final int? pageSize;
-  final bool? showHeaderBackButton;
-  final IconThemeData? headerIconTheme;
+  final bool? hideHeader;
+  final Widget? listEmptyComponent;
+  final String? title;
+  final TextStyle? defaultHeaderTextStyle;
+  final bool? showDefaultHeaderBackButton;
+  final Icon? defaultBackButton;
   final bool? isCenterTitle;
-  final Widget Function(NotificationDataType)? buildCardWidget;
-  final void Function(NotificationDataType)? onCardClick;
+  final Widget Function(NotificationDataType)? customNotificationCard;
+  final void Function(NotificationDataType)? onNotificationCardClick;
   final void Function(ApiErrorDetails)? onError;
   final bool? hideClearAll;
-  final List<Widget>? customHeaderSuffixCTA;
-  final bool? isDarkMode;
-  final CustomThemeColors? customTheme;
+  final bool? darkMode;
+  final CustomThemeColors? theme;
   final Widget? customLoader;
+  final Widget? customErrorWidget;
+  final Widget? customHeader;
+  final void Function()? handleBackNavigation;
+  final bool? disableAutoMarkAsRead;
 
   @override
-  _SirenWindowState createState() => _SirenWindowState();
+  _SirenInboxState createState() => _SirenInboxState();
 }
 
-class _SirenWindowState extends State<SirenWindow> {
+class _SirenInboxState extends State<SirenInbox> {
   late ScrollController _scrollController;
   bool isLoading = true;
   bool endReached = false;
@@ -112,11 +115,13 @@ class _SirenWindowState extends State<SirenWindow> {
         _tokenVerificationStatus == Status.SUCCESS) {
       await fetchNotifications();
     } else if (_tokenVerificationResponse.isError) {
-      setState(() {
-        isError = true;
-      });
-      widget.onError
-          ?.call(_tokenVerificationResponse.error ?? ApiErrorDetails());
+      if (mounted) {
+        setState(() {
+          isError = true;
+        });
+        widget.onError
+            ?.call(_tokenVerificationResponse.error ?? ApiErrorDetails());
+      }
     }
   }
 
@@ -127,14 +132,17 @@ class _SirenWindowState extends State<SirenWindow> {
           switch (streamResponse.api) {
             case UpdateEvents.READ_BY_ID:
               _markNotificationAsReadById(streamResponse.id);
+              break;
             case UpdateEvents.READ_ALL:
               _markAllNotificationsAsRead();
+              break;
             case UpdateEvents.DELETE_BY_ID:
               _deleteById(streamResponse.id);
+              break;
             case UpdateEvents.DELETE_ALL:
               _deleteAllNotifications();
+              break;
             default:
-            //handle a default case
           }
         } else if (streamResponse.response?.isError ?? false) {
           widget.onError
@@ -144,33 +152,48 @@ class _SirenWindowState extends State<SirenWindow> {
     );
   }
 
+  PreferredSize _buildAppBar(ThemeData theme) {
+    return PreferredSize(
+      preferredSize: const Size.fromHeight(kToolbarHeight),
+      child: widget.customHeader ?? _buildCustomAppBar(theme, kToolbarHeight),
+    );
+  }
+
   void _markNotificationAsReadById(String? notificationId) {
-    setState(() {
-      notifications.firstWhere((n) => n.id == notificationId).markAsRead();
-    });
+    if (mounted) {
+      setState(() {
+        notifications.firstWhere((n) => n.id == notificationId).markAsRead();
+      });
+    }
   }
 
   void _markAllNotificationsAsRead() {
-    setState(() {
-      for (final notification in notifications) {
-        notification.markAsRead();
-      }
-    });
+    if (mounted) {
+      setState(() {
+        for (final notification in notifications) {
+          notification.markAsRead();
+        }
+      });
+    }
   }
 
   void _deleteById(String? notificationId) {
-    setState(() {
-      notifications
-          .removeWhere((notification) => notification.id == notificationId);
-      totalElements = totalElements - 1;
-    });
+    if (mounted) {
+      setState(() {
+        notifications
+            .removeWhere((notification) => notification.id == notificationId);
+        totalElements = totalElements - 1;
+      });
+    }
   }
 
   void _deleteAllNotifications() {
-    setState(() {
-      notifications = [];
-      totalElements = 0;
-    });
+    if (mounted) {
+      setState(() {
+        notifications = [];
+        totalElements = 0;
+      });
+    }
   }
 
   void _scrollListener() {
@@ -192,7 +215,7 @@ class _SirenWindowState extends State<SirenWindow> {
     }
   }
 
-  void pollFetchNotifications() {
+  void fetchNewNotifications() {
     late var newNotifications = <NotificationDataType>[];
     _periodicUpdateRef = Timer.periodic(
       const Duration(seconds: Generics.DATA_FETCH_INTERVAL),
@@ -200,7 +223,7 @@ class _SirenWindowState extends State<SirenWindow> {
         final fetchedNotifications =
             await FetchAllNotifications.instance.fetchAllNotifications(
           page: 0,
-          size: widget.pageSize ?? Generics.PAGE_SIZE,
+          size: Generics.PAGE_SIZE,
         );
         if (fetchedNotifications.isSuccess) {
           if (fetchedNotifications.meta!.totalElements! > totalElements) {
@@ -225,9 +248,11 @@ class _SirenWindowState extends State<SirenWindow> {
             newNotifications = [];
           }
         } else if (fetchedNotifications.isError) {
-          setState(() {
-            isError = fetchedNotifications.isError;
-          });
+          if (mounted) {
+            setState(() {
+              isError = fetchedNotifications.isError;
+            });
+          }
           widget.onError?.call(fetchedNotifications.error ?? ApiErrorDetails());
         }
       },
@@ -248,57 +273,64 @@ class _SirenWindowState extends State<SirenWindow> {
   }
 
   Future<void> fetchNotifications() async {
-    if (notifications.isEmpty) {
-      setState(() {
-        isLoading = true;
-      });
-    } else {
-      setState(() {
-        loadingNextPage = true;
-      });
-    }
+    if (mounted) {
+      if (notifications.isEmpty) {
+        setState(() {
+          isLoading = true;
+        });
+      } else {
+        setState(() {
+          loadingNextPage = true;
+        });
+      }
 
-    if (!endReached) {
-      final fetchedNotifications =
-          await FetchAllNotifications.instance.fetchAllNotifications(
-        page: currentPage,
-        size: widget.pageSize ?? Generics.PAGE_SIZE,
-      );
-      if (fetchedNotifications.isSuccess) {
-        await markAllNotificationsAsViewed();
-        setState(() {
-          notifications.addAll(
-            fetchedNotifications.data as Iterable<NotificationDataType>,
-          );
-          isLoading = false;
-          totalElements = fetchedNotifications.meta?.totalElements ?? 0;
-          totalPages = fetchedNotifications.meta?.totalPages ?? 0;
-          updateCurrentPageState();
-        });
-        pollFetchNotifications();
-      } else if (fetchedNotifications.isError) {
-        setState(() {
-          isError = fetchedNotifications.isError;
-        });
-        //initialized to avoid LateInitializationError.
-        _periodicUpdateRef =
-            Timer.periodic(const Duration(seconds: 1), (timer) {});
-        widget.onError?.call(fetchedNotifications.error ?? ApiErrorDetails());
+      if (!endReached) {
+        final fetchedNotifications =
+            await FetchAllNotifications.instance.fetchAllNotifications(
+          page: currentPage,
+          size: Generics.PAGE_SIZE,
+        );
+        if (fetchedNotifications.isSuccess) {
+          await markAllNotificationsAsViewed();
+          setState(() {
+            notifications.addAll(
+              fetchedNotifications.data as Iterable<NotificationDataType>,
+            );
+            isLoading = false;
+            totalElements = fetchedNotifications.meta?.totalElements ?? 0;
+            totalPages = fetchedNotifications.meta?.totalPages ?? 0;
+            updateCurrentPageState();
+          });
+          fetchNewNotifications();
+        } else if (fetchedNotifications.isError) {
+          if (mounted) {
+            setState(() {
+              isError = fetchedNotifications.isError;
+            });
+          }
+          //initialized to avoid LateInitializationError.
+          _periodicUpdateRef =
+              Timer.periodic(const Duration(seconds: 1), (timer) {});
+          widget.onError?.call(fetchedNotifications.error ?? ApiErrorDetails());
+        }
       }
     }
   }
 
   Future<void> onRefresh() async {
-    setState(() {
-      notifications = [];
-      totalElements = 0;
-      isLoading = true;
-      currentPage = 0;
-    });
-    await fetchNotifications();
-    setState(() {
-      isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        isLoading = true;
+        notifications = [];
+        endReached = false;
+        totalElements = 0;
+        currentPage = 0;
+      });
+      await fetchNotifications();
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   Future<void> onBulkDelete() async {
@@ -323,16 +355,20 @@ class _SirenWindowState extends State<SirenWindow> {
     );
 
     if (deletionStatus.data == Status.SUCCESS && deletionStatus.isSuccess) {
-      setState(() {
-        deletingNotificationId = id;
-      });
+      if (mounted) {
+        setState(() {
+          deletingNotificationId = id;
+        });
+      }
 
       await Future.delayed(const Duration(milliseconds: 500));
 
-      setState(() {
-        deletingNotificationId = null;
-        _deleteById(id);
-      });
+      if (mounted) {
+        setState(() {
+          deletingNotificationId = null;
+          _deleteById(id);
+        });
+      }
     } else if (deletionStatus.isError) {
       widget.onError?.call(deletionStatus.error ?? ApiErrorDetails());
     }
@@ -340,16 +376,20 @@ class _SirenWindowState extends State<SirenWindow> {
 
   void onEndReached() {
     if (!isLoading && !loadingNextPage) {
-      setState(() {
-        loadingNextPage = true;
-      });
+      if (mounted) {
+        setState(() {
+          loadingNextPage = true;
+        });
+      }
 
       Future.delayed(const Duration(seconds: 2), () async {
         await fetchNotifications();
-        setState(() {
-          isLoading = false;
-          loadingNextPage = false;
-        });
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+            loadingNextPage = false;
+          });
+        }
       });
     }
   }
@@ -367,9 +407,10 @@ class _SirenWindowState extends State<SirenWindow> {
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: widget.customTheme != null
-          ? AppTheme.customTheme(widget.customTheme!, isDarkMode: widget.isDarkMode ?? false)
-          : (widget.isDarkMode ?? false
+      data: widget.theme != null
+          ? AppTheme.customTheme(widget.theme!,
+              isDarkMode: widget.darkMode ?? false)
+          : (widget.darkMode ?? false
               ? AppTheme.darkTheme
               : AppTheme.lightTheme),
       child: Builder(
@@ -378,18 +419,19 @@ class _SirenWindowState extends State<SirenWindow> {
 
           return Scaffold(
             backgroundColor: currentTheme.colorScheme.primary,
-            appBar: widget.showWindowHeader ?? true
-                ? _buildAppBar(currentTheme)
-                : null,
+            appBar:
+                widget.hideHeader ?? false ? null : _buildAppBar(currentTheme),
             body: isError
                 ? RefreshIndicator(
                     color: currentTheme.colorScheme.secondary,
                     backgroundColor: currentTheme.colorScheme.primary,
                     onRefresh: () async {
-                      setState(() {
-                        isError = false;
-                      });
-                      await fetchNotifications();
+                      if (mounted) {
+                        setState(() {
+                          isError = false;
+                        });
+                        await fetchNotifications();
+                      }
                     },
                     child: ListView(
                       physics: const AlwaysScrollableScrollPhysics(),
@@ -413,57 +455,85 @@ class _SirenWindowState extends State<SirenWindow> {
     );
   }
 
-  AppBar? _buildAppBar(ThemeData theme) {
-    return AppBar(
-      title: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Text(widget.windowHeaderText ?? 'Notifications'),
-      ),
-      backgroundColor: theme.colorScheme.primary,
-      titleTextStyle: widget.windowHeaderTextStyle ??
-          TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: theme.colorScheme.inversePrimary,
-          ),
-      centerTitle: widget.isCenterTitle ?? false,
-      automaticallyImplyLeading: widget.showHeaderBackButton ?? false,
-      iconTheme:
-          widget.headerIconTheme ?? const IconThemeData(color: Colors.white),
-      actions: [
-        if (widget.customHeaderSuffixCTA != null)
-          ...widget.customHeaderSuffixCTA!,
-        if (!(widget.hideClearAll ?? false) &&
-            (!isError && !isLoading && notifications.isNotEmpty))
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: GestureDetector(
-              onTap: onBulkDelete,
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 2,
-                    ),
-                    child: Icon(
-                      Icons.clear_all,
-                      color: theme.colorScheme.outline,
-                      size: 24,
-                    ),
-                  ),
-                  Text(
-                    'Clear All',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: theme.colorScheme.outline,
-                    ),
-                  ),
-                ],
+  Widget _buildCustomAppBar(ThemeData theme, double appBarHeight) {
+    return Container(
+      decoration: BoxDecoration(
+          color: theme.colorScheme.primary,
+          border: Border(
+            bottom: BorderSide(
+              color: theme.colorScheme.surfaceTint,
+            ),
+          )),
+      height: appBarHeight,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              if (widget.showDefaultHeaderBackButton ?? false)
+                IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    if (widget.handleBackNavigation != null) {
+                      widget.handleBackNavigation?.call();
+                    }
+                  },
+                  icon: widget.defaultBackButton ??
+                      const Icon(Icons.arrow_back_ios),
+                ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal:
+                      widget.showDefaultHeaderBackButton ?? false ? 2 : 24,
+                ),
+                child: Text(
+                  widget.title ?? 'Notifications',
+                  style: widget.defaultHeaderTextStyle ??
+                      TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: theme.colorScheme.inversePrimary,
+                      ),
+                ),
               ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              right: 24,
+            ),
+            child: Row(
+              children: [
+                if (!(widget.hideClearAll ?? false) &&
+                    (!isError && !isLoading && notifications.isNotEmpty))
+                  GestureDetector(
+                    onTap: onBulkDelete,
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 2),
+                          child: Icon(
+                            Icons.clear_all,
+                            color: theme.colorScheme.outline,
+                            size: 24,
+                          ),
+                        ),
+                        Text(
+                          'Clear All',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: theme.colorScheme.outline,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
             ),
           ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -471,7 +541,7 @@ class _SirenWindowState extends State<SirenWindow> {
     if (notifications.isEmpty && isLoading) {
       return widget.customLoader ?? const LoaderWidget();
     } else if (notifications.isEmpty && !isLoading) {
-      return widget.customEmptyWidget ?? const EmptyWidget();
+      return widget.listEmptyComponent ?? const EmptyWidget();
     } else {
       return NotificationListView(
         notifications: notifications,
@@ -486,9 +556,11 @@ class _SirenWindowState extends State<SirenWindow> {
         scrollController: _scrollController,
         onDelete: deleteNotification,
         markAsRead: _markNotificationAsRead,
-        buildCardWidget: widget.buildCardWidget,
-        onCardClick: widget.onCardClick,
+        customNotificationCard: widget.customNotificationCard,
+        onNotificationCardClick: widget.onNotificationCardClick,
         deletingNotificationId: deletingNotificationId,
+        customLoader: widget.customLoader,
+        disableAutoMarkAsRead: widget.disableAutoMarkAsRead,
       );
     }
   }
@@ -509,93 +581,6 @@ class LoaderWidget extends StatelessWidget {
           child: CardLoaderWidget(),
         );
       },
-    );
-  }
-}
-
-class NotificationListView extends StatelessWidget {
-  const NotificationListView({
-    required this.notifications,
-    required this.isLoading,
-    required this.endReached,
-    required this.onRefresh,
-    required this.onEndReached,
-    required this.loadingNextPage,
-    required this.customStyles,
-    required this.hideAvatar,
-    required this.deleteWidget,
-    required this.scrollController,
-    required this.onDelete,
-    required this.markAsRead,
-    this.buildCardWidget,
-    this.onCardClick,
-    this.deletingNotificationId,
-    super.key,
-  });
-
-  final List<NotificationDataType> notifications;
-  final bool isLoading;
-  final bool endReached;
-  final bool loadingNextPage;
-  final Future<void> Function() onRefresh;
-  final VoidCallback onEndReached;
-  final SirenStyleProps? customStyles;
-  final bool? hideAvatar;
-  final Widget? deleteWidget;
-  final ScrollController scrollController;
-  final Future<void> Function(String) onDelete;
-  final void Function(String) markAsRead;
-  final Widget Function(NotificationDataType)? buildCardWidget;
-  final void Function(NotificationDataType)? onCardClick;
-  final String? deletingNotificationId;
-
-  @override
-  Widget build(BuildContext context) {
-    return RefreshIndicator(
-      color: Theme.of(context).colorScheme.secondary,
-      backgroundColor: Theme.of(context).colorScheme.primary,
-      onRefresh: onRefresh,
-      child: ListView.builder(
-        itemCount: notifications.length + (endReached ? 0 : 1),
-        itemBuilder: (context, index) {
-          if (index < notifications.length) {
-            final itemWidget = buildCardWidget?.call(notifications[index]) ??
-                CardWidget(
-                  onTap: (notification) {
-                    markAsRead(notifications[index].id ?? '');
-                    onCardClick?.call(notifications[index]);
-                  },
-                  notification: notifications[index],
-                  cardProps: CardProps(
-                    hideAvatar: hideAvatar,
-                    showMedia: true,
-                  ),
-                  styles: customStyles,
-                  deleteWidget: deleteWidget,
-                  onDelete: onDelete,
-                );
-            return AnimatedOpacity(
-              duration: const Duration(milliseconds: 500),
-              opacity:
-                  deletingNotificationId == notifications[index].id ? 0.0 : 1.0,
-              child: itemWidget,
-            );
-          } else {
-            return loadingNextPage
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                    ),
-                  )
-                : const SizedBox();
-          }
-        },
-        physics: const AlwaysScrollableScrollPhysics(),
-        controller: scrollController,
-      ),
     );
   }
 }

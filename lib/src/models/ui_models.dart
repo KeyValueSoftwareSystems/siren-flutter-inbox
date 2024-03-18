@@ -42,7 +42,6 @@ class SirenStyleProps {
   SirenStyleProps({
     this.container,
     this.contentContainer,
-    this.headerContainer,
     this.subHeaderText,
     this.cardAvatarContainer,
     this.cardContentContainer,
@@ -55,7 +54,6 @@ class SirenStyleProps {
   });
   final BoxDecoration? container;
   final BoxDecoration? contentContainer;
-  final BoxDecoration? headerContainer;
   final TextStyle? subHeaderText;
   final BoxDecoration? cardAvatarContainer;
   final BoxDecoration? cardContentContainer;

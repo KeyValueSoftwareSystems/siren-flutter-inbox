@@ -9,8 +9,8 @@ export 'package:siren_flutter_inbox/src/models/api_response.dart';
 export 'package:siren_flutter_inbox/src/models/notification_model.dart';
 export 'package:siren_flutter_inbox/src/models/ui_models.dart';
 export 'package:siren_flutter_inbox/src/utils/siren.dart';
+export 'package:siren_flutter_inbox/src/widgets/siren_inbox.dart';
 export 'package:siren_flutter_inbox/src/widgets/siren_inbox_icon.dart';
-export 'package:siren_flutter_inbox/src/widgets/siren_window.dart';
 
 class SirenProvider extends StatefulWidget {
   SirenProvider({
