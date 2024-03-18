@@ -26,7 +26,6 @@ class SirenInbox extends StatefulWidget {
       this.listEmptyComponent,
       this.title,
       this.defaultHeaderTextStyle,
-      this.pageSize,
       this.showDefaultHeaderBackButton,
       this.defaultBackButton,
       this.isCenterTitle,
@@ -49,7 +48,6 @@ class SirenInbox extends StatefulWidget {
   final Widget? listEmptyComponent;
   final String? title;
   final TextStyle? defaultHeaderTextStyle;
-  final int? pageSize;
   final bool? showDefaultHeaderBackButton;
   final Icon? defaultBackButton;
   final bool? isCenterTitle;
@@ -212,7 +210,7 @@ class _SirenInboxState extends State<SirenInbox> {
         final fetchedNotifications =
             await FetchAllNotifications.instance.fetchAllNotifications(
           page: 0,
-          size: widget.pageSize ?? Generics.PAGE_SIZE,
+          size: Generics.PAGE_SIZE,
         );
         if (fetchedNotifications.isSuccess) {
           if (fetchedNotifications.meta!.totalElements! > totalElements) {
@@ -274,7 +272,7 @@ class _SirenInboxState extends State<SirenInbox> {
       final fetchedNotifications =
           await FetchAllNotifications.instance.fetchAllNotifications(
         page: currentPage,
-        size: widget.pageSize ?? Generics.PAGE_SIZE,
+        size: Generics.PAGE_SIZE,
       );
       if (fetchedNotifications.isSuccess) {
         await markAllNotificationsAsViewed();
