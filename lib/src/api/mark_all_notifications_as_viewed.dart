@@ -13,8 +13,7 @@ class MarkAllNotificationsAsViewed {
   static final MarkAllNotificationsAsViewed instance =
       MarkAllNotificationsAsViewed._internal();
 
-
-   Future<ApiResponse> markAllNotificationsAsViewed({
+  Future<ApiResponse> markAllNotificationsAsViewed({
     required String untilDate,
   }) async {
     final api = ApiClient(apiProvider());

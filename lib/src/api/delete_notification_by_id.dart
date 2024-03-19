@@ -5,7 +5,6 @@ import 'package:siren_flutter_inbox/src/services/api_client.dart';
 import 'package:siren_flutter_inbox/src/services/api_provider.dart';
 
 class DeleteNotificationById {
-
   DeleteNotificationById._internal();
   static final DeleteNotificationById instance =
       DeleteNotificationById._internal();
