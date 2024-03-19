@@ -126,7 +126,7 @@ class _SirenInboxIconState extends State<SirenInboxIcon> {
       final response = await FetchUnViewedNotificationsCount.instance
           .fetchUnViewedNotificationsCount();
       if (response.isSuccess) {
-        _startRealTimeUnViewedCountFetch();
+        // _startRealTimeUnViewedCountFetch();
         if (mounted) {
           setState(
             () {

@@ -21,3 +21,10 @@ String generateElapsedTimeText(DateTime targetTime) {
   }
 }
 
+String convertToISOString(String dateString) {
+  final parsedDateTime = DateTime.parse(dateString);
+  final modifiedDateTime = parsedDateTime.add(const Duration(milliseconds: 1));
+  final isoString = modifiedDateTime.toIso8601String();
+
+  return isoString;
+}
