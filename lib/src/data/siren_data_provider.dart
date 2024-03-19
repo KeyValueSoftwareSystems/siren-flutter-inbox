@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:siren_flutter_inbox/siren_flutter_inbox.dart';
 import 'package:siren_flutter_inbox/src/api/verify_token.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
+import 'package:siren_flutter_inbox/src/utils/common_utils.dart';
 
 class SirenDataProvider {
   factory SirenDataProvider() {
@@ -16,6 +17,7 @@ class SirenDataProvider {
   static final SirenDataProvider instance = SirenDataProvider._internal();
   String userToken = '';
   String recipientId = '';
+  String apiDomain = '';
   int _retryCount = 0;
 
   Status _tokenVerificationStatus = Status.PENDING;
@@ -29,6 +31,10 @@ class SirenDataProvider {
   StreamController<StreamResponse> get iconController => _iconController;
 
   Status get tokenVerificationStatus => _tokenVerificationStatus;
+
+  Future<void> initialize() async {
+    apiDomain = await getApiDomain();
+  }
 
   void updateParams({
     required String userToken,

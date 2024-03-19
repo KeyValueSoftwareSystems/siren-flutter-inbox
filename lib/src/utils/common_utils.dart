@@ -1,3 +1,6 @@
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:siren_flutter_inbox/src/constants/generics.dart';
+
 String generateElapsedTimeText(DateTime targetTime) {
   final currentTime = DateTime.now();
   final millisecondsDiff = currentTime.difference(targetTime).inMilliseconds;
@@ -34,4 +37,33 @@ String convertToISOString(String dateString) {
   final isoString = parsedDateTime.toIso8601String();
 
   return isoString;
+}
+
+Future<Map<String, String>> loadEnv() async {
+  try {
+    final contents = await rootBundle.loadString(Generics.ENV_PATH);
+    final lines =
+        contents.split('\n').where((line) => line.isNotEmpty).toList();
+
+    final envVariables = <String, String>{};
+    for (final line in lines) {
+      final parts = line.split('=');
+      if (parts.length == 2) {
+        final key = parts[0].trim();
+        final value = parts[1].trim();
+
+        envVariables[key] = value;
+      }
+    }
+
+    return envVariables;
+  } catch (e) {
+    return {};
+  }
+}
+
+Future<String> getApiDomain() async {
+  final env = await loadEnv();
+  final apiDomain = env['API_DOMAIN'] ?? '';
+  return apiDomain;
 }

@@ -29,10 +29,7 @@ class _SirenProviderState extends State<SirenProvider> {
   @override
   void initState() {
     super.initState();
-    SirenDataProvider.instance.updateParams(
-      userToken: widget.userToken,
-      recipientId: widget.recipientId,
-    );
+    initialize();
   }
 
   @override
@@ -54,5 +51,13 @@ class _SirenProviderState extends State<SirenProvider> {
   @override
   Widget build(BuildContext context) {
     return widget.child;
+  }
+
+  Future<void> initialize() async {
+    await SirenDataProvider.instance.initialize();
+    SirenDataProvider.instance.updateParams(
+      userToken: widget.userToken,
+      recipientId: widget.recipientId,
+    );
   }
 }

@@ -3,7 +3,6 @@ import 'package:siren_flutter_inbox/siren_flutter_inbox.dart';
 class Generics {
   Generics._();
 
-  static const String API_DOMAIN = 'https://api.dev.sirenapp.io/api/';
   static const String V2 = 'v2';
   static const String BASE_URL = '/in-app/recipients/';
 
@@ -11,6 +10,7 @@ class Generics {
   static const String PLACEHOLDER_IMAGE_URL = 'https://picsum.photos/200/300';
   static const int PAGE_SIZE = 10;
   static const int MAX_RETRIES = 3;
+  static const String ENV_PATH = 'packages/siren_flutter_inbox/.env';
 
   static final defaultError = ApiErrorDetails(
     errorType: ErrorTypes.DEFAULT_ERROR,

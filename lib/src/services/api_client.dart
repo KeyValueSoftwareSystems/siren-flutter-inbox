@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:siren_flutter_inbox/src/constants/generics.dart';
+import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
 import 'package:siren_flutter_inbox/src/models/api_response.dart';
 
 class ApiClient {
@@ -24,7 +24,7 @@ class ApiClient {
     ProgressCallback? onReceiveProgress,
   }) async {
     try {
-      final url = '${Generics.API_DOMAIN}$path';
+      final url = '${SirenDataProvider.instance.apiDomain}$path';
       final response = await _api.get(
         url,
         queryParameters: queryParameters,
@@ -58,7 +58,7 @@ class ApiClient {
     ProgressCallback? onReceiveProgress,
   }) async {
     try {
-      final url = '${Generics.API_DOMAIN}$path';
+      final url = '${SirenDataProvider.instance.apiDomain}$path';
       final response = await _api.post(
         url,
         data: data,
@@ -94,7 +94,7 @@ class ApiClient {
     ProgressCallback? onReceiveProgress,
   }) async {
     try {
-      final url = '${Generics.API_DOMAIN}$path';
+      final url = '${SirenDataProvider.instance.apiDomain}$path';
       final response = await _api.patch(
         url,
         data: data,
@@ -128,7 +128,7 @@ class ApiClient {
     ProgressCallback? onReceiveProgress,
   }) async {
     try {
-      final url = '${Generics.API_DOMAIN}$path';
+      final url = '${SirenDataProvider.instance.apiDomain}$path';
       final response = await _api.delete(
         url,
         queryParameters: queryParameters,
