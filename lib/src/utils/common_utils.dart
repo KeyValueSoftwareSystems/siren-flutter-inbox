@@ -20,4 +20,3 @@ String generateElapsedTimeText(DateTime targetTime) {
     return years == 1 ? '1 year ago' : '$years years ago';
   }
 }
-

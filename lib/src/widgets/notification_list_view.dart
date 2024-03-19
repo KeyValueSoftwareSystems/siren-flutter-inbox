@@ -43,7 +43,7 @@ class NotificationListView extends StatefulWidget {
   final bool? disableAutoMarkAsRead;
 
   @override
-  _NotificationListViewState createState() => _NotificationListViewState();
+  State<NotificationListView> createState() => _NotificationListViewState();
 }
 
 class _NotificationListViewState extends State<NotificationListView> {

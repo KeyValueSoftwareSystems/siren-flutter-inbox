@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
 class NullableText extends StatelessWidget {
+  const NullableText({
+    required this.style,
+    super.key,
+    this.text,
+  });
   final String? text;
   final TextStyle? style;
-
-  const NullableText({
-    Key? key,
-    this.text,
-    required this.style,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -50,7 +50,7 @@ class VerifyToken {
         ..isSuccess = false
         ..isError = true
         ..data = Status.FAILED
-        ..error = Generics.DEFAULT_ERROR;
+        ..error = Generics.defaultError;
     }
 
     return result;

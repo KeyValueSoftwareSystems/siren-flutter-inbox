@@ -36,7 +36,7 @@ class NotificationsBulkUpdate {
         ..isSuccess = false
         ..isError = true
         ..rawResponse = apiResponse
-        ..error = Generics.DEFAULT_ERROR;
+        ..error = Generics.defaultError;
     }
 
     return result;
