@@ -45,7 +45,7 @@ class NotificationListView extends StatefulWidget {
   final int? totalElements;
 
   @override
-  _NotificationListViewState createState() => _NotificationListViewState();
+  State<NotificationListView> createState() => _NotificationListViewState();
 }
 
 class _NotificationListViewState extends State<NotificationListView> {

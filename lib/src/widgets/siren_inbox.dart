@@ -65,7 +65,7 @@ class SirenInbox extends StatefulWidget {
   final bool? disableAutoMarkAsRead;
 
   @override
-  _SirenInboxState createState() => _SirenInboxState();
+  State<SirenInbox> createState() => _SirenInboxState();
 }
 
 class _SirenInboxState extends State<SirenInbox> {
@@ -590,7 +590,7 @@ class LoaderWidget extends StatelessWidget {
       itemCount: Generics.PAGE_SIZE,
       itemBuilder: (context, index) {
         return const Padding(
-          padding: EdgeInsets.symmetric(vertical: 8.0),
+          padding: EdgeInsets.symmetric(vertical: 8),
           child: CardLoaderWidget(),
         );
       },
