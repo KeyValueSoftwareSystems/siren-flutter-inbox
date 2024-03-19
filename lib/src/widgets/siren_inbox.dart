@@ -7,7 +7,6 @@ import 'package:siren_flutter_inbox/src/api/fetch_all_notification.dart';
 import 'package:siren_flutter_inbox/src/api/mark_all_notifications_as_viewed.dart';
 import 'package:siren_flutter_inbox/src/api/notifications_bulk_update.dart';
 import 'package:siren_flutter_inbox/src/api/read_notification_by_id.dart';
-import 'package:siren_flutter_inbox/src/api/verify_token.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
 import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
 import 'package:siren_flutter_inbox/src/theme/app_theme.dart';
@@ -85,18 +84,16 @@ class _SirenInboxState extends State<SirenInbox> {
   late Timer? _periodicUpdateRef;
   late StreamSubscription<StreamResponse> _subscription;
 
-  ApiResponse _tokenVerificationResponse = ApiResponse()..isLoading;
-  Status _tokenVerificationStatus = Status.PENDING;
-
   @override
   void initState() {
     super.initState();
-    _initialize();
+    _periodicUpdateRef = Timer(const Duration(days: 1), () {});
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
     _deleteNotificationById = DeleteNotificationById.instance;
     _readNotificationById = ReadNotificationById.instance;
     _subscribeToStream();
+    _initialize();
   }
 
   @override
@@ -110,18 +107,14 @@ class _SirenInboxState extends State<SirenInbox> {
   }
 
   Future<void> _initialize() async {
-    _tokenVerificationResponse = await VerifyToken.instance.verifyToken();
-    _tokenVerificationStatus = _tokenVerificationResponse.data as Status;
-    if (_tokenVerificationResponse.isSuccess &&
-        _tokenVerificationStatus == Status.SUCCESS) {
+    if (SirenDataProvider.instance.tokenVerificationStatus == Status.SUCCESS) {
       await fetchNotifications();
-    } else if (_tokenVerificationResponse.isError) {
+    } else if (SirenDataProvider.instance.tokenVerificationStatus ==
+        Status.FAILED) {
       if (mounted) {
         setState(() {
           isError = true;
         });
-        widget.onError
-            ?.call(_tokenVerificationResponse.error ?? ApiErrorDetails());
       }
     }
   }
@@ -129,6 +122,10 @@ class _SirenInboxState extends State<SirenInbox> {
   void _subscribeToStream() {
     _subscription = SirenDataProvider.instance.inboxController.stream.listen(
       (streamResponse) {
+        if (streamResponse.api == UpdateEvents.PARAMS_CHANGED) {
+          _reset(cancelFetch: true);
+          return;
+        }
         if (streamResponse.response?.isSuccess ?? false) {
           switch (streamResponse.api) {
             case UpdateEvents.READ_BY_ID:
@@ -139,6 +136,9 @@ class _SirenInboxState extends State<SirenInbox> {
               _deleteById(streamResponse.id);
             case UpdateEvents.DELETE_ALL:
               _deleteAllNotifications();
+            case UpdateEvents.TOKEN_VERIFIED:
+              _initialize();
+
             // ignore: no_default_cases
             default:
           }
@@ -148,6 +148,22 @@ class _SirenInboxState extends State<SirenInbox> {
         }
       },
     );
+  }
+
+  void _reset({bool cancelFetch = false}) {
+    if (mounted) {
+      setState(() {
+        isLoading = true;
+        notifications = [];
+        endReached = false;
+        totalElements = 0;
+        currentPage = 0;
+      });
+    }
+
+    if (cancelFetch) {
+      _periodicUpdateRef?.cancel();
+    }
   }
 
   PreferredSize _buildAppBar(ThemeData theme) {
@@ -215,6 +231,7 @@ class _SirenInboxState extends State<SirenInbox> {
 
   void fetchNewNotifications() {
     late var newNotifications = <NotificationDataType>[];
+    _periodicUpdateRef?.cancel();
     _periodicUpdateRef = Timer.periodic(
       const Duration(seconds: Generics.DATA_FETCH_INTERVAL),
       (timer) async {
@@ -240,6 +257,13 @@ class _SirenInboxState extends State<SirenInbox> {
                   );
                 },
               );
+              if (isLoading) {
+                setState(
+                  () {
+                    isLoading = false;
+                  },
+                );
+              }
             }
             totalElements = fetchedNotifications.meta!.totalElements ?? 0;
             totalPages = fetchedNotifications.meta!.totalPages ?? 0;
@@ -306,9 +330,6 @@ class _SirenInboxState extends State<SirenInbox> {
               isError = fetchedNotifications.isError;
             });
           }
-          //initialized to avoid LateInitializationError.
-          _periodicUpdateRef =
-              Timer.periodic(const Duration(seconds: 1), (timer) {});
           widget.onError?.call(fetchedNotifications.error ?? ApiErrorDetails());
         }
       }
@@ -317,13 +338,7 @@ class _SirenInboxState extends State<SirenInbox> {
 
   Future<void> onRefresh() async {
     if (mounted) {
-      setState(() {
-        isLoading = true;
-        notifications = [];
-        endReached = false;
-        totalElements = 0;
-        currentPage = 0;
-      });
+      _reset();
       await fetchNotifications();
       setState(() {
         isLoading = false;

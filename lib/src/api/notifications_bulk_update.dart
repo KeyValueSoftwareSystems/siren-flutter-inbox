@@ -1,4 +1,5 @@
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
+import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
 import 'package:siren_flutter_inbox/src/models/api_response.dart';
 import 'package:siren_flutter_inbox/src/services/api_client.dart';
 import 'package:siren_flutter_inbox/src/services/api_provider.dart';
@@ -8,7 +9,8 @@ class NotificationsBulkUpdate {
     required Map<String, dynamic> data,
   }) async {
     final api = ApiClient(apiProvider());
-    final apiPath = '${Generics.API_PATH}/notifications/bulk-update';
+    final apiPath =
+        '${Generics.V2}${Generics.BASE_URL}${SirenDataProvider.instance.recipientId}/notifications/bulk-update';
     final result = ApiResponse()..isLoading;
     final apiError = ApiErrorDetails()
       ..errorType = ErrorTypes.NOTIFICATION_DELETE_ERROR;
