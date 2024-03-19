@@ -102,7 +102,7 @@ class _SirenInboxState extends State<SirenInbox> {
     _scrollController.dispose();
     _periodicUpdateRef?.cancel();
     _subscription.cancel();
-    SirenDataProvider.instance.dispose();
+    SirenDataProvider.instance.inboxDispose();
     super.dispose();
   }
 
@@ -230,9 +230,11 @@ class _SirenInboxState extends State<SirenInbox> {
         final fetchedNotifications =
             await FetchAllNotifications.instance.fetchAllNotifications(
           size: Generics.PAGE_SIZE,
-          start: convertToISOString(
-            notifications[0].createdAt ?? '',
-          ),
+          start: notifications.isNotEmpty
+              ? modifyAndConvertToISOString(
+                  notifications[0].createdAt ?? '',
+                )
+              : null,
         );
         if (fetchedNotifications.isSuccess) {
           if ((fetchedNotifications.meta?.totalElements ?? 0) > 0) {
