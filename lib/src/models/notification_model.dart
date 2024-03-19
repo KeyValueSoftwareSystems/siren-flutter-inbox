@@ -1,5 +1,3 @@
-// models.dart
-
 import 'package:flutter/material.dart';
 
 class NotificationDataType {
@@ -42,11 +40,11 @@ class MessageData {
   MessageData({
     required this.channel,
     required this.header,
-    this.subHeader,
     required this.body,
     required this.actionUrl,
     required this.avatar,
     required this.additionalData,
+    this.subHeader,
   });
 
   factory MessageData.fromJson(Map<String, dynamic>? json) {

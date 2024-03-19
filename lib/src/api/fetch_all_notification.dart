@@ -29,18 +29,32 @@ class FetchAllNotifications {
     int? page,
     int? size,
     bool? isRead,
+    String? start,
+    String? end,
   }) async {
     final result = ApiResponse()..isLoading = true;
     final apiError = ApiErrorDetails()
       ..errorType = ErrorTypes.NOTIFICATION_FETCH_ERROR;
 
+    // Manually construct query parameters
+    final queryParams = {
+      'size': size.toString(),
+      'sort': 'createdAt',
+    };
+
+    if (end != null) {
+      queryParams['end'] = end;
+    }
+
+    if (start != null) {
+      queryParams['start'] = start;
+    }
+
+    final queryString =
+        queryParams.entries.map((e) => '${e.key}=${e.value}').join('&');
+
     final apiResponse = await api.get(
-      path: _apiPath,
-      queryParameters: {
-        'page': page,
-        'size': size,
-        'sort': 'createdAt',
-      },
+      path: '$_apiPath?$queryString',
     );
 
     if (apiResponse.statusCode != 0 && apiResponse.data != null) {
@@ -64,7 +78,7 @@ class FetchAllNotifications {
         ..isSuccess = false
         ..isError = true
         ..rawResponse = apiResponse
-        ..error = Generics.DEFAULT_ERROR;
+        ..error = Generics.defaultError;
     }
 
     return result;

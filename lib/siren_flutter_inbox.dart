@@ -1,5 +1,3 @@
-library siren_flutter_inbox;
-
 import 'package:flutter/material.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
 import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';

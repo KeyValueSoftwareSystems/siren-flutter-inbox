@@ -12,7 +12,7 @@ class Generics {
   static const int PAGE_SIZE = 10;
   static const int MAX_RETRIES = 3;
 
-  static final DEFAULT_ERROR = ApiErrorDetails(
+  static final defaultError = ApiErrorDetails(
     errorType: ErrorTypes.DEFAULT_ERROR,
     errorCode: 'INTERNAL SERVER ERROR',
     message:

@@ -35,8 +35,10 @@ class AppTheme {
         ),
   );
 
-  static ThemeData customTheme(CustomThemeColors customColors,
-      {bool isDarkMode = false}) {
+  static ThemeData customTheme(
+    CustomThemeColors customColors, {
+    bool isDarkMode = false,
+  }) {
     return isDarkMode
         ? ThemeData.dark().copyWith(
             colorScheme: ThemeData.dark().colorScheme.copyWith(

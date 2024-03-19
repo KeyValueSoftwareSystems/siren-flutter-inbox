@@ -21,6 +21,7 @@ class NotificationListView extends StatefulWidget {
     this.deletingNotificationId,
     this.customLoader,
     this.disableAutoMarkAsRead,
+    this.totalElements,
     super.key,
   });
 
@@ -41,9 +42,10 @@ class NotificationListView extends StatefulWidget {
   final String? deletingNotificationId;
   final Widget? customLoader;
   final bool? disableAutoMarkAsRead;
+  final int? totalElements;
 
   @override
-  _NotificationListViewState createState() => _NotificationListViewState();
+  State<NotificationListView> createState() => _NotificationListViewState();
 }
 
 class _NotificationListViewState extends State<NotificationListView> {
@@ -65,7 +67,8 @@ class _NotificationListViewState extends State<NotificationListView> {
     if (renderObject is RenderBox) {
       final renderBox = renderObject;
       final position = renderBox.localToGlobal(Offset.zero);
-      if (position.dy < deviceHeight) {
+      if (position.dy < deviceHeight &&
+          (widget.totalElements ?? 0) < widget.notifications.length) {
         widget.onEndReached();
       }
     }
