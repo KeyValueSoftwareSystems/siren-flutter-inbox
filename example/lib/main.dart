@@ -1,5 +1,5 @@
-import 'package:example/siren_icon.dart';
-import 'package:example/siren_window.dart';
+import './siren_icon.dart';
+import './siren_window.dart';
 import 'package:flutter/material.dart';
 import 'package:siren_flutter_inbox/siren_flutter_inbox.dart';
 

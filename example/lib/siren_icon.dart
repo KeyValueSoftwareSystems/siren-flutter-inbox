@@ -5,7 +5,7 @@ class SirenIconWidget extends StatefulWidget {
   const SirenIconWidget({Key? key}) : super(key: key);
 
   @override
-  _SirenIconWidgetState createState() => _SirenIconWidgetState();
+  State<SirenIconWidget> createState() => _SirenIconWidgetState();
 }
 
 class _SirenIconWidgetState extends State<SirenIconWidget> {
@@ -17,15 +17,13 @@ class _SirenIconWidgetState extends State<SirenIconWidget> {
     return Scaffold(
       body: Column(
         children: [
-          Spacer(),
+          const Spacer(),
           Center(
             child: SirenInboxIcon(
               notificationIcon: notificationIcon,
               darkMode: true,
               hideBadge: hideBadge,
-              onError: (error) {
-                print('This is the inApp error message ${error.message}');
-              },
+              onError: (error) {},
             ),
           ),
           Text(
@@ -34,7 +32,7 @@ class _SirenIconWidgetState extends State<SirenIconWidget> {
           Text(
             'You are ${hideBadge == false ? 'viewing' : 'not viewing'} notification count',
           ),
-          Spacer(),
+          const Spacer(),
           Padding(
             padding: const EdgeInsets.all(16),
             child: Row(
