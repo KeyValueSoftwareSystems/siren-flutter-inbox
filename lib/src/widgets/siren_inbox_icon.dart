@@ -83,7 +83,11 @@ class _SirenInboxIconState extends State<SirenInboxIcon> {
   }
 
   Future<void> _reset() async {
-    _notificationsCount = 0;
+    if (mounted) {
+      setState(() {
+        _notificationsCount = 0;
+      });
+    }
     _periodicUpdateRef.cancel();
   }
 
