@@ -73,10 +73,13 @@ class SirenDataProvider {
     }
   }
 
-  void dispose() {
-    _inboxController.close();
+  void iconDispose() {
     _iconController.close();
-    _inboxController = StreamController<StreamResponse>();
     _iconController = StreamController<StreamResponse>();
+  }
+
+  void inboxDispose() {
+    _inboxController.close();
+    _inboxController = StreamController<StreamResponse>();
   }
 }

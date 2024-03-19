@@ -18,6 +18,7 @@ class SirenInboxIcon extends StatefulWidget {
     this.notificationIcon,
     this.onError,
     this.onTap,
+    this.hideBadge = false,
   });
 
   final bool darkMode;
@@ -27,6 +28,7 @@ class SirenInboxIcon extends StatefulWidget {
   final void Function(ApiErrorDetails)? onError;
   final VoidCallback? onTap;
   final Widget? notificationIcon;
+  final bool? hideBadge;
 
   @override
   State<SirenInboxIcon> createState() => _SirenInboxIconState();
@@ -52,7 +54,7 @@ class _SirenInboxIconState extends State<SirenInboxIcon> {
     super.dispose();
     _periodicUpdateRef.cancel();
     _subscription.cancel();
-    SirenDataProvider.instance.dispose();
+    SirenDataProvider.instance.iconDispose();
   }
 
   void _subscribeToStream() {
@@ -170,7 +172,8 @@ class _SirenInboxIconState extends State<SirenInboxIcon> {
                           color: currentTheme.colorScheme.onPrimary,
                         ),
                   ),
-                  if (_notificationsCount > 0) _getBadge(context),
+                  if (_notificationsCount > 0 && !(widget.hideBadge ?? false))
+                    _getBadge(context),
                 ],
               ),
             ),
