@@ -10,8 +10,7 @@ class SirenWindowWidget extends StatelessWidget {
       body: Stack(
         children: [
           SirenInbox(
-            onError: (error) {
-            },
+            onError: (error) {},
           ),
         ],
       ),
