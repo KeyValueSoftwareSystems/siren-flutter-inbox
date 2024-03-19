@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 import 'package:siren_flutter_inbox/siren_flutter_inbox.dart';
 import 'package:siren_flutter_inbox/src/api/fetch_unviewed_notification_count.dart';
-import 'package:siren_flutter_inbox/src/api/verify_token.dart';
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
 import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
 import 'package:siren_flutter_inbox/src/theme/app_theme.dart';
@@ -36,9 +35,6 @@ class SirenInboxIcon extends StatefulWidget {
 class _SirenInboxIconState extends State<SirenInboxIcon> {
   int _notificationsCount = 0;
 
-  ApiResponse _tokenVerificationResponse = ApiResponse()..isLoading;
-  Status _tokenVerificationStatus = Status.PENDING;
-
   late Timer _periodicUpdateRef;
 
   late StreamSubscription<StreamResponse> _subscription;
@@ -46,8 +42,9 @@ class _SirenInboxIconState extends State<SirenInboxIcon> {
   @override
   void initState() {
     super.initState();
-    _initialize();
     _subscribeToStream();
+    _periodicUpdateRef = Timer(const Duration(days: 1), () {});
+    _initialize();
   }
 
   @override
@@ -70,6 +67,12 @@ class _SirenInboxIconState extends State<SirenInboxIcon> {
             case UpdateEvents.VIEW_ALL:
               {
                 await _markAllNotificationsAsViewed();
+                break;
+              }
+            case UpdateEvents.TOKEN_VERIFIED:
+              {
+                await _initialize();
+                break;
               }
             // ignore: no_default_cases
             default:
@@ -80,10 +83,12 @@ class _SirenInboxIconState extends State<SirenInboxIcon> {
   }
 
   Future<void> _reset() async {
-    _notificationsCount = 0;
-    _tokenVerificationStatus = Status.PENDING;
+    if (mounted) {
+      setState(() {
+        _notificationsCount = 0;
+      });
+    }
     _periodicUpdateRef.cancel();
-    await _initialize();
   }
 
   Future<void> _markAllNotificationsAsViewed() async {
@@ -103,6 +108,7 @@ class _SirenInboxIconState extends State<SirenInboxIcon> {
   }
 
   void _startRealTimeUnViewedCountFetch() {
+    _periodicUpdateRef.cancel();
     _periodicUpdateRef = Timer.periodic(
         const Duration(seconds: Generics.DATA_FETCH_INTERVAL), (timer) async {
       final response = await FetchUnViewedNotificationsCount.instance
@@ -116,33 +122,22 @@ class _SirenInboxIconState extends State<SirenInboxIcon> {
   }
 
   Future<void> _initialize() async {
-    await _verifyToken();
-    if (_tokenVerificationResponse.isSuccess) {
-      if (_tokenVerificationStatus == Status.SUCCESS) {
-        final response = await FetchUnViewedNotificationsCount.instance
-            .fetchUnViewedNotificationsCount();
-        if (response.isSuccess) {
-          _startRealTimeUnViewedCountFetch();
-          if (mounted) {
-            setState(
-              () {
-                _updateNotificationsCount(response.data);
-              },
-            );
-          }
-        } else if (response.isError) {
-          widget.onError?.call(response.error ?? ApiErrorDetails());
+    if (SirenDataProvider.instance.tokenVerificationStatus == Status.SUCCESS) {
+      final response = await FetchUnViewedNotificationsCount.instance
+          .fetchUnViewedNotificationsCount();
+      if (response.isSuccess) {
+        _startRealTimeUnViewedCountFetch();
+        if (mounted) {
+          setState(
+            () {
+              _updateNotificationsCount(response.data);
+            },
+          );
         }
+      } else if (response.isError) {
+        widget.onError?.call(response.error ?? ApiErrorDetails());
       }
-    } else if (_tokenVerificationResponse.isError) {
-      widget.onError
-          ?.call(_tokenVerificationResponse.error ?? ApiErrorDetails());
     }
-  }
-
-  Future<void> _verifyToken() async {
-    _tokenVerificationResponse = await VerifyToken.instance.verifyToken();
-    _tokenVerificationStatus = _tokenVerificationResponse.data as Status;
   }
 
   @override

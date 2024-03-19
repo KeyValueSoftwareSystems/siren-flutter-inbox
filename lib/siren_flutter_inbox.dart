@@ -13,15 +13,12 @@ export 'package:siren_flutter_inbox/src/widgets/siren_inbox.dart';
 export 'package:siren_flutter_inbox/src/widgets/siren_inbox_icon.dart';
 
 class SirenProvider extends StatefulWidget {
-  SirenProvider({
+  const SirenProvider({
     required this.userToken,
     required this.recipientId,
     required this.child,
     super.key,
-  }) {
-    SirenDataProvider.instance
-        .updateParams(userToken: userToken, recipientId: recipientId);
-  }
+  });
   final String userToken;
   final String recipientId;
   final Widget child;
@@ -32,6 +29,15 @@ class SirenProvider extends StatefulWidget {
 
 class _SirenProviderState extends State<SirenProvider> {
   @override
+  void initState() {
+    super.initState();
+    SirenDataProvider.instance.updateParams(
+      userToken: widget.userToken,
+      recipientId: widget.recipientId,
+    );
+  }
+
+  @override
   void didUpdateWidget(SirenProvider oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.userToken != widget.userToken ||
@@ -41,6 +47,8 @@ class _SirenProviderState extends State<SirenProvider> {
         recipientId: widget.recipientId,
       );
       SirenDataProvider.instance.iconController.sink
+          .add(StreamResponse(null, UpdateEvents.PARAMS_CHANGED, ''));
+      SirenDataProvider.instance.inboxController.sink
           .add(StreamResponse(null, UpdateEvents.PARAMS_CHANGED, ''));
     }
   }
