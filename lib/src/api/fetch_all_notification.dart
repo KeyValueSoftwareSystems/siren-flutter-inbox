@@ -6,6 +6,7 @@ import 'package:siren_flutter_inbox/src/services/api_client.dart';
 import 'package:siren_flutter_inbox/src/services/api_provider.dart';
 
 class FetchAllNotifications {
+
   FetchAllNotifications._internal();
   static final FetchAllNotifications instance =
       FetchAllNotifications._internal();

@@ -8,6 +8,7 @@ import 'package:siren_flutter_inbox/src/services/api_client.dart';
 import 'package:siren_flutter_inbox/src/services/network_service.dart';
 
 class FetchUnViewedNotificationsCount {
+
   factory FetchUnViewedNotificationsCount() {
     return instance;
   }

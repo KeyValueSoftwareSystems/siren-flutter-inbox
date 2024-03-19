@@ -275,8 +275,9 @@ class _SirenInboxState extends State<SirenInbox> {
   }
 
   Future<void> markAllNotificationsAsViewed() async {
-    final notificationsMarkedAsViewed =
-        await MarkAllNotificationsAsViewed.markAllNotificationsAsViewed(
+    final notificationsMarkedAsViewed = await MarkAllNotificationsAsViewed
+        .instance
+        .markAllNotificationsAsViewed(
       untilDate: DateTime.now().toUtc().toIso8601String(),
     );
 
@@ -338,7 +339,7 @@ class _SirenInboxState extends State<SirenInbox> {
       'operation': BulkUpdateType.MARK_AS_DELETED.name,
     };
     final deleteAllResponse =
-        await NotificationsBulkUpdate.notificationsBulkUpdate(
+        await NotificationsBulkUpdate.instance.notificationsBulkUpdate(
       data: data,
     );
     if (deleteAllResponse.isSuccess) {

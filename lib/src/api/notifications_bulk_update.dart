@@ -5,7 +5,17 @@ import 'package:siren_flutter_inbox/src/services/api_client.dart';
 import 'package:siren_flutter_inbox/src/services/api_provider.dart';
 
 class NotificationsBulkUpdate {
-  static Future<ApiResponse> notificationsBulkUpdate({
+
+  factory NotificationsBulkUpdate() {
+    return instance;
+  }
+
+  NotificationsBulkUpdate._internal();
+  static final NotificationsBulkUpdate instance =
+      NotificationsBulkUpdate._internal();
+
+
+   Future<ApiResponse> notificationsBulkUpdate({
     required Map<String, dynamic> data,
   }) async {
     final api = ApiClient(apiProvider());

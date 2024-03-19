@@ -24,8 +24,8 @@ class Siren {
       'until': untilDate,
       'operation': BulkUpdateType.MARK_AS_READ.name,
     };
-    final response =
-        await NotificationsBulkUpdate.notificationsBulkUpdate(data: data);
+    final response = await NotificationsBulkUpdate.instance
+        .notificationsBulkUpdate(data: data);
     SirenDataProvider.instance.inboxController.sink
         .add(StreamResponse(response, UpdateEvents.READ_ALL, ''));
     return response.rawResponse;
@@ -34,8 +34,8 @@ class Siren {
   static Future markNotificationsAsViewed({
     required String untilDate,
   }) async {
-    final response =
-        await MarkAllNotificationsAsViewed.markAllNotificationsAsViewed(
+    final response = await MarkAllNotificationsAsViewed.instance
+        .markAllNotificationsAsViewed(
       untilDate: untilDate,
     );
     SirenDataProvider.instance.inboxController.sink
@@ -60,8 +60,8 @@ class Siren {
       'until': untilDate,
       'operation': BulkUpdateType.MARK_AS_DELETED.name,
     };
-    final response =
-        await NotificationsBulkUpdate.notificationsBulkUpdate(data: data);
+    final response = await NotificationsBulkUpdate.instance
+        .notificationsBulkUpdate(data: data);
     SirenDataProvider.instance.inboxController.sink
         .add(StreamResponse(response, UpdateEvents.DELETE_ALL, ''));
     return response.rawResponse;

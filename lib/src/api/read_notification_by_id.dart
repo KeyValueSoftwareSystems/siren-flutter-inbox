@@ -5,6 +5,7 @@ import 'package:siren_flutter_inbox/src/services/api_client.dart';
 import 'package:siren_flutter_inbox/src/services/api_provider.dart';
 
 class ReadNotificationById {
+
   ReadNotificationById._internal();
   static final ReadNotificationById instance = ReadNotificationById._internal();
 
