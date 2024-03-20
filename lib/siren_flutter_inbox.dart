@@ -41,6 +41,13 @@ class _SirenProviderState extends State<SirenProvider> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    SirenDataProvider.instance.iconDispose();
+    SirenDataProvider.instance.inboxDispose();
+  }
+
+  @override
   void didUpdateWidget(SirenProvider oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.userToken != widget.userToken ||

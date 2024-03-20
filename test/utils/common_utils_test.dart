@@ -64,68 +64,69 @@ void main() {
   });
 
   // group('loadEnv', () {
-  //   // Inside the test group for loadEnv
-  //   test('should load environment variables from .env file', () async {
-  //     // Mock the rootBundle.loadString method
-  //     const envContents = 'API_DOMAIN=test.com\nAPI_KEY=123456';
-  //     const expectedEnvVariables = {
-  //       'API_DOMAIN': 'test.com',
-  //       'API_KEY': '123456'
-  //     };
-  //     final mockBundle = MockAssetBundle();
+  // Inside the test group for loadEnv
+  // test('should load environment variables from .env file', () async {
+  //   // Mock the rootBundle.loadString method
+  //   const envContents = 'API_DOMAIN=test.com';
+  //   const expectedEnvVariables = {
+  //     'API_DOMAIN': 'test.com',
+  //   };
+  //   final mockBundle = MockAssetBundle();
 
-  //     // Use when to define behavior for the method call
-  //     when(mockBundle.loadString(Generics.ENV_PATH))
-  //         .thenAnswer((_) => Future.value(envContents));
+  //   // Use when to define behavior for the method call
+  //   // when(mockBundle.loadString(Generics.ENV_PATH))
+  //   //     .thenAnswer((_) => Future.value(envContents));
 
-  //     // Load environment variables
-  //     final envVariables = await loadEnv();
+  //   // Load environment variables
+  //   final envVariables = await loadEnv();
+  //   print('envVariables $envVariables');
+  //   print('expectedEnvVariables $expectedEnvVariables');
 
-  //     // Assert that the loaded environment variables match the expected ones
-  //     expect(envVariables, expectedEnvVariables);
-  //   });
+  //   // Assert that the loaded environment variables match the expected ones
+  //   expect(envVariables, expectedEnvVariables);
+  // });
 
-  //   test('should return empty map if failed to load .env file', () async {
-  //     // Mock the rootBundle.loadString method to throw an error
-  //     final mockBundle = MockAssetBundle();
-  //     when(mockBundle.loadString(Generics.ENV_PATH))
-  //         .thenThrow(Exception('Failed to load'));
+  // test('should return empty map if failed to load .env file', () async {
+  //   // Mock the rootBundle.loadString method to throw an error
+  //   final mockBundle = MockAssetBundle();
+  //   when(mockBundle.loadString(Generics.ENV_PATH))
+  //       .thenThrow(Exception('Failed to load'));
 
-  //     // Load environment variables
-  //     final envVariables = await loadEnv();
+  //   // Load environment variables
+  //   final envVariables = await loadEnv();
 
-  //     // Assert that an empty map is returned
-  //     expect(envVariables, {});
-  //   });
+  //   // Assert that an empty map is returned
+  //   expect(envVariables, {});
+  // });
   // });
 
   // group('getApiDomain', () {
-  //   test('should return API domain from environment variables', () async {
-  //     // Mock the loadEnv function to return environment variables
-  //     const expectedApiDomain = 'test.com';
-  //     final mockEnv = {'API_DOMAIN': expectedApiDomain};
-  //     // when(loadEnv()).thenAnswer((_) => Future.value(mockEnv));
-  //     when(loadEnv()).thenAnswer((_) async => mockEnv);
+  // test('should return API domain from environment variables', () async {
+  //   // Mock the loadEnv function to return environment variables
+  //   const expectedApiDomain = 'test.com';
+  //   final mockEnv = {'API_DOMAIN': expectedApiDomain};
+  //   when(loadEnv()).thenAnswer((_) => Future.value(mockEnv));
+  //   // when(loadEnv()).thenAnswer((_) async => mockEnv);
 
-  //     // Get API domain
-  //     final apiDomain = await getApiDomain();
+  //   // Get API domain
+  //   final apiDomain = await getApiDomain();
 
-  //     // Assert that the returned API domain matches the expected one
-  //     expect(apiDomain, expectedApiDomain);
-  //   });
+  //   // Assert that the returned API domain matches the expected one
+  //   expect(apiDomain, expectedApiDomain);
+  // });
 
-  //   test(
-  //       'should return empty string if API domain is not found in environment variables',
-  //       () async {
-  //     // Mock the loadEnv function to return empty environment variables
-  //     when(loadEnv()).thenAnswer((_) => Future.value({}));
+  // test(
+  //     'should return empty string if API domain is not found in environment variables',
+  //     () async {
+  //   // Mock the loadEnv function to return empty environment variables
+  //   // when(loadEnv()).thenAnswer((_) => Future.value({}));
 
-  //     // Get API domain
-  //     final apiDomain = await getApiDomain();
+  //   // Get API domain
+  //   final apiDomain = await getApiDomain();
 
-  //     // Assert that an empty string is returned
-  //     expect(apiDomain, '');
-  //   });
+  //   // Assert that an empty string is returned
+  //   expect(apiDomain, '');
+  // });
   // });
 }
 
