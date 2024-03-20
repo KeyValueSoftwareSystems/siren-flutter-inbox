@@ -11,7 +11,7 @@ class SirenWindowWidget extends StatelessWidget {
         children: [
           SirenInbox(
             onError: (error) {
-              print('This is the inApp error message ${error.message}');
+              // print('This is the inApp error message ${error.message}');
             },
           ),
         ],
