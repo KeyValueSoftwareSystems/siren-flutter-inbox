@@ -23,7 +23,9 @@ class _SirenIconWidgetState extends State<SirenIconWidget> {
               notificationIcon: notificationIcon,
               darkMode: true,
               hideBadge: hideBadge,
-              onError: (error) {},
+              onError: (error) {
+                // print('This is the inApp error message ${error.message}');
+              },
             ),
           ),
           Text(

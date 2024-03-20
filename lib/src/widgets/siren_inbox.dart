@@ -16,6 +16,7 @@ import 'package:siren_flutter_inbox/src/widgets/error_widget.dart';
 import 'package:siren_flutter_inbox/src/widgets/loader_widget.dart';
 import 'package:siren_flutter_inbox/src/widgets/notification_list_view.dart';
 
+/// Widget for displaying an inbox of notifications.
 class SirenInbox extends StatefulWidget {
   const SirenInbox({
     super.key,
@@ -23,12 +24,11 @@ class SirenInbox extends StatefulWidget {
     this.hideAvatar,
     this.deleteWidget,
     this.hideHeader,
-    this.listEmptyComponent,
+    this.listEmptyWidget,
     this.title,
     this.defaultHeaderTextStyle,
     this.showDefaultHeaderBackButton,
     this.defaultBackButton,
-    this.isCenterTitle,
     this.customNotificationCard,
     this.onNotificationCardClick,
     this.onError,
@@ -42,26 +42,64 @@ class SirenInbox extends StatefulWidget {
     this.disableAutoMarkAsRead,
   });
 
+  /// Custom styles for the card of each notification.
   final SirenStyleProps? customStyles;
+
+  /// Flag to hide avatars in notifications.
   final bool? hideAvatar;
+
+  /// Widget or Icon for deleting notifications.
   final Widget? deleteWidget;
+
+  /// Flag to hide the header.
   final bool? hideHeader;
-  final Widget? listEmptyComponent;
+
+  /// Widget to display when the notification list is empty.
+  final Widget? listEmptyWidget;
+
+  /// Title of the inbox page or window.
   final String? title;
+
+  /// Text style for the header provided by the sdk.
   final TextStyle? defaultHeaderTextStyle;
+
+  /// Flag to show the header back button provided by the sdk.
   final bool? showDefaultHeaderBackButton;
+
+  /// Default back button widget for the header provided by the sdk.
   final Icon? defaultBackButton;
-  final bool? isCenterTitle;
+
+  /// Custom builder for notification cards.
   final Widget Function(NotificationDataType)? customNotificationCard;
+
+  /// Callback function when a notification card is clicked.
   final void Function(NotificationDataType)? onNotificationCardClick;
+
+  /// Callback function for handling errors.
   final void Function(ApiErrorDetails)? onError;
+
+  /// Flag to hide the "Clear All" button.
   final bool? hideClearAll;
+
+  /// Flag for enabling dark mode.
   final bool? darkMode;
+
+  /// Custom theme colors for the inbox, this focuses on the idea of colorSchemes in flutter theme.
   final CustomThemeColors? theme;
+
+  /// Custom loader widget.
   final Widget? customLoader;
+
+  /// Custom error widget.
   final Widget? customErrorWidget;
+
+  /// Custom header or appBar widget.
   final Widget? customHeader;
+
+  /// Callback function for handling back navigation.
   final void Function()? handleBackNavigation;
+
+  /// Flag to disable automatic marking of notifications as read.
   final bool? disableAutoMarkAsRead;
 
   @override
@@ -374,14 +412,16 @@ class _SirenInboxState extends State<SirenInbox> {
   }
 
   void onEndReached() {
-    if (!isLoading && !loadingNextPage) {
+    if (!isLoading &&
+        !loadingNextPage &&
+        totalElements > notifications.length) {
       if (mounted) {
         setState(() {
           loadingNextPage = true;
         });
       }
 
-      Future.delayed(const Duration(seconds: 2), () async {
+      Future.delayed(Duration.zero, () async {
         final fetchedNotifications =
             await FetchAllNotifications.instance.fetchAllNotifications(
           end: convertToISOString(
@@ -555,7 +595,7 @@ class _SirenInboxState extends State<SirenInbox> {
     if (notifications.isEmpty && isLoading) {
       return widget.customLoader ?? const LoaderWidget();
     } else if (notifications.isEmpty && !isLoading) {
-      return widget.listEmptyComponent ?? const EmptyWidget();
+      return widget.listEmptyWidget ?? const EmptyWidget();
     } else {
       return NotificationListView(
         notifications: notifications,
