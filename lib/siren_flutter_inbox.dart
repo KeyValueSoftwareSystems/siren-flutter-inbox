@@ -10,15 +10,23 @@ export 'package:siren_flutter_inbox/src/utils/siren.dart';
 export 'package:siren_flutter_inbox/src/widgets/siren_inbox.dart';
 export 'package:siren_flutter_inbox/src/widgets/siren_inbox_icon.dart';
 
+/// Provides access to the Siren SDK functionalities.
 class SirenProvider extends StatefulWidget {
+  /// Constructs SirenProvider widget.
   const SirenProvider({
     required this.userToken,
     required this.recipientId,
     required this.child,
     super.key,
   });
+
+  /// User token used for authentication.
   final String userToken;
+
+  /// Recipient identifier.
   final String recipientId;
+
+  /// Child widget to be wrapped by the provider.
   final Widget child;
 
   @override
@@ -53,6 +61,7 @@ class _SirenProviderState extends State<SirenProvider> {
     return widget.child;
   }
 
+  /// Initializes the Siren provider.
   Future<void> initialize() async {
     await SirenDataProvider.instance.initialize();
     SirenDataProvider.instance.updateParams(

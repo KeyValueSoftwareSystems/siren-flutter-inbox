@@ -5,6 +5,7 @@ import 'package:siren_flutter_inbox/src/utils/common_utils.dart';
 import 'package:siren_flutter_inbox/src/widgets/common/nullable_text.dart';
 
 class CardWidget extends StatefulWidget {
+  /// Widget for displaying a notification card.
   const CardWidget({
     required this.onTap,
     required this.notification,
@@ -14,11 +15,23 @@ class CardWidget extends StatefulWidget {
     super.key,
     this.deleteWidget,
   });
+
+  /// Callback function invoked when the card is tapped.
   final Function onTap;
+
+  /// Notification data to be displayed.
   final NotificationDataType notification;
+
+  /// Properties for customizing the card.
   final CardProps cardProps;
+
+  /// Styles to be applied to various elements of the card.
   final SirenStyleProps? styles;
+
+  /// Callback function invoked when the card is deleted.
   final void Function(String) onDelete;
+
+  /// Widget to be displayed for deletion, if provided.
   final Widget? deleteWidget;
 
   @override

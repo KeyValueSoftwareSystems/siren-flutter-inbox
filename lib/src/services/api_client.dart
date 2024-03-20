@@ -2,12 +2,15 @@ import 'package:dio/dio.dart';
 import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
 import 'package:siren_flutter_inbox/src/models/api_response.dart';
 
+/// A class responsible for making HTTP requests using Dio.
 class ApiClient {
-  // injecting dio instance
+  /// Injecting Dio instance.
   ApiClient(this._api);
-  // dio instance
+
+  /// Dio instance.
   final Dio _api;
 
+  /// Checks if the response indicates a server error.
   bool isServerError(Response<dynamic>? response) {
     return response == null ||
         (response.statusCode != null &&
@@ -15,7 +18,7 @@ class ApiClient {
             response.statusCode! < 600);
   }
 
-  // Get API
+  /// Performs a GET request.
   Future<DioResponse> get({
     String? path,
     Map<String, dynamic>? queryParameters,
@@ -35,10 +38,7 @@ class ApiClient {
       return DioResponse(data: response.data, statusCode: response.statusCode);
     } on DioException catch (e) {
       if (isServerError(e.response)) {
-        return DioResponse(
-          data: null,
-          statusCode: 0,
-        );
+        return DioResponse(data: null, statusCode: 0);
       }
       return DioResponse(
         data: e.response?.data ?? '',
@@ -47,7 +47,7 @@ class ApiClient {
     }
   }
 
-  // Post API
+  /// Performs a POST request.
   Future<DioResponse> post({
     String? path,
     dynamic data,
@@ -71,10 +71,7 @@ class ApiClient {
       return DioResponse(data: response.data, statusCode: response.statusCode);
     } on DioException catch (e) {
       if (isServerError(e.response)) {
-        return DioResponse(
-          data: null,
-          statusCode: 0,
-        );
+        return DioResponse(data: null, statusCode: 0);
       }
       return DioResponse(
         data: e.response?.data ?? '',
@@ -83,7 +80,7 @@ class ApiClient {
     }
   }
 
-  // Patch API
+  /// Performs a PATCH request.
   Future<DioResponse> patch({
     String? path,
     dynamic data,
@@ -107,10 +104,7 @@ class ApiClient {
       return DioResponse(data: response.data, statusCode: response.statusCode);
     } on DioException catch (e) {
       if (isServerError(e.response)) {
-        return DioResponse(
-          data: null,
-          statusCode: 0,
-        );
+        return DioResponse(data: null, statusCode: 0);
       }
       return DioResponse(
         data: e.response?.data ?? '',
@@ -119,7 +113,7 @@ class ApiClient {
     }
   }
 
-  // Delete API
+  /// Performs a DELETE request.
   Future<DioResponse> delete({
     String? path,
     Map<String, dynamic>? queryParameters,
@@ -138,10 +132,7 @@ class ApiClient {
       return DioResponse(data: response.data, statusCode: response.statusCode);
     } on DioException catch (e) {
       if (isServerError(e.response)) {
-        return DioResponse(
-          data: null,
-          statusCode: 0,
-        );
+        return DioResponse(data: null, statusCode: 0);
       }
       return DioResponse(
         data: e.response?.data ?? '',

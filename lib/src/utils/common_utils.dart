@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:siren_flutter_inbox/src/constants/generics.dart';
 
+/// Generates elapsed time text based on the difference between the target time and the current time.
 String generateElapsedTimeText(DateTime targetTime) {
   final currentTime = DateTime.now();
   final millisecondsDiff = currentTime.difference(targetTime).inMilliseconds;
@@ -24,6 +25,7 @@ String generateElapsedTimeText(DateTime targetTime) {
   }
 }
 
+/// Modifies the provided date string, converts it to a DateTime object, and then returns it as an ISO 8601 string.
 String modifyAndConvertToISOString(String dateString) {
   final parsedDateTime = DateTime.parse(dateString);
   final modifiedDateTime = parsedDateTime.add(const Duration(milliseconds: 1));
@@ -32,6 +34,7 @@ String modifyAndConvertToISOString(String dateString) {
   return isoString;
 }
 
+/// Converts the provided date string to a DateTime object and then returns it as an ISO 8601 string.
 String convertToISOString(String dateString) {
   final parsedDateTime = DateTime.parse(dateString);
   final isoString = parsedDateTime.toIso8601String();
@@ -39,6 +42,7 @@ String convertToISOString(String dateString) {
   return isoString;
 }
 
+/// Loads environment variables from the .env file and returns them as a map.
 Future<Map<String, String>> loadEnv() async {
   try {
     final contents = await rootBundle.loadString(Generics.ENV_PATH);
@@ -62,6 +66,7 @@ Future<Map<String, String>> loadEnv() async {
   }
 }
 
+/// Retrieves the API domain from the loaded environment variables.
 Future<String> getApiDomain() async {
   final env = await loadEnv();
   final apiDomain = env['API_DOMAIN'] ?? '';

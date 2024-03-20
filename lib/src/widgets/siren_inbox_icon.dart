@@ -8,26 +8,43 @@ import 'package:siren_flutter_inbox/src/constants/generics.dart';
 import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
 import 'package:siren_flutter_inbox/src/theme/app_theme.dart';
 
+/// Widget representing the inbox icon.
 class SirenInboxIcon extends StatefulWidget {
+  /// Constructs SirenInboxIcon widget.
   const SirenInboxIcon({
     super.key,
     this.customStyles,
-    this.theme,
     this.darkMode = false,
     this.disabled = false,
+    this.hideBadge = false,
     this.notificationIcon,
     this.onError,
     this.onTap,
-    this.hideBadge = false,
+    this.theme,
   });
 
+  /// Whether to use dark mode or not.
   final bool darkMode;
+
+  /// Whether the inbox icon is disabled or not.
   final bool disabled;
+
+  /// Custom theme colors.
   final CustomThemeColors? theme;
+
+  /// Custom styles for the inbox icon.
   final SirenStyleProps? customStyles;
+
+  /// Callback function to handle errors.
   final void Function(ApiErrorDetails)? onError;
+
+  /// Callback function when the inbox icon is tapped.
   final VoidCallback? onTap;
+
+  /// Widget representing the notification icon.
   final Widget? notificationIcon;
+
+  /// Whether to hide the badge or not.
   final bool? hideBadge;
 
   @override
