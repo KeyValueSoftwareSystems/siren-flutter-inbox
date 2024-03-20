@@ -5,7 +5,15 @@ import 'package:siren_flutter_inbox/src/services/api_client.dart';
 import 'package:siren_flutter_inbox/src/services/api_provider.dart';
 
 class MarkAllNotificationsAsViewed {
-  static Future<ApiResponse> markAllNotificationsAsViewed({
+  factory MarkAllNotificationsAsViewed() {
+    return instance;
+  }
+
+  MarkAllNotificationsAsViewed._internal();
+  static final MarkAllNotificationsAsViewed instance =
+      MarkAllNotificationsAsViewed._internal();
+
+  Future<ApiResponse> markAllNotificationsAsViewed({
     required String untilDate,
   }) async {
     final api = ApiClient(apiProvider());

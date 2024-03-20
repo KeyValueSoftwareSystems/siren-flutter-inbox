@@ -10,7 +10,7 @@
     - [Siren Provider](#2-siren-provider)
     - [Siren Notification Icon](#3-siren-notification-icon)
     - [Siren Inbox](#4-siren-inbox)
-    - [Siren Class](#5-Siren class)
+    - [Siren Class](#5-siren-class)
     - [Error Codes](#6-error-codes)
     - [Complete Code Example](#complete-code-example)
 - [I want to know more!](#i-want-to-know-more)
@@ -54,7 +54,7 @@ void main() {
   );
 }
 ```
-The user token and recipient id in SirenProvider component is used to authenticate and initialize the sdk.
+The user token and recipient id in SirenProvider widget is used to authenticate and initialize the sdk.
 
 ### 3. Siren Notification Icon
 The `SirenInboxIcon` widget includes a customizable notification icon and a badge for indicating the number of unread notifications.
@@ -97,6 +97,41 @@ SirenInboxIcon(
   ),
 ),
 ```
+#### Siren Notification Icon parameters
+Given below are the parameters of notification icon widget.
+
+Prop | Description | Type | Default value |
+--- | --- | --- | --- |
+customStyles | Style properties for custom styling |  SirenStyleProps | {} |
+darkMode | Flag to enable dark mode |  boolean | false |
+disabled | Flag to disable click handler of icon |  boolean | false |
+hideBadge | Flag to hide badge|  boolean | false |
+notificationIcon | Option to use custom notification Icon |  Widget | null |
+onError | Callback for handling errors | Function(ApiErrorDetails)? | null |
+onTap | Function for handling press of icon | VoidCallback? | null |
+theme | Theme properties for custom color theme |  CustomThemeColors | {} |
+
+#### Theming options
+Customize the unread badge of the notification icon, and choose between dark and light theming options. 
+```dart
+theme: CustomThemeColors(
+    badgeBackgroundColor: Colors.deepPurpleAccent,
+    iconColor: Colors.white,
+    badgeColor: Colors.white)
+```
+#### Styling options
+Customize the notification icon style properties which includes size of icon and badge,
+```dart
+customStyles: SirenStyleProps(
+    iconStyle: IconStyle(size: 35),
+        badgeStyle: BadgeStyle(
+        fontSize: 10,
+        size: 18,
+        inset: 1,
+        top: 2,
+        right: 0,
+        ))
+```
 
 ### 4. Siren Inbox
 The `SirenInbox` widget is a paginated list view for displaying notifications.
@@ -112,10 +147,95 @@ SirenInbox(
   onError: (error) => print(error),
 );
 ```
+#### Siren Inbox parameters
+Given below are the parameters of Siren Inbox Widget.
 
+Prop | Description | Type | Default value |
+--- | --- | --- | --- |
+customStyles | Style properties for custom styling |  SirenStyleProps | {} |
+hideAvatar | Flag to hide avatar |  boolean | false |
+deleteWidget | Custom widget for custom delete icon in notification card |  Widget | null |
+hideHeader | Flag to hide the default Inbox app bar|  boolean | false |
+listEmptyWidget | Custom widget to display when the notification list is empty  |  Widget | null |
+title | Title displayed for Inbox app bar |  String | null |
+defaultHeaderTextStyle | TextStyle for the title in default app bar|  TextStyle | null |
+showDefaultHeaderBackButton | Flag to determine whether to display back button in default Inbox app bar |  boolean | false |
+defaultBackButton | Custom icon to be used as back button in Inbox app bar |  Icon | null |
+customNotificationCard | Custom widget to display the notification card |  Widget | null |
+onNotificationCardClick | Function to handle notification card click |  Function(NotificationDataType) | null |
+onError | Callback for handling errors |  Function(ApiErrorDetails) | null |
+hideClearAll | Flag to hide clear all CTA in Inbox app bar |  boolean | false |
+theme | Theme properties for custom color theme |  boolean | false |
+customLoader | Custom widget to display the initial loading state in the Inbox |  Widget | null |
+customErrorWidget | Custom widget to display error state |  Widget | null |
+customHeader | Custom widget to display the app bar in Inbox |  Widget | null |
+handleBackNavigation | Function to handle the back button click |  Function() | null |
+disableAutoMarkAsRead | Flag to disable the mark as read functionality on notification card click |  boolean | false |
+
+#### Theming options
+Customizable theme option for notification inbox, with dark and light theme options. 
+
+```dart
+theme: CustomThemeColors(
+    backgroundColor: const Color.fromRGBO(218, 223, 254, 1),
+    activeCardBorderColor: const Color.fromRGBO(103, 58, 183, 1),
+    activeCardColor: const Color.fromRGBO(171, 242, 251, 1),
+    cardBorder: const Color.fromRGBO(133, 146, 230, 1),
+    deleteIconColor: const Color.fromRGBO(103, 58, 183, 1),
+    clearAllIconColor: const Color.fromRGBO(103, 58, 183, 1),
+    textColor: const Color.fromRGBO(0, 0, 0, 1),
+    windowTitleColor: const Color.fromRGBO(0, 0, 0, 1),
+    ),
+```
+#### Styling options
+Customizable Styling option for notification inbox.
+
+```dart
+customStyles: SirenStyleProps(
+    cardAvatarContainer: BoxDecoration(
+        border: Border.all(
+            color: AppColors.primaryBlue,
+            width: 1,
+            ),
+            shape: BoxShape.circle,
+        ),
+        container: BoxDecoration(
+            border: Border.all(
+              color: Colors.black,
+        ),
+    ),
+    cardContentContainer: BoxDecoration(
+        border: Border.all(
+            color: Colors.blue,
+        ),
+    ),
+    contentContainer: BoxDecoration(
+        border: Border.all(
+            color: Colors.red,
+        ),
+    ),
+    cardFooterRow: BoxDecoration(
+        border: Border.all(
+            color: Colors.green,
+        ),
+    ),
+    subHeaderText: TextStyle(
+        color: Colors.red,
+    ),
+    cardTitle: TextStyle(
+        color: Colors.black,
+    ),
+    cardDescription: TextStyle(
+        color: Colors.blue,
+    ),
+    dateStyle: TextStyle(
+        color: Colors.green,
+    ),
+)
+```
 
 ### 5. Siren Class
-The `Siren` class provides utility functions for modifying notifications.
+The `Siren Class` class provides utility functions for modifying notifications.
 
 ```dart
 import 'package:siren_flutter_inbox/siren_flutter_inbox.dart';
