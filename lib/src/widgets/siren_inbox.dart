@@ -29,7 +29,6 @@ class SirenInbox extends StatefulWidget {
     this.defaultHeaderTextStyle,
     this.showDefaultHeaderBackButton,
     this.defaultBackButton,
-    this.isCenterTitle,
     this.customNotificationCard,
     this.onNotificationCardClick,
     this.onError,
@@ -69,9 +68,6 @@ class SirenInbox extends StatefulWidget {
 
   /// Default back button widget for the header provided by the sdk.
   final Icon? defaultBackButton;
-
-  /// Flag to center the title in the header provided by the sdk.
-  final bool? isCenterTitle;
 
   /// Custom builder for notification cards.
   final Widget Function(NotificationDataType)? customNotificationCard;
