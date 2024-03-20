@@ -30,8 +30,8 @@ class AppTheme {
           tertiary: AppColors.grey700Complementary,
           inversePrimary: Colors.white,
           tertiaryContainer: AppColors.primary400,
-          onTertiary: Colors.black,
-          onPrimary: Colors.black,
+          onTertiary: Colors.white,
+          onPrimary: AppColors.black100,
         ),
   );
 
