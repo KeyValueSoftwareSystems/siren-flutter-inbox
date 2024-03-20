@@ -412,14 +412,16 @@ class _SirenInboxState extends State<SirenInbox> {
   }
 
   void onEndReached() {
-    if (!isLoading && !loadingNextPage) {
+    if (!isLoading &&
+        !loadingNextPage &&
+        totalElements > notifications.length) {
       if (mounted) {
         setState(() {
           loadingNextPage = true;
         });
       }
 
-      Future.delayed(const Duration(seconds: 2), () async {
+      Future.delayed(Duration.zero, () async {
         final fetchedNotifications =
             await FetchAllNotifications.instance.fetchAllNotifications(
           end: convertToISOString(
