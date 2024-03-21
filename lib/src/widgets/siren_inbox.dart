@@ -301,11 +301,6 @@ class _SirenInboxState extends State<SirenInbox> {
             newNotifications = [];
           }
         } else if (fetchedNotifications.isError) {
-          if (mounted) {
-            setState(() {
-              isError = fetchedNotifications.isError;
-            });
-          }
           widget.onError?.call(fetchedNotifications.error ?? ApiErrorDetails());
         }
       },
@@ -405,7 +400,12 @@ class _SirenInboxState extends State<SirenInbox> {
         setState(() {
           deletingNotificationId = null;
           _deleteById(id);
+          totalElements = totalElements - 1;
         });
+      }
+      if (notifications.length < Generics.PAGE_SIZE &&
+          notifications.length < totalElements) {
+        onEndReached();
       }
     } else if (deletionStatus.isError) {
       widget.onError?.call(deletionStatus.error ?? ApiErrorDetails());
