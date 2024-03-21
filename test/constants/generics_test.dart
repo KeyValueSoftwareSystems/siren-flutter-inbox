@@ -11,10 +11,12 @@ void main() {
       expect(Generics.PAGE_SIZE, 10);
       expect(Generics.MAX_RETRIES, 3);
       expect(Generics.ENV_PATH, 'packages/siren_flutter_inbox/.env');
-      expect(Generics.defaultError.errorType, ErrorTypes.DEFAULT_ERROR);
+      expect(Generics.defaultError.errorType, ErrorTypes.GENERIC_API_ERROR);
       expect(Generics.defaultError.errorCode, 'INTERNAL SERVER ERROR');
-      expect(Generics.defaultError.message,
-          'Oops something went wrong, if issue persist please contact Siren Team',);
+      expect(
+        Generics.defaultError.message,
+        'Oops something went wrong, if issue persist please contact Siren Team',
+      );
     });
   });
 
@@ -41,13 +43,13 @@ void main() {
     });
 
     test('ErrorTypes enum values are correct', () {
-      expect(ErrorTypes.DEFAULT_ERROR.index, 0);
-      expect(ErrorTypes.AUTHENTICATION_ERROR.index, 1);
-      expect(ErrorTypes.FETCH_COUNT_ERROR.index, 2);
-      expect(ErrorTypes.NOTIFICATION_FETCH_ERROR.index, 3);
-      expect(ErrorTypes.NOTIFICATION_READ_ERROR.index, 4);
-      expect(ErrorTypes.NOTIFICATION_DELETE_ERROR.index, 5);
-      expect(ErrorTypes.UPDATE_VIEWED_ERROR.index, 6);
+      expect(ErrorTypes.GENERIC_API_ERROR.index, 0);
+      expect(ErrorTypes.AUTHENTICATION_FAILED.index, 1);
+      expect(ErrorTypes.FETCH_COUNT_FAILED.index, 2);
+      expect(ErrorTypes.NOTIFICATION_FETCH_FAILED.index, 3);
+      expect(ErrorTypes.NOTIFICATION_READ_FAILED.index, 4);
+      expect(ErrorTypes.NOTIFICATION_DELETE_FAILED.index, 5);
+      expect(ErrorTypes.UPDATE_VIEWED_FAILED.index, 6);
     });
   });
 }

@@ -21,7 +21,18 @@ class NotificationsBulkUpdate {
         '${Generics.V2}${Generics.BASE_URL}${SirenDataProvider.instance.recipientId}/notifications/bulk-update';
     final result = ApiResponse()..isLoading;
     final apiError = ApiErrorDetails()
-      ..errorType = ErrorTypes.NOTIFICATION_DELETE_ERROR;
+      ..errorType = ErrorTypes.NOTIFICATION_DELETE_FAILED;
+
+    if (SirenDataProvider.instance.tokenVerificationStatus != Status.SUCCESS) {
+      apiError.errorType = ErrorTypes.AUTHENTICATION_FAILED;
+      result
+        ..isLoading = false
+        ..isError = true
+        ..data = null
+        ..rawResponse = Generics.rawResponseError
+        ..error = apiError;
+      return result;
+    }
 
     final apiResponse = await api.post(
       path: apiPath,

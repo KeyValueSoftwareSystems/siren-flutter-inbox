@@ -43,8 +43,8 @@ class _SirenProviderState extends State<SirenProvider> {
   @override
   void dispose() {
     super.dispose();
-    SirenDataProvider.instance.iconDispose();
     SirenDataProvider.instance.inboxDispose();
+    SirenDataProvider.instance.iconDispose();
   }
 
   @override

@@ -67,8 +67,7 @@ class _NotificationListViewState extends State<NotificationListView> {
     if (renderObject is RenderBox) {
       final renderBox = renderObject;
       final position = renderBox.localToGlobal(Offset.zero);
-      if (position.dy < deviceHeight &&
-          (widget.totalElements ?? 0) < widget.notifications.length) {
+      if (position.dy < deviceHeight) {
         widget.onEndReached();
       }
     }
