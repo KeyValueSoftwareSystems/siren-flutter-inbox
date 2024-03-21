@@ -257,9 +257,6 @@ class _SirenInboxState extends State<SirenInbox> {
 
   void _scrollListener() {
     if (_scrollController.position.atEdge &&
-        _scrollController.position.pixels == 0) {
-      onRefresh();
-    } else if (_scrollController.position.atEdge &&
         _scrollController.position.pixels ==
             _scrollController.position.maxScrollExtent) {
       onEndReached();
@@ -283,6 +280,7 @@ class _SirenInboxState extends State<SirenInbox> {
         );
         if (fetchedNotifications.isSuccess) {
           if ((fetchedNotifications.meta?.totalElements ?? 0) > 0) {
+            unawaited(markAllNotificationsAsViewed());
             newNotifications.addAll(
               fetchedNotifications.data as Iterable<NotificationDataType>,
             );
@@ -336,12 +334,12 @@ class _SirenInboxState extends State<SirenInbox> {
     }
     final fetchedNotifications =
         await FetchAllNotifications.instance.fetchAllNotifications(
-      end: DateTime.now().toUtc().toString(),
+      end: DateTime.now().toUtc().toIso8601String(),
       size: pageSize,
     );
 
     if (fetchedNotifications.isSuccess) {
-      await markAllNotificationsAsViewed();
+      unawaited(markAllNotificationsAsViewed());
       setState(() {
         notifications.addAll(
           fetchedNotifications.data as Iterable<NotificationDataType>,
@@ -356,9 +354,6 @@ class _SirenInboxState extends State<SirenInbox> {
           isError = fetchedNotifications.isError;
         });
       }
-      //initialized to avoid LateInitializationError.
-      _periodicUpdateRef =
-          Timer.periodic(const Duration(seconds: 1), (timer) {});
       widget.onError?.call(fetchedNotifications.error ?? ApiErrorDetails());
     }
   }
@@ -451,7 +446,7 @@ class _SirenInboxState extends State<SirenInbox> {
         } else if (fetchedNotifications.isError) {
           if (mounted) {
             setState(() {
-              isError = fetchedNotifications.isError;
+              loadingNextPage = true;
             });
           }
           widget.onError?.call(fetchedNotifications.error ?? ApiErrorDetails());
