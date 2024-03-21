@@ -40,7 +40,6 @@ class SirenInbox extends StatefulWidget {
     this.customErrorWidget,
     this.customHeader,
     this.handleBackNavigation,
-    this.disableAutoMarkAsRead,
     this.itemsPerFetch,
   });
 
@@ -100,9 +99,6 @@ class SirenInbox extends StatefulWidget {
 
   /// Callback function for handling back navigation.
   final void Function()? handleBackNavigation;
-
-  /// Flag to disable automatic marking of notifications as read.
-  final bool? disableAutoMarkAsRead;
 
   /// Notifications to be fetched in each request
   final int? itemsPerFetch;
@@ -617,7 +613,7 @@ class _SirenInboxState extends State<SirenInbox> {
         onNotificationCardClick: widget.onNotificationCardClick,
         deletingNotificationId: deletingNotificationId,
         customLoader: widget.customLoader,
-        disableAutoMarkAsRead: widget.disableAutoMarkAsRead,
+        disableAutoMarkAsRead: true,
         totalElements: totalElements,
       );
     }

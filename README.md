@@ -166,7 +166,6 @@ customLoader | Custom widget to display the initial loading state in the Inbox |
 customErrorWidget | Custom widget to display error state |  Widget | null |
 customHeader | Custom widget to display the app bar in Inbox |  Widget | null |
 handleBackNavigation | Function to handle the back button click |  Function() | null |
-disableAutoMarkAsRead | Flag to disable the mark as read functionality on notification card click |  boolean | false |
 itemsPerFetch | Items fetched in a request |  int | 20 |
 
 #### Theming options
@@ -175,13 +174,13 @@ Customizable theme option for notification inbox, with dark and light theme opti
 ```dart
 theme: CustomThemeColors(
     backgroundColor: const Color.fromRGBO(218, 223, 254, 1),
-    activeCardBorderColor: const Color.fromRGBO(103, 58, 183, 1),
-    activeCardColor: const Color.fromRGBO(171, 242, 251, 1),
-    cardBorder: const Color.fromRGBO(133, 146, 230, 1),
-    deleteIconColor: const Color.fromRGBO(103, 58, 183, 1),
-    clearAllIconColor: const Color.fromRGBO(103, 58, 183, 1),
+    highlightedCardBorderColor: const Color.fromRGBO(103, 58, 183, 1),
+    highlightedCardColor: const Color.fromRGBO(171, 242, 251, 1),
+    borderColor: const Color.fromRGBO(133, 146, 230, 1),
+    deleteIcon: const Color.fromRGBO(103, 58, 183, 1),
+    clearAllIcon: const Color.fromRGBO(103, 58, 183, 1),
     textColor: const Color.fromRGBO(0, 0, 0, 1),
-    windowTitleColor: const Color.fromRGBO(0, 0, 0, 1),
+    dateColor: const Color.fromRGBO(0, 0, 0, 1),
     ),
 ```
 #### Styling options
