@@ -237,6 +237,7 @@ markNotificationsAsViewed | startDate: string | Set all notification viewed stat
 The package may throw various error codes, which includes:
 
 Error code | Description |
+--- | --- |
 GENERIC_API_ERROR | This error occurs when an unspecified error occurs |
 AUTHENTICATION_FAILED | This error occurs when authentication fails, either the token or the recipient id provided might be incorrect |
 FETCH_COUNT_FAILED | This error occurs when there is an issue fetching the count of notifications |
