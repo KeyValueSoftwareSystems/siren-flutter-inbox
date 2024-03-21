@@ -37,7 +37,7 @@ To install the `siren_flutter_inbox` package, add it to your `pubspec.yaml` file
 3. Run `flutter pub get` in your terminal to install the package.
 
 ### 2. Siren Provider
-The `SirenProvider` initializes the Siren SDK with the specified configuration, including parameters like the user token and recipient id. Wrap the `SirenProvider` around the root of your application.
+The `SirenProvider` initializes the Siren SDK with the specified configuration, including arguments like the user token and recipient id. Wrap the `SirenProvider` around the root of your application.
 
 ```dart
 import 'package:siren_flutter_inbox/siren_flutter_inbox.dart';
@@ -60,8 +60,6 @@ The user token and recipient id in SirenProvider widget is used to authenticate 
 The `SirenInboxIcon` widget includes a customizable notification icon and a badge for indicating the number of unread notifications.
 
 ```dart
-import 'package:siren_flutter_inbox/siren_flutter_inbox.dart';
-
 SirenInboxIcon(
   notificationIcon: Icon(
     Icons.notifications_active_rounded,
@@ -97,10 +95,10 @@ SirenInboxIcon(
   ),
 ),
 ```
-#### Siren Notification Icon parameters
-Given below are the parameters of notification icon widget.
+#### Siren Notification Icon Arguments
+Given below are the arguments of notification icon widget.
 
-Prop | Description | Type | Default value |
+Arguments | Description | Type | Default value |
 --- | --- | --- | --- |
 customStyles | Style properties for custom styling |  SirenStyleProps | {} |
 darkMode | Flag to enable dark mode |  boolean | false |
@@ -137,8 +135,6 @@ customStyles: SirenStyleProps(
 The `SirenInbox` widget is a paginated list view for displaying notifications.
 
 ```dart
-import 'package:siren_flutter_inbox/siren_flutter_inbox.dart';
-
 SirenInbox(
   theme: customTheme,
   title: 'Notifications',
@@ -147,10 +143,10 @@ SirenInbox(
   onError: (error) => print(error),
 );
 ```
-#### Siren Inbox parameters
-Given below are the parameters of Siren Inbox Widget.
+#### Siren Inbox Arguments
+Given below are the arguments of Siren Inbox Widget.
 
-Prop | Description | Type | Default value |
+Arguments | Description | Type | Default value |
 --- | --- | --- | --- |
 customStyles | Style properties for custom styling |  SirenStyleProps | {} |
 hideAvatar | Flag to hide avatar |  boolean | false |
@@ -171,6 +167,7 @@ customErrorWidget | Custom widget to display error state |  Widget | null |
 customHeader | Custom widget to display the app bar in Inbox |  Widget | null |
 handleBackNavigation | Function to handle the back button click |  Function() | null |
 disableAutoMarkAsRead | Flag to disable the mark as read functionality on notification card click |  boolean | false |
+itemsPerFetch | Items fetched in a request |  int | 20 |
 
 #### Theming options
 Customizable theme option for notification inbox, with dark and light theme options. 
@@ -238,12 +235,10 @@ customStyles: SirenStyleProps(
 The `Siren Class` class provides utility functions for modifying notifications.
 
 ```dart
-import 'package:siren_flutter_inbox/siren_flutter_inbox.dart';
-
 Siren.markAsRead(id: 'notification-id');
 ```
 
-Function name | Parameters type | Description |
+Function | Arguments | Description |
 --- | --- | --- |
 markAllNotificationsAsReadByDate | startDate: string | Set all notification read status to true until given date |
 markAsRead | id: string | Set read status of a specific notification to true |
@@ -252,14 +247,16 @@ deleteNotificationsByDate | startDate: string | Delete all notifications until g
 markNotificationsAsViewed | startDate: string | Set all notification viewed status to true until given date |
 
 ### 6. Error Codes
-The package may throw various error codes, including:
-- `DEFAULT_ERROR`: This error occurs when an unspecified error occurs.
-- `AUTHENTICATION_ERROR`: This error occurs when authentication fails or is invalid.
-- `FETCH_COUNT_ERROR`: This error occurs when there is an issue fetching the count of notifications.
-- `NOTIFICATION_FETCH_ERROR`: This error occurs when there is an issue fetching notifications.
-- `NOTIFICATION_READ_ERROR`: This error occurs when there is an issue marking notifications as read.
-- `NOTIFICATION_DELETE_ERROR`: This error occurs when there is an issue deleting notifications.
-- `UPDATE_VIEWED_ERROR`: This error occurs when there is an issue updating the viewed status of notifications.
+The package may throw various error codes, which includes:
+
+Error code | Description |
+GENERIC_API_ERROR | This error occurs when an unspecified error occurs |
+AUTHENTICATION_FAILED | This error occurs when authentication fails, either the token or the recipient id provided might be incorrect |
+FETCH_COUNT_FAILED | This error occurs when there is an issue fetching the count of notifications |
+NOTIFICATION_FETCH_FAILED | This error occurs when there is an issue fetching notifications |
+NOTIFICATION_READ_FAILED | This error occurs when there is an issue marking notifications as read |
+NOTIFICATION_DELETE_FAILED | This error occurs when there is an issue deleting notifications |
+UPDATE_VIEWED_FAILED | This error occurs when there is an issue updating the viewed status of notifications |
 
 ## Complete Code Example
 Here's a complete code example demonstrating the usage of the package.

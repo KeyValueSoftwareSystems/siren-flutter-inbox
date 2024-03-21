@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:siren_flutter_inbox/siren_flutter_inbox.dart';
@@ -40,6 +41,7 @@ class SirenInbox extends StatefulWidget {
     this.customHeader,
     this.handleBackNavigation,
     this.disableAutoMarkAsRead,
+    this.itemsPerFetch,
   });
 
   /// Custom styles for the card of each notification.
@@ -102,6 +104,9 @@ class SirenInbox extends StatefulWidget {
   /// Flag to disable automatic marking of notifications as read.
   final bool? disableAutoMarkAsRead;
 
+  /// Notifications to be fetched in each request
+  final int? itemsPerFetch;
+
   @override
   State<SirenInbox> createState() => _SirenInboxState();
 }
@@ -115,6 +120,7 @@ class _SirenInboxState extends State<SirenInbox> {
   int currentPage = 0;
   late int totalElements;
   String? deletingNotificationId;
+  int pageSize = 20;
 
   List<NotificationDataType> notifications = [];
   late final DeleteNotificationById _deleteNotificationById;
@@ -125,6 +131,7 @@ class _SirenInboxState extends State<SirenInbox> {
   @override
   void initState() {
     super.initState();
+    pageSize = min(widget.itemsPerFetch ?? Generics.PAGE_SIZE, 50);
     _periodicUpdateRef = Timer(const Duration(days: 1), () {});
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
@@ -267,7 +274,7 @@ class _SirenInboxState extends State<SirenInbox> {
       (timer) async {
         final fetchedNotifications =
             await FetchAllNotifications.instance.fetchAllNotifications(
-          size: Generics.PAGE_SIZE,
+          size: pageSize,
           start: notifications.isNotEmpty
               ? modifyAndConvertToISOString(
                   notifications[0].createdAt ?? '',
@@ -335,7 +342,7 @@ class _SirenInboxState extends State<SirenInbox> {
     final fetchedNotifications =
         await FetchAllNotifications.instance.fetchAllNotifications(
       end: DateTime.now().toUtc().toString(),
-      size: Generics.PAGE_SIZE,
+      size: pageSize,
     );
 
     if (fetchedNotifications.isSuccess) {
@@ -428,7 +435,7 @@ class _SirenInboxState extends State<SirenInbox> {
           end: convertToISOString(
             notifications[notifications.length - 1].createdAt ?? '',
           ),
-          size: Generics.PAGE_SIZE,
+          size: pageSize,
         );
         if (fetchedNotifications.isSuccess) {
           if (mounted) {

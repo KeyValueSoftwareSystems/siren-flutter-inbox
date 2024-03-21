@@ -18,7 +18,7 @@ class ReadNotificationById {
   }) async {
     final result = ApiResponse()..isLoading = true;
     final apiError = ApiErrorDetails()
-      ..errorType = ErrorTypes.NOTIFICATION_READ_ERROR;
+      ..errorType = ErrorTypes.NOTIFICATION_READ_FAILED;
 
     final apiResponse = await api.patch(
       path: '$_apiPath/$notificationId',

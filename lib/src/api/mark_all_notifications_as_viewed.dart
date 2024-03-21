@@ -19,7 +19,7 @@ class MarkAllNotificationsAsViewed {
     final api = ApiClient(apiProvider());
     final result = ApiResponse()..isLoading;
     final apiError = ApiErrorDetails()
-      ..errorType = ErrorTypes.UPDATE_VIEWED_ERROR;
+      ..errorType = ErrorTypes.UPDATE_VIEWED_FAILED;
 
     final data = {
       'lastOpenedAt': untilDate,

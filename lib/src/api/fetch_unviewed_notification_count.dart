@@ -20,7 +20,7 @@ class FetchUnViewedNotificationsCount {
   Future<ApiResponse> fetchUnViewedNotificationsCount() async {
     final result = ApiResponse()..isLoading = true;
     final apiError = ApiErrorDetails()
-      ..errorType = ErrorTypes.FETCH_COUNT_ERROR;
+      ..errorType = ErrorTypes.FETCH_COUNT_FAILED;
 
     final apiResponse = await api.get(
       path:

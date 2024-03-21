@@ -34,7 +34,7 @@ class FetchAllNotifications {
   }) async {
     final result = ApiResponse()..isLoading = true;
     final apiError = ApiErrorDetails()
-      ..errorType = ErrorTypes.NOTIFICATION_FETCH_ERROR;
+      ..errorType = ErrorTypes.NOTIFICATION_FETCH_FAILED;
 
     // Manually construct query parameters
     final queryParams = {

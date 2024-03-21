@@ -8,12 +8,12 @@ class Generics {
 
   static const int DATA_FETCH_INTERVAL = 5;
   static const String PLACEHOLDER_IMAGE_URL = 'https://picsum.photos/200/300';
-  static const int PAGE_SIZE = 10;
+  static const int PAGE_SIZE = 20;
   static const int MAX_RETRIES = 3;
   static const String ENV_PATH = 'packages/siren_flutter_inbox/.env';
 
   static final defaultError = ApiErrorDetails(
-    errorType: ErrorTypes.DEFAULT_ERROR,
+    errorType: ErrorTypes.GENERIC_API_ERROR,
     errorCode: 'INTERNAL SERVER ERROR',
     message:
         'Oops something went wrong, if issue persist please contact Siren Team',
@@ -42,11 +42,11 @@ enum UpdateEvents {
 }
 
 enum ErrorTypes {
-  DEFAULT_ERROR,
-  AUTHENTICATION_ERROR,
-  FETCH_COUNT_ERROR,
-  NOTIFICATION_FETCH_ERROR,
-  NOTIFICATION_READ_ERROR,
-  NOTIFICATION_DELETE_ERROR,
-  UPDATE_VIEWED_ERROR,
+  GENERIC_API_ERROR,
+  AUTHENTICATION_FAILED,
+  FETCH_COUNT_FAILED,
+  NOTIFICATION_FETCH_FAILED,
+  NOTIFICATION_READ_FAILED,
+  NOTIFICATION_DELETE_FAILED,
+  UPDATE_VIEWED_FAILED,
 }
