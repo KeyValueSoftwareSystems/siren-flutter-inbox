@@ -54,6 +54,8 @@ class SirenInboxIcon extends StatefulWidget {
 class _SirenInboxIconState extends State<SirenInboxIcon> {
   int _notificationsCount = 0;
 
+  bool _processingGesture = false;
+
   late Timer _periodicUpdateRef;
 
   late StreamSubscription<StreamResponse> _subscription;
@@ -176,7 +178,21 @@ class _SirenInboxIconState extends State<SirenInboxIcon> {
           return IgnorePointer(
             ignoring: widget.disabled,
             child: GestureDetector(
-              onTap: widget.onTap ?? () {},
+              onTap: () {
+                if (!_processingGesture && mounted) {
+                  setState(() {
+                    _processingGesture = true;
+                  });
+                  if (widget.onTap != null) {
+                    widget.onTap?.call();
+                  }
+                }
+                Future.delayed(const Duration(milliseconds: 500), () {
+                  setState(() {
+                    _processingGesture = false;
+                  });
+                });
+              },
               child: Stack(
                 children: [
                   SizedBox(
