@@ -410,7 +410,7 @@ class _SirenInboxState extends State<SirenInbox> {
           totalElements = totalElements - 1;
         });
       }
-      if (notifications.length < Generics.PAGE_SIZE &&
+      if (notifications.length < pageSize &&
           notifications.length < totalElements) {
         onEndReached();
       }
