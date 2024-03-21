@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:siren_flutter_inbox/src/theme/colors.dart';
 
 class CardLoaderWidget extends StatefulWidget {
   const CardLoaderWidget({
@@ -31,6 +30,7 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
 
   @override
   Widget build(BuildContext context) {
+    final currentTheme = Theme.of(context);
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
@@ -39,37 +39,48 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildAnimatedCircleAvatar(),
+          _buildAnimatedCircleAvatar(theme: currentTheme),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildAnimatedContainer(height: 18),
+                  _buildAnimatedContainer(height: 18, theme: currentTheme),
                   const SizedBox(height: 8),
-                  _buildAnimatedContainer(height: 18),
+                  _buildAnimatedContainer(height: 18, theme: currentTheme),
                   const SizedBox(height: 8),
-                  _buildAnimatedContainer(height: 18),
+                  _buildAnimatedContainer(height: 18, theme: currentTheme),
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      _buildAnimatedCircleAvatar(radius: 5),
+                      _buildAnimatedCircleAvatar(
+                        theme: currentTheme,
+                        radius: 5,
+                      ),
                       const SizedBox(width: 8),
-                      Expanded(child: _buildAnimatedContainer(height: 12)),
+                      Expanded(
+                        child: _buildAnimatedContainer(
+                          theme: currentTheme,
+                          height: 12,
+                        ),
+                      ),
                     ],
                   ),
                 ],
               ),
             ),
           ),
-          _buildAnimatedDeleteIcon(),
+          _buildAnimatedDeleteIcon(theme: currentTheme),
         ],
       ),
     );
   }
 
-  Widget _buildAnimatedCircleAvatar({double radius = 21}) {
+  Widget _buildAnimatedCircleAvatar({
+    required ThemeData theme,
+    double radius = 21,
+  }) {
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
@@ -78,21 +89,24 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
           height: radius * 2,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: AppColors.grey300.withOpacity(0.5 + 0.5 * _controller.value),
+            color: theme.colorScheme.background,
           ),
         );
       },
     );
   }
 
-  Widget _buildAnimatedContainer({required double height}) {
+  Widget _buildAnimatedContainer({
+    required ThemeData theme,
+    required double height,
+  }) {
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
         return Container(
           height: height,
           decoration: BoxDecoration(
-            color: AppColors.grey300.withOpacity(0.5 + 0.5 * _controller.value),
+            color: theme.colorScheme.background,
             borderRadius: BorderRadius.circular(4),
           ),
         );
@@ -100,7 +114,9 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
     );
   }
 
-  Widget _buildAnimatedDeleteIcon() {
+  Widget _buildAnimatedDeleteIcon({
+    required ThemeData theme,
+  }) {
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
@@ -108,7 +124,7 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
           width: 16,
           height: 16,
           decoration: BoxDecoration(
-            color: AppColors.grey300.withOpacity(0.5 + 0.5 * _controller.value),
+            color: theme.colorScheme.background,
             borderRadius: BorderRadius.circular(4),
           ),
         );

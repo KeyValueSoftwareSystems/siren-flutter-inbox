@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:siren_flutter_inbox/src/constants/strings.dart';
-import 'package:siren_flutter_inbox/src/theme/colors.dart';
 
 class EmptyWidget extends StatelessWidget {
   const EmptyWidget({super.key});
@@ -54,15 +53,15 @@ Widget _buildCircle(ThemeData theme) {
       Container(
         width: 160,
         height: 160,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: AppColors.emptyWidgetBg,
+          color: theme.colorScheme.background,
         ),
       ),
       Icon(
         Icons.landscape_rounded,
         size: 84,
-        color: theme.colorScheme.surfaceTint,
+        color: theme.colorScheme.outline,
       ),
     ],
   );

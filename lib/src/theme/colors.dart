@@ -22,5 +22,6 @@ class AppColors {
   static const Color black100 = Color(0xFF232326);
 
   //empty state
-  static const Color emptyWidgetBg = Color(0xFFF7F9FC);
+  static const Color emptyWidgetBgLightTheme = Color(0xFFF7F9FC);
+  static const Color emptyWidgetBgDarkTheme = Color(0xFF38383D);
 }

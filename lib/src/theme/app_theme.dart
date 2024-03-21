@@ -17,6 +17,7 @@ class AppTheme {
           tertiary: AppColors.grey700,
           tertiaryContainer: AppColors.red,
           scrim: AppColors.grey500,
+          background: AppColors.emptyWidgetBgLightTheme,
         ),
   );
 
@@ -34,6 +35,7 @@ class AppTheme {
           tertiary: AppColors.grey700Complementary,
           tertiaryContainer: AppColors.red,
           scrim: AppColors.grey400,
+          background: AppColors.emptyWidgetBgDarkTheme,
         ),
   );
 

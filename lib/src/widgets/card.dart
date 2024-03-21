@@ -117,7 +117,7 @@ class _CardWidgetState extends State<CardWidget> {
           width: 4,
         ),
         right: _getDefaultBorderDecoration(theme),
-        top: _getDefaultBorderDecoration(theme),
+        bottom: _getDefaultBorderDecoration(theme),
       ),
       color: widget.notification.cardColor ??
           (widget.notification.isRead ?? true
@@ -136,7 +136,7 @@ class _CardWidgetState extends State<CardWidget> {
             ? NetworkImage(avatarUrl)
             : null,
         backgroundColor: (avatarUrl == null || avatarUrl.isEmpty)
-            ? AppColors.emptyWidgetBg
+            ? AppColors.emptyWidgetBgLightTheme
             : null,
         child: (avatarUrl == null || avatarUrl.isEmpty)
             ? Icon(

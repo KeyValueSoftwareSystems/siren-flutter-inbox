@@ -515,11 +515,11 @@ class _SirenInboxState extends State<SirenInbox> {
     return Container(
       decoration: BoxDecoration(
         color: theme.colorScheme.primary,
-        // border: Border(
-        //   bottom: BorderSide(
-        //     color: theme.colorScheme.surfaceTint,
-        //   ),
-        // ),
+        border: Border(
+          bottom: BorderSide(
+            color: theme.colorScheme.surfaceTint,
+          ),
+        ),
       ),
       height: appBarHeight,
       child: Row(
