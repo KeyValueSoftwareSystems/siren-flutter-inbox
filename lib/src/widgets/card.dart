@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:siren_flutter_inbox/src/models/notification_model.dart';
 import 'package:siren_flutter_inbox/src/models/ui_models.dart';
+import 'package:siren_flutter_inbox/src/theme/colors.dart';
 import 'package:siren_flutter_inbox/src/utils/common_utils.dart';
 import 'package:siren_flutter_inbox/src/widgets/common/nullable_text.dart';
 
@@ -101,9 +102,7 @@ class _CardWidgetState extends State<CardWidget> {
 
   BorderSide _getDefaultBorderDecoration(ThemeData theme) {
     return BorderSide(
-      color: widget.notification.isRead ?? true
-          ? theme.colorScheme.primary
-          : theme.colorScheme.surfaceTint,
+      color: theme.colorScheme.surfaceTint,
       width: 0.5,
     );
   }
@@ -137,10 +136,13 @@ class _CardWidgetState extends State<CardWidget> {
             ? NetworkImage(avatarUrl)
             : null,
         backgroundColor: (avatarUrl == null || avatarUrl.isEmpty)
-            ? theme.colorScheme.secondary
+            ? AppColors.emptyWidgetBg
             : null,
         child: (avatarUrl == null || avatarUrl.isEmpty)
-            ? Icon(Icons.person, color: theme.colorScheme.secondaryContainer)
+            ? Icon(
+                Icons.landscape_rounded,
+                color: theme.colorScheme.outlineVariant,
+              )
             : null,
       ),
     );
@@ -149,7 +151,7 @@ class _CardWidgetState extends State<CardWidget> {
   Widget _buildHeaderText(ThemeData theme) {
     return Text(
       widget.notification.message?.header ?? '',
-      maxLines: 1,
+      maxLines: 2,
       overflow: TextOverflow.ellipsis,
       style: widget.styles?.cardTitle ??
           TextStyle(
@@ -184,7 +186,7 @@ class _CardWidgetState extends State<CardWidget> {
             fontWeight: FontWeight.w400,
             color: theme.colorScheme.tertiary,
           ),
-      maxLines: 3,
+      maxLines: 2,
       overflow: TextOverflow.ellipsis,
     );
   }
@@ -208,7 +210,7 @@ class _CardWidgetState extends State<CardWidget> {
           padding: const EdgeInsets.only(right: 2),
           child: Icon(
             Icons.access_time_sharp,
-            color: theme.colorScheme.tertiary,
+            color: theme.colorScheme.scrim,
             size: 14,
           ),
         ),
@@ -220,7 +222,7 @@ class _CardWidgetState extends State<CardWidget> {
               TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
-                color: theme.colorScheme.tertiary,
+                color: theme.colorScheme.inversePrimary,
               ),
         ),
       ],
@@ -231,7 +233,7 @@ class _CardWidgetState extends State<CardWidget> {
     return Icon(
       Icons.close,
       color: theme.colorScheme.outlineVariant,
-      size: 16,
+      size: 18,
     );
   }
 }

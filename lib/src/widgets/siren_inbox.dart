@@ -446,7 +446,7 @@ class _SirenInboxState extends State<SirenInbox> {
         } else if (fetchedNotifications.isError) {
           if (mounted) {
             setState(() {
-              loadingNextPage = true;
+              loadingNextPage = false;
             });
           }
           widget.onError?.call(fetchedNotifications.error ?? ApiErrorDetails());
@@ -515,11 +515,11 @@ class _SirenInboxState extends State<SirenInbox> {
     return Container(
       decoration: BoxDecoration(
         color: theme.colorScheme.primary,
-        border: Border(
-          bottom: BorderSide(
-            color: theme.colorScheme.surfaceTint,
-          ),
-        ),
+        // border: Border(
+        //   bottom: BorderSide(
+        //     color: theme.colorScheme.surfaceTint,
+        //   ),
+        // ),
       ),
       height: appBarHeight,
       child: Row(
@@ -549,7 +549,7 @@ class _SirenInboxState extends State<SirenInbox> {
                       TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.inversePrimary,
+                        color: theme.colorScheme.tertiary,
                       ),
                 ),
               ),
@@ -568,7 +568,7 @@ class _SirenInboxState extends State<SirenInbox> {
                     child: Row(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 2),
+                          padding: const EdgeInsets.only(right: 4),
                           child: Icon(
                             Icons.clear_all,
                             color: theme.colorScheme.outline,
