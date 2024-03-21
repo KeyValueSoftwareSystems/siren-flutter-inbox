@@ -100,14 +100,14 @@ Given below are the arguments of notification icon widget.
 
 Arguments | Description | Type | Default value |
 --- | --- | --- | --- |
-customStyles | Style properties for custom styling |  SirenStyleProps | {} |
+customStyles | Style properties for custom styling |  SirenStyleProps | null |
 darkMode | Flag to enable dark mode |  boolean | false |
 disabled | Flag to disable click handler of icon |  boolean | false |
 hideBadge | Flag to hide badge|  boolean | false |
 notificationIcon | Option to use custom notification Icon |  Widget | null |
 onError | Callback for handling errors | Function(ApiErrorDetails)? | null |
 onTap | Function for handling press of icon | VoidCallback? | null |
-theme | Theme properties for custom color theme |  CustomThemeColors | {} |
+theme | Theme properties for custom color theme |  CustomThemeColors | null |
 
 #### Theming options
 Customize the unread badge of the notification icon, and choose between dark and light theming options. 
@@ -148,7 +148,7 @@ Given below are the arguments of Siren Inbox Widget.
 
 Arguments | Description | Type | Default value |
 --- | --- | --- | --- |
-customStyles | Style properties for custom styling |  SirenStyleProps | {} |
+customStyles | Style properties for custom styling |  SirenStyleProps | null |
 hideAvatar | Flag to hide avatar |  boolean | false |
 deleteWidget | Custom widget for custom delete icon in notification card |  Widget | null |
 hideHeader | Flag to hide the default Inbox app bar|  boolean | false |
@@ -201,19 +201,9 @@ customStyles: SirenStyleProps(
               color: Colors.black,
         ),
     ),
-    cardContentContainer: BoxDecoration(
-        border: Border.all(
-            color: Colors.blue,
-        ),
-    ),
     contentContainer: BoxDecoration(
         border: Border.all(
             color: Colors.red,
-        ),
-    ),
-    cardFooterRow: BoxDecoration(
-        border: Border.all(
-            color: Colors.green,
         ),
     ),
     subHeaderText: TextStyle(
@@ -221,9 +211,6 @@ customStyles: SirenStyleProps(
     ),
     cardTitle: TextStyle(
         color: Colors.black,
-    ),
-    cardDescription: TextStyle(
-        color: Colors.blue,
     ),
     dateStyle: TextStyle(
         color: Colors.green,
@@ -294,9 +281,7 @@ class _MyAppState extends State<MyApp> {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
