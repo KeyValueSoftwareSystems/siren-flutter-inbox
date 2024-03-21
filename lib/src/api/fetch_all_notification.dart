@@ -53,6 +53,17 @@ class FetchAllNotifications {
     final queryString =
         queryParams.entries.map((e) => '${e.key}=${e.value}').join('&');
 
+    if (SirenDataProvider.instance.tokenVerificationStatus != Status.SUCCESS) {
+      apiError.errorType = ErrorTypes.AUTHENTICATION_FAILED;
+      result
+        ..isLoading = false
+        ..isError = true
+        ..data = null
+        ..rawResponse = Generics.rawResponseError
+        ..error = apiError;
+      return result;
+    }
+
     final apiResponse = await api.get(
       path: '$_apiPath?$queryString',
     );

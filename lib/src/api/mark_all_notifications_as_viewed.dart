@@ -25,6 +25,17 @@ class MarkAllNotificationsAsViewed {
       'lastOpenedAt': untilDate,
     };
 
+    if (SirenDataProvider.instance.tokenVerificationStatus != Status.SUCCESS) {
+      apiError.errorType = ErrorTypes.AUTHENTICATION_FAILED;
+      result
+        ..isLoading = false
+        ..isError = true
+        ..data = null
+        ..rawResponse = Generics.rawResponseError
+        ..error = apiError;
+      return result;
+    }
+
     final apiResponse = await api.patch(
       path:
           '${Generics.V2}${Generics.BASE_URL}${SirenDataProvider.instance.recipientId}',

@@ -23,6 +23,17 @@ class NotificationsBulkUpdate {
     final apiError = ApiErrorDetails()
       ..errorType = ErrorTypes.NOTIFICATION_DELETE_FAILED;
 
+    if (SirenDataProvider.instance.tokenVerificationStatus != Status.SUCCESS) {
+      apiError.errorType = ErrorTypes.AUTHENTICATION_FAILED;
+      result
+        ..isLoading = false
+        ..isError = true
+        ..data = null
+        ..rawResponse = Generics.rawResponseError
+        ..error = apiError;
+      return result;
+    }
+
     final apiResponse = await api.post(
       path: apiPath,
       data: data,

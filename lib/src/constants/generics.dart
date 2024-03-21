@@ -18,6 +18,9 @@ class Generics {
     message:
         'Oops something went wrong, if issue persist please contact Siren Team',
   );
+
+  static const rawResponseError =
+      '{"data": null,"error": "AUTHENTICATION FAILED","errors":null,"meta":null}';
 }
 
 enum Status {
