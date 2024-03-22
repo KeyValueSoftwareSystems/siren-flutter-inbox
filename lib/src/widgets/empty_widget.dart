@@ -60,9 +60,31 @@ Widget _buildCircle(ThemeData theme) {
         ),
       ),
       Icon(
-        Icons.landscape_rounded,
+        Icons.notifications,
         size: 84,
-        color: theme.colorScheme.outline,
+        color: theme.colorScheme.shadow,
+      ),
+      Positioned(
+        right: 50,
+        top: 55,
+        child: Container(
+          padding: const EdgeInsets.all(4),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: theme.colorScheme.background,
+              width: 3,
+            ),
+          ),
+          child: const Text(
+            '0',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 12,
+            ),
+          ),
+        ),
       ),
     ],
   );
