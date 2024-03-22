@@ -22,8 +22,6 @@ class SirenInbox extends StatefulWidget {
   const SirenInbox({
     super.key,
     this.customStyles,
-    this.hideAvatar,
-    this.deleteWidget,
     this.hideHeader,
     this.listEmptyWidget,
     this.title,
@@ -40,16 +38,11 @@ class SirenInbox extends StatefulWidget {
     this.customHeader,
     this.handleBackNavigation,
     this.itemsPerFetch,
+    this.cardProps,
   });
 
   /// Custom styles for the card of each notification.
   final SirenStyleProps? customStyles;
-
-  /// Flag to hide avatars in notifications.
-  final bool? hideAvatar;
-
-  /// Widget or Icon for deleting notifications.
-  final Widget? deleteWidget;
 
   /// Flag to hide the header.
   final bool? hideHeader;
@@ -98,6 +91,9 @@ class SirenInbox extends StatefulWidget {
 
   /// Notifications to be fetched in each request
   final int? itemsPerFetch;
+
+  ///Custom params for Card properties
+  final CardParams? cardProps;
 
   @override
   State<SirenInbox> createState() => _SirenInboxState();
@@ -605,8 +601,8 @@ class _SirenInboxState extends State<SirenInbox> {
         onEndReached: onEndReached,
         loadingNextPage: loadingNextPage,
         customStyles: widget.customStyles,
-        deleteWidget: widget.deleteWidget,
-        hideAvatar: widget.hideAvatar,
+        deleteWidget: widget.cardProps?.deleteWidget,
+        hideAvatar: widget.cardProps?.hideAvatar,
         scrollController: _scrollController,
         onDelete: deleteNotification,
         markAsRead: _markNotificationAsRead,

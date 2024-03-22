@@ -185,3 +185,16 @@ class CustomThemeColors {
   /// The color for window title in Siren inbox.
   final Color? inboxTitleColor;
 }
+
+/// Custom Properties for notification card
+class CardParams {
+  CardParams({
+    this.hideAvatar,
+    this.deleteWidget,
+  });
+  /// The Flag to hide or show avatar
+  final bool? hideAvatar;
+
+  /// Custom widget that can be used instead of default delete in the card (x)
+  final Widget? deleteWidget;
+}
