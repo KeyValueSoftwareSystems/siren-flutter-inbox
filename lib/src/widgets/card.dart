@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:siren_flutter_inbox/src/models/notification_model.dart';
 import 'package:siren_flutter_inbox/src/models/ui_models.dart';
-import 'package:siren_flutter_inbox/src/theme/colors.dart';
 import 'package:siren_flutter_inbox/src/utils/common_utils.dart';
 import 'package:siren_flutter_inbox/src/widgets/common/nullable_text.dart';
 
@@ -135,11 +134,11 @@ class _CardWidgetState extends State<CardWidget> {
         backgroundImage: avatarUrl != null && avatarUrl.isNotEmpty
             ? NetworkImage(avatarUrl)
             : null,
-        backgroundColor: AppColors.avatarPlaceholderBg,
+        backgroundColor: theme.colorScheme.onSecondary,
         child: avatarUrl == null || avatarUrl.isEmpty
-            ? const Icon(
+            ? Icon(
                 Icons.landscape_rounded,
-                color: AppColors.avatarIcon,
+                color: theme.colorScheme.surfaceVariant,
               )
             : null,
       ),

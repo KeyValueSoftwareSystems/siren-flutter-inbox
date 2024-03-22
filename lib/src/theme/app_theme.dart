@@ -21,6 +21,8 @@ class AppTheme {
           onBackground: Colors.black,
           shadow: AppColors.emptyWidgetBellLight,
           surface: AppColors.emptyWidgetBadgeLight,
+          surfaceVariant: AppColors.avatarIconLight,
+          onSecondary: AppColors.avatarPlaceholderBgLight,
         ),
   );
 
@@ -42,6 +44,8 @@ class AppTheme {
           onBackground: AppColors.grey50,
           shadow: AppColors.emptyWidgetBellDark,
           surface: AppColors.emptyWidgetBadgeDark,
+          surfaceVariant: AppColors.avatarIconDark,
+          onSecondary: AppColors.avatarPlaceholderBgDark,
         ),
   );
 

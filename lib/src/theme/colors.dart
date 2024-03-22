@@ -30,6 +30,8 @@ class AppColors {
   static const Color emptyWidgetBadgeLight = AppColors.grey400;
   static const Color emptyWidgetBadgeDark = Color(0xFF63636C);
 
-  static const Color avatarPlaceholderBg = Color(0xFFF0F2F5);
-  static const Color avatarIcon = Color(0xFF98A2B3);
+  static const Color avatarPlaceholderBgLight = Color(0xFFF0F2F5);
+  static const Color avatarIconLight = Color(0xFF98A2B3);
+  static const Color avatarPlaceholderBgDark = Color(0xFF4C4C4C);
+  static const Color avatarIconDark = Color(0xFF999999);
 }
