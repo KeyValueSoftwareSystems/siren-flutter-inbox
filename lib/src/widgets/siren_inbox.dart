@@ -21,24 +21,24 @@ import 'package:siren_flutter_inbox/src/widgets/notification_list_view.dart';
 class SirenInbox extends StatefulWidget {
   const SirenInbox({
     super.key,
-    this.customStyles,
     this.hideHeader,
-    this.listEmptyWidget,
-    this.title,
-    this.showDefaultHeaderBackButton,
-    this.defaultBackButton,
-    this.customNotificationCard,
-    this.onNotificationCardClick,
-    this.onError,
     this.hideClearAll,
+    this.showDefaultBackButton,
     this.darkMode,
-    this.theme,
+    this.itemsPerFetch,
+    this.title,
+    this.defaultBackButton,
+    this.listEmptyWidget,
+    this.customNotificationCard,
     this.customLoader,
     this.customErrorWidget,
     this.customHeader,
-    this.handleBackNavigation,
-    this.itemsPerFetch,
     this.cardProps,
+    this.onNotificationCardClick,
+    this.onError,
+    this.handleBackNavigation,
+    this.theme,
+    this.customStyles,
   });
 
   /// Custom styles for the card of each notification.
@@ -54,7 +54,7 @@ class SirenInbox extends StatefulWidget {
   final String? title;
 
   /// Flag to show the header back button provided by the sdk.
-  final bool? showDefaultHeaderBackButton;
+  final bool? showDefaultBackButton;
 
   /// Default back button widget for the header provided by the sdk.
   final Icon? defaultBackButton;
@@ -525,7 +525,7 @@ class _SirenInboxState extends State<SirenInbox> {
         children: [
           Row(
             children: [
-              if (widget.showDefaultHeaderBackButton ?? false)
+              if (widget.showDefaultBackButton ?? false)
                 IconButton(
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -538,8 +538,7 @@ class _SirenInboxState extends State<SirenInbox> {
                 ),
               Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal:
-                      widget.showDefaultHeaderBackButton ?? false ? 2 : 24,
+                  horizontal: widget.showDefaultBackButton ?? false ? 2 : 24,
                 ),
                 child: Text(
                   widget.title ?? 'Notifications',
