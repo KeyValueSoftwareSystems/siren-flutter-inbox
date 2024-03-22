@@ -140,6 +140,8 @@ class CustomThemeColors {
     this.badgeColor,
     this.iconColor,
     this.inboxTitleColor,
+    this.emptyBellColor,
+    this.emptyBellBadgeColor,
   });
 
   /// The background color for Siren inbox.
@@ -180,4 +182,10 @@ class CustomThemeColors {
 
   /// The color for window title in Siren inbox.
   final Color? inboxTitleColor;
+
+  /// The Color for Bell Icon in empty state widget.
+  final Color? emptyBellColor;
+
+  /// The Color for Bell Icon badge in empty state widget.
+  final Color? emptyBellBadgeColor;
 }

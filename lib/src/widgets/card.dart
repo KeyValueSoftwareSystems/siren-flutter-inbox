@@ -135,13 +135,11 @@ class _CardWidgetState extends State<CardWidget> {
         backgroundImage: avatarUrl != null && avatarUrl.isNotEmpty
             ? NetworkImage(avatarUrl)
             : null,
-        backgroundColor: (avatarUrl == null || avatarUrl.isEmpty)
-            ? AppColors.emptyWidgetBgLightTheme
-            : null,
-        child: (avatarUrl == null || avatarUrl.isEmpty)
-            ? Icon(
+        backgroundColor: AppColors.avatarPlaceholderBg,
+        child: avatarUrl == null || avatarUrl.isEmpty
+            ? const Icon(
                 Icons.landscape_rounded,
-                color: theme.colorScheme.outlineVariant,
+                color: AppColors.avatarIcon,
               )
             : null,
       ),

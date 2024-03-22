@@ -19,6 +19,8 @@ class AppTheme {
           scrim: AppColors.grey500,
           background: AppColors.emptyWidgetBgLightTheme,
           onBackground: Colors.black,
+          shadow: AppColors.emptyWidgetBellLight,
+          surface: AppColors.emptyWidgetBadgeLight,
         ),
   );
 
@@ -38,6 +40,8 @@ class AppTheme {
           scrim: AppColors.grey400,
           background: AppColors.emptyWidgetBgDarkTheme,
           onBackground: AppColors.grey50,
+          shadow: AppColors.emptyWidgetBellDark,
+          surface: AppColors.emptyWidgetBadgeDark,
         ),
   );
 
@@ -61,6 +65,8 @@ class AppTheme {
                   tertiaryContainer: customColors.badgeBackgroundColor,
                   scrim: customColors.timerIcon,
                   onBackground: customColors.inboxTitleColor,
+                  shadow: customColors.emptyBellColor,
+                  surface: customColors.emptyBellBadgeColor,
                 ),
           )
         : ThemeData.light().copyWith(
@@ -78,6 +84,8 @@ class AppTheme {
                   tertiaryContainer: customColors.badgeBackgroundColor,
                   scrim: customColors.timerIcon,
                   onBackground: customColors.inboxTitleColor,
+                  shadow: customColors.emptyBellColor,
+                  surface: customColors.emptyBellBadgeColor,
                 ),
           );
   }
