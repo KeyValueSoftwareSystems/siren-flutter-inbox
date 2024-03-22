@@ -6,8 +6,8 @@ import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
 Dio apiProvider() {
   final dio = Dio();
   // Configuring timeouts
-  dio.options.connectTimeout = const Duration(seconds: 10);
-  dio.options.receiveTimeout = const Duration(seconds: 3);
+  // dio.options.connectTimeout = 10000;
+  // dio.options.receiveTimeout = 3000;
 
   // Adding interceptors
   dio.interceptors.add(
@@ -35,7 +35,7 @@ Dio apiProvider() {
       /**
        * onError interceptor - called on error
        */
-      onError: (DioException dioError, ErrorInterceptorHandler handler) async {
+      onError: (DioError dioError, ErrorInterceptorHandler handler) async {
         if (dioError.error is SocketException) {
           // HANDLE ERROR
         }
