@@ -166,6 +166,10 @@ class _SirenInboxState extends State<SirenInbox> {
         if (streamResponse.api == UpdateEvents.PARAMS_CHANGED) {
           _reset(cancelFetch: true);
           return;
+        } else if (streamResponse.api == UpdateEvents.SHOW_ERROR) {
+          setState(() {
+            isError = true;
+          });
         }
         if (streamResponse.response?.isSuccess ?? false) {
           switch (streamResponse.api) {
@@ -341,6 +345,7 @@ class _SirenInboxState extends State<SirenInbox> {
           fetchedNotifications.data as Iterable<NotificationDataType>,
         );
         isLoading = false;
+        isError = false;
         totalElements = fetchedNotifications.meta?.totalElements ?? 0;
       });
       fetchNewNotifications();
@@ -545,7 +550,7 @@ class _SirenInboxState extends State<SirenInbox> {
                       TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.tertiary,
+                        color: theme.colorScheme.onBackground,
                       ),
                 ),
               ),

@@ -20,6 +20,7 @@ class AppColors {
   static const Color grey500Complementary = Color(0XFFD0D5DD);
   static const Color grey700Complementary = Colors.white;
   static const Color black100 = Color(0xFF232326);
+  static const Color grey50 = Color(0xFFF9FAFB);
 
   //empty state
   static const Color emptyWidgetBgLightTheme = Color(0xFFF7F9FC);

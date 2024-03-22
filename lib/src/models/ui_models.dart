@@ -139,6 +139,7 @@ class CustomThemeColors {
     this.badgeBackgroundColor,
     this.badgeColor,
     this.iconColor,
+    this.inboxTitleColor,
   });
 
   /// The background color for Siren inbox.
@@ -176,4 +177,7 @@ class CustomThemeColors {
 
   /// The color for notification icon.
   final Color? iconColor;
+
+  /// The color for window title in Siren inbox.
+  final Color? inboxTitleColor;
 }

@@ -91,6 +91,14 @@ class SirenDataProvider {
           const Duration(seconds: Generics.DATA_FETCH_INTERVAL),
           _verifyToken,
         );
+      } else if (_retryCount >= Generics.MAX_RETRIES) {
+        SirenDataProvider.instance.inboxController.sink.add(
+          StreamResponse(
+            _tokenVerificationResponse,
+            UpdateEvents.SHOW_ERROR,
+            '',
+          ),
+        );
       }
     }
   }

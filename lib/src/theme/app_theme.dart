@@ -5,7 +5,7 @@ import 'package:siren_flutter_inbox/src/theme/colors.dart';
 class AppTheme {
   static ThemeData lightTheme = ThemeData.light().copyWith(
     colorScheme: ThemeData.light().colorScheme.copyWith(
-          inversePrimary: Colors.black,
+          inversePrimary: AppColors.grey500,
           onPrimary: AppColors.black100,
           onTertiary: Colors.white,
           outline: AppColors.grey500,
@@ -18,6 +18,7 @@ class AppTheme {
           tertiaryContainer: AppColors.red,
           scrim: AppColors.grey500,
           background: AppColors.emptyWidgetBgLightTheme,
+          onBackground: Colors.black,
         ),
   );
 
@@ -36,6 +37,7 @@ class AppTheme {
           tertiaryContainer: AppColors.red,
           scrim: AppColors.grey400,
           background: AppColors.emptyWidgetBgDarkTheme,
+          onBackground: AppColors.grey50,
         ),
   );
 
@@ -58,6 +60,7 @@ class AppTheme {
                   tertiary: customColors.textColor,
                   tertiaryContainer: customColors.badgeBackgroundColor,
                   scrim: customColors.timerIcon,
+                  onBackground: customColors.inboxTitleColor,
                 ),
           )
         : ThemeData.light().copyWith(
@@ -74,6 +77,7 @@ class AppTheme {
                   tertiary: customColors.textColor,
                   tertiaryContainer: customColors.badgeBackgroundColor,
                   scrim: customColors.timerIcon,
+                  onBackground: customColors.inboxTitleColor,
                 ),
           );
   }

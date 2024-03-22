@@ -207,7 +207,7 @@ class _CardWidgetState extends State<CardWidget> {
     return Row(
       children: [
         Padding(
-          padding: const EdgeInsets.only(right: 2),
+          padding: const EdgeInsets.only(right: 4),
           child: Icon(
             Icons.access_time_sharp,
             color: theme.colorScheme.scrim,
@@ -221,7 +221,7 @@ class _CardWidgetState extends State<CardWidget> {
           style: widget.styles?.dateStyle ??
               TextStyle(
                 fontSize: 12,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w400,
                 color: theme.colorScheme.inversePrimary,
               ),
         ),
