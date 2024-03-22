@@ -27,7 +27,6 @@ class SirenInbox extends StatefulWidget {
     this.hideHeader,
     this.listEmptyWidget,
     this.title,
-    this.defaultHeaderTextStyle,
     this.showDefaultHeaderBackButton,
     this.defaultBackButton,
     this.customNotificationCard,
@@ -60,9 +59,6 @@ class SirenInbox extends StatefulWidget {
 
   /// Title of the inbox page or window.
   final String? title;
-
-  /// Text style for the header provided by the sdk.
-  final TextStyle? defaultHeaderTextStyle;
 
   /// Flag to show the header back button provided by the sdk.
   final bool? showDefaultHeaderBackButton;
@@ -546,7 +542,7 @@ class _SirenInboxState extends State<SirenInbox> {
                 ),
                 child: Text(
                   widget.title ?? 'Notifications',
-                  style: widget.defaultHeaderTextStyle ??
+                  style: widget.customStyles?.defaultHeaderTextStyle ??
                       TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
