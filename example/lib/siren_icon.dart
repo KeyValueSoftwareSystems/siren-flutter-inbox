@@ -51,9 +51,9 @@ class _SirenIconWidgetState extends State<SirenIconWidget> {
                           : null;
                     });
                   },
-                  child: Text(notificationIcon == null
-                      ? 'Custom Notification'
-                      : 'Default Notification'),
+                  child: Text(
+                    notificationIcon == null ? 'Custom Icon' : 'Default Icon',
+                  ),
                 ),
                 ElevatedButton(
                   onPressed: () {
