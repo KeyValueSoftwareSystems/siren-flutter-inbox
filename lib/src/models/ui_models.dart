@@ -192,6 +192,7 @@ class CardParams {
     this.hideAvatar,
     this.deleteWidget,
   });
+
   /// The Flag to hide or show avatar
   final bool? hideAvatar;
 
