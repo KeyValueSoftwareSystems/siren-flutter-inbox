@@ -128,41 +128,46 @@ class CustomThemeColors {
   /// Constructs a [CustomThemeColors] with optional parameters.
   CustomThemeColors({
     this.backgroundColor,
-    this.activeCardBorderColor,
-    this.activeCardColor,
-    this.cardBorder,
-    this.deleteIconColor,
-    this.clearAllIconColor,
+    this.highlightedCardBorderColor,
+    this.highlightedCardColor,
+    this.borderColor,
+    this.deleteIcon,
+    this.clearAllIcon,
     this.textColor,
-    this.windowTitleColor,
+    this.dateColor,
+    this.timerIcon,
     this.badgeBackgroundColor,
     this.badgeColor,
     this.iconColor,
+    this.inboxTitleColor,
   });
 
   /// The background color for Siren inbox.
   final Color? backgroundColor;
 
   /// The color for the border of active cards in Siren inbox.
-  final Color? activeCardBorderColor;
+  final Color? highlightedCardBorderColor;
 
   /// The color for active cards in Siren inbox.
-  final Color? activeCardColor;
+  final Color? highlightedCardColor;
 
   /// The color for card borders in Siren inbox.
-  final Color? cardBorder;
+  final Color? borderColor;
 
   /// The color for delete icon in Siren inbox.
-  final Color? deleteIconColor;
+  final Color? deleteIcon;
 
   /// The color for clear all icon in Siren inbox.
-  final Color? clearAllIconColor;
+  final Color? clearAllIcon;
 
   /// The text color in Siren inbox.
   final Color? textColor;
 
-  /// The color for window title in Siren inbox.
-  final Color? windowTitleColor;
+  /// The color notification created at time
+  final Color? dateColor;
+
+  /// The color of timer icon
+  final Color? timerIcon;
 
   /// The background color for notification icon badge.
   final Color? badgeBackgroundColor;
@@ -172,4 +177,7 @@ class CustomThemeColors {
 
   /// The color for notification icon.
   final Color? iconColor;
+
+  /// The color for window title in Siren inbox.
+  final Color? inboxTitleColor;
 }

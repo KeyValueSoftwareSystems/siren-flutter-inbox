@@ -99,13 +99,13 @@ void main() {
       // Arrange & Act
       final customThemeColors = CustomThemeColors(
         backgroundColor: Colors.white,
-        activeCardBorderColor: Colors.grey,
+        highlightedCardBorderColor: Colors.grey,
         badgeColor: Colors.red,
       );
 
       // Assert
       expect(customThemeColors.backgroundColor, Colors.white);
-      expect(customThemeColors.activeCardBorderColor, Colors.grey);
+      expect(customThemeColors.highlightedCardBorderColor, Colors.grey);
       expect(customThemeColors.badgeColor, Colors.red);
     });
   });

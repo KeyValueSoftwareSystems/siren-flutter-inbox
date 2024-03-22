@@ -40,7 +40,6 @@ class SirenInbox extends StatefulWidget {
     this.customErrorWidget,
     this.customHeader,
     this.handleBackNavigation,
-    this.disableAutoMarkAsRead,
     this.itemsPerFetch,
   });
 
@@ -100,9 +99,6 @@ class SirenInbox extends StatefulWidget {
 
   /// Callback function for handling back navigation.
   final void Function()? handleBackNavigation;
-
-  /// Flag to disable automatic marking of notifications as read.
-  final bool? disableAutoMarkAsRead;
 
   /// Notifications to be fetched in each request
   final int? itemsPerFetch;
@@ -170,6 +166,10 @@ class _SirenInboxState extends State<SirenInbox> {
         if (streamResponse.api == UpdateEvents.PARAMS_CHANGED) {
           _reset(cancelFetch: true);
           return;
+        } else if (streamResponse.api == UpdateEvents.SHOW_ERROR) {
+          setState(() {
+            isError = true;
+          });
         }
         if (streamResponse.response?.isSuccess ?? false) {
           switch (streamResponse.api) {
@@ -345,6 +345,7 @@ class _SirenInboxState extends State<SirenInbox> {
           fetchedNotifications.data as Iterable<NotificationDataType>,
         );
         isLoading = false;
+        isError = false;
         totalElements = fetchedNotifications.meta?.totalElements ?? 0;
       });
       fetchNewNotifications();
@@ -446,7 +447,7 @@ class _SirenInboxState extends State<SirenInbox> {
         } else if (fetchedNotifications.isError) {
           if (mounted) {
             setState(() {
-              loadingNextPage = true;
+              loadingNextPage = false;
             });
           }
           widget.onError?.call(fetchedNotifications.error ?? ApiErrorDetails());
@@ -549,7 +550,7 @@ class _SirenInboxState extends State<SirenInbox> {
                       TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.inversePrimary,
+                        color: theme.colorScheme.onBackground,
                       ),
                 ),
               ),
@@ -568,7 +569,7 @@ class _SirenInboxState extends State<SirenInbox> {
                     child: Row(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 2),
+                          padding: const EdgeInsets.only(right: 4),
                           child: Icon(
                             Icons.clear_all,
                             color: theme.colorScheme.outline,
@@ -617,7 +618,7 @@ class _SirenInboxState extends State<SirenInbox> {
         onNotificationCardClick: widget.onNotificationCardClick,
         deletingNotificationId: deletingNotificationId,
         customLoader: widget.customLoader,
-        disableAutoMarkAsRead: widget.disableAutoMarkAsRead,
+        disableAutoMarkAsRead: true,
         totalElements: totalElements,
       );
     }

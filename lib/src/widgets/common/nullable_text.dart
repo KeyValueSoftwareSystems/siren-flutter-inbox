@@ -15,7 +15,7 @@ class NullableText extends StatelessWidget {
       return Text(
         text!,
         style: style,
-        maxLines: 1,
+        maxLines: 2,
         overflow: TextOverflow.ellipsis,
       );
     } else {
