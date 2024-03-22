@@ -87,6 +87,7 @@ class SirenStyleProps {
     this.dateStyle,
     this.iconStyle,
     this.badgeStyle,
+    this.defaultHeaderTextStyle,
   });
 
   /// The decoration for the outer container of the card in Siren inbox.
@@ -121,6 +122,9 @@ class SirenStyleProps {
 
   /// The style for the notification icon badge.
   final BadgeStyle? badgeStyle;
+
+  /// Text style for the header provided by the sdk.
+  final TextStyle? defaultHeaderTextStyle;
 }
 
 /// Custom theme colors to configure the appearance of UI elements.
@@ -180,4 +184,18 @@ class CustomThemeColors {
 
   /// The color for window title in Siren inbox.
   final Color? inboxTitleColor;
+}
+
+/// Custom Properties for notification card
+class CardParams {
+  CardParams({
+    this.hideAvatar,
+    this.deleteWidget,
+  });
+
+  /// The Flag to hide or show avatar
+  final bool? hideAvatar;
+
+  /// Custom widget that can be used instead of default delete in the card (x)
+  final Widget? deleteWidget;
 }

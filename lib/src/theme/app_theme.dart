@@ -19,6 +19,10 @@ class AppTheme {
           scrim: AppColors.grey500,
           background: AppColors.emptyWidgetBgLightTheme,
           onBackground: Colors.black,
+          shadow: AppColors.emptyWidgetBellLight,
+          surface: AppColors.emptyWidgetBadgeLight,
+          surfaceVariant: AppColors.avatarIconLight,
+          onSecondary: AppColors.avatarPlaceholderBgLight,
         ),
   );
 
@@ -38,6 +42,10 @@ class AppTheme {
           scrim: AppColors.grey400,
           background: AppColors.emptyWidgetBgDarkTheme,
           onBackground: AppColors.grey50,
+          shadow: AppColors.emptyWidgetBellDark,
+          surface: AppColors.emptyWidgetBadgeDark,
+          surfaceVariant: AppColors.avatarIconDark,
+          onSecondary: AppColors.avatarPlaceholderBgDark,
         ),
   );
 

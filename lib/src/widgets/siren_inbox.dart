@@ -22,12 +22,9 @@ class SirenInbox extends StatefulWidget {
   const SirenInbox({
     super.key,
     this.customStyles,
-    this.hideAvatar,
-    this.deleteWidget,
     this.hideHeader,
     this.listEmptyWidget,
     this.title,
-    this.defaultHeaderTextStyle,
     this.showDefaultHeaderBackButton,
     this.defaultBackButton,
     this.customNotificationCard,
@@ -41,16 +38,11 @@ class SirenInbox extends StatefulWidget {
     this.customHeader,
     this.handleBackNavigation,
     this.itemsPerFetch,
+    this.cardProps,
   });
 
   /// Custom styles for the card of each notification.
   final SirenStyleProps? customStyles;
-
-  /// Flag to hide avatars in notifications.
-  final bool? hideAvatar;
-
-  /// Widget or Icon for deleting notifications.
-  final Widget? deleteWidget;
 
   /// Flag to hide the header.
   final bool? hideHeader;
@@ -60,9 +52,6 @@ class SirenInbox extends StatefulWidget {
 
   /// Title of the inbox page or window.
   final String? title;
-
-  /// Text style for the header provided by the sdk.
-  final TextStyle? defaultHeaderTextStyle;
 
   /// Flag to show the header back button provided by the sdk.
   final bool? showDefaultHeaderBackButton;
@@ -102,6 +91,9 @@ class SirenInbox extends StatefulWidget {
 
   /// Notifications to be fetched in each request
   final int? itemsPerFetch;
+
+  ///Custom params for Card properties
+  final CardParams? cardProps;
 
   @override
   State<SirenInbox> createState() => _SirenInboxState();
@@ -551,7 +543,7 @@ class _SirenInboxState extends State<SirenInbox> {
                 ),
                 child: Text(
                   widget.title ?? 'Notifications',
-                  style: widget.defaultHeaderTextStyle ??
+                  style: widget.customStyles?.defaultHeaderTextStyle ??
                       TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
@@ -614,8 +606,8 @@ class _SirenInboxState extends State<SirenInbox> {
         onEndReached: onEndReached,
         loadingNextPage: loadingNextPage,
         customStyles: widget.customStyles,
-        deleteWidget: widget.deleteWidget,
-        hideAvatar: widget.hideAvatar,
+        deleteWidget: widget.cardProps?.deleteWidget,
+        hideAvatar: widget.cardProps?.hideAvatar,
         scrollController: _scrollController,
         onDelete: deleteNotification,
         markAsRead: _markNotificationAsRead,
