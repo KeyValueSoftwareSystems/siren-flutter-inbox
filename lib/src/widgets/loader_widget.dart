@@ -89,7 +89,7 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
           height: radius * 2,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: theme.colorScheme.outlineVariant
+            color: theme.colorScheme.onSecondary
                 .withOpacity(0.5 + 0.5 * _controller.value),
           ),
         );
@@ -107,7 +107,7 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
         return Container(
           height: height,
           decoration: BoxDecoration(
-            color: theme.colorScheme.outlineVariant
+            color: theme.colorScheme.onSecondary
                 .withOpacity(0.5 + 0.5 * _controller.value),
             borderRadius: BorderRadius.circular(4),
           ),
@@ -126,7 +126,7 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
           width: 16,
           height: 16,
           decoration: BoxDecoration(
-            color: theme.colorScheme.outlineVariant
+            color: theme.colorScheme.onSecondary
                 .withOpacity(0.5 + 0.5 * _controller.value),
             borderRadius: BorderRadius.circular(4),
           ),
