@@ -175,14 +175,19 @@ class _SirenInboxState extends State<SirenInbox> {
           switch (streamResponse.api) {
             case UpdateEvents.READ_BY_ID:
               _markNotificationAsReadById(streamResponse.id);
+              break;
             case UpdateEvents.READ_ALL:
               _markAllNotificationsAsRead();
+              break;
             case UpdateEvents.DELETE_BY_ID:
               _deleteById(streamResponse.id);
+              break;
             case UpdateEvents.DELETE_ALL:
               _deleteAllNotifications();
+              break;
             case UpdateEvents.TOKEN_VERIFIED:
               _initialize();
+              break;
 
             // ignore: no_default_cases
             default:
