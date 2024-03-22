@@ -65,8 +65,6 @@ class AppTheme {
                   tertiaryContainer: customColors.badgeBackgroundColor,
                   scrim: customColors.timerIcon,
                   onBackground: customColors.inboxTitleColor,
-                  shadow: customColors.emptyBellColor,
-                  surface: customColors.emptyBellBadgeColor,
                 ),
           )
         : ThemeData.light().copyWith(
@@ -84,8 +82,6 @@ class AppTheme {
                   tertiaryContainer: customColors.badgeBackgroundColor,
                   scrim: customColors.timerIcon,
                   onBackground: customColors.inboxTitleColor,
-                  shadow: customColors.emptyBellColor,
-                  surface: customColors.emptyBellBadgeColor,
                 ),
           );
   }
