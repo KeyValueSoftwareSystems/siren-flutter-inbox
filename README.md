@@ -44,7 +44,7 @@ Below are optional arguments available for the icon widget:
 
 Arguments | Description | Type | Default value |
 --- | --- | --- | --- |
-darkMode | Toggle to enable dark mode |  boolean | false |
+darkMode | Toggle to enable dark mode when custom theme is not passed |  boolean | false |
 disabled | Toggle to disable click on icon |  boolean | false |
 hideBadge | Toggle to  hide unviewed count badge|  boolean | false |
 notificationIcon | Option to use custom notification icon |  Widget | null |
@@ -99,7 +99,7 @@ Arguments | Description | Type | Default value |
 hideHeader | Toggle to hide the header section|  boolean | false |
 hideClearAll | Toggle to hide clear all button|  boolean | false |
 showDefaultBackButton | Toggle to display back button in default Inbox app bar |  boolean | false |
-darkMode | Toggle to enable dark mode |  boolean | false |
+darkMode | Toggle to enable dark mode when custom theme is not passed |  boolean | false |
 itemsPerFetch | Number of notifications fetch per api request (have a max cap of 50) |  int | 20 |
 title | Title of the Inbox app bar |  String | null |
 defaultBackButton | Custom icon for back button |  Icon | null |
@@ -112,7 +112,7 @@ cardProps | Properties of notification card |  CardParams | false |
 onNotificationCardClick | Custom click handler for notification cards |  Function(NotificationDataType) | null |
 onError | Callback for handling errors |  Function(ApiErrorDetails) | null |
 handleBackNavigation | Function to handle the back button click |  Function | null |
-theme | Theme properties for custom color theme |  boolean | false |
+theme | Theme properties for custom color theme |  CustomThemeColors | null |
 customStyles | Style properties for custom styling |  SirenStyleProps | null |
 
 #### Theme customization

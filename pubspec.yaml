@@ -5,10 +5,9 @@ homepage: 'https://github.com/KeyValueSoftwareSystems/siren-flutter-inbox#readme
 repository: 'https://github.com/KeyValueSoftwareSystems/siren-flutter-inbox'
 license: MIT
 keywords:
-  - react-native
+  - flutter
   - siren
   - in-app
-  - flutter
   - notifications
 
 environment:
