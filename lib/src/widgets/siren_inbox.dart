@@ -172,7 +172,7 @@ class _SirenInboxState extends State<SirenInbox> {
               _markAllNotificationsAsRead();
               break;
             case UpdateEvents.DELETE_BY_ID:
-              _deleteById(streamResponse.id);
+              _updateDeletionStatus(streamResponse.id);
               break;
             case UpdateEvents.DELETE_ALL:
               _deleteAllNotifications();
@@ -229,6 +229,19 @@ class _SirenInboxState extends State<SirenInbox> {
         for (final notification in notifications) {
           notification.markAsRead();
         }
+      });
+    }
+  }
+
+  Future<void> _updateDeletionStatus(String? notificationId) async {
+    if (mounted) {
+      setState(() {
+        deletingNotificationId = notificationId;
+      });
+      await Future.delayed(const Duration(milliseconds: 500));
+      _deleteById(notificationId);
+      setState(() {
+        deletingNotificationId = null;
       });
     }
   }
