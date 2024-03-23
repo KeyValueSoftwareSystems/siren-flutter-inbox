@@ -98,6 +98,9 @@ class _SirenInboxIconState extends State<SirenInboxIcon> {
             // ignore: no_default_cases
             default:
           }
+        } else if (streamResponse.response?.isError ?? false) {
+          widget.onError
+              ?.call(streamResponse.response?.error ?? ApiErrorDetails());
         }
       },
     );
