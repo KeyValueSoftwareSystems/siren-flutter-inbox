@@ -493,15 +493,18 @@ class _SirenInboxState extends State<SirenInbox> {
                         SizedBox(
                           height: MediaQuery.of(context).size.height * 0.75,
                           width: MediaQuery.of(context).size.width,
-                          child: const Center(
-                            child: CustomErrorWidget(),
+                          child: Center(
+                            child: widget.customErrorWidget ??
+                                const DefaultErrorWidget(),
                           ),
                         ),
                       ],
                     ),
                   )
                 : (isLoading && !loadingNextPage)
-                    ? const LoaderWidget()
+                    ? LoaderWidget(
+                        customLoader: widget.customLoader,
+                      )
                     : _buildBody(currentTheme),
           );
         },
@@ -593,7 +596,9 @@ class _SirenInboxState extends State<SirenInbox> {
 
   Widget _buildBody(ThemeData theme) {
     if (notifications.isEmpty && isLoading) {
-      return widget.customLoader ?? const LoaderWidget();
+      return LoaderWidget(
+        customLoader: widget.customLoader,
+      );
     } else if (notifications.isEmpty && !isLoading) {
       return widget.listEmptyWidget ?? const EmptyWidget();
     } else {
@@ -613,7 +618,6 @@ class _SirenInboxState extends State<SirenInbox> {
         customNotificationCard: widget.customNotificationCard,
         onNotificationCardClick: widget.onNotificationCardClick,
         deletingNotificationId: deletingNotificationId,
-        customLoader: widget.customLoader,
         disableAutoMarkAsRead: true,
         totalElements: totalElements,
       );
@@ -624,18 +628,22 @@ class _SirenInboxState extends State<SirenInbox> {
 class LoaderWidget extends StatelessWidget {
   const LoaderWidget({
     super.key,
+    this.customLoader,
   });
+
+  final Widget? customLoader;
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: Generics.PAGE_SIZE,
-      itemBuilder: (context, index) {
-        return const Padding(
-          padding: EdgeInsets.symmetric(vertical: 8),
-          child: CardLoaderWidget(),
+    return customLoader ??
+        ListView.builder(
+          itemCount: Generics.PAGE_SIZE,
+          itemBuilder: (context, index) {
+            return const Padding(
+              padding: EdgeInsets.symmetric(vertical: 8),
+              child: CardLoaderWidget(),
+            );
+          },
         );
-      },
-    );
   }
 }
