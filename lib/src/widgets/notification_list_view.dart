@@ -87,7 +87,7 @@ class _NotificationListViewState extends State<NotificationListView> {
                 CardWidget(
                   onTap: (notification) {
                     if (!(widget.disableAutoMarkAsRead ?? false)) {
-                      widget.markAsRead(widget.notifications[index].id ?? '');
+                      widget.markAsRead(widget.notifications[index].id);
                     }
                     widget.onNotificationCardClick
                         ?.call(widget.notifications[index]);

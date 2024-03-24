@@ -86,7 +86,7 @@ class _CardWidgetState extends State<CardWidget> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () => widget.onDelete(widget.notification.id ?? ''),
+                    onTap: () => widget.onDelete(widget.notification.id),
                     child: widget.deleteWidget ??
                         _buildDefaultDeleteButton(currentTheme),
                   ),
@@ -110,7 +110,7 @@ class _CardWidgetState extends State<CardWidget> {
     return BoxDecoration(
       border: Border(
         left: BorderSide(
-          color: widget.notification.isRead ?? true
+          color: widget.notification.isRead
               ? theme.colorScheme.primary
               : theme.colorScheme.secondary,
           width: 4,
@@ -119,14 +119,14 @@ class _CardWidgetState extends State<CardWidget> {
         bottom: _getDefaultBorderDecoration(theme),
       ),
       color: widget.notification.cardColor ??
-          (widget.notification.isRead ?? true
+          (widget.notification.isRead
               ? null
               : theme.colorScheme.secondaryContainer),
     );
   }
 
   Widget _buildDefaultAvatarContainer(ThemeData theme) {
-    final avatarUrl = widget.notification.message?.avatar?.url;
+    final avatarUrl = widget.notification.message.avatar?.url;
     return Container(
       decoration: widget.styles?.cardAvatarContainer,
       child: CircleAvatar(
@@ -147,7 +147,7 @@ class _CardWidgetState extends State<CardWidget> {
 
   Widget _buildHeaderText(ThemeData theme) {
     return Text(
-      widget.notification.message?.header ?? '',
+      widget.notification.message.header ?? '',
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
       style: widget.styles?.cardTitle ??
@@ -163,7 +163,7 @@ class _CardWidgetState extends State<CardWidget> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: NullableText(
-        text: widget.notification.message?.subHeader,
+        text: widget.notification.message.subHeader,
         style: widget.styles?.subHeaderText ??
             TextStyle(
               fontSize: 14,
@@ -176,7 +176,7 @@ class _CardWidgetState extends State<CardWidget> {
 
   Widget _buildBodyText(ThemeData theme) {
     return Text(
-      widget.notification.message?.body ?? '',
+      widget.notification.message.body ?? '',
       style: widget.styles?.cardDescription ??
           TextStyle(
             fontSize: 14,
@@ -213,7 +213,7 @@ class _CardWidgetState extends State<CardWidget> {
         ),
         Text(
           generateElapsedTimeText(
-            DateTime.parse(widget.notification.createdAt ?? ''),
+            DateTime.parse(widget.notification.createdAt),
           ),
           style: widget.styles?.dateStyle ??
               TextStyle(

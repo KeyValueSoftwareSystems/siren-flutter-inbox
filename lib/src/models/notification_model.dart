@@ -15,31 +15,29 @@ class NotificationDataType {
   /// Factory method to create NotificationDataType from JSON.
   factory NotificationDataType.fromJson(Map<String, dynamic>? json) {
     return NotificationDataType(
-      id: json?['id'] as String?,
-      createdAt: json?['createdAt'] as String?,
-      message: json?['message'] != null
-          ? MessageData.fromJson(json?['message'] as Map<String, dynamic>)
-          : null,
+      id: json?['id'] as String,
+      createdAt: json?['createdAt'] as String,
+      message: MessageData.fromJson(json?['message'] as Map<String, dynamic>),
       requestId: json?['requestId'] as String?,
-      isRead: json?['isRead'] as bool?,
+      isRead: json?['isRead'] as bool,
       cardColor: json?['cardColor'] as Color?,
     );
   }
 
   /// The unique identifier of the notification.
-  final String? id;
+  final String id;
 
   /// The creation timestamp of the notification.
-  final String? createdAt;
+  final String createdAt;
 
   /// The message associated with the notification.
-  final MessageData? message;
+  final MessageData message;
 
   /// The request identifier associated with the notification.
   final String? requestId;
 
   /// Indicates whether the notification has been read.
-  bool? isRead;
+  bool isRead;
 
   /// The color of the notification card.
   Color? cardColor;

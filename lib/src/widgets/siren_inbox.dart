@@ -284,7 +284,7 @@ class _SirenInboxState extends State<SirenInbox> {
           size: pageSize,
           start: notifications.isNotEmpty
               ? modifyAndConvertToISOString(
-                  notifications[0].createdAt ?? '',
+                  notifications[0].createdAt,
                 )
               : null,
         );
@@ -439,7 +439,7 @@ class _SirenInboxState extends State<SirenInbox> {
         final fetchedNotifications =
             await FetchAllNotifications.instance.fetchAllNotifications(
           end: convertToISOString(
-            notifications[notifications.length - 1].createdAt ?? '',
+            notifications[notifications.length - 1].createdAt,
           ),
           size: pageSize,
         );
