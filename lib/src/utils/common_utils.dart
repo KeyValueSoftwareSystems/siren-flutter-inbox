@@ -42,7 +42,7 @@ String convertToISOString(String dateString) {
   return isoString;
 }
 
-/// Loads environment variables from the .env file and returns them as a map.
+/// Loads environment variables from the env file and returns them as a map.
 Future<Map<String, String>> loadEnv() async {
   try {
     final contents = await rootBundle.loadString(Generics.ENV_PATH);

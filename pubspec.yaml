@@ -32,7 +32,7 @@ dev_dependencies:
 flutter:
 
   assets:
-    - .env
+    - env
 
 
 
