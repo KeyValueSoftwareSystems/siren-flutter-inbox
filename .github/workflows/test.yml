@@ -17,6 +17,8 @@ jobs:
     - uses: subosito/flutter-action@v1
       with:
         channel: 'stable' 
+    - name: Exclude Example application
+      run: rm -rf example
     - name: Verify formatting
       run: dart format --output=none --set-exit-if-changed .
     - name: Install dependencies
