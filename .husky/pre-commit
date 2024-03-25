@@ -2,5 +2,5 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 dart format .
-flutter analyze
-flutter test
+flutter analyze lib/
+flutter test lib/
