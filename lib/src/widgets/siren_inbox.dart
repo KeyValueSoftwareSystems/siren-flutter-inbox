@@ -620,6 +620,7 @@ class _SirenInboxState extends State<SirenInbox> {
         deletingNotificationId: deletingNotificationId,
         disableAutoMarkAsRead: true,
         totalElements: totalElements,
+        customLoader: widget.customLoader,
       );
     }
   }

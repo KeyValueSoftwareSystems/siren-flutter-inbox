@@ -21,6 +21,7 @@ class NotificationListView extends StatefulWidget {
     this.deletingNotificationId,
     this.disableAutoMarkAsRead,
     this.totalElements,
+    this.customLoader,
     super.key,
   });
 
@@ -41,6 +42,7 @@ class NotificationListView extends StatefulWidget {
   final String? deletingNotificationId;
   final bool? disableAutoMarkAsRead;
   final int? totalElements;
+  final Widget? customLoader;
 
   @override
   State<NotificationListView> createState() => _NotificationListViewState();
@@ -115,9 +117,10 @@ class _NotificationListViewState extends State<NotificationListView> {
                 ? Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Center(
-                      child: CircularProgressIndicator(
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
+                      child: widget.customLoader ??
+                          CircularProgressIndicator(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
                     ),
                   )
                 : const SizedBox();
