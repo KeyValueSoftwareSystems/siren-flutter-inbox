@@ -36,7 +36,7 @@ class ApiClient {
         onReceiveProgress: onReceiveProgress,
       );
       return DioResponse(data: response.data, statusCode: response.statusCode);
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       if (isServerError(e.response)) {
         return DioResponse(data: null, statusCode: 0);
       }
@@ -69,7 +69,7 @@ class ApiClient {
         onReceiveProgress: onReceiveProgress,
       );
       return DioResponse(data: response.data, statusCode: response.statusCode);
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       if (isServerError(e.response)) {
         return DioResponse(data: null, statusCode: 0);
       }
@@ -102,7 +102,7 @@ class ApiClient {
         onReceiveProgress: onReceiveProgress,
       );
       return DioResponse(data: response.data, statusCode: response.statusCode);
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       if (isServerError(e.response)) {
         return DioResponse(data: null, statusCode: 0);
       }
@@ -130,7 +130,7 @@ class ApiClient {
         cancelToken: cancelToken,
       );
       return DioResponse(data: response.data, statusCode: response.statusCode);
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       if (isServerError(e.response)) {
         return DioResponse(data: null, statusCode: 0);
       }

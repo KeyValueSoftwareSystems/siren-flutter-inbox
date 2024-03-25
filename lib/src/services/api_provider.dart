@@ -35,7 +35,7 @@ Dio apiProvider() {
       /**
        * onError interceptor - called on error
        */
-      onError: (DioError dioError, ErrorInterceptorHandler handler) async {
+      onError: (DioException dioError, ErrorInterceptorHandler handler) async {
         if (dioError.error is SocketException) {
           // HANDLE ERROR
         }
