@@ -10,7 +10,7 @@ class Generics {
   static const String PLACEHOLDER_IMAGE_URL = 'https://picsum.photos/200/300';
   static const int PAGE_SIZE = 20;
   static const int MAX_RETRIES = 2;
-  static const String ENV_PATH = 'packages/siren_flutter_inbox/.env';
+  static const String ENV_PATH = 'packages/siren_flutter_inbox/env';
 
   static final defaultError = ApiErrorDetails(
     errorType: ErrorTypes.GENERIC_API_ERROR,

@@ -3,4 +3,4 @@
 
 dart format .
 flutter analyze
-# flutter test
+flutter test

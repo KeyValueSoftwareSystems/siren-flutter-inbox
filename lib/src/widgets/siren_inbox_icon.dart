@@ -13,7 +13,6 @@ class SirenInboxIcon extends StatefulWidget {
   /// Constructs SirenInboxIcon widget.
   const SirenInboxIcon({
     super.key,
-    this.customStyles,
     this.darkMode = false,
     this.disabled = false,
     this.hideBadge = false,
@@ -21,6 +20,7 @@ class SirenInboxIcon extends StatefulWidget {
     this.onError,
     this.onTap,
     this.theme,
+    this.customStyles,
   });
 
   /// Whether to use dark mode or not.
@@ -98,6 +98,9 @@ class _SirenInboxIconState extends State<SirenInboxIcon> {
             // ignore: no_default_cases
             default:
           }
+        } else if (streamResponse.response?.isError ?? false) {
+          widget.onError
+              ?.call(streamResponse.response?.error ?? ApiErrorDetails());
         }
       },
     );

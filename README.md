@@ -1,43 +1,19 @@
 # Siren Flutter Inbox
 
-![Siren Logo](https://app.dev.sirenapp.io/assets/Siren-b2f89b52.svg)
-
-## Table of Contents
-<!-- MarkdownTOC -->
-- [Overview](#overview)
-- [Quick Start Guide](#quick-start-guide)
-    - [Install SDK](#1-install-sdk)
-    - [Siren Provider](#2-siren-provider)
-    - [Siren Notification Icon](#3-siren-notification-icon)
-    - [Siren Inbox](#4-siren-inbox)
-    - [Siren Class](#5-siren-class)
-    - [Error Codes](#6-error-codes)
-    - [Complete Code Example](#complete-code-example)
-- [I want to know more!](#i-want-to-know-more)
-
-<!-- /MarkdownTOC -->
-
-
-<a name="introduction"></a>
 ## Overview
 
-The siren_flutter_inbox is a comprehensive and customizable Flutter UI kit for displaying and managing notifications. This documentation provides comprehensive information on how to install, configure, and use the sdk effectively.
+The `siren_flutter_inbox` is a comprehensive and customizable Flutter UI kit for displaying and managing notifications. This documentation provides comprehensive information on how to install, configure, and use the sdk effectively.
 
-## Quick Start Guide
-
-### 1. Install Package
-To install the `siren_flutter_inbox` package, add it to your `pubspec.yaml` file.
+## 1. Installation
+To install the `siren_flutter_inbox` package,
 
 1. Open your `pubspec.yaml` file.
-2. Add `siren_flutter_inbox` to your dependencies:
-   ```
-   dependencies:
-     siren_flutter_inbox: ^1.0.0
-   ```
+2. Add `siren_flutter_inbox` to your dependencies.
 3. Run `flutter pub get` in your terminal to install the package.
 
-### 2. Siren Provider
-The `SirenProvider` initializes the Siren SDK with the specified configuration, including arguments like the user token and recipient id. Wrap the `SirenProvider` around the root of your application.
+## 2. Configuration
+### 2.1 Initialization
+Initialize the sdk with user token and recipient id.Wrap the provider around your App's root.
 
 ```dart
 import 'package:siren_flutter_inbox/siren_flutter_inbox.dart';
@@ -54,71 +30,41 @@ void main() {
   );
 }
 ```
-The user token and recipient id in SirenProvider widget is used to authenticate and initialize the sdk.
 
-### 3. Siren Notification Icon
-The `SirenInboxIcon` widget includes a customizable notification icon and a badge for indicating the number of unread notifications.
+### 2.2 Configure notification icon
+Once the provider is configured, next step is to configure the notification icon
+
+This widget consists of a notification icon along with a badge to display the number of unviewed notifications.
 
 ```dart
-SirenInboxIcon(
-  notificationIcon: Icon(
-    Icons.notifications_active_rounded,
-    color: Colors.white,
-    size: 30,
-  ),
-  onTap: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => Window()),
-    );
-  },
-  onError: (ApiErrorDetails error) {
-    print(error.message);
-  },
-  darkMode: false,
-  disabled: false,
-  hideBadge: false,
-  theme: CustomThemeColors(
-    badgeBackgroundColor: Colors.deepPurpleAccent,
-    iconColor: Colors.white,
-    badgeColor: Colors.white,
-  ),
-  customStyles: SirenStyleProps(
-    iconStyle: IconStyle(size: 35),
-    badgeStyle: BadgeStyle(
-      fontSize: 10,
-      size: 18,
-      inset: 1,
-      top: 2,
-      right: 0,
-    ),
-  ),
-),
+SirenInboxIcon()
 ```
-#### Siren Notification Icon Arguments
-Given below are the arguments of notification icon widget.
+#### Arguments for notification icon
+Below are optional arguments available for the icon widget:
 
 Arguments | Description | Type | Default value |
 --- | --- | --- | --- |
-customStyles | Style properties for custom styling |  SirenStyleProps | null |
-darkMode | Flag to enable dark mode |  boolean | false |
-disabled | Flag to disable click handler of icon |  boolean | false |
-hideBadge | Flag to hide badge|  boolean | false |
-notificationIcon | Option to use custom notification Icon |  Widget | null |
-onError | Callback for handling errors | Function(ApiErrorDetails)? | null |
-onTap | Function for handling press of icon | VoidCallback? | null |
+darkMode | Toggle to enable dark mode when custom theme is not passed |  boolean | false |
+disabled | Toggle to disable click on icon |  boolean | false |
+hideBadge | Toggle to  hide unviewed count badge|  boolean | false |
+notificationIcon | Option to use custom notification icon |  Widget | null |
+onError | Callback for handling errors | Function(ApiErrorDetails) | null |
+onTap | Custom click handler for notification icon | VoidCallback | null |
 theme | Theme properties for custom color theme |  CustomThemeColors | null |
+customStyles | Style properties for custom styling |  SirenStyleProps | null |
 
-#### Theming options
-Customize the unread badge of the notification icon, and choose between dark and light theming options. 
+#### Theme customization
+Here are the available theme options:
+
 ```dart
 theme: CustomThemeColors(
     badgeBackgroundColor: Colors.deepPurpleAccent,
     iconColor: Colors.white,
     badgeColor: Colors.white)
 ```
-#### Styling options
-Customize the notification icon style properties which includes size of icon and badge,
+#### Style customization
+Here are the custom style options for the notification icon:
+
 ```dart
 customStyles: SirenStyleProps(
     iconStyle: IconStyle(size: 35),
@@ -128,11 +74,11 @@ customStyles: SirenStyleProps(
         inset: 1,
         top: 2,
         right: 0,
-        ))
+    ))
 ```
 
-### 4. Siren Inbox
-The `SirenInbox` widget is a paginated list view for displaying notifications.
+### 2.3. Configure notification inbox
+Inbox is a paginated list view for displaying notifications.
 
 ```dart
 SirenInbox(
@@ -140,36 +86,38 @@ SirenInbox(
   title: 'Notifications',
   hideHeader: false,
   darkMode: true,
-  onError: (error) => print(error),
+  onError: (error) () {
+    // Handle error
+  },
 );
 ```
-#### Siren Inbox Arguments
+#### Arguments for the notification inbox
 Given below are the arguments of Siren Inbox Widget.
 
 Arguments | Description | Type | Default value |
 --- | --- | --- | --- |
-customStyles | Style properties for custom styling |  SirenStyleProps | null |
-hideAvatar | Flag to hide avatar |  boolean | false |
-deleteWidget | Custom widget for custom delete icon in notification card |  Widget | null |
-hideHeader | Flag to hide the default Inbox app bar|  boolean | false |
-listEmptyWidget | Custom widget to display when the notification list is empty  |  Widget | null |
-title | Title displayed for Inbox app bar |  String | null |
-defaultHeaderTextStyle | TextStyle for the title in default app bar|  TextStyle | null |
-showDefaultHeaderBackButton | Flag to determine whether to display back button in default Inbox app bar |  boolean | false |
-defaultBackButton | Custom icon to be used as back button in Inbox app bar |  Icon | null |
-customNotificationCard | Custom widget to display the notification card |  Widget | null |
-onNotificationCardClick | Function to handle notification card click |  Function(NotificationDataType) | null |
+hideHeader | Toggle to hide the header section|  boolean | false |
+hideClearAll | Toggle to hide clear all button|  boolean | false |
+showDefaultBackButton | Toggle to display back button in default Inbox app bar |  boolean | false |
+darkMode | Toggle to enable dark mode when custom theme is not passed |  boolean | false |
+itemsPerFetch | Number of notifications fetch per api request (have a max cap of 50) |  int | 20 |
+title | Title of the Inbox app bar |  String | null |
+defaultBackButton | Custom icon for back button |  Icon | null |
+listEmptyWidget | Custom widget for empty notification list  |  Widget | null |
+customNotificationCard | Custom widget to display the notification cards |  Widget | null |
+customLoader | Custom widget to display the initial loading state |  Widget | null |
+customErrorWidget | Custom error widget|  Widget | null |
+customHeader | Custom header widget |  Widget | null |
+cardProps | Properties of notification card |  CardParams | false |
+onNotificationCardClick | Custom click handler for notification cards |  Function(NotificationDataType) | null |
 onError | Callback for handling errors |  Function(ApiErrorDetails) | null |
-hideClearAll | Flag to hide clear all CTA in Inbox app bar |  boolean | false |
-theme | Theme properties for custom color theme |  boolean | false |
-customLoader | Custom widget to display the initial loading state in the Inbox |  Widget | null |
-customErrorWidget | Custom widget to display error state |  Widget | null |
-customHeader | Custom widget to display the app bar in Inbox |  Widget | null |
-handleBackNavigation | Function to handle the back button click |  Function() | null |
-itemsPerFetch | Items fetched in a request |  int | 20 |
+handleBackNavigation | Function to handle the back button click |  Function | null |
+theme | Theme properties for custom color theme |  CustomThemeColors | null |
+customStyles | Style properties for custom styling |  SirenStyleProps | null |
 
-#### Theming options
-Customizable theme option for notification inbox, with dark and light theme options. 
+#### Theme customization
+
+Here are the available theme options:
 
 ```dart
 theme: CustomThemeColors(
@@ -181,10 +129,16 @@ theme: CustomThemeColors(
     clearAllIcon: const Color.fromRGBO(103, 58, 183, 1),
     textColor: const Color.fromRGBO(0, 0, 0, 1),
     dateColor: const Color.fromRGBO(0, 0, 0, 1),
+    timerIcon: const Color.fromRGBO(133, 146, 230, 1),
+    badgeBackgroundColor: const Color.fromRGBO(103, 58, 183, 1),
+    badgeColor: const Color.fromRGBO(103, 58, 183, 1),
+    iconColor: const Color.fromRGBO(0, 0, 0, 1),
+    inboxTitleColor: const Color.fromRGBO(0, 0, 0, 1),
     ),
 ```
-#### Styling options
-Customizable Styling option for notification inbox.
+#### Style options
+
+Here are some of the custom style options for the notification inbox:
 
 ```dart
 customStyles: SirenStyleProps(
@@ -217,36 +171,37 @@ customStyles: SirenStyleProps(
 )
 ```
 
-### 5. Siren Class
+## 3. Siren Class
+
 The `Siren Class` class provides utility functions for modifying notifications.
 
 ```dart
 Siren.markAsRead(id: 'notification-id');
 ```
 
-Function | Arguments | Description |
---- | --- | --- |
-markAllNotificationsAsReadByDate | startDate: string | Set all notification read status to true until given date |
-markAsRead | id: string | Set read status of a specific notification to true |
-deleteNotification |  id: string  | Delete a specific notification by id |
-deleteNotificationsByDate | startDate: string | Delete all notifications until given date |
-markNotificationsAsViewed | startDate: string | Set all notification viewed status to true until given date |
+Function | Arguments |Type | Description |
+--- | --- | --- |----|
+markAllNotificationsAsReadByDate | startDate| ISO date string | Sets the read status of notifications to true until the given date |
+markAsRead | id| string | Set read status of a notification to true  |
+deleteNotification |  id| string  | Delete a notification by id |
+deleteNotificationsByDate | startDate| ISO date string | Delete all notifications until given date |
+markNotificationsAsViewed | startDate| ISO date string | Sets the viewed status of notifications to true until the given date |
 
-### 6. Error Codes
-The package may throw various error codes, which includes:
+## 4. Error Codes
+Given below are all possible error codes thrown by the package:
 
 Error code | Description |
 --- | --- |
-GENERIC_API_ERROR | This error occurs when an unspecified error occurs |
-AUTHENTICATION_FAILED | This error occurs when authentication fails, either the token or the recipient id provided might be incorrect |
-FETCH_COUNT_FAILED | This error occurs when there is an issue fetching the count of notifications |
-NOTIFICATION_FETCH_FAILED | This error occurs when there is an issue fetching notifications |
-NOTIFICATION_READ_FAILED | This error occurs when there is an issue marking notifications as read |
-NOTIFICATION_DELETE_FAILED | This error occurs when there is an issue deleting notifications |
-UPDATE_VIEWED_FAILED | This error occurs when there is an issue updating the viewed status of notifications |
+GENERIC_API_ERROR | Occurrence of an unexpected api error |
+AUTHENTICATION_FAILED | Verification of the given tokens has failed |
+FETCH_COUNT_FAILED | An error occurred while fetching unviewed count |
+NOTIFICATION_FETCH_FAILED | An error occurred while fetching notifications |
+NOTIFICATION_READ_FAILED | An error occurred while marking notifications as read |
+NOTIFICATION_DELETE_FAILED | An error occurred while deleting notifications |
+UPDATE_VIEWED_FAILED | An error occurred while updating the viewed status of notifications |
 
-## Complete Code Example
-Here's a complete code example demonstrating the usage of the package.
+## Example
+Here's a basic example to help you get started
 
 ```dart
 import 'package:flutter/material.dart';
@@ -310,6 +265,3 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 ```
-
-## Learn More
-For more information and advanced guides, you can refer to the [Flutter documentation](https://flutter.dev/docs).

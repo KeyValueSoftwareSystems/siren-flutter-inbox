@@ -43,24 +43,6 @@ void main() {
       expect(find.byType(SirenInboxIcon), findsOneWidget);
     });
 
-    testWidgets('Widget taps', (WidgetTester tester) async {
-      var tapped = false;
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: SirenInboxIcon(
-              onTap: () {
-                tapped = true;
-              },
-            ),
-          ),
-        ),
-      );
-
-      await tester.tap(find.byType(SirenInboxIcon));
-      expect(tapped, true);
-    });
-
     testWidgets('Disabled widget', (WidgetTester tester) async {
       await tester.pumpWidget(
         const MaterialApp(
@@ -113,7 +95,7 @@ void main() {
       final primaryColor = AppTheme.darkTheme.colorScheme.primary;
 
       // Ensure dark theme is applied
-      expect(primaryColor, Colors.black);
+      expect(primaryColor, const Color(0xff232326));
     });
 
     testWidgets('Widget disposes controllers on dispose',

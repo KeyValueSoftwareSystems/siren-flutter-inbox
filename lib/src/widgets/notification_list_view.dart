@@ -19,7 +19,6 @@ class NotificationListView extends StatefulWidget {
     this.customNotificationCard,
     this.onNotificationCardClick,
     this.deletingNotificationId,
-    this.customLoader,
     this.disableAutoMarkAsRead,
     this.totalElements,
     super.key,
@@ -40,7 +39,6 @@ class NotificationListView extends StatefulWidget {
   final Widget Function(NotificationDataType)? customNotificationCard;
   final void Function(NotificationDataType)? onNotificationCardClick;
   final String? deletingNotificationId;
-  final Widget? customLoader;
   final bool? disableAutoMarkAsRead;
   final int? totalElements;
 
@@ -89,7 +87,7 @@ class _NotificationListViewState extends State<NotificationListView> {
                 CardWidget(
                   onTap: (notification) {
                     if (!(widget.disableAutoMarkAsRead ?? false)) {
-                      widget.markAsRead(widget.notifications[index].id ?? '');
+                      widget.markAsRead(widget.notifications[index].id);
                     }
                     widget.onNotificationCardClick
                         ?.call(widget.notifications[index]);

@@ -99,6 +99,13 @@ class SirenDataProvider {
             '',
           ),
         );
+        SirenDataProvider.instance.iconController.sink.add(
+          StreamResponse(
+            _tokenVerificationResponse,
+            UpdateEvents.SHOW_ERROR,
+            '',
+          ),
+        );
       }
     }
   }

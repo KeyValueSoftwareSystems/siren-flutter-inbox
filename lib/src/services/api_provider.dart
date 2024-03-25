@@ -1,14 +1,13 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
 
 /// Provides an instance of Dio with configured interceptors.
 Dio apiProvider() {
   final dio = Dio();
   // Configuring timeouts
-  dio.options.connectTimeout = const Duration(seconds: 10);
-  dio.options.receiveTimeout = const Duration(seconds: 3);
+  // dio.options.connectTimeout = 10000;
+  // dio.options.receiveTimeout = 3000;
 
   // Adding interceptors
   dio.interceptors.add(
@@ -44,15 +43,5 @@ Dio apiProvider() {
       },
     ),
   );
-
-  // Adding logging interceptor in debug mode
-  if (kDebugMode) {
-    dio.interceptors.add(
-      LogInterceptor(
-        responseBody: true,
-        requestBody: true,
-      ),
-    );
-  }
   return dio;
 }

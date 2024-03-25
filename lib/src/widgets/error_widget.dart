@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:siren_flutter_inbox/src/constants/strings.dart';
 
-class CustomErrorWidget extends StatelessWidget {
-  const CustomErrorWidget({
+class DefaultErrorWidget extends StatelessWidget {
+  const DefaultErrorWidget({
     super.key,
   });
 

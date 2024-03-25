@@ -8,9 +8,9 @@ void main() {
       expect(Generics.BASE_URL, '/in-app/recipients/');
       expect(Generics.DATA_FETCH_INTERVAL, 5);
       expect(Generics.PLACEHOLDER_IMAGE_URL, 'https://picsum.photos/200/300');
-      expect(Generics.PAGE_SIZE, 10);
-      expect(Generics.MAX_RETRIES, 3);
-      expect(Generics.ENV_PATH, 'packages/siren_flutter_inbox/.env');
+      expect(Generics.PAGE_SIZE, 20);
+      expect(Generics.MAX_RETRIES, 2);
+      expect(Generics.ENV_PATH, 'packages/siren_flutter_inbox/env');
       expect(Generics.defaultError.errorType, ErrorTypes.GENERIC_API_ERROR);
       expect(Generics.defaultError.errorCode, 'INTERNAL SERVER ERROR');
       expect(

@@ -21,36 +21,28 @@ import 'package:siren_flutter_inbox/src/widgets/notification_list_view.dart';
 class SirenInbox extends StatefulWidget {
   const SirenInbox({
     super.key,
-    this.customStyles,
-    this.hideAvatar,
-    this.deleteWidget,
     this.hideHeader,
-    this.listEmptyWidget,
-    this.title,
-    this.defaultHeaderTextStyle,
-    this.showDefaultHeaderBackButton,
-    this.defaultBackButton,
-    this.customNotificationCard,
-    this.onNotificationCardClick,
-    this.onError,
     this.hideClearAll,
+    this.showDefaultBackButton,
     this.darkMode,
-    this.theme,
+    this.itemsPerFetch,
+    this.title,
+    this.defaultBackButton,
+    this.listEmptyWidget,
+    this.customNotificationCard,
     this.customLoader,
     this.customErrorWidget,
     this.customHeader,
+    this.cardProps,
+    this.onNotificationCardClick,
+    this.onError,
     this.handleBackNavigation,
-    this.itemsPerFetch,
+    this.theme,
+    this.customStyles,
   });
 
   /// Custom styles for the card of each notification.
   final SirenStyleProps? customStyles;
-
-  /// Flag to hide avatars in notifications.
-  final bool? hideAvatar;
-
-  /// Widget or Icon for deleting notifications.
-  final Widget? deleteWidget;
 
   /// Flag to hide the header.
   final bool? hideHeader;
@@ -61,11 +53,8 @@ class SirenInbox extends StatefulWidget {
   /// Title of the inbox page or window.
   final String? title;
 
-  /// Text style for the header provided by the sdk.
-  final TextStyle? defaultHeaderTextStyle;
-
   /// Flag to show the header back button provided by the sdk.
-  final bool? showDefaultHeaderBackButton;
+  final bool? showDefaultBackButton;
 
   /// Default back button widget for the header provided by the sdk.
   final Icon? defaultBackButton;
@@ -102,6 +91,9 @@ class SirenInbox extends StatefulWidget {
 
   /// Notifications to be fetched in each request
   final int? itemsPerFetch;
+
+  ///Custom params for Card properties
+  final CardParams? cardProps;
 
   @override
   State<SirenInbox> createState() => _SirenInboxState();
@@ -175,14 +167,19 @@ class _SirenInboxState extends State<SirenInbox> {
           switch (streamResponse.api) {
             case UpdateEvents.READ_BY_ID:
               _markNotificationAsReadById(streamResponse.id);
+              break;
             case UpdateEvents.READ_ALL:
               _markAllNotificationsAsRead();
+              break;
             case UpdateEvents.DELETE_BY_ID:
               _deleteById(streamResponse.id);
+              break;
             case UpdateEvents.DELETE_ALL:
               _deleteAllNotifications();
+              break;
             case UpdateEvents.TOKEN_VERIFIED:
               _initialize();
+              break;
 
             // ignore: no_default_cases
             default:
@@ -274,7 +271,7 @@ class _SirenInboxState extends State<SirenInbox> {
           size: pageSize,
           start: notifications.isNotEmpty
               ? modifyAndConvertToISOString(
-                  notifications[0].createdAt ?? '',
+                  notifications[0].createdAt,
                 )
               : null,
         );
@@ -429,7 +426,7 @@ class _SirenInboxState extends State<SirenInbox> {
         final fetchedNotifications =
             await FetchAllNotifications.instance.fetchAllNotifications(
           end: convertToISOString(
-            notifications[notifications.length - 1].createdAt ?? '',
+            notifications[notifications.length - 1].createdAt,
           ),
           size: pageSize,
         );
@@ -496,15 +493,18 @@ class _SirenInboxState extends State<SirenInbox> {
                         SizedBox(
                           height: MediaQuery.of(context).size.height * 0.75,
                           width: MediaQuery.of(context).size.width,
-                          child: const Center(
-                            child: CustomErrorWidget(),
+                          child: Center(
+                            child: widget.customErrorWidget ??
+                                const DefaultErrorWidget(),
                           ),
                         ),
                       ],
                     ),
                   )
                 : (isLoading && !loadingNextPage)
-                    ? const LoaderWidget()
+                    ? LoaderWidget(
+                        customLoader: widget.customLoader,
+                      )
                     : _buildBody(currentTheme),
           );
         },
@@ -528,7 +528,7 @@ class _SirenInboxState extends State<SirenInbox> {
         children: [
           Row(
             children: [
-              if (widget.showDefaultHeaderBackButton ?? false)
+              if (widget.showDefaultBackButton ?? false)
                 IconButton(
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -541,12 +541,11 @@ class _SirenInboxState extends State<SirenInbox> {
                 ),
               Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal:
-                      widget.showDefaultHeaderBackButton ?? false ? 2 : 24,
+                  horizontal: widget.showDefaultBackButton ?? false ? 2 : 24,
                 ),
                 child: Text(
                   widget.title ?? 'Notifications',
-                  style: widget.defaultHeaderTextStyle ??
+                  style: widget.customStyles?.defaultHeaderTextStyle ??
                       TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
@@ -597,7 +596,9 @@ class _SirenInboxState extends State<SirenInbox> {
 
   Widget _buildBody(ThemeData theme) {
     if (notifications.isEmpty && isLoading) {
-      return widget.customLoader ?? const LoaderWidget();
+      return LoaderWidget(
+        customLoader: widget.customLoader,
+      );
     } else if (notifications.isEmpty && !isLoading) {
       return widget.listEmptyWidget ?? const EmptyWidget();
     } else {
@@ -609,15 +610,14 @@ class _SirenInboxState extends State<SirenInbox> {
         onEndReached: onEndReached,
         loadingNextPage: loadingNextPage,
         customStyles: widget.customStyles,
-        deleteWidget: widget.deleteWidget,
-        hideAvatar: widget.hideAvatar,
+        deleteWidget: widget.cardProps?.deleteWidget,
+        hideAvatar: widget.cardProps?.hideAvatar,
         scrollController: _scrollController,
         onDelete: deleteNotification,
         markAsRead: _markNotificationAsRead,
         customNotificationCard: widget.customNotificationCard,
         onNotificationCardClick: widget.onNotificationCardClick,
         deletingNotificationId: deletingNotificationId,
-        customLoader: widget.customLoader,
         disableAutoMarkAsRead: true,
         totalElements: totalElements,
       );
@@ -628,18 +628,22 @@ class _SirenInboxState extends State<SirenInbox> {
 class LoaderWidget extends StatelessWidget {
   const LoaderWidget({
     super.key,
+    this.customLoader,
   });
+
+  final Widget? customLoader;
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: Generics.PAGE_SIZE,
-      itemBuilder: (context, index) {
-        return const Padding(
-          padding: EdgeInsets.symmetric(vertical: 8),
-          child: CardLoaderWidget(),
+    return customLoader ??
+        ListView.builder(
+          itemCount: Generics.PAGE_SIZE,
+          itemBuilder: (context, index) {
+            return const Padding(
+              padding: EdgeInsets.symmetric(vertical: 8),
+              child: CardLoaderWidget(),
+            );
+          },
         );
-      },
-    );
   }
 }
