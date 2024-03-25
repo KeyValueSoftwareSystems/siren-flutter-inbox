@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:siren_flutter_inbox/src/models/unviewed_notification_count_model.dart';
+import 'package:sirenapp_flutter_inbox/src/models/unviewed_notification_count_model.dart';
 
 void main() {
   group('UnViewedNotificationsCountModel', () {

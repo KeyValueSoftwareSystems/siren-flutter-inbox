@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import 'package:siren_flutter_inbox/siren_flutter_inbox.dart';
-import 'package:siren_flutter_inbox/src/api/fetch_unviewed_notification_count.dart';
-import 'package:siren_flutter_inbox/src/constants/generics.dart';
-import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
-import 'package:siren_flutter_inbox/src/theme/app_theme.dart';
+import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
+import 'package:sirenapp_flutter_inbox/src/api/fetch_unviewed_notification_count.dart';
+import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
+import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
+import 'package:sirenapp_flutter_inbox/src/theme/app_theme.dart';
 
 /// Widget representing the inbox icon.
 class SirenInboxIcon extends StatefulWidget {

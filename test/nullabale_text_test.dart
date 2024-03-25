@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:siren_flutter_inbox/src/widgets/common/nullable_text.dart';
+import 'package:sirenapp_flutter_inbox/src/widgets/common/nullable_text.dart';
 
 void main() {
   testWidgets('NullableText displays text when not null or empty',

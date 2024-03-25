@@ -2,13 +2,13 @@
 
 ## Overview
 
-The `siren_flutter_inbox` is a comprehensive and customizable Flutter UI kit for displaying and managing notifications. This documentation provides comprehensive information on how to install, configure, and use the sdk effectively.
+The `sirenapp_flutter_inbox` is a comprehensive and customizable Flutter UI kit for displaying and managing notifications. This documentation provides comprehensive information on how to install, configure, and use the sdk effectively.
 
 ## 1. Installation
-To install the `siren_flutter_inbox` package,
+To install the `sirenapp_flutter_inbox` package,
 
 1. Open your `pubspec.yaml` file.
-2. Add `siren_flutter_inbox` to your dependencies.
+2. Add `sirenapp_flutter_inbox` to your dependencies.
 3. Run `flutter pub get` in your terminal to install the package.
 
 ## 2. Configuration
@@ -16,7 +16,7 @@ To install the `siren_flutter_inbox` package,
 Initialize the sdk with user token and recipient id.Wrap the provider around your App's root.
 
 ```dart
-import 'package:siren_flutter_inbox/siren_flutter_inbox.dart';
+import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
 
 void main() {
   runApp(
@@ -205,7 +205,7 @@ Here's a basic example to help you get started
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:siren_flutter_inbox/siren_flutter_inbox.dart';
+import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
 
 void main() {
   runApp(const MyApp());

@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:siren_flutter_inbox/siren_flutter_inbox.dart';
-import 'package:siren_flutter_inbox/src/api/verify_token.dart';
-import 'package:siren_flutter_inbox/src/constants/generics.dart';
-import 'package:siren_flutter_inbox/src/utils/common_utils.dart';
+import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
+import 'package:sirenapp_flutter_inbox/src/api/verify_token.dart';
+import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
+import 'package:sirenapp_flutter_inbox/src/utils/common_utils.dart';
 
 /// Singleton class responsible for providing data to the Siren Inbox and Icon.
 class SirenDataProvider {

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:siren_flutter_inbox/src/constants/strings.dart';
+import 'package:sirenapp_flutter_inbox/src/constants/strings.dart';
 
 void main() {
   group('Strings', () {

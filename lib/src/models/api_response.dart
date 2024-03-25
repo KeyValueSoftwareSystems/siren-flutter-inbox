@@ -1,4 +1,4 @@
-import 'package:siren_flutter_inbox/src/constants/generics.dart';
+import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
 
 /// Class representing an API response.
 class ApiResponse {

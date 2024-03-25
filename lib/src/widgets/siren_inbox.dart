@@ -2,20 +2,20 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:siren_flutter_inbox/siren_flutter_inbox.dart';
-import 'package:siren_flutter_inbox/src/api/delete_notification_by_id.dart';
-import 'package:siren_flutter_inbox/src/api/fetch_all_notification.dart';
-import 'package:siren_flutter_inbox/src/api/mark_all_notifications_as_viewed.dart';
-import 'package:siren_flutter_inbox/src/api/notifications_bulk_update.dart';
-import 'package:siren_flutter_inbox/src/api/read_notification_by_id.dart';
-import 'package:siren_flutter_inbox/src/constants/generics.dart';
-import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
-import 'package:siren_flutter_inbox/src/theme/app_theme.dart';
-import 'package:siren_flutter_inbox/src/utils/common_utils.dart';
-import 'package:siren_flutter_inbox/src/widgets/empty_widget.dart';
-import 'package:siren_flutter_inbox/src/widgets/error_widget.dart';
-import 'package:siren_flutter_inbox/src/widgets/loader_widget.dart';
-import 'package:siren_flutter_inbox/src/widgets/notification_list_view.dart';
+import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
+import 'package:sirenapp_flutter_inbox/src/api/delete_notification_by_id.dart';
+import 'package:sirenapp_flutter_inbox/src/api/fetch_all_notification.dart';
+import 'package:sirenapp_flutter_inbox/src/api/mark_all_notifications_as_viewed.dart';
+import 'package:sirenapp_flutter_inbox/src/api/notifications_bulk_update.dart';
+import 'package:sirenapp_flutter_inbox/src/api/read_notification_by_id.dart';
+import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
+import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
+import 'package:sirenapp_flutter_inbox/src/theme/app_theme.dart';
+import 'package:sirenapp_flutter_inbox/src/utils/common_utils.dart';
+import 'package:sirenapp_flutter_inbox/src/widgets/empty_widget.dart';
+import 'package:sirenapp_flutter_inbox/src/widgets/error_widget.dart';
+import 'package:sirenapp_flutter_inbox/src/widgets/loader_widget.dart';
+import 'package:sirenapp_flutter_inbox/src/widgets/notification_list_view.dart';
 
 /// Widget for displaying an inbox of notifications.
 class SirenInbox extends StatefulWidget {

@@ -1,10 +1,10 @@
-import 'package:siren_flutter_inbox/src/api/delete_notification_by_id.dart';
-import 'package:siren_flutter_inbox/src/api/mark_all_notifications_as_viewed.dart';
-import 'package:siren_flutter_inbox/src/api/notifications_bulk_update.dart';
-import 'package:siren_flutter_inbox/src/api/read_notification_by_id.dart';
-import 'package:siren_flutter_inbox/src/constants/generics.dart';
-import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
-import 'package:siren_flutter_inbox/src/models/api_response.dart';
+import 'package:sirenapp_flutter_inbox/src/api/delete_notification_by_id.dart';
+import 'package:sirenapp_flutter_inbox/src/api/mark_all_notifications_as_viewed.dart';
+import 'package:sirenapp_flutter_inbox/src/api/notifications_bulk_update.dart';
+import 'package:sirenapp_flutter_inbox/src/api/read_notification_by_id.dart';
+import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
+import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
+import 'package:sirenapp_flutter_inbox/src/models/api_response.dart';
 
 class Siren {
   /// Marks a notification as read by its ID.
