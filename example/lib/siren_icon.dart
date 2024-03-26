@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:siren_flutter_inbox/siren_flutter_inbox.dart';
+import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
 
 class SirenIconWidget extends StatefulWidget {
   const SirenIconWidget({Key? key}) : super(key: key);

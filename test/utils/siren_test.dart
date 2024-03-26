@@ -2,11 +2,11 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:siren_flutter_inbox/siren_flutter_inbox.dart';
-import 'package:siren_flutter_inbox/src/api/notifications_bulk_update.dart';
-import 'package:siren_flutter_inbox/src/api/read_notification_by_id.dart';
-import 'package:siren_flutter_inbox/src/constants/generics.dart';
-import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
+import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
+import 'package:sirenapp_flutter_inbox/src/api/notifications_bulk_update.dart';
+import 'package:sirenapp_flutter_inbox/src/api/read_notification_by_id.dart';
+import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
+import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
 
 class MockReadNotificationById extends Mock implements ReadNotificationById {
   @override

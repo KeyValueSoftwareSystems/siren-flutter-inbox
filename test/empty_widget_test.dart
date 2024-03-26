@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:siren_flutter_inbox/src/constants/strings.dart';
-import 'package:siren_flutter_inbox/src/widgets/empty_widget.dart';
+import 'package:sirenapp_flutter_inbox/src/constants/strings.dart';
+import 'package:sirenapp_flutter_inbox/src/widgets/empty_widget.dart';
 
 void main() {
   group('EmptyWidget', () {

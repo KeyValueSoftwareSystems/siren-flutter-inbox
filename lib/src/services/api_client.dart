@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:siren_flutter_inbox/src/data/siren_data_provider.dart';
-import 'package:siren_flutter_inbox/src/models/api_response.dart';
+import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
+import 'package:sirenapp_flutter_inbox/src/models/api_response.dart';
 
 /// A class responsible for making HTTP requests using Dio.
 class ApiClient {

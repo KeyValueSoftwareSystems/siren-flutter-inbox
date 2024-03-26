@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:siren_flutter_inbox/src/models/notification_model.dart';
-import 'package:siren_flutter_inbox/src/models/ui_models.dart';
-import 'package:siren_flutter_inbox/src/utils/common_utils.dart';
-import 'package:siren_flutter_inbox/src/widgets/common/nullable_text.dart';
+import 'package:sirenapp_flutter_inbox/src/models/notification_model.dart';
+import 'package:sirenapp_flutter_inbox/src/models/ui_models.dart';
+import 'package:sirenapp_flutter_inbox/src/utils/common_utils.dart';
+import 'package:sirenapp_flutter_inbox/src/widgets/common/nullable_text.dart';
 
 class CardWidget extends StatefulWidget {
   /// Widget for displaying a notification card.

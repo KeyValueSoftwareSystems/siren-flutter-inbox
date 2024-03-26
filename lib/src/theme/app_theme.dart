@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:siren_flutter_inbox/siren_flutter_inbox.dart';
-import 'package:siren_flutter_inbox/src/theme/colors.dart';
+import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
+import 'package:sirenapp_flutter_inbox/src/theme/colors.dart';
 
 class AppTheme {
   static ThemeData _createThemeData(ColorScheme colorScheme) {

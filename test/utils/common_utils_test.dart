@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart'; // Import mockito
-import 'package:siren_flutter_inbox/src/utils/common_utils.dart';
+import 'package:sirenapp_flutter_inbox/src/utils/common_utils.dart';
 
 void main() {
   group('generateElapsedTimeText', () {

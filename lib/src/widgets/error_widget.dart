@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:siren_flutter_inbox/src/constants/strings.dart';
+import 'package:sirenapp_flutter_inbox/src/constants/strings.dart';
 
 class DefaultErrorWidget extends StatelessWidget {
   const DefaultErrorWidget({

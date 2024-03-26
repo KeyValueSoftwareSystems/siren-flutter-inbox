@@ -1,5 +1,5 @@
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:siren_flutter_inbox/src/constants/generics.dart';
+import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
 
 /// Generates elapsed time text based on the difference between the target time and the current time.
 String generateElapsedTimeText(DateTime targetTime) {
