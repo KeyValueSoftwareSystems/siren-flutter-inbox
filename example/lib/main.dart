@@ -14,8 +14,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return SirenProvider(
 // Get in touch with the Siren team to obtain the necessary token and ID for integration.
-      userToken: '',
-      recipientId: '',
+      userToken: 'YOUR_USER_TOKEN',
+      recipientId: 'YOUR_RECIPIENT_ID',
       child: MaterialApp(
         title: 'Siren',
         theme: ThemeData(
