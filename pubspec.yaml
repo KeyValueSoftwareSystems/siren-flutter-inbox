@@ -1,0 +1,38 @@
+name: sirenapp_flutter_inbox
+description: "Flutter SDK tailored for creating and managing in-app notification inboxes."
+version: 1.0.0
+homepage: 'https://github.com/KeyValueSoftwareSystems/siren-flutter-inbox#readme'
+repository: 'https://github.com/KeyValueSoftwareSystems/siren-flutter-inbox'
+license: MIT
+keywords:
+  - flutter
+  - siren
+  - in-app
+  - notifications
+
+environment:
+  sdk: '>=2.18.0 <4.0.0'
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  dio: '>=5.2.0'
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+  very_good_analysis: ^5.1.0
+  husky: ^0.1.7
+  mockito: ^5.1.0
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+flutter:
+
+  assets:
+    - env
+
+
+
