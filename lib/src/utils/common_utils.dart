@@ -10,6 +10,7 @@ String generateElapsedTimeText(DateTime targetTime) {
   final minutes = (seconds / 60).floor();
   final hours = (minutes / 60).floor();
   final days = (hours / 24).floor();
+  final months = (days / 30).floor();
   final years = (days / 365).floor();
 
   if (millisecondsDiff < 60000) {
@@ -18,8 +19,10 @@ String generateElapsedTimeText(DateTime targetTime) {
     return minutes == 1 ? '1 minute ago' : '$minutes minutes ago';
   } else if (hours < 24) {
     return hours == 1 ? '1 hour ago' : '$hours hours ago';
-  } else if (days < 365) {
+  } else if (days < 30) {
     return days == 1 ? '1 day ago' : '$days days ago';
+  } else if (months < 12) {
+    return months == 1 ? '1 month ago' : '$months months ago';
   } else {
     return years == 1 ? '1 year ago' : '$years years ago';
   }
