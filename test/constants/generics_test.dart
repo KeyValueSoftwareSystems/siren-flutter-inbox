@@ -7,7 +7,6 @@ void main() {
       expect(Generics.V2, 'v2');
       expect(Generics.BASE_URL, '/in-app/recipients/');
       expect(Generics.DATA_FETCH_INTERVAL, 5);
-      expect(Generics.PLACEHOLDER_IMAGE_URL, 'https://picsum.photos/200/300');
       expect(Generics.PAGE_SIZE, 20);
       expect(Generics.MAX_RETRIES, 2);
       expect(Generics.ENV_PATH, 'packages/sirenapp_flutter_inbox/env');
