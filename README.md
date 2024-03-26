@@ -13,7 +13,7 @@ To install the `sirenapp_flutter_inbox` package,
 
 ## 2. Configuration
 ### 2.1 Initialization
-Initialize the sdk with user token and recipient id.Wrap the provider around your App's root.
+Initialize the sdk with user token and recipient id. Wrap the provider around your App's root.
 
 ```dart
 import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
