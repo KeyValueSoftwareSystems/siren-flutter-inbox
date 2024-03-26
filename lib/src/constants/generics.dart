@@ -7,7 +7,6 @@ class Generics {
   static const String BASE_URL = '/in-app/recipients/';
 
   static const int DATA_FETCH_INTERVAL = 5;
-  static const String PLACEHOLDER_IMAGE_URL = 'https://picsum.photos/200/300';
   static const int PAGE_SIZE = 20;
   static const int MAX_RETRIES = 2;
   static const String ENV_PATH = 'packages/sirenapp_flutter_inbox/env';
