@@ -11,7 +11,7 @@ class MockFunction extends Mock {
 }
 
 void main() {
-  final notifications = <NotificationDataType>[
+  final notificationsList = <NotificationDataType>[
     NotificationDataType(
       id: '1',
       createdAt: '2024-03-15T04:07:14.577928Z',
@@ -44,7 +44,7 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: NotificationListView(
-              notifications: notifications,
+              notifications: notificationsList,
               isLoading: isLoading,
               endReached: endReached,
               loadingNextPage: loadingNextPage,
@@ -67,6 +67,45 @@ void main() {
       await tester.pumpAndSettle(const Duration(seconds: 1));
       verify(func()).called(1);
       expect(find.byElementType(CircularProgressIndicator), findsNothing);
+    });
+  });
+
+  testWidgets('NotificationListView with custom notification card',
+      (WidgetTester tester) async {
+    const isLoading = false;
+    const endReached = false;
+    const loadingNextPage = false;
+
+    await mockNetworkImagesFor(() async {
+      final func = MockFunction().call;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: NotificationListView(
+              notifications: notificationsList,
+              isLoading: isLoading,
+              endReached: endReached,
+              loadingNextPage: loadingNextPage,
+              onRefresh: () async {},
+              onEndReached: () {},
+              customStyles: null,
+              hideAvatar: false,
+              deleteWidget: null,
+              scrollController: ScrollController(),
+              customNotificationCard: (n) {
+                return Text(n.message.subHeader.toString());
+              },
+              onDelete: (id) async {},
+              markAsRead: (id) {},
+              onNotificationCardClick: (n) {
+                func();
+              },
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+      expect(find.text('Test SubHeader'), findsOne);
     });
   });
 }

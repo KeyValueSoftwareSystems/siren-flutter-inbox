@@ -5,13 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
 import 'package:sirenapp_flutter_inbox/src/api/fetch_unviewed_notification_count.dart';
-import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
 import 'package:sirenapp_flutter_inbox/src/theme/app_theme.dart';
-
-// Create a mock class for SirenDataProvider
-class MockSirenDataProvider extends Mock implements SirenDataProvider {}
-
-// Create a mock class for your function
 
 class MockFunction extends Mock {
   // Define the mock function signature

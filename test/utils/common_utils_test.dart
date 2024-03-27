@@ -35,6 +35,12 @@ void main() {
       );
       expect(
         generateElapsedTimeText(
+          DateTime.now().subtract(const Duration(days: 35)),
+        ),
+        '1 month ago',
+      );
+      expect(
+        generateElapsedTimeText(
           DateTime.now().subtract(const Duration(days: 370)),
         ),
         '1 year ago',
@@ -66,20 +72,11 @@ void main() {
   });
 
   group('loadEnv', () {
-    test('returns empty map if file contents are empty', () async {
-      // Mock the rootBundle for testing
-      final mockRootBundle = MockRootBundle();
-      // print('(mockRootBundle.loadString(Generics.ENV_PATH) ${(mockRootBundle.loadString(Generics.ENV_PATH)}');
-      // when(mockRootBundle.loadString(Generics.ENV_PATH)).thenAnswer((_) async => '');
-
-      // Set the mock rootBundle for testing
+    test('API_DOMAIN', () async {
       TestWidgetsFlutterBinding.ensureInitialized();
-      final rootBundle = mockRootBundle;
-
       final envVariables = await loadEnv();
-
-      // Assert that the result is an empty map
-      //expect(envVariables, {});
+      expect(envVariables.keys.first, 'API_DOMAIN');
+      await getApiDomain();
     });
 
     // Write other tests for loadEnv function...
