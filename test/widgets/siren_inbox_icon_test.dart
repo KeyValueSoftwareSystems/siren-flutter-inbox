@@ -11,6 +11,13 @@ import 'package:sirenapp_flutter_inbox/src/theme/app_theme.dart';
 // Create a mock class for SirenDataProvider
 class MockSirenDataProvider extends Mock implements SirenDataProvider {}
 
+// Create a mock class for your function
+
+class MockFunction extends Mock {
+  // Define the mock function signature
+  void call(); // You can define parameters and return types as needed
+}
+
 class MockFetchUnViewedNotificationsCount extends Mock
     implements FetchUnViewedNotificationsCount {}
 
@@ -113,6 +120,36 @@ void main() {
       // Verify controllers are closed
       expect(iconController.hasListener, false);
       expect(inboxController.hasListener, false);
+    });
+
+    testWidgets('Widget with no badge', (WidgetTester tester) async {
+      const widget = MaterialApp(
+        home: Scaffold(
+          body: SirenInboxIcon(
+            hideBadge: true,
+          ),
+        ),
+      );
+      await tester.pumpWidget(widget);
+
+      await tester.pumpWidget(Container());
+      await tester.pumpAndSettle();
+      expect(find.byType(Positioned), findsNothing);
+    });
+    testWidgets('Widget test on Tap', (WidgetTester tester) async {
+      final func = MockFunction().call;
+      final widget = MaterialApp(
+        home: Scaffold(
+          body: SirenInboxIcon(
+            hideBadge: true,
+            onTap: func,
+          ),
+        ),
+      );
+      await tester.pumpWidget(widget);
+      await tester.tap(find.byType(GestureDetector));
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+      verify(func()).called(1);
     });
   });
 }
