@@ -119,7 +119,7 @@ class _SirenInboxState extends State<SirenInbox> {
   @override
   void initState() {
     super.initState();
-    pageSize = min(widget.itemsPerFetch ?? Generics.PAGE_SIZE, 50);
+    pageSize = max(min(widget.itemsPerFetch ?? Generics.PAGE_SIZE, 50), 0);
     _periodicUpdateRef = Timer(const Duration(days: 1), () {});
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
