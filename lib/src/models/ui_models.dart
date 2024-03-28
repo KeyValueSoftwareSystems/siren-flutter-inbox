@@ -6,6 +6,8 @@ class CardProps {
   const CardProps({
     this.hideAvatar,
     this.showMedia,
+    this.disableAutoMarkAsRead,
+    this.deleteWidget,
   });
 
   /// Determines whether to hide the avatar in the notification card in Siren inbox.
@@ -13,6 +15,12 @@ class CardProps {
 
   /// Determines whether to show media content in the notification card in Siren inbox.
   final bool? showMedia;
+
+  /// The flag to turn on and off the mark as read functionality
+  final bool? disableAutoMarkAsRead;
+
+  /// Custom widget that can be used instead of default delete in the card (x)
+  final Widget? deleteWidget;
 }
 
 /// Customizable style for the Siren notification icon.
@@ -186,20 +194,32 @@ class CustomThemeColors {
   final Color? inboxTitleColor;
 }
 
-/// Custom Properties for notification card
-class CardParams {
-  CardParams({
-    this.hideAvatar,
-    this.deleteWidget,
-    this.disableAutoMarkAsRead,
+/// Properties for configuring the appearance of the notification window app bar.
+class WindowHeaderProps {
+  WindowHeaderProps({
+    this.hideHeader,
+    this.showDefaultBackButton,
+    this.defaultBackButton,
+    this.hideClearAll,
+    this.customHeader,
+    this.handleBackNavigation,
   });
 
-  /// The Flag to hide or show avatar
-  final bool? hideAvatar;
+  /// Flag to hide the header.
+  final bool? hideHeader;
 
-  /// Custom widget that can be used instead of default delete in the card (x)
-  final Widget? deleteWidget;
+  /// Flag to show the header back button provided by the sdk.
+  final bool? showDefaultBackButton;
 
-  /// The flag to turn on and off the mark as read functionality
-  final bool? disableAutoMarkAsRead;
+  /// Default back button widget for the header provided by the sdk.
+  final Icon? defaultBackButton;
+
+  /// Flag to hide the "Clear All" button.
+  final bool? hideClearAll;
+
+  /// Custom header or appBar widget.
+  final Widget? customHeader;
+
+  /// Callback function for handling back navigation.
+  final void Function()? handleBackNavigation;
 }

@@ -21,43 +21,29 @@ import 'package:sirenapp_flutter_inbox/src/widgets/notification_list_view.dart';
 class SirenInbox extends StatefulWidget {
   const SirenInbox({
     super.key,
-    this.hideHeader,
-    this.hideClearAll,
-    this.showDefaultBackButton,
     this.darkMode,
     this.itemsPerFetch,
     this.title,
-    this.defaultBackButton,
     this.listEmptyWidget,
     this.customNotificationCard,
     this.customLoader,
     this.customErrorWidget,
-    this.customHeader,
     this.cardProps,
     this.onNotificationCardClick,
     this.onError,
-    this.handleBackNavigation,
     this.theme,
     this.customStyles,
+    this.windowHeaderProps,
   });
 
   /// Custom styles for the card of each notification.
   final SirenStyleProps? customStyles;
-
-  /// Flag to hide the header.
-  final bool? hideHeader;
 
   /// Widget to display when the notification list is empty.
   final Widget? listEmptyWidget;
 
   /// Title of the inbox page or window.
   final String? title;
-
-  /// Flag to show the header back button provided by the sdk.
-  final bool? showDefaultBackButton;
-
-  /// Default back button widget for the header provided by the sdk.
-  final Icon? defaultBackButton;
 
   /// Custom builder for notification cards.
   final Widget Function(NotificationDataType)? customNotificationCard;
@@ -67,9 +53,6 @@ class SirenInbox extends StatefulWidget {
 
   /// Callback function for handling errors.
   final void Function(ApiErrorDetails)? onError;
-
-  /// Flag to hide the "Clear All" button.
-  final bool? hideClearAll;
 
   /// Flag for enabling dark mode.
   final bool? darkMode;
@@ -83,18 +66,14 @@ class SirenInbox extends StatefulWidget {
   /// Custom error widget.
   final Widget? customErrorWidget;
 
-  /// Custom header or appBar widget.
-  final Widget? customHeader;
-
-  /// Callback function for handling back navigation.
-  final void Function()? handleBackNavigation;
-
   /// Notifications to be fetched in each request
   final int? itemsPerFetch;
 
-  ///Custom params for Card properties
-  final CardParams? cardProps;
+  ///Custom props for Card properties
+  final CardProps? cardProps;
 
+  /// Custom props for header properties
+  final WindowHeaderProps? windowHeaderProps;
   @override
   State<SirenInbox> createState() => _SirenInboxState();
 }
@@ -211,7 +190,8 @@ class _SirenInboxState extends State<SirenInbox> {
   PreferredSize _buildAppBar(ThemeData theme) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(kToolbarHeight),
-      child: widget.customHeader ?? _buildCustomAppBar(theme, kToolbarHeight),
+      child: widget.windowHeaderProps?.customHeader ??
+          _buildCustomAppBar(theme, kToolbarHeight),
     );
   }
 
@@ -480,8 +460,9 @@ class _SirenInboxState extends State<SirenInbox> {
 
           return Scaffold(
             backgroundColor: currentTheme.colorScheme.primary,
-            appBar:
-                widget.hideHeader ?? false ? null : _buildAppBar(currentTheme),
+            appBar: widget.windowHeaderProps?.hideHeader ?? false
+                ? null
+                : _buildAppBar(currentTheme),
             body: isError
                 ? RefreshIndicator(
                     color: currentTheme.colorScheme.secondary,
@@ -528,20 +509,24 @@ class _SirenInboxState extends State<SirenInbox> {
         children: [
           Row(
             children: [
-              if (widget.showDefaultBackButton ?? false)
+              if (widget.windowHeaderProps?.showDefaultBackButton ?? false)
                 IconButton(
                   onPressed: () {
                     Navigator.of(context).pop();
-                    if (widget.handleBackNavigation != null) {
-                      widget.handleBackNavigation?.call();
+                    if (widget.windowHeaderProps?.handleBackNavigation !=
+                        null) {
+                      widget.windowHeaderProps?.handleBackNavigation?.call();
                     }
                   },
-                  icon: widget.defaultBackButton ??
+                  icon: widget.windowHeaderProps?.defaultBackButton ??
                       const Icon(Icons.arrow_back_ios),
                 ),
               Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal: widget.showDefaultBackButton ?? false ? 2 : 24,
+                  horizontal:
+                      widget.windowHeaderProps?.showDefaultBackButton ?? false
+                          ? 2
+                          : 24,
                 ),
                 child: Text(
                   widget.title ?? 'Notifications',
@@ -561,7 +546,7 @@ class _SirenInboxState extends State<SirenInbox> {
             ),
             child: Row(
               children: [
-                if (!(widget.hideClearAll ?? false) &&
+                if (!(widget.windowHeaderProps?.hideClearAll ?? false) &&
                     (!isError && !isLoading && notifications.isNotEmpty))
                   GestureDetector(
                     onTap: onBulkDelete,
