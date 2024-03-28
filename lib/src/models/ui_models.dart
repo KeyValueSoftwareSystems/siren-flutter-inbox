@@ -191,6 +191,7 @@ class CardParams {
   CardParams({
     this.hideAvatar,
     this.deleteWidget,
+    this.disableAutoMarkAsRead,
   });
 
   /// The Flag to hide or show avatar
@@ -198,4 +199,7 @@ class CardParams {
 
   /// Custom widget that can be used instead of default delete in the card (x)
   final Widget? deleteWidget;
+
+  /// The flag to turn on and off the mark as read functionality
+  final bool? disableAutoMarkAsRead;
 }

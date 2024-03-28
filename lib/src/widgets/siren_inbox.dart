@@ -618,7 +618,7 @@ class _SirenInboxState extends State<SirenInbox> {
         customNotificationCard: widget.customNotificationCard,
         onNotificationCardClick: widget.onNotificationCardClick,
         deletingNotificationId: deletingNotificationId,
-        disableAutoMarkAsRead: true,
+        disableAutoMarkAsRead: widget.cardProps?.disableAutoMarkAsRead ?? false,
         totalElements: totalElements,
       );
     }
