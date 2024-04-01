@@ -114,7 +114,6 @@ class _SirenInboxState extends State<SirenInbox> {
     _scrollController.dispose();
     _periodicUpdateRef?.cancel();
     _subscription.cancel();
-    SirenDataProvider.instance.inboxDispose();
     super.dispose();
   }
 
@@ -356,6 +355,13 @@ class _SirenInboxState extends State<SirenInbox> {
       data: data,
     );
     if (deleteAllResponse.isSuccess) {
+      SirenDataProvider.instance.inboxController.sink.add(
+        StreamResponse(
+          deleteAllResponse,
+          UpdateEvents.DELETE_ALL,
+          '',
+        ),
+      );
       _deleteAllNotifications();
     } else if (deleteAllResponse.isError) {
       widget.onError?.call(deleteAllResponse.error ?? ApiErrorDetails());
@@ -375,7 +381,13 @@ class _SirenInboxState extends State<SirenInbox> {
       }
 
       await Future.delayed(const Duration(milliseconds: 500));
-
+      SirenDataProvider.instance.inboxController.sink.add(
+        StreamResponse(
+          deletionStatus,
+          UpdateEvents.DELETE_BY_ID,
+          id,
+        ),
+      );
       if (mounted) {
         setState(() {
           deletingNotificationId = null;
@@ -437,6 +449,13 @@ class _SirenInboxState extends State<SirenInbox> {
     final readStatus =
         await _readNotificationById.readNotificationById(notificationId: id);
     if (readStatus.isSuccess) {
+      SirenDataProvider.instance.inboxController.sink.add(
+        StreamResponse(
+          readStatus,
+          UpdateEvents.READ_BY_ID,
+          id,
+        ),
+      );
       _markNotificationAsReadById(id);
     } else if (readStatus.isError) {
       widget.onError?.call(readStatus.error ?? ApiErrorDetails());
@@ -461,7 +480,10 @@ class _SirenInboxState extends State<SirenInbox> {
           return Scaffold(
             backgroundColor: currentTheme.colorScheme.primary,
             appBar: widget.windowHeaderProps?.hideHeader ?? false
-                ? null
+                ? const PreferredSize(
+                    preferredSize: Size.zero,
+                    child: SizedBox(),
+                  )
                 : _buildAppBar(currentTheme),
             body: isError
                 ? RefreshIndicator(
