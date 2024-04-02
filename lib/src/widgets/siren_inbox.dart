@@ -13,10 +13,7 @@ import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
 import 'package:sirenapp_flutter_inbox/src/theme/app_theme.dart';
 import 'package:sirenapp_flutter_inbox/src/utils/common_utils.dart';
 import 'package:sirenapp_flutter_inbox/src/widgets/app_bar.dart';
-import 'package:sirenapp_flutter_inbox/src/widgets/empty_widget.dart';
-import 'package:sirenapp_flutter_inbox/src/widgets/error_widget.dart';
-import 'package:sirenapp_flutter_inbox/src/widgets/loader_widget.dart';
-import 'package:sirenapp_flutter_inbox/src/widgets/notification_list_view.dart';
+import 'package:sirenapp_flutter_inbox/src/widgets/inbox_body.dart';
 
 /// Widget for displaying an inbox of notifications.
 class SirenInbox extends StatefulWidget {
@@ -86,7 +83,7 @@ class _SirenInboxState extends State<SirenInbox> {
   bool isError = false;
   bool loadingNextPage = false;
   int currentPage = 0;
-  late int totalElements;
+  int totalElements = 0;
   String? deletingNotificationId;
   int pageSize = 20;
 
@@ -473,7 +470,6 @@ class _SirenInboxState extends State<SirenInbox> {
       child: Builder(
         builder: (context) {
           final currentTheme = Theme.of(context);
-
           return Scaffold(
             backgroundColor: currentTheme.colorScheme.primary,
             appBar: SirenAppBar(
@@ -491,63 +487,32 @@ class _SirenInboxState extends State<SirenInbox> {
               hideHeader: widget.inboxHeaderProps?.hideHeader ?? false,
               showClearAllButton: shouldShowClearAllButton(),
             ),
-            body: isError
-                ? RefreshIndicator(
-                    color: currentTheme.colorScheme.secondary,
-                    backgroundColor: currentTheme.colorScheme.primary,
-                    onRefresh: onRefresh,
-                    child: ListView(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      children: [
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.75,
-                          width: MediaQuery.of(context).size.width,
-                          child: Center(
-                            child: widget.customErrorWidget ??
-                                const DefaultErrorWidget(),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                : (isLoading && !loadingNextPage)
-                    ? LoaderWidget(
-                        customLoader: widget.customLoader,
-                      )
-                    : _buildBody(currentTheme),
+            body: InboxBody(
+              currentTheme: currentTheme,
+              isLoading: isLoading,
+              loadingNextPage: loadingNextPage,
+              isError: isError,
+              notifications: notifications,
+              deleteNotification: deleteNotification,
+              markAsRead: _markNotificationAsRead,
+              customNotificationCard: widget.customNotificationCard,
+              onNotificationCardClick: widget.onNotificationCardClick,
+              deletingNotificationId: deletingNotificationId,
+              disableAutoMarkAsRead:
+                  widget.cardProps?.disableAutoMarkAsRead ?? false,
+              totalElements: totalElements,
+              onRefresh: onRefresh,
+              customErrorWidget: widget.customErrorWidget,
+              customLoader: widget.customLoader,
+              endReached: endReached,
+              customStyles: widget.customStyles,
+              cardProps: widget.cardProps,
+              scrollController: _scrollController,
+              onEndReached: onEndReached,
+            ),
           );
         },
       ),
     );
-  }
-
-  Widget _buildBody(ThemeData theme) {
-    if (notifications.isEmpty && isLoading) {
-      return LoaderWidget(
-        customLoader: widget.customLoader,
-      );
-    } else if (notifications.isEmpty && !isLoading) {
-      return widget.listEmptyWidget ?? const EmptyWidget();
-    } else {
-      return NotificationListView(
-        notifications: notifications,
-        isLoading: isLoading,
-        endReached: endReached,
-        onRefresh: onRefresh,
-        onEndReached: onEndReached,
-        loadingNextPage: loadingNextPage,
-        customStyles: widget.customStyles,
-        deleteWidget: widget.cardProps?.deleteWidget,
-        hideAvatar: widget.cardProps?.hideAvatar,
-        scrollController: _scrollController,
-        onDelete: deleteNotification,
-        markAsRead: _markNotificationAsRead,
-        customNotificationCard: widget.customNotificationCard,
-        onNotificationCardClick: widget.onNotificationCardClick,
-        deletingNotificationId: deletingNotificationId,
-        disableAutoMarkAsRead: widget.cardProps?.disableAutoMarkAsRead ?? false,
-        totalElements: totalElements,
-      );
-    }
   }
 }
