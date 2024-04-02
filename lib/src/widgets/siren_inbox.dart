@@ -12,6 +12,7 @@ import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
 import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
 import 'package:sirenapp_flutter_inbox/src/theme/app_theme.dart';
 import 'package:sirenapp_flutter_inbox/src/utils/common_utils.dart';
+import 'package:sirenapp_flutter_inbox/src/widgets/app_bar.dart';
 import 'package:sirenapp_flutter_inbox/src/widgets/empty_widget.dart';
 import 'package:sirenapp_flutter_inbox/src/widgets/error_widget.dart';
 import 'package:sirenapp_flutter_inbox/src/widgets/loader_widget.dart';
@@ -186,12 +187,8 @@ class _SirenInboxState extends State<SirenInbox> {
     }
   }
 
-  PreferredSize _buildAppBar(ThemeData theme) {
-    return PreferredSize(
-      preferredSize: const Size.fromHeight(kToolbarHeight),
-      child: widget.inboxHeaderProps?.customHeader ??
-          _buildCustomAppBar(theme, kToolbarHeight),
-    );
+  bool shouldShowClearAllButton() {
+    return !isError && !isLoading && notifications.isNotEmpty;
   }
 
   void _markNotificationAsReadById(String? notificationId) {
@@ -479,12 +476,21 @@ class _SirenInboxState extends State<SirenInbox> {
 
           return Scaffold(
             backgroundColor: currentTheme.colorScheme.primary,
-            appBar: widget.inboxHeaderProps?.hideHeader ?? false
-                ? const PreferredSize(
-                    preferredSize: Size.zero,
-                    child: SizedBox(),
-                  )
-                : _buildAppBar(currentTheme),
+            appBar: SirenAppBar(
+              theme: currentTheme,
+              title: widget.title ?? 'Notifications',
+              showBackButton: widget.inboxHeaderProps?.showBackButton ?? false,
+              onBackButtonPressed: () {
+                Navigator.of(context).pop();
+                if (widget.inboxHeaderProps?.handleBackNavigation != null) {
+                  widget.inboxHeaderProps?.handleBackNavigation?.call();
+                }
+              },
+              hideClearAll: widget.inboxHeaderProps?.hideClearAll ?? false,
+              onClearAllPressed: onBulkDelete,
+              hideHeader: widget.inboxHeaderProps?.hideHeader ?? false,
+              showClearAllButton: shouldShowClearAllButton(),
+            ),
             body: isError
                 ? RefreshIndicator(
                     color: currentTheme.colorScheme.secondary,
@@ -511,89 +517,6 @@ class _SirenInboxState extends State<SirenInbox> {
                     : _buildBody(currentTheme),
           );
         },
-      ),
-    );
-  }
-
-  Widget _buildCustomAppBar(ThemeData theme, double appBarHeight) {
-    return Container(
-      decoration: BoxDecoration(
-        color: theme.colorScheme.primary,
-        border: Border(
-          bottom: BorderSide(
-            color: theme.colorScheme.surfaceTint,
-          ),
-        ),
-      ),
-      height: appBarHeight,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              if (widget.inboxHeaderProps?.showBackButton ?? false)
-                IconButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    if (widget.inboxHeaderProps?.handleBackNavigation != null) {
-                      widget.inboxHeaderProps?.handleBackNavigation?.call();
-                    }
-                  },
-                  icon: widget.inboxHeaderProps?.backButton ??
-                      const Icon(Icons.arrow_back_ios),
-                ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal:
-                      widget.inboxHeaderProps?.showBackButton ?? false ? 2 : 24,
-                ),
-                child: Text(
-                  widget.title ?? 'Notifications',
-                  style: widget.customStyles?.defaultHeaderTextStyle ??
-                      TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.onBackground,
-                      ),
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-              right: 24,
-            ),
-            child: Row(
-              children: [
-                if (!(widget.inboxHeaderProps?.hideClearAll ?? false) &&
-                    (!isError && !isLoading && notifications.isNotEmpty))
-                  GestureDetector(
-                    onTap: onBulkDelete,
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 4),
-                          child: Icon(
-                            Icons.clear_all,
-                            color: theme.colorScheme.outline,
-                            size: 24,
-                          ),
-                        ),
-                        Text(
-                          'Clear All',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: theme.colorScheme.outline,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }
