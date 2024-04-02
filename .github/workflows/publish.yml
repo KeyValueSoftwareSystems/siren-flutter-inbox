@@ -1,4 +1,4 @@
-name: Publish
+name: Publish sirenapp_flutter_inbox in pub.dev
 
 on:
   workflow_dispatch:
@@ -6,7 +6,7 @@ on:
       ReleaseType:
         description: 'Release Type'
         required: true
-        default: 'warning'
+        default: 'Patch'
         type: choice
         options:
           - "Major"
@@ -51,9 +51,6 @@ jobs:
           echo NEW_TAG $NEW_TAG
           echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
           sed -i "s/version: $VERSION/version: $NEW_TAG/g" pubspec.yaml
-          git add pubspec.yaml
-          git commit -m "Version bumped to $NEW_TAG"
-          git push origin $BRANCH
 
       - uses: actions/setup-java@v1
         with:
@@ -78,14 +75,23 @@ jobs:
           flutter: true
           skipTests: true
           force: true
+    
+      - name: Commit pubspec.yaml
+        if: success()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NEW_TAG: ${{ env.NEW_TAG }}
+        run: |
+          git add pubspec.yaml
+          git commit -m "Version bumped to $NEW_TAG"
+          git push origin $BRANCH
 
       - name: Create New Tag
+        if: success()
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             NEW_TAG: ${{ env.NEW_TAG }}
         run: |
-            git config user.name github-actions
-            git config user.email github-actions@github.com
             git tag v${{ env.NEW_TAG }}
             git push origin v${{ env.NEW_TAG }}
 
