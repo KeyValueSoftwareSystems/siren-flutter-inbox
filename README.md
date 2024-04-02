@@ -114,7 +114,7 @@ onError | Callback for handling errors |  Function(ApiErrorDetails) | null |
 handleBackNavigation | Function to handle the back button click |  Function | null |
 theme | Theme properties for custom color theme |  CustomThemeColors | null |
 customStyles | Style properties for custom styling |  SirenStyleProps | null |
-windowHeaderProps | Properties of notification window header | WindowHeaderProps | null |
+inboxHeaderProps | Properties of notification window header | InboxHeaderProps | null |
 
 #### Theme customization
 
