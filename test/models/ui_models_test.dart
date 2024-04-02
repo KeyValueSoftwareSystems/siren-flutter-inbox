@@ -70,7 +70,7 @@ void main() {
       // Assert
       expect(defaultFontSize, 10);
       expect(defaultInset, 1);
-      expect(defaultSize, 18);
+      expect(defaultSize, 20);
       expect(defaultTop, 0);
       expect(defaultRight, 2);
       expect(iconSize, 35);
