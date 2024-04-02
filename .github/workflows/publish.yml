@@ -1,0 +1,104 @@
+name: Publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      ReleaseType:
+        description: 'Release Type'
+        required: true
+        default: 'warning'
+        type: choice
+        options:
+          - "Major"
+          - "Minor"
+          - "Patch"
+
+
+jobs:
+  publish:
+    permissions:
+      id-token: write # Required for authentication using OIDC
+      contents: write 
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get branch names.
+        id: branch-names
+        uses: tj-actions/branch-names@v8
+      
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Git
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          export BRANCH=${{ steps.branch-names.outputs.current_branch }}
+          echo "branch: $BRANCH"
+          if [[ "$BRANCH" != "main" ]]; then
+            echo "Tagging cannot be done on a branch other than main"
+            echo $BRANCH
+            exit 1
+          fi
+          export VERSION=$(cat pubspec.yaml | grep "version:" | awk '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//')
+          echo $VERSION
+          export UPDATE_CHOICE=${{ inputs.ReleaseType }}
+          export MAJOR=$(echo $VERSION | cut -d. -f1)
+          export MINOR=$(echo $VERSION | cut -d. -f2)
+          export PATCH=$(echo $VERSION | cut -d"+" -f1 | cut -d"." -f3)
+          if [[ "$UPDATE_CHOICE" == "Major" ]]; then export NEW_TAG=$((MAJOR + 1)).0.0; fi
+          if [[ "$UPDATE_CHOICE" == "Minor" ]]; then export NEW_TAG=$MAJOR.$((MINOR + 1)).0; fi
+          if [[ "$UPDATE_CHOICE" == "Patch" ]]; then export NEW_TAG=$MAJOR.$MINOR.$((PATCH + 1)); fi
+          echo NEW_TAG $NEW_TAG
+          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
+          sed -i "s/version: $VERSION/version: $NEW_TAG/g" pubspec.yaml
+          git add pubspec.yaml
+          git commit -m "Version bumped to $NEW_TAG"
+          git push origin $BRANCH
+
+      - uses: actions/setup-java@v1
+        with:
+            java-version: '12.x'
+      - uses: subosito/flutter-action@v1
+        with:
+            channel: 'stable' 
+            
+      - name: Exclude Example application
+        run: rm -rf example
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Check Publish Warnings
+        run: flutter pub publish --dry-run
+
+      - name: Publish Package
+        uses: k-paxian/dart-package-publisher@v1.5.1
+        with:
+          credentialJson: ${{ secrets.CREDENTIAL_JSON }}
+          flutter: true
+          skipTests: true
+          force: true
+
+      - name: Create New Tag
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            NEW_TAG: ${{ env.NEW_TAG }}
+        run: |
+            git config user.name github-actions
+            git config user.email github-actions@github.com
+            git tag v${{ env.NEW_TAG }}
+            git push origin v${{ env.NEW_TAG }}
+
+
+      - name: Create GitHub release
+        if: success()
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NEW_TAG: ${{ env.NEW_TAG }}
+        with:
+            tag_name: v${{ env.NEW_TAG }}
+            release_name: Release v${{ env.NEW_TAG }}
+            draft: false
+            prerelease: false
+     
