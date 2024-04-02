@@ -33,7 +33,7 @@ class SirenInbox extends StatefulWidget {
     this.onError,
     this.theme,
     this.customStyles,
-    this.windowHeaderProps,
+    this.inboxHeaderProps,
   });
 
   /// Custom styles for the card of each notification.
@@ -73,7 +73,7 @@ class SirenInbox extends StatefulWidget {
   final CardProps? cardProps;
 
   /// Custom props for header properties
-  final WindowHeaderProps? windowHeaderProps;
+  final InboxHeaderProps? inboxHeaderProps;
   @override
   State<SirenInbox> createState() => _SirenInboxState();
 }
@@ -189,7 +189,7 @@ class _SirenInboxState extends State<SirenInbox> {
   PreferredSize _buildAppBar(ThemeData theme) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(kToolbarHeight),
-      child: widget.windowHeaderProps?.customHeader ??
+      child: widget.inboxHeaderProps?.customHeader ??
           _buildCustomAppBar(theme, kToolbarHeight),
     );
   }
@@ -479,7 +479,7 @@ class _SirenInboxState extends State<SirenInbox> {
 
           return Scaffold(
             backgroundColor: currentTheme.colorScheme.primary,
-            appBar: widget.windowHeaderProps?.hideHeader ?? false
+            appBar: widget.inboxHeaderProps?.hideHeader ?? false
                 ? const PreferredSize(
                     preferredSize: Size.zero,
                     child: SizedBox(),
@@ -531,24 +531,21 @@ class _SirenInboxState extends State<SirenInbox> {
         children: [
           Row(
             children: [
-              if (widget.windowHeaderProps?.showDefaultBackButton ?? false)
+              if (widget.inboxHeaderProps?.showBackButton ?? false)
                 IconButton(
                   onPressed: () {
                     Navigator.of(context).pop();
-                    if (widget.windowHeaderProps?.handleBackNavigation !=
-                        null) {
-                      widget.windowHeaderProps?.handleBackNavigation?.call();
+                    if (widget.inboxHeaderProps?.handleBackNavigation != null) {
+                      widget.inboxHeaderProps?.handleBackNavigation?.call();
                     }
                   },
-                  icon: widget.windowHeaderProps?.defaultBackButton ??
+                  icon: widget.inboxHeaderProps?.backButton ??
                       const Icon(Icons.arrow_back_ios),
                 ),
               Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal:
-                      widget.windowHeaderProps?.showDefaultBackButton ?? false
-                          ? 2
-                          : 24,
+                      widget.inboxHeaderProps?.showBackButton ?? false ? 2 : 24,
                 ),
                 child: Text(
                   widget.title ?? 'Notifications',
@@ -568,7 +565,7 @@ class _SirenInboxState extends State<SirenInbox> {
             ),
             child: Row(
               children: [
-                if (!(widget.windowHeaderProps?.hideClearAll ?? false) &&
+                if (!(widget.inboxHeaderProps?.hideClearAll ?? false) &&
                     (!isError && !isLoading && notifications.isNotEmpty))
                   GestureDetector(
                     onTap: onBulkDelete,

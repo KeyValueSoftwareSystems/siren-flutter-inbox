@@ -195,11 +195,11 @@ class CustomThemeColors {
 }
 
 /// Properties for configuring the appearance of the notification window app bar.
-class WindowHeaderProps {
-  WindowHeaderProps({
+class InboxHeaderProps {
+  InboxHeaderProps({
     this.hideHeader,
-    this.showDefaultBackButton,
-    this.defaultBackButton,
+    this.showBackButton,
+    this.backButton,
     this.hideClearAll,
     this.customHeader,
     this.handleBackNavigation,
@@ -209,10 +209,10 @@ class WindowHeaderProps {
   final bool? hideHeader;
 
   /// Flag to show the header back button provided by the sdk.
-  final bool? showDefaultBackButton;
+  final bool? showBackButton;
 
   /// Default back button widget for the header provided by the sdk.
-  final Icon? defaultBackButton;
+  final Icon? backButton;
 
   /// Flag to hide the "Clear All" button.
   final bool? hideClearAll;
