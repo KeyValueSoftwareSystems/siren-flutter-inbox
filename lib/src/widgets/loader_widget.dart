@@ -1,4 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
+
+class LoaderWidget extends StatelessWidget {
+  const LoaderWidget({
+    super.key,
+    this.customLoader,
+  });
+
+  final Widget? customLoader;
+
+  @override
+  Widget build(BuildContext context) {
+    return customLoader ??
+        ListView.builder(
+          itemCount: Generics.PAGE_SIZE,
+          itemBuilder: (context, index) {
+            return const Padding(
+              padding: EdgeInsets.symmetric(vertical: 8),
+              child: CardLoaderWidget(),
+            );
+          },
+        );
+  }
+}
 
 class CardLoaderWidget extends StatefulWidget {
   const CardLoaderWidget({
