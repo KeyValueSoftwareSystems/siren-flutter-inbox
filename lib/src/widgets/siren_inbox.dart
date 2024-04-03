@@ -477,7 +477,6 @@ class _SirenInboxState extends State<SirenInbox> {
               title: widget.title ?? 'Notifications',
               showBackButton: widget.inboxHeaderProps?.showBackButton ?? false,
               onBackButtonPressed: () {
-                Navigator.of(context).pop();
                 if (widget.inboxHeaderProps?.handleBackNavigation != null) {
                   widget.inboxHeaderProps?.handleBackNavigation?.call();
                 }

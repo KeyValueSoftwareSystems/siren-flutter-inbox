@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sirenapp_flutter_inbox/src/constants/strings.dart';
 
 class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
   const SirenAppBar({
@@ -81,7 +82,7 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                     ),
                     Text(
-                      'Clear All',
+                      Strings.clear_all,
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,

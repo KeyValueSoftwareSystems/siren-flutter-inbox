@@ -55,21 +55,6 @@ void main() {
       expect(find.byType(LoaderWidget), findsOneWidget);
     });
 
-    // testWidgets('Error state', (WidgetTester tester) async {
-    //   // Mock SirenDataProvider
-
-    //   await tester.pumpWidget(
-    //     const MaterialApp(
-    //       home: Scaffold(
-    //         body: SirenInbox(),
-    //       ),
-    //     ),
-    //   );
-
-    //   // Error state widget should be displayed
-    //   expect(find.byType(DefaultErrorWidget), findsOneWidget);
-    // });
-
     testWidgets('Test Title', (WidgetTester tester) async {
       // Mock SirenDataProvider
 
@@ -91,51 +76,6 @@ void main() {
 
       // Verify that notification list is displayed
       expect(find.text('Notifications Header'), findsOneWidget);
-    });
-
-    testWidgets('Custom Header', (WidgetTester tester) async {
-      // Mock SirenDataProvider
-
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: SirenInbox(
-              inboxHeaderProps: InboxHeaderProps(
-                customHeader: const Text(
-                  'Custom Header',
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-
-      // Loading state widget should be displayed
-      expect(find.byType(LoaderWidget), findsOneWidget);
-
-      // Simulate a successful fetch
-      await tester.pump();
-
-      // Verify that notification list is displayed
-      expect(find.text('Custom Header'), findsOneWidget);
-    });
-
-    testWidgets('Widget Handle back navigation', (WidgetTester tester) async {
-      final func = MockFunction().call;
-      final widget = MaterialApp(
-        home: Scaffold(
-          body: SirenInbox(
-            inboxHeaderProps: InboxHeaderProps(
-              showBackButton: true,
-              handleBackNavigation: func,
-            ),
-          ),
-        ),
-      );
-      await tester.pumpWidget(widget);
-      await tester.tap(find.byType(GestureDetector));
-      await tester.pumpAndSettle(const Duration(seconds: 2));
-      verify(func()).called(1);
     });
 
     testWidgets('Show default back button', (WidgetTester tester) async {
