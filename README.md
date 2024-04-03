@@ -108,12 +108,13 @@ customNotificationCard | Custom widget to display the notification cards |  Widg
 customLoader | Custom widget to display the initial loading state |  Widget | null |
 customErrorWidget | Custom error widget|  Widget | null |
 customHeader | Custom header widget |  Widget | null |
-cardProps | Properties of notification card |  CardParams | false |
+cardProps | Properties of notification card |  CardProps | null |
 onNotificationCardClick | Custom click handler for notification cards |  Function(NotificationDataType) | null |
 onError | Callback for handling errors |  Function(ApiErrorDetails) | null |
 handleBackNavigation | Function to handle the back button click |  Function | null |
 theme | Theme properties for custom color theme |  CustomThemeColors | null |
 customStyles | Style properties for custom styling |  SirenStyleProps | null |
+inboxHeaderProps | Properties of notification window header | InboxHeaderProps | null |
 
 #### Theme customization
 
@@ -173,7 +174,7 @@ customStyles: SirenStyleProps(
 
 ## 3. Siren Class
 
-The `Siren Class` class provides utility functions for modifying notifications.
+The `Siren Class` provides utility functions for modifying notifications.
 
 ```dart
 Siren.markAsRead(id: 'notification-id');
