@@ -13,7 +13,6 @@ class CardWidget extends StatefulWidget {
     required this.styles,
     required this.onDelete,
     super.key,
-    this.deleteWidget,
   });
 
   /// Callback function invoked when the card is tapped.
@@ -30,9 +29,6 @@ class CardWidget extends StatefulWidget {
 
   /// Callback function invoked when the card is deleted.
   final void Function(String) onDelete;
-
-  /// Widget to be displayed for deletion, if provided.
-  final Widget? deleteWidget;
 
   @override
   State<CardWidget> createState() => _CardWidgetState();
@@ -56,42 +52,40 @@ class _CardWidgetState extends State<CardWidget> {
         decoration: widget.styles?.container ??
             _getDefaultContainerDecoration(currentTheme),
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Container(
-              decoration: widget.styles?.contentContainer,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (!(widget.cardProps.hideAvatar ?? false))
-                    _buildDefaultAvatarContainer(currentTheme),
-                  Expanded(
-                    child: Container(
-                      decoration: widget.styles?.cardContentContainer,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildHeaderText(currentTheme),
-                            _buildSubHeaderText(currentTheme),
-                            _buildBodyText(currentTheme),
-                            _buildFooterRow(currentTheme),
-                          ],
-                        ),
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+          child: Container(
+            decoration: widget.styles?.contentContainer,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (!(widget.cardProps.hideAvatar ?? false))
+                  _buildDefaultAvatarContainer(currentTheme),
+                Expanded(
+                  child: Container(
+                    decoration: widget.styles?.cardContentContainer,
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        right: 16,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildHeaderText(currentTheme),
+                          _buildSubHeaderText(currentTheme),
+                          _buildBodyText(currentTheme),
+                          _buildFooterRow(currentTheme),
+                        ],
                       ),
                     ),
                   ),
+                ),
+                if (!(widget.cardProps.hideDelete ?? false))
                   GestureDetector(
                     onTap: () => widget.onDelete(widget.notification.id),
-                    child: widget.deleteWidget ??
+                    child: widget.cardProps.deleteWidget ??
                         _buildDefaultDeleteButton(currentTheme),
                   ),
-                ],
-              ),
+              ],
             ),
           ),
         ),
@@ -127,20 +121,25 @@ class _CardWidgetState extends State<CardWidget> {
 
   Widget _buildDefaultAvatarContainer(ThemeData theme) {
     final avatarUrl = widget.notification.message.avatar?.url;
-    return Container(
-      decoration: widget.styles?.cardAvatarContainer,
-      child: CircleAvatar(
-        radius: 21,
-        backgroundImage: avatarUrl != null && avatarUrl.isNotEmpty
-            ? NetworkImage(avatarUrl)
-            : null,
-        backgroundColor: theme.colorScheme.onSecondary,
-        child: avatarUrl == null || avatarUrl.isEmpty
-            ? Icon(
-                Icons.landscape_rounded,
-                color: theme.colorScheme.surfaceVariant,
-              )
-            : null,
+    return Padding(
+      padding: const EdgeInsets.only(
+        right: 24,
+      ),
+      child: Container(
+        decoration: widget.styles?.cardAvatarContainer,
+        child: CircleAvatar(
+          radius: 21,
+          backgroundImage: avatarUrl != null && avatarUrl.isNotEmpty
+              ? NetworkImage(avatarUrl)
+              : null,
+          backgroundColor: theme.colorScheme.onSecondary,
+          child: avatarUrl == null || avatarUrl.isEmpty
+              ? Icon(
+                  Icons.landscape_rounded,
+                  color: theme.colorScheme.surfaceVariant,
+                )
+              : null,
+        ),
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
+import 'package:sirenapp_flutter_inbox/src/widgets/empty_widget.dart';
 import 'package:sirenapp_flutter_inbox/src/widgets/error_widget.dart';
 import 'package:sirenapp_flutter_inbox/src/widgets/loader_widget.dart';
 import 'package:sirenapp_flutter_inbox/src/widgets/notification_list_view.dart';
@@ -26,6 +27,7 @@ class InboxBody extends StatelessWidget {
     this.customLoader,
     this.customStyles,
     this.cardProps,
+    this.listEmptyWidget,
     super.key,
   });
   final ThemeData currentTheme;
@@ -48,6 +50,7 @@ class InboxBody extends StatelessWidget {
   final CardProps? cardProps;
   final VoidCallback onEndReached;
   final ScrollController scrollController;
+  final Widget? listEmptyWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +73,12 @@ class InboxBody extends StatelessWidget {
         ),
       );
     } else if (isLoading && !loadingNextPage) {
-      return LoaderWidget(customLoader: customLoader);
+      return LoaderWidget(
+        customLoader: customLoader,
+        hideAvatar: cardProps?.hideAvatar ?? false,
+      );
+    } else if (notifications.isEmpty) {
+      return listEmptyWidget ?? const EmptyWidget();
     } else {
       return NotificationListView(
         notifications: notifications,
@@ -80,16 +88,14 @@ class InboxBody extends StatelessWidget {
         onEndReached: onEndReached,
         loadingNextPage: loadingNextPage,
         customStyles: customStyles,
-        deleteWidget: cardProps?.deleteWidget,
-        hideAvatar: cardProps?.hideAvatar,
         scrollController: scrollController,
         onDelete: deleteNotification,
         markAsRead: markAsRead,
         customNotificationCard: customNotificationCard,
         onNotificationCardClick: onNotificationCardClick,
         deletingNotificationId: deletingNotificationId,
-        disableAutoMarkAsRead: disableAutoMarkAsRead,
         totalElements: totalElements,
+        cardProps: cardProps,
       );
     }
   }
