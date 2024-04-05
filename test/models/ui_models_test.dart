@@ -60,9 +60,19 @@ void main() {
   group('DefaultIconStyle', () {
     test('iconSize should return default size for the notification icon', () {
       // Arrange & Act
+      final defaultFontSize = DefaultIconStyle.defaultFontSize;
+      final defaultInset = DefaultIconStyle.defaultInset;
+      final defaultSize = DefaultIconStyle.defaultSize;
+      final defaultTop = DefaultIconStyle.defaultTop;
+      final defaultRight = DefaultIconStyle.defaultRight;
       final iconSize = DefaultIconStyle.iconSize;
 
       // Assert
+      expect(defaultFontSize, 10);
+      expect(defaultInset, 1);
+      expect(defaultSize, 20);
+      expect(defaultTop, 0);
+      expect(defaultRight, 2);
       expect(iconSize, 35);
     });
   });
@@ -108,5 +118,21 @@ void main() {
       expect(customThemeColors.highlightedCardBorderColor, Colors.grey);
       expect(customThemeColors.badgeColor, Colors.red);
     });
+  });
+
+  test('Card Params', () {
+    // Arrange
+    const hideAvatar = true;
+    const Widget deleteWidget = Icon(Icons.delete);
+
+    // Act
+    final cardParams = CardParams(
+      hideAvatar: hideAvatar,
+      deleteWidget: deleteWidget,
+    );
+
+    // Assert
+    expect(cardParams.hideAvatar, hideAvatar);
+    expect(cardParams.deleteWidget, deleteWidget);
   });
 }
