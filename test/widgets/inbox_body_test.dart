@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:network_image_mock/network_image_mock.dart';
+import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
 import 'package:sirenapp_flutter_inbox/src/widgets/error_widget.dart';
 import 'package:sirenapp_flutter_inbox/src/widgets/inbox_body.dart';
 import 'package:sirenapp_flutter_inbox/src/widgets/loader_widget.dart';
+import 'package:sirenapp_flutter_inbox/src/widgets/notification_list_view.dart';
 
 void main() {
   testWidgets('InboxBody displays loader when isLoading is true',
@@ -59,5 +62,55 @@ void main() {
     );
 
     expect(find.byType(DefaultErrorWidget), findsOneWidget);
+  });
+
+  testWidgets('InboxBody displays notifications', (WidgetTester tester) async {
+    final notifications = <NotificationDataType>[
+      NotificationDataType(
+        id: '1',
+        createdAt: '2024-03-15T04:07:14.577928Z',
+        message: MessageData(
+          header: 'Test Header',
+          subHeader: 'Test SubHeader',
+          body: 'Test Body',
+          channel: 'Test Channel',
+          actionUrl: 'Test Action Url',
+          avatar: AvatarData(
+            altText: 'Test alt text',
+            url: 'https://picsum.photos/200/300',
+          ),
+          additionalData: 'Test Additional Data',
+        ),
+        requestId: 'request-id',
+        isRead: false,
+        cardColor: Colors.black,
+      ),
+    ];
+    await mockNetworkImagesFor(() async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: InboxBody(
+            currentTheme: ThemeData(),
+            isLoading: false,
+            loadingNextPage: false,
+            isError: false,
+            notifications: notifications,
+            deleteNotification: (id) async {},
+            markAsRead: (id) {},
+            customNotificationCard: null,
+            onNotificationCardClick: null,
+            deletingNotificationId: null,
+            disableAutoMarkAsRead: false,
+            totalElements: 1,
+            onRefresh: () async {},
+            endReached: false,
+            onEndReached: () {},
+            scrollController: ScrollController(),
+          ),
+        ),
+      );
+
+      expect(find.byType(NotificationListView), findsOneWidget);
+    });
   });
 }

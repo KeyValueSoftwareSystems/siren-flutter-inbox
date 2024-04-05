@@ -26,7 +26,7 @@ void main() {
     late StreamController<StreamResponse> iconController;
     late StreamController<StreamResponse> inboxController;
     late MockSirenDataProvider mockSirenDataProvider;
-    
+
     setUp(() {
       iconController = StreamController<StreamResponse>.broadcast();
       inboxController = StreamController<StreamResponse>.broadcast();
@@ -40,7 +40,6 @@ void main() {
       inboxController.close();
     });
     testWidgets('Initial loading state', (WidgetTester tester) async {
-    
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -61,6 +60,7 @@ void main() {
           home: Scaffold(
             body: SirenInbox(
               title: 'Notifications Header',
+              darkMode: true,
             ),
           ),
         ),
@@ -74,6 +74,28 @@ void main() {
 
       // Verify that notification list is displayed
       expect(find.text('Notifications Header'), findsOneWidget);
+    });
+
+    testWidgets('Test theme', (WidgetTester tester) async {
+      // Mock SirenDataProvider
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SirenInbox(
+              theme: CustomThemeColors(backgroundColor: Colors.amber),
+            ),
+          ),
+        ),
+      );
+
+      final scaffoldFinder = find.byType(Scaffold).at(1);
+
+      final scaffoldWidget = tester.widget<Scaffold>(scaffoldFinder);
+      final scaffoldBackgroundColor = scaffoldWidget.backgroundColor;
+      expect(scaffoldBackgroundColor, equals(Colors.amber));
+
+      await tester.pump();
     });
 
     testWidgets('Stream', (WidgetTester tester) async {
