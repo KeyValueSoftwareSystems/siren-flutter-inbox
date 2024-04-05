@@ -76,6 +76,28 @@ void main() {
       expect(find.text('Notifications Header'), findsOneWidget);
     });
 
+    testWidgets('Back navigation', (WidgetTester tester) async {
+      var backButtonPressed = false;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SirenInbox(
+              inboxHeaderProps: InboxHeaderProps(
+                showBackButton: true,
+                handleBackNavigation: () {
+                  backButtonPressed = true;
+                },
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.tap(find.byIcon(Icons.arrow_back_ios));
+      expect(backButtonPressed, true);
+    });
+
     testWidgets('Test theme', (WidgetTester tester) async {
       // Mock SirenDataProvider
 
