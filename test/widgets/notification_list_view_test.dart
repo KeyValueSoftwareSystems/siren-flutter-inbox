@@ -51,8 +51,6 @@ void main() {
               onRefresh: () async {},
               onEndReached: () {},
               customStyles: null,
-              hideAvatar: false,
-              deleteWidget: null,
               scrollController: ScrollController(),
               onDelete: (id) async {},
               markAsRead: (id) {},
@@ -89,8 +87,6 @@ void main() {
               onRefresh: () async {},
               onEndReached: () {},
               customStyles: null,
-              hideAvatar: false,
-              deleteWidget: null,
               scrollController: ScrollController(),
               customNotificationCard: (n) {
                 return Text(n.message.subHeader.toString());

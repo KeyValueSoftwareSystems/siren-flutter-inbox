@@ -8,6 +8,7 @@ class CardProps {
     this.showMedia,
     this.disableAutoMarkAsRead,
     this.deleteWidget,
+    this.hideDelete,
   });
 
   /// Determines whether to hide the avatar in the notification card in Siren inbox.
@@ -21,6 +22,9 @@ class CardProps {
 
   /// Custom widget that can be used instead of default delete in the card (x)
   final Widget? deleteWidget;
+
+  /// Determines whether to hide the avatar in the notification card in Siren inbox.
+  final bool? hideDelete;
 }
 
 /// Customizable style for the Siren notification icon.
