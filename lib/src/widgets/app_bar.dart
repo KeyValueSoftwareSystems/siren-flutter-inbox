@@ -50,8 +50,7 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
             children: [
               if (showBackButton)
                 IconButton(
-                  onPressed:
-                      onBackButtonPressed ?? () => Navigator.of(context).pop(),
+                  onPressed: onBackButtonPressed,
                   icon: const Icon(Icons.arrow_back_ios),
                 ),
               Padding(
