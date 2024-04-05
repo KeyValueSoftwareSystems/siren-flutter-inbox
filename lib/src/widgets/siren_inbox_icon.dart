@@ -7,6 +7,7 @@ import 'package:sirenapp_flutter_inbox/src/api/fetch_unviewed_notification_count
 import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
 import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
 import 'package:sirenapp_flutter_inbox/src/theme/app_theme.dart';
+import 'package:sirenapp_flutter_inbox/src/widgets/icon_badge.dart';
 
 /// Widget representing the inbox icon.
 class SirenInboxIcon extends StatefulWidget {
@@ -207,42 +208,17 @@ class _SirenInboxIconState extends State<SirenInboxIcon> {
                           color: currentTheme.colorScheme.onPrimary,
                         ),
                   ),
-                  if (_notificationsCount > 0 && !(widget.hideBadge ?? false))
-                    _getBadge(context),
+                  IconBadge(
+                    hideBadge:
+                        _notificationsCount == 0 || (widget.hideBadge ?? false),
+                    badgeStyle: widget.customStyles?.badgeStyle,
+                    notificationsCount: _notificationsCount,
+                  ),
                 ],
               ),
             ),
           );
         },
-      ),
-    );
-  }
-
-  Widget _getBadge(BuildContext context) {
-    final badgeStyle = widget.customStyles?.badgeStyle;
-    final currentTheme = Theme.of(context);
-    return Positioned(
-      right: badgeStyle?.right ?? DefaultIconStyle.defaultRight,
-      top: badgeStyle?.top ?? DefaultIconStyle.defaultTop,
-      child: Container(
-        width: badgeStyle?.size ?? DefaultIconStyle.defaultSize,
-        height: badgeStyle?.size ?? DefaultIconStyle.defaultSize,
-        padding:
-            EdgeInsets.all(badgeStyle?.inset ?? DefaultIconStyle.defaultInset),
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: currentTheme.colorScheme.tertiaryContainer,
-        ),
-        child: Align(
-          child: Text(
-            _notificationsCount > 99 ? '99+' : _notificationsCount.toString(),
-            style: TextStyle(
-              color: currentTheme.colorScheme.onTertiary,
-              fontSize:
-                  badgeStyle?.fontSize ?? DefaultIconStyle.defaultFontSize,
-            ),
-          ),
-        ),
       ),
     );
   }

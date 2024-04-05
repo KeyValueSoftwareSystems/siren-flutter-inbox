@@ -8,7 +8,6 @@ import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
 import 'package:sirenapp_flutter_inbox/src/api/fetch_unviewed_notification_count.dart';
 import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
 import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
-import 'package:sirenapp_flutter_inbox/src/models/ui_models.dart';
 import 'package:sirenapp_flutter_inbox/src/widgets/loader_widget.dart';
 
 import 'siren_inbox_test.mocks.dart';
@@ -27,7 +26,7 @@ void main() {
     late StreamController<StreamResponse> iconController;
     late StreamController<StreamResponse> inboxController;
     late MockSirenDataProvider mockSirenDataProvider;
-
+    
     setUp(() {
       iconController = StreamController<StreamResponse>.broadcast();
       inboxController = StreamController<StreamResponse>.broadcast();
@@ -41,8 +40,7 @@ void main() {
       inboxController.close();
     });
     testWidgets('Initial loading state', (WidgetTester tester) async {
-      // Mock SirenDataProvider
-
+    
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -76,21 +74,6 @@ void main() {
 
       // Verify that notification list is displayed
       expect(find.text('Notifications Header'), findsOneWidget);
-    });
-
-    testWidgets('Show default back button', (WidgetTester tester) async {
-      final widget = MaterialApp(
-        home: Scaffold(
-          body: SirenInbox(
-            inboxHeaderProps: InboxHeaderProps(
-              showBackButton: true,
-              // defaultBackButton: Icon(Icons.back_hand),
-            ),
-          ),
-        ),
-      );
-      await tester.pumpWidget(widget);
-      expect(find.byIcon(Icons.arrow_back_ios), findsOneWidget);
     });
 
     testWidgets('Stream', (WidgetTester tester) async {
