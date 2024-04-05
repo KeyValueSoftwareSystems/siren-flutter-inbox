@@ -4,17 +4,22 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
+import 'package:sirenapp_flutter_inbox/src/api/fetch_unviewed_notification_count.dart';
 import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
 import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
 import 'package:sirenapp_flutter_inbox/src/theme/app_theme.dart';
+
+import 'siren_inbox_test.mocks.dart';
 
 class MockFunction extends Mock {
   // Define the mock function signature
   void call(); // You can define parameters and return types as needed
 }
 
+@GenerateMocks([SirenDataProvider, FetchUnViewedNotificationsCount])
 void main() {
   group('SirenInboxIcon', () {
     late StreamController<StreamResponse> iconController;
@@ -38,6 +43,18 @@ void main() {
           ),
         ),
       );
+      final mockSirenDataProvider = MockSirenDataProvider();
+      final mockFetchUnViewedNotificationsCount =
+          MockFetchUnViewedNotificationsCount();
+      final result = ApiResponse()..isLoading = true;
+      result.data = 5;
+      result.isSuccess = true;
+
+      when(mockSirenDataProvider.tokenVerificationStatus)
+          .thenReturn(Status.SUCCESS);
+      when(
+        mockFetchUnViewedNotificationsCount.fetchUnViewedNotificationsCount(),
+      ).thenAnswer((_) async => result);
 
       expect(find.byType(SirenInboxIcon), findsOneWidget);
     });
@@ -176,6 +193,24 @@ void main() {
 
       SirenDataProvider.instance.iconController.sink
           .add(StreamResponse(result, UpdateEvents.VIEW_ALL, ''));
+    });
+
+    testWidgets('Theme', (WidgetTester tester) async {
+      final widget = MaterialApp(
+        home: Scaffold(
+          body: SirenInboxIcon(
+            darkMode: true,
+            theme: CustomThemeColors(iconColor: Colors.amber),
+          ),
+        ),
+      );
+      await tester.pumpWidget(widget);
+
+      final iconFinder = find.byWidgetPredicate(
+        (widget) => widget is Icon && widget.color == Colors.amber,
+      );
+
+      expect(iconFinder, findsOneWidget);
     });
   });
 }

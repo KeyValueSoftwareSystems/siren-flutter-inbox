@@ -8,7 +8,6 @@ import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
 import 'package:sirenapp_flutter_inbox/src/api/fetch_unviewed_notification_count.dart';
 import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
 import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
-import 'package:sirenapp_flutter_inbox/src/models/ui_models.dart';
 
 import 'siren_inbox_test.mocks.dart';
 
@@ -26,6 +25,27 @@ void main() {
     late StreamController<StreamResponse> iconController;
     late StreamController<StreamResponse> inboxController;
     late MockSirenDataProvider mockSirenDataProvider;
+    final notification = <NotificationDataType>[
+      NotificationDataType(
+        id: '1',
+        createdAt: '2024-03-15T04:07:14.577928Z',
+        message: MessageData(
+          header: 'Test Header',
+          subHeader: 'Test SubHeader',
+          body: 'Test Body',
+          channel: 'Test Channel',
+          actionUrl: 'Test Action Url',
+          avatar: AvatarData(
+            altText: 'Test alt text',
+            url: 'https://picsum.photos/200/300',
+          ),
+          additionalData: 'Test Additional Data',
+        ),
+        requestId: 'request-id',
+        isRead: false,
+        cardColor: Colors.black,
+      ),
+    ];
 
     setUp(() {
       iconController = StreamController<StreamResponse>.broadcast();

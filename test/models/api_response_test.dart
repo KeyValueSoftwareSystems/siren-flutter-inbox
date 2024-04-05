@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
 import 'package:sirenapp_flutter_inbox/src/models/api_response.dart';
 
 void main() {
@@ -15,7 +14,7 @@ void main() {
           'currentPage': '1',
           'first': 'first',
           'totalElements': '50',
-        }
+        },
       };
       final response = ApiResponse.fromJson(json);
 

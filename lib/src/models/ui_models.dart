@@ -41,7 +41,7 @@ class DefaultIconStyle {
   static double get defaultInset => 1;
 
   /// Default size for the badge count.
-  static double get defaultSize => 18;
+  static double get defaultSize => 20;
 
   /// Default top position for the badge count.
   static double get defaultTop => 0;
