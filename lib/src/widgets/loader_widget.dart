@@ -1,9 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
+
+class LoaderWidget extends StatelessWidget {
+  const LoaderWidget({
+    required this.hideAvatar,
+    super.key,
+    this.customLoader,
+  });
+
+  final Widget? customLoader;
+  final bool hideAvatar;
+
+  @override
+  Widget build(BuildContext context) {
+    return customLoader ??
+        ListView.builder(
+          itemCount: Generics.PAGE_SIZE,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: CardLoaderWidget(hideAvatar: hideAvatar),
+            );
+          },
+        );
+  }
+}
 
 class CardLoaderWidget extends StatefulWidget {
   const CardLoaderWidget({
+    required this.hideAvatar,
     super.key,
   });
+
+  final bool hideAvatar;
 
   @override
   CardLoaderWidgetState createState() => CardLoaderWidgetState();
@@ -39,30 +68,92 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildAnimatedCircleAvatar(theme: currentTheme),
+          if (!widget.hideAvatar)
+            Padding(
+              padding: const EdgeInsets.only(right: 24),
+              child: _buildAnimatedWidget(
+                theme: currentTheme,
+                builder: (context, child) => Container(
+                  width: 42,
+                  height: 42,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: currentTheme.colorScheme.onSecondary
+                        .withOpacity(0.5 + 0.5 * _controller.value),
+                  ),
+                ),
+              ),
+            ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+              padding: const EdgeInsets.only(
+                right: 24,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildAnimatedContainer(height: 18, theme: currentTheme),
+                  _buildAnimatedWidget(
+                    theme: currentTheme,
+                    builder: (context, child) => Container(
+                      height: 18,
+                      decoration: BoxDecoration(
+                        color: currentTheme.colorScheme.onSecondary
+                            .withOpacity(0.5 + 0.5 * _controller.value),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 8),
-                  _buildAnimatedContainer(height: 18, theme: currentTheme),
+                  _buildAnimatedWidget(
+                    theme: currentTheme,
+                    builder: (context, child) => Container(
+                      height: 18,
+                      decoration: BoxDecoration(
+                        color: currentTheme.colorScheme.onSecondary
+                            .withOpacity(0.5 + 0.5 * _controller.value),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 8),
-                  _buildAnimatedContainer(height: 18, theme: currentTheme),
+                  _buildAnimatedWidget(
+                    theme: currentTheme,
+                    builder: (context, child) => Container(
+                      height: 18,
+                      decoration: BoxDecoration(
+                        color: currentTheme.colorScheme.onSecondary
+                            .withOpacity(0.5 + 0.5 * _controller.value),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      _buildAnimatedCircleAvatar(
+                      _buildAnimatedWidget(
                         theme: currentTheme,
-                        radius: 5,
+                        builder: (context, child) => Container(
+                          width: 10,
+                          height: 10,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: currentTheme.colorScheme.onSecondary
+                                .withOpacity(0.5 + 0.5 * _controller.value),
+                          ),
+                        ),
                       ),
                       const SizedBox(width: 8),
                       Expanded(
-                        child: _buildAnimatedContainer(
+                        child: _buildAnimatedWidget(
                           theme: currentTheme,
-                          height: 12,
+                          builder: (context, child) => Container(
+                            height: 12,
+                            decoration: BoxDecoration(
+                              color: currentTheme.colorScheme.onSecondary
+                                  .withOpacity(0.5 + 0.5 * _controller.value),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -71,67 +162,30 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
               ),
             ),
           ),
-          _buildAnimatedDeleteIcon(theme: currentTheme),
+          _buildAnimatedWidget(
+            theme: currentTheme,
+            builder: (context, child) => Container(
+              width: 16,
+              height: 16,
+              decoration: BoxDecoration(
+                color: currentTheme.colorScheme.onSecondary
+                    .withOpacity(0.5 + 0.5 * _controller.value),
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildAnimatedCircleAvatar({
+  Widget _buildAnimatedWidget({
     required ThemeData theme,
-    double radius = 21,
+    required Widget Function(BuildContext, Widget?) builder,
   }) {
     return AnimatedBuilder(
       animation: _controller,
-      builder: (context, child) {
-        return Container(
-          width: radius * 2,
-          height: radius * 2,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: theme.colorScheme.onSecondary
-                .withOpacity(0.5 + 0.5 * _controller.value),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildAnimatedContainer({
-    required ThemeData theme,
-    required double height,
-  }) {
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, child) {
-        return Container(
-          height: height,
-          decoration: BoxDecoration(
-            color: theme.colorScheme.onSecondary
-                .withOpacity(0.5 + 0.5 * _controller.value),
-            borderRadius: BorderRadius.circular(4),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildAnimatedDeleteIcon({
-    required ThemeData theme,
-  }) {
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, child) {
-        return Container(
-          width: 16,
-          height: 16,
-          decoration: BoxDecoration(
-            color: theme.colorScheme.onSecondary
-                .withOpacity(0.5 + 0.5 * _controller.value),
-            borderRadius: BorderRadius.circular(4),
-          ),
-        );
-      },
+      builder: builder,
     );
   }
 }

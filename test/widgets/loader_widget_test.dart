@@ -8,7 +8,9 @@ void main() {
         (WidgetTester tester) async {
       await tester.pumpWidget(
         const MaterialApp(
-          home: CardLoaderWidget(),
+          home: CardLoaderWidget(
+            hideAvatar: false,
+          ),
         ),
       );
 

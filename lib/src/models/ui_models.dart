@@ -8,6 +8,7 @@ class CardProps {
     this.showMedia,
     this.disableAutoMarkAsRead,
     this.deleteWidget,
+    this.hideDelete,
   });
 
   /// Determines whether to hide the avatar in the notification card in Siren inbox.
@@ -21,6 +22,9 @@ class CardProps {
 
   /// Custom widget that can be used instead of default delete in the card (x)
   final Widget? deleteWidget;
+
+  /// Determines whether to hide the avatar in the notification card in Siren inbox.
+  final bool? hideDelete;
 }
 
 /// Customizable style for the Siren notification icon.
@@ -197,6 +201,7 @@ class CustomThemeColors {
 /// Properties for configuring the appearance of the notification window app bar.
 class InboxHeaderProps {
   InboxHeaderProps({
+    this.title,
     this.hideHeader,
     this.showBackButton,
     this.backButton,
@@ -204,6 +209,9 @@ class InboxHeaderProps {
     this.customHeader,
     this.handleBackNavigation,
   });
+
+  /// Title of the inbox page or window.
+  final String? title;
 
   /// Flag to hide the header.
   final bool? hideHeader;
