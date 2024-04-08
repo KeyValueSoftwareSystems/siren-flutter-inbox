@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
 import 'package:sirenapp_flutter_inbox/src/widgets/app_bar.dart';
 
 void main() {
@@ -10,8 +11,10 @@ void main() {
         home: Scaffold(
           appBar: SirenAppBar(
             theme: ThemeData(),
-            title: title,
-            showBackButton: false,
+            inboxHeaderProps: InboxHeaderProps(
+              title: title,
+              showBackButton: false,
+            ),
             showClearAllButton: false,
           ),
         ),
@@ -28,8 +31,10 @@ void main() {
         home: Scaffold(
           appBar: SirenAppBar(
             theme: ThemeData(),
-            title: 'Title',
-            showBackButton: true,
+            inboxHeaderProps: InboxHeaderProps(
+              title: 'Title',
+              showBackButton: true,
+            ),
             showClearAllButton: false,
           ),
         ),
@@ -47,10 +52,12 @@ void main() {
         home: Scaffold(
           appBar: SirenAppBar(
             theme: ThemeData(),
-            title: 'Title',
-            showBackButton: false,
+            inboxHeaderProps: InboxHeaderProps(
+              title: 'Title',
+              showBackButton: false,
+              hideClearAll: true,
+            ),
             showClearAllButton: true,
-            hideClearAll: true,
           ),
         ),
       ),
@@ -67,8 +74,10 @@ void main() {
         home: Scaffold(
           appBar: SirenAppBar(
             theme: ThemeData(),
-            title: 'Title',
-            showBackButton: false,
+            inboxHeaderProps: InboxHeaderProps(
+              title: 'Title',
+              showBackButton: false,
+            ),
             showClearAllButton: true,
           ),
         ),
@@ -87,12 +96,14 @@ void main() {
         home: Scaffold(
           appBar: SirenAppBar(
             theme: ThemeData(),
-            title: 'Title',
-            showBackButton: true,
+            inboxHeaderProps: InboxHeaderProps(
+              title: 'Title',
+              showBackButton: true,
+              handleBackNavigation: () {
+                backButtonPressed = true;
+              },
+            ),
             showClearAllButton: false,
-            onBackButtonPressed: () {
-              backButtonPressed = true;
-            },
           ),
         ),
       ),
@@ -111,8 +122,10 @@ void main() {
         home: Scaffold(
           appBar: SirenAppBar(
             theme: ThemeData(),
-            title: 'Title',
-            showBackButton: false,
+            inboxHeaderProps: InboxHeaderProps(
+              title: 'Title',
+              showBackButton: false,
+            ),
             showClearAllButton: true,
             onClearAllPressed: () {
               clearAllPressed = true;

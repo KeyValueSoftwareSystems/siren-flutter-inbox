@@ -21,7 +21,6 @@ class SirenInbox extends StatefulWidget {
     super.key,
     this.darkMode,
     this.itemsPerFetch,
-    this.title,
     this.listEmptyWidget,
     this.customNotificationCard,
     this.customLoader,
@@ -39,9 +38,6 @@ class SirenInbox extends StatefulWidget {
 
   /// Widget to display when the notification list is empty.
   final Widget? listEmptyWidget;
-
-  /// Title of the inbox page or window.
-  final String? title;
 
   /// Custom builder for notification cards.
   final Widget Function(NotificationDataType)? customNotificationCard;
@@ -474,17 +470,9 @@ class _SirenInboxState extends State<SirenInbox> {
             backgroundColor: currentTheme.colorScheme.primary,
             appBar: SirenAppBar(
               theme: currentTheme,
-              title: widget.title ?? 'Notifications',
-              showBackButton: widget.inboxHeaderProps?.showBackButton ?? false,
-              onBackButtonPressed: () {
-                if (widget.inboxHeaderProps?.handleBackNavigation != null) {
-                  widget.inboxHeaderProps?.handleBackNavigation?.call();
-                }
-              },
-              hideClearAll: widget.inboxHeaderProps?.hideClearAll ?? false,
               onClearAllPressed: onBulkDelete,
-              hideHeader: widget.inboxHeaderProps?.hideHeader ?? false,
               showClearAllButton: shouldShowClearAllButton(),
+              inboxHeaderProps: widget.inboxHeaderProps,
             ),
             body: InboxBody(
               currentTheme: currentTheme,

@@ -8,6 +8,7 @@ import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
 import 'package:sirenapp_flutter_inbox/src/api/fetch_unviewed_notification_count.dart';
 import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
 import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
+import 'package:sirenapp_flutter_inbox/src/models/ui_models.dart';
 import 'package:sirenapp_flutter_inbox/src/widgets/loader_widget.dart';
 
 import 'siren_inbox_test.mocks.dart';
@@ -56,10 +57,12 @@ void main() {
       // Mock SirenDataProvider
 
       await tester.pumpWidget(
-        const MaterialApp(
+        MaterialApp(
           home: Scaffold(
             body: SirenInbox(
-              title: 'Notifications Header',
+              inboxHeaderProps: InboxHeaderProps(
+                title: 'Notifications Header',
+              ),
               darkMode: true,
             ),
           ),

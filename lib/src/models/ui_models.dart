@@ -201,6 +201,7 @@ class CustomThemeColors {
 /// Properties for configuring the appearance of the notification window app bar.
 class InboxHeaderProps {
   InboxHeaderProps({
+    this.title,
     this.hideHeader,
     this.showBackButton,
     this.backButton,
@@ -208,6 +209,9 @@ class InboxHeaderProps {
     this.customHeader,
     this.handleBackNavigation,
   });
+
+  /// Title of the inbox page or window.
+  final String? title;
 
   /// Flag to hide the header.
   final bool? hideHeader;
