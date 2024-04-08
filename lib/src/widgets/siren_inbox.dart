@@ -496,6 +496,7 @@ class _SirenInboxState extends State<SirenInbox> {
               cardProps: widget.cardProps,
               scrollController: _scrollController,
               onEndReached: onEndReached,
+              listEmptyWidget: widget.listEmptyWidget,
             ),
           );
         },
