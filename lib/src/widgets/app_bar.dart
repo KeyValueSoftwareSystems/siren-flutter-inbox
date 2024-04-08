@@ -51,7 +51,7 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                         right: 16,
                       ),
                       child: IconButton(
-                        onPressed: inboxHeaderProps?.handleBackNavigation,
+                        onPressed: inboxHeaderProps?.onBackPress,
                         icon: inboxHeaderProps?.backButton ??
                             const Icon(Icons.arrow_back_ios),
                       ),

@@ -207,7 +207,7 @@ class InboxHeaderProps {
     this.backButton,
     this.hideClearAll,
     this.customHeader,
-    this.handleBackNavigation,
+    this.onBackPress,
   });
 
   /// Title of the inbox page or window.
@@ -229,5 +229,5 @@ class InboxHeaderProps {
   final Widget? customHeader;
 
   /// Callback function for handling back navigation.
-  final void Function()? handleBackNavigation;
+  final void Function()? onBackPress;
 }

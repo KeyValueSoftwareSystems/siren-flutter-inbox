@@ -87,7 +87,7 @@ void main() {
             body: SirenInbox(
               inboxHeaderProps: InboxHeaderProps(
                 showBackButton: true,
-                handleBackNavigation: () {
+                onBackPress: () {
                   backButtonPressed = true;
                 },
               ),

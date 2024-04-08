@@ -99,7 +99,7 @@ void main() {
             inboxHeaderProps: InboxHeaderProps(
               title: 'Title',
               showBackButton: true,
-              handleBackNavigation: () {
+              onBackPress: () {
                 backButtonPressed = true;
               },
             ),
