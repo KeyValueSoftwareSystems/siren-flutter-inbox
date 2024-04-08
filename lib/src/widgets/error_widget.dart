@@ -60,7 +60,7 @@ Widget _buildCircle(ThemeData theme) {
     child: Icon(
       Icons.warning_rounded,
       size: 84,
-      color: theme.colorScheme.surfaceTint,
+      color: theme.colorScheme.shadow,
     ),
   );
 }
