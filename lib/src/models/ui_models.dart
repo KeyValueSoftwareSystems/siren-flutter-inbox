@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sirenapp_flutter_inbox/src/models/notification_model.dart';
 
 /// Properties for configuring the appearance of the notification card.
 class CardProps {
@@ -9,6 +10,7 @@ class CardProps {
     this.disableAutoMarkAsRead,
     this.deleteWidget,
     this.hideDelete,
+    this.onAvatarClick,
   });
 
   /// Determines whether to hide the avatar in the notification card in Siren inbox.
@@ -25,6 +27,9 @@ class CardProps {
 
   /// Determines whether to hide the avatar in the notification card in Siren inbox.
   final bool? hideDelete;
+
+  /// Callback function when a notification card is clicked.
+  final void Function(NotificationDataType)? onAvatarClick;
 }
 
 /// Customizable style for the Siren notification icon.

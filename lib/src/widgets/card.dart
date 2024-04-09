@@ -121,24 +121,29 @@ class _CardWidgetState extends State<CardWidget> {
 
   Widget _buildDefaultAvatarContainer(ThemeData theme) {
     final avatarUrl = widget.notification.message.avatar?.url;
-    return Padding(
-      padding: const EdgeInsets.only(
-        right: 24,
-      ),
-      child: Container(
-        decoration: widget.styles?.cardAvatarContainer,
-        child: CircleAvatar(
-          radius: 21,
-          backgroundImage: avatarUrl != null && avatarUrl.isNotEmpty
-              ? NetworkImage(avatarUrl)
-              : null,
-          backgroundColor: theme.colorScheme.onSecondary,
-          child: avatarUrl == null || avatarUrl.isEmpty
-              ? Icon(
-                  Icons.landscape_rounded,
-                  color: theme.colorScheme.surfaceVariant,
-                )
-              : null,
+    return GestureDetector(
+      onTap: () {
+        widget.cardProps.onAvatarClick?.call(widget.notification);
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(
+          right: 24,
+        ),
+        child: Container(
+          decoration: widget.styles?.cardAvatarContainer,
+          child: CircleAvatar(
+            radius: 21,
+            backgroundImage: avatarUrl != null && avatarUrl.isNotEmpty
+                ? NetworkImage(avatarUrl)
+                : null,
+            backgroundColor: theme.colorScheme.onSecondary,
+            child: avatarUrl == null || avatarUrl.isEmpty
+                ? Icon(
+                    Icons.landscape_rounded,
+                    color: theme.colorScheme.surfaceVariant,
+                  )
+                : null,
+          ),
         ),
       ),
     );
