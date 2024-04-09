@@ -14,7 +14,7 @@ void main() {
           'currentPage': '1',
           'first': 'first',
           'totalElements': '50',
-        },
+        }
       };
       final response = ApiResponse.fromJson(json);
 

@@ -74,7 +74,6 @@ class _SirenInboxIconState extends State<SirenInboxIcon> {
     super.dispose();
     _periodicUpdateRef.cancel();
     _subscription.cancel();
-    SirenDataProvider.instance.iconDispose();
   }
 
   void _subscribeToStream() {

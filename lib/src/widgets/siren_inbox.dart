@@ -12,52 +12,32 @@ import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
 import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
 import 'package:sirenapp_flutter_inbox/src/theme/app_theme.dart';
 import 'package:sirenapp_flutter_inbox/src/utils/common_utils.dart';
-import 'package:sirenapp_flutter_inbox/src/widgets/empty_widget.dart';
-import 'package:sirenapp_flutter_inbox/src/widgets/error_widget.dart';
-import 'package:sirenapp_flutter_inbox/src/widgets/loader_widget.dart';
-import 'package:sirenapp_flutter_inbox/src/widgets/notification_list_view.dart';
+import 'package:sirenapp_flutter_inbox/src/widgets/app_bar.dart';
+import 'package:sirenapp_flutter_inbox/src/widgets/inbox_body.dart';
 
 /// Widget for displaying an inbox of notifications.
 class SirenInbox extends StatefulWidget {
   const SirenInbox({
     super.key,
-    this.hideHeader,
-    this.hideClearAll,
-    this.showDefaultBackButton,
     this.darkMode,
     this.itemsPerFetch,
-    this.title,
-    this.defaultBackButton,
     this.listEmptyWidget,
     this.customNotificationCard,
     this.customLoader,
     this.customErrorWidget,
-    this.customHeader,
     this.cardProps,
     this.onNotificationCardClick,
     this.onError,
-    this.handleBackNavigation,
     this.theme,
     this.customStyles,
+    this.inboxHeaderProps,
   });
 
   /// Custom styles for the card of each notification.
   final SirenStyleProps? customStyles;
 
-  /// Flag to hide the header.
-  final bool? hideHeader;
-
   /// Widget to display when the notification list is empty.
   final Widget? listEmptyWidget;
-
-  /// Title of the inbox page or window.
-  final String? title;
-
-  /// Flag to show the header back button provided by the sdk.
-  final bool? showDefaultBackButton;
-
-  /// Default back button widget for the header provided by the sdk.
-  final Icon? defaultBackButton;
 
   /// Custom builder for notification cards.
   final Widget Function(NotificationDataType)? customNotificationCard;
@@ -67,9 +47,6 @@ class SirenInbox extends StatefulWidget {
 
   /// Callback function for handling errors.
   final void Function(ApiErrorDetails)? onError;
-
-  /// Flag to hide the "Clear All" button.
-  final bool? hideClearAll;
 
   /// Flag for enabling dark mode.
   final bool? darkMode;
@@ -83,18 +60,14 @@ class SirenInbox extends StatefulWidget {
   /// Custom error widget.
   final Widget? customErrorWidget;
 
-  /// Custom header or appBar widget.
-  final Widget? customHeader;
-
-  /// Callback function for handling back navigation.
-  final void Function()? handleBackNavigation;
-
   /// Notifications to be fetched in each request
   final int? itemsPerFetch;
 
-  ///Custom params for Card properties
-  final CardParams? cardProps;
+  ///Custom props for Card properties
+  final CardProps? cardProps;
 
+  /// Custom props for header properties
+  final InboxHeaderProps? inboxHeaderProps;
   @override
   State<SirenInbox> createState() => _SirenInboxState();
 }
@@ -106,7 +79,7 @@ class _SirenInboxState extends State<SirenInbox> {
   bool isError = false;
   bool loadingNextPage = false;
   int currentPage = 0;
-  late int totalElements;
+  int totalElements = 0;
   String? deletingNotificationId;
   int pageSize = 20;
 
@@ -119,7 +92,7 @@ class _SirenInboxState extends State<SirenInbox> {
   @override
   void initState() {
     super.initState();
-    pageSize = min(widget.itemsPerFetch ?? Generics.PAGE_SIZE, 50);
+    pageSize = max(min(widget.itemsPerFetch ?? Generics.PAGE_SIZE, 50), 0);
     _periodicUpdateRef = Timer(const Duration(days: 1), () {});
     _scrollController = ScrollController();
     _scrollController.addListener(_scrollListener);
@@ -135,7 +108,6 @@ class _SirenInboxState extends State<SirenInbox> {
     _scrollController.dispose();
     _periodicUpdateRef?.cancel();
     _subscription.cancel();
-    SirenDataProvider.instance.inboxDispose();
     super.dispose();
   }
 
@@ -208,11 +180,8 @@ class _SirenInboxState extends State<SirenInbox> {
     }
   }
 
-  PreferredSize _buildAppBar(ThemeData theme) {
-    return PreferredSize(
-      preferredSize: const Size.fromHeight(kToolbarHeight),
-      child: widget.customHeader ?? _buildCustomAppBar(theme, kToolbarHeight),
-    );
+  bool shouldShowClearAllButton() {
+    return !isError && !isLoading && notifications.isNotEmpty;
   }
 
   void _markNotificationAsReadById(String? notificationId) {
@@ -376,6 +345,13 @@ class _SirenInboxState extends State<SirenInbox> {
       data: data,
     );
     if (deleteAllResponse.isSuccess) {
+      SirenDataProvider.instance.inboxController.sink.add(
+        StreamResponse(
+          deleteAllResponse,
+          UpdateEvents.DELETE_ALL,
+          '',
+        ),
+      );
       _deleteAllNotifications();
     } else if (deleteAllResponse.isError) {
       widget.onError?.call(deleteAllResponse.error ?? ApiErrorDetails());
@@ -395,7 +371,13 @@ class _SirenInboxState extends State<SirenInbox> {
       }
 
       await Future.delayed(const Duration(milliseconds: 500));
-
+      SirenDataProvider.instance.inboxController.sink.add(
+        StreamResponse(
+          deletionStatus,
+          UpdateEvents.DELETE_BY_ID,
+          id,
+        ),
+      );
       if (mounted) {
         setState(() {
           deletingNotificationId = null;
@@ -457,6 +439,13 @@ class _SirenInboxState extends State<SirenInbox> {
     final readStatus =
         await _readNotificationById.readNotificationById(notificationId: id);
     if (readStatus.isSuccess) {
+      SirenDataProvider.instance.inboxController.sink.add(
+        StreamResponse(
+          readStatus,
+          UpdateEvents.READ_BY_ID,
+          id,
+        ),
+      );
       _markNotificationAsReadById(id);
     } else if (readStatus.isError) {
       widget.onError?.call(readStatus.error ?? ApiErrorDetails());
@@ -477,173 +466,41 @@ class _SirenInboxState extends State<SirenInbox> {
       child: Builder(
         builder: (context) {
           final currentTheme = Theme.of(context);
-
           return Scaffold(
             backgroundColor: currentTheme.colorScheme.primary,
-            appBar:
-                widget.hideHeader ?? false ? null : _buildAppBar(currentTheme),
-            body: isError
-                ? RefreshIndicator(
-                    color: currentTheme.colorScheme.secondary,
-                    backgroundColor: currentTheme.colorScheme.primary,
-                    onRefresh: onRefresh,
-                    child: ListView(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      children: [
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.75,
-                          width: MediaQuery.of(context).size.width,
-                          child: Center(
-                            child: widget.customErrorWidget ??
-                                const DefaultErrorWidget(),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                : (isLoading && !loadingNextPage)
-                    ? LoaderWidget(
-                        customLoader: widget.customLoader,
-                      )
-                    : _buildBody(currentTheme),
+            appBar: SirenAppBar(
+              theme: currentTheme,
+              onClearAllPressed: onBulkDelete,
+              showClearAllButton: shouldShowClearAllButton(),
+              inboxHeaderProps: widget.inboxHeaderProps,
+            ),
+            body: InboxBody(
+              currentTheme: currentTheme,
+              isLoading: isLoading,
+              loadingNextPage: loadingNextPage,
+              isError: isError,
+              notifications: notifications,
+              deleteNotification: deleteNotification,
+              markAsRead: _markNotificationAsRead,
+              customNotificationCard: widget.customNotificationCard,
+              onNotificationCardClick: widget.onNotificationCardClick,
+              deletingNotificationId: deletingNotificationId,
+              disableAutoMarkAsRead:
+                  widget.cardProps?.disableAutoMarkAsRead ?? false,
+              totalElements: totalElements,
+              onRefresh: onRefresh,
+              customErrorWidget: widget.customErrorWidget,
+              customLoader: widget.customLoader,
+              endReached: endReached,
+              customStyles: widget.customStyles,
+              cardProps: widget.cardProps,
+              scrollController: _scrollController,
+              onEndReached: onEndReached,
+              listEmptyWidget: widget.listEmptyWidget,
+            ),
           );
         },
       ),
     );
-  }
-
-  Widget _buildCustomAppBar(ThemeData theme, double appBarHeight) {
-    return Container(
-      decoration: BoxDecoration(
-        color: theme.colorScheme.primary,
-        border: Border(
-          bottom: BorderSide(
-            color: theme.colorScheme.surfaceTint,
-          ),
-        ),
-      ),
-      height: appBarHeight,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              if (widget.showDefaultBackButton ?? false)
-                IconButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    if (widget.handleBackNavigation != null) {
-                      widget.handleBackNavigation?.call();
-                    }
-                  },
-                  icon: widget.defaultBackButton ??
-                      const Icon(Icons.arrow_back_ios),
-                ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: widget.showDefaultBackButton ?? false ? 2 : 24,
-                ),
-                child: Text(
-                  widget.title ?? 'Notifications',
-                  style: widget.customStyles?.defaultHeaderTextStyle ??
-                      TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: theme.colorScheme.onBackground,
-                      ),
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-              right: 24,
-            ),
-            child: Row(
-              children: [
-                if (!(widget.hideClearAll ?? false) &&
-                    (!isError && !isLoading && notifications.isNotEmpty))
-                  GestureDetector(
-                    onTap: onBulkDelete,
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 4),
-                          child: Icon(
-                            Icons.clear_all,
-                            color: theme.colorScheme.outline,
-                            size: 24,
-                          ),
-                        ),
-                        Text(
-                          'Clear All',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: theme.colorScheme.outline,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBody(ThemeData theme) {
-    if (notifications.isEmpty && isLoading) {
-      return LoaderWidget(
-        customLoader: widget.customLoader,
-      );
-    } else if (notifications.isEmpty && !isLoading) {
-      return widget.listEmptyWidget ?? const EmptyWidget();
-    } else {
-      return NotificationListView(
-        notifications: notifications,
-        isLoading: isLoading,
-        endReached: endReached,
-        onRefresh: onRefresh,
-        onEndReached: onEndReached,
-        loadingNextPage: loadingNextPage,
-        customStyles: widget.customStyles,
-        deleteWidget: widget.cardProps?.deleteWidget,
-        hideAvatar: widget.cardProps?.hideAvatar,
-        scrollController: _scrollController,
-        onDelete: deleteNotification,
-        markAsRead: _markNotificationAsRead,
-        customNotificationCard: widget.customNotificationCard,
-        onNotificationCardClick: widget.onNotificationCardClick,
-        deletingNotificationId: deletingNotificationId,
-        disableAutoMarkAsRead: true,
-        totalElements: totalElements,
-      );
-    }
-  }
-}
-
-class LoaderWidget extends StatelessWidget {
-  const LoaderWidget({
-    super.key,
-    this.customLoader,
-  });
-
-  final Widget? customLoader;
-
-  @override
-  Widget build(BuildContext context) {
-    return customLoader ??
-        ListView.builder(
-          itemCount: Generics.PAGE_SIZE,
-          itemBuilder: (context, index) {
-            return const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8),
-              child: CardLoaderWidget(),
-            );
-          },
-        );
   }
 }

@@ -195,5 +195,101 @@ void main() {
       expect(response.data, responseData);
       expect(response.statusCode, responseStatusCode);
     });
+
+    test('Handles DioException on GET request', () async {
+      // Simulate DioException when making a GET request
+      when(mockDio.get(any, queryParameters: anyNamed('queryParameters')))
+          .thenThrow(
+        DioException(
+          requestOptions: RequestOptions(),
+          response: Response(
+            data: 'Error message',
+            statusCode: 404,
+            requestOptions: RequestOptions(),
+          ),
+        ),
+      );
+
+      // Perform the GET request using ApiClient
+      final result = await apiClient.get(path: '/example');
+
+      expect(result.data, 'Error message');
+      expect(
+        result.statusCode,
+        404,
+      );
+    });
+
+    test('Handles DioException on POST request', () async {
+      // Simulate DioException when making a GET request
+      when(mockDio.post(any, queryParameters: anyNamed('queryParameters')))
+          .thenThrow(
+        DioException(
+          requestOptions: RequestOptions(),
+          response: Response(
+            data: 'Error message',
+            statusCode: 404,
+            requestOptions: RequestOptions(),
+          ),
+        ),
+      );
+
+      // Perform the GET request using ApiClient
+      final result = await apiClient.post(path: '/example');
+
+      expect(result.data, 'Error message');
+      expect(
+        result.statusCode,
+        404,
+      );
+    });
+
+    test('Handles DioException on Patch request', () async {
+      // Simulate DioException when making a GET request
+      when(mockDio.patch(any, queryParameters: anyNamed('queryParameters')))
+          .thenThrow(
+        DioException(
+          requestOptions: RequestOptions(),
+          response: Response(
+            data: 'Error message',
+            statusCode: 404,
+            requestOptions: RequestOptions(),
+          ),
+        ),
+      );
+
+      // Perform the GET request using ApiClient
+      final result = await apiClient.patch(path: '/example');
+
+      expect(result.data, 'Error message');
+      expect(
+        result.statusCode,
+        404,
+      );
+    });
+
+    test('Handles DioException on delete request', () async {
+      // Simulate DioException when making a GET request
+      when(mockDio.delete(any, queryParameters: anyNamed('queryParameters')))
+          .thenThrow(
+        DioException(
+          requestOptions: RequestOptions(),
+          response: Response(
+            data: 'Error message',
+            statusCode: 404,
+            requestOptions: RequestOptions(),
+          ),
+        ),
+      );
+
+      // Perform the GET request using ApiClient
+      final result = await apiClient.delete(path: '/example');
+
+      expect(result.data, 'Error message');
+      expect(
+        result.statusCode,
+        404,
+      );
+    });
   });
 }

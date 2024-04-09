@@ -126,7 +126,7 @@ void main() {
     const Widget deleteWidget = Icon(Icons.delete);
 
     // Act
-    final cardParams = CardParams(
+    const cardParams = CardProps(
       hideAvatar: hideAvatar,
       deleteWidget: deleteWidget,
     );

@@ -1,5 +1,3 @@
-// ignore_for_file: unused_local_variable
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -10,6 +8,8 @@ import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
 import 'package:sirenapp_flutter_inbox/src/api/fetch_unviewed_notification_count.dart';
 import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
 import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
+import 'package:sirenapp_flutter_inbox/src/models/ui_models.dart';
+import 'package:sirenapp_flutter_inbox/src/widgets/loader_widget.dart';
 
 import 'siren_inbox_test.mocks.dart';
 
@@ -27,27 +27,6 @@ void main() {
     late StreamController<StreamResponse> iconController;
     late StreamController<StreamResponse> inboxController;
     late MockSirenDataProvider mockSirenDataProvider;
-    final notification = <NotificationDataType>[
-      NotificationDataType(
-        id: '1',
-        createdAt: '2024-03-15T04:07:14.577928Z',
-        message: MessageData(
-          header: 'Test Header',
-          subHeader: 'Test SubHeader',
-          body: 'Test Body',
-          channel: 'Test Channel',
-          actionUrl: 'Test Action Url',
-          avatar: AvatarData(
-            altText: 'Test alt text',
-            url: 'https://picsum.photos/200/300',
-          ),
-          additionalData: 'Test Additional Data',
-        ),
-        requestId: 'request-id',
-        isRead: false,
-        cardColor: Colors.black,
-      ),
-    ];
 
     setUp(() {
       iconController = StreamController<StreamResponse>.broadcast();
@@ -62,8 +41,6 @@ void main() {
       inboxController.close();
     });
     testWidgets('Initial loading state', (WidgetTester tester) async {
-      // Mock SirenDataProvider
-
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -76,29 +53,17 @@ void main() {
       expect(find.byType(LoaderWidget), findsOneWidget);
     });
 
-    // testWidgets('Error state', (WidgetTester tester) async {
-    //   // Mock SirenDataProvider
-
-    //   await tester.pumpWidget(
-    //     const MaterialApp(
-    //       home: Scaffold(
-    //         body: SirenInbox(),
-    //       ),
-    //     ),
-    //   );
-
-    //   // Error state widget should be displayed
-    //   expect(find.byType(DefaultErrorWidget), findsOneWidget);
-    // });
-
     testWidgets('Test Title', (WidgetTester tester) async {
       // Mock SirenDataProvider
 
       await tester.pumpWidget(
-        const MaterialApp(
+        MaterialApp(
           home: Scaffold(
             body: SirenInbox(
-              title: 'Notifications Header',
+              inboxHeaderProps: InboxHeaderProps(
+                title: 'Notifications Header',
+              ),
+              darkMode: true,
             ),
           ),
         ),
@@ -114,56 +79,48 @@ void main() {
       expect(find.text('Notifications Header'), findsOneWidget);
     });
 
-    testWidgets('Custom Header', (WidgetTester tester) async {
-      // Mock SirenDataProvider
-
+    testWidgets('Back navigation', (WidgetTester tester) async {
+      var backButtonPressed = false;
       await tester.pumpWidget(
-        const MaterialApp(
+        MaterialApp(
           home: Scaffold(
             body: SirenInbox(
-              customHeader: Text('Custom Header'),
+              inboxHeaderProps: InboxHeaderProps(
+                showBackButton: true,
+                onBackPress: () {
+                  backButtonPressed = true;
+                },
+              ),
             ),
           ),
         ),
       );
 
-      // Loading state widget should be displayed
-      expect(find.byType(LoaderWidget), findsOneWidget);
-
-      // Simulate a successful fetch
       await tester.pump();
-
-      // Verify that notification list is displayed
-      expect(find.text('Custom Header'), findsOneWidget);
+      await tester.tap(find.byIcon(Icons.arrow_back_ios));
+      expect(backButtonPressed, true);
     });
 
-    testWidgets('Widget Handle back navigation', (WidgetTester tester) async {
-      final func = MockFunction().call;
-      final widget = MaterialApp(
-        home: Scaffold(
-          body: SirenInbox(
-            showDefaultBackButton: true,
-            handleBackNavigation: func,
+    testWidgets('Test theme', (WidgetTester tester) async {
+      // Mock SirenDataProvider
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SirenInbox(
+              theme: CustomThemeColors(backgroundColor: Colors.amber),
+            ),
           ),
         ),
       );
-      await tester.pumpWidget(widget);
-      await tester.tap(find.byType(GestureDetector));
-      await tester.pumpAndSettle(const Duration(seconds: 2));
-      verify(func()).called(1);
-    });
 
-    testWidgets('Show default back button', (WidgetTester tester) async {
-      const widget = MaterialApp(
-        home: Scaffold(
-          body: SirenInbox(
-            showDefaultBackButton: true,
-            // defaultBackButton: Icon(Icons.back_hand),
-          ),
-        ),
-      );
-      await tester.pumpWidget(widget);
-      expect(find.byIcon(Icons.arrow_back_ios), findsOneWidget);
+      final scaffoldFinder = find.byType(Scaffold).at(1);
+
+      final scaffoldWidget = tester.widget<Scaffold>(scaffoldFinder);
+      final scaffoldBackgroundColor = scaffoldWidget.backgroundColor;
+      expect(scaffoldBackgroundColor, equals(Colors.amber));
+
+      await tester.pump();
     });
 
     testWidgets('Stream', (WidgetTester tester) async {

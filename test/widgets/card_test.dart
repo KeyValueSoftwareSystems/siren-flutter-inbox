@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:network_image_mock/network_image_mock.dart';
 import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
 import 'package:sirenapp_flutter_inbox/src/widgets/card.dart';
 
 class MockNetworkImage extends Mock implements NetworkImage {}
 
+class MockFunction extends Mock {
+  void call();
+}
+
 void main() {
   testWidgets('CardWidget renders correctly', (WidgetTester tester) async {
     // Create a mock notification data
     // ignore: unused_local_variable
+    final func = MockFunction().call;
     final notification = NotificationDataType(
       id: '123',
       createdAt: '2024-03-15T04:07:14.577928Z',
@@ -27,45 +33,40 @@ void main() {
       ),
       requestId: '456',
       isRead: false,
-      cardColor: Colors.blue, // Mock card color
+      cardColor: Colors.blue,
     );
 
-    // Mock the NetworkImage provider
-    // final mockImageProvider = MockNetworkImage();
-    // when(mockImageProvider.resolve(any, any)).thenAnswer(
-    //   (_) => Future.value(
-    //     ImageStreamCompleter(
-    //       completer: Completer<ImageInfo>(),
-    //       // Mock image stream completer
-    //     ),
-    //   ),
-    // );
-
-    // Build the CardWidget with the mock data
-    await tester.pumpWidget(
-      MaterialApp(
-        home: CardWidget(
-          onTap: (notification) {}, // Mock onTap function
-          onDelete: (id) {}, // Mock onDelete function
-          notification: notification,
-          cardProps: const CardProps(hideAvatar: true),
-          styles: null, // Mock styles
-          // Pass the mock image provider
-          // deleteWidget: Image(image: mockImageProvider),
+    var deletePressed = false;
+    await mockNetworkImagesFor(() async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: CardWidget(
+            onTap: (notification) {},
+            onDelete: (id) {
+              deletePressed = true;
+            },
+            notification: notification,
+            cardProps: CardProps(
+              hideAvatar: false,
+              hideDelete: false,
+              onAvatarClick: (notification) {
+                func();
+              },
+            ),
+            styles: null, // Mock styles
+            // deleteWidget: Image(image: mockImageProvider),
+          ),
         ),
-      ),
-    );
-
-    // Verify that the header text is rendered
+      );
+    });
     expect(find.text('Test Header'), findsOneWidget);
-
-    // Verify that the sub-header text is rendered
     expect(find.text('Test SubHeader'), findsOneWidget);
-
-    // Verify that the body text is rendered
     expect(find.text('Test Body'), findsOneWidget);
-
-    // Verify that the delete button is rendered
-    // expect(find.byType(Image), findsOneWidget);
+    await tester.tap(find.byType(GestureDetector).at(1));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    verify(func()).called(1);
+    await tester.tap(find.byType(GestureDetector).at(2));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    expect(deletePressed, true);
   });
 }

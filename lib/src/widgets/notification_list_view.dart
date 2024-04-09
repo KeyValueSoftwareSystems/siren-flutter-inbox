@@ -11,16 +11,14 @@ class NotificationListView extends StatefulWidget {
     required this.onEndReached,
     required this.loadingNextPage,
     required this.customStyles,
-    required this.hideAvatar,
-    required this.deleteWidget,
     required this.scrollController,
     required this.onDelete,
     required this.markAsRead,
     this.customNotificationCard,
     this.onNotificationCardClick,
     this.deletingNotificationId,
-    this.disableAutoMarkAsRead,
     this.totalElements,
+    this.cardProps,
     super.key,
   });
 
@@ -31,16 +29,14 @@ class NotificationListView extends StatefulWidget {
   final Future<void> Function() onRefresh;
   final VoidCallback onEndReached;
   final SirenStyleProps? customStyles;
-  final bool? hideAvatar;
-  final Widget? deleteWidget;
   final ScrollController scrollController;
   final Future<void> Function(String) onDelete;
   final void Function(String) markAsRead;
   final Widget Function(NotificationDataType)? customNotificationCard;
   final void Function(NotificationDataType)? onNotificationCardClick;
   final String? deletingNotificationId;
-  final bool? disableAutoMarkAsRead;
   final int? totalElements;
+  final CardProps? cardProps;
 
   @override
   State<NotificationListView> createState() => _NotificationListViewState();
@@ -86,19 +82,15 @@ class _NotificationListViewState extends State<NotificationListView> {
                     ?.call(widget.notifications[index]) ??
                 CardWidget(
                   onTap: (notification) {
-                    if (!(widget.disableAutoMarkAsRead ?? false)) {
+                    if (!(widget.cardProps?.disableAutoMarkAsRead ?? false)) {
                       widget.markAsRead(widget.notifications[index].id);
                     }
                     widget.onNotificationCardClick
                         ?.call(widget.notifications[index]);
                   },
                   notification: widget.notifications[index],
-                  cardProps: CardProps(
-                    hideAvatar: widget.hideAvatar,
-                    showMedia: true,
-                  ),
+                  cardProps: widget.cardProps ?? const CardProps(),
                   styles: widget.customStyles,
-                  deleteWidget: widget.deleteWidget,
                   onDelete: widget.onDelete,
                 );
             return AnimatedOpacity(

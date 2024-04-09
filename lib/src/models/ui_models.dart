@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sirenapp_flutter_inbox/src/models/notification_model.dart';
 
 /// Properties for configuring the appearance of the notification card.
 class CardProps {
@@ -6,6 +7,10 @@ class CardProps {
   const CardProps({
     this.hideAvatar,
     this.showMedia,
+    this.disableAutoMarkAsRead,
+    this.deleteWidget,
+    this.hideDelete,
+    this.onAvatarClick,
   });
 
   /// Determines whether to hide the avatar in the notification card in Siren inbox.
@@ -13,6 +18,18 @@ class CardProps {
 
   /// Determines whether to show media content in the notification card in Siren inbox.
   final bool? showMedia;
+
+  /// The flag to turn on and off the mark as read functionality
+  final bool? disableAutoMarkAsRead;
+
+  /// Custom widget that can be used instead of default delete in the card (x)
+  final Widget? deleteWidget;
+
+  /// Determines whether to hide the avatar in the notification card in Siren inbox.
+  final bool? hideDelete;
+
+  /// Callback function when a notification card is clicked.
+  final void Function(NotificationDataType)? onAvatarClick;
 }
 
 /// Customizable style for the Siren notification icon.
@@ -186,16 +203,36 @@ class CustomThemeColors {
   final Color? inboxTitleColor;
 }
 
-/// Custom Properties for notification card
-class CardParams {
-  CardParams({
-    this.hideAvatar,
-    this.deleteWidget,
+/// Properties for configuring the appearance of the notification window app bar.
+class InboxHeaderProps {
+  InboxHeaderProps({
+    this.title,
+    this.hideHeader,
+    this.showBackButton,
+    this.backButton,
+    this.hideClearAll,
+    this.customHeader,
+    this.onBackPress,
   });
 
-  /// The Flag to hide or show avatar
-  final bool? hideAvatar;
+  /// Title of the inbox page or window.
+  final String? title;
 
-  /// Custom widget that can be used instead of default delete in the card (x)
-  final Widget? deleteWidget;
+  /// Flag to hide the header.
+  final bool? hideHeader;
+
+  /// Flag to show the header back button provided by the sdk.
+  final bool? showBackButton;
+
+  /// Default back button widget for the header provided by the sdk.
+  final Icon? backButton;
+
+  /// Flag to hide the "Clear All" button.
+  final bool? hideClearAll;
+
+  /// Custom header or appBar widget.
+  final Widget? customHeader;
+
+  /// Callback function for handling back navigation.
+  final void Function()? onBackPress;
 }

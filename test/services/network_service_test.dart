@@ -7,8 +7,6 @@ import 'package:sirenapp_flutter_inbox/src/services/network_service.dart';
 
 import 'network_service_test.mocks.dart';
 
-// class MockApiClient extends Mock implements ApiClient {}
-
 @GenerateNiceMocks([
   MockSpec<ApiClient>(),
 ])
