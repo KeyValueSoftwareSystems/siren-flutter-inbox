@@ -14,10 +14,8 @@ void main() {
         ),
       );
 
-      // Verify that CardLoaderWidget is rendered
       expect(find.byType(CardLoaderWidget), findsOneWidget);
 
-      // Find the circular Container
       final circularContainerFinder = find.descendant(
         of: find.byType(CardLoaderWidget),
         matching: find.byWidgetPredicate(
@@ -30,10 +28,8 @@ void main() {
         ),
       );
 
-      // Verify that only one circular Container is found
       expect(circularContainerFinder, findsOneWidget);
 
-      // Find the Padding containing the Row
       final paddingWithRowFinder = find.descendant(
         of: find.byType(CardLoaderWidget),
         matching: find.byWidgetPredicate(
@@ -41,7 +37,6 @@ void main() {
         ),
       );
 
-      // Verify that only one Padding containing a Row is found
       expect(paddingWithRowFinder, findsOneWidget);
     });
   });

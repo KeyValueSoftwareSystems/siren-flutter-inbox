@@ -116,7 +116,7 @@ void main() {
   testWidgets(
       'SirenAppBar calls onClearAllPressed when clear all button is pressed',
       (WidgetTester tester) async {
-    bool clearAllPressed = false;
+    var clearAllPressed = false;
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(

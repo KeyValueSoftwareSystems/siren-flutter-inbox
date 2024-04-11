@@ -8,14 +8,12 @@ import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
 import 'package:sirenapp_flutter_inbox/src/api/fetch_unviewed_notification_count.dart';
 import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
 import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
-import 'package:sirenapp_flutter_inbox/src/models/ui_models.dart';
 import 'package:sirenapp_flutter_inbox/src/widgets/loader_widget.dart';
 
 import 'siren_inbox_test.mocks.dart';
 
 class MockFunction extends Mock {
-  // Define the mock function signature
-  void call(); // You can define parameters and return types as needed
+  void call();
 }
 
 @GenerateNiceMocks([
@@ -49,13 +47,10 @@ void main() {
         ),
       );
 
-      // Loading state widget should be displayed
       expect(find.byType(LoaderWidget), findsOneWidget);
     });
 
     testWidgets('Test Title', (WidgetTester tester) async {
-      // Mock SirenDataProvider
-
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -69,13 +64,10 @@ void main() {
         ),
       );
 
-      // Loading state widget should be displayed
       expect(find.byType(LoaderWidget), findsOneWidget);
 
-      // Simulate a successful fetch
       await tester.pump();
 
-      // Verify that notification list is displayed
       expect(find.text('Notifications Header'), findsOneWidget);
     });
 
@@ -102,8 +94,6 @@ void main() {
     });
 
     testWidgets('Test theme', (WidgetTester tester) async {
-      // Mock SirenDataProvider
-
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(

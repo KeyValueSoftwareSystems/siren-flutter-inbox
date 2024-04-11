@@ -22,30 +22,24 @@ void main() {
 
   group('SirenDataProvider', () {
     test('UpdateParams updates user token and recipient ID', () async {
-      // Perform updateParams
       sirenDataProvider.updateParams(
         userToken: 'token',
         recipientId: 'recipientId',
       );
 
-      // Verify that user token and recipient ID are updated correctly
       expect(sirenDataProvider.userToken, 'token');
       expect(sirenDataProvider.recipientId, 'recipientId');
     });
 
     test('IconDispose closes icon controller', () {
-      // Perform icon disposal
       sirenDataProvider.iconDispose();
 
-      // Verify that icon controller is closed
       expect(sirenDataProvider.iconController.isClosed, false);
     });
 
     test('InboxDispose closes inbox controller', () {
-      // Perform inbox disposal
       sirenDataProvider.inboxDispose();
 
-      // Verify that inbox controller is closed
       expect(sirenDataProvider.inboxController.isClosed, false);
     });
 
@@ -59,8 +53,9 @@ void main() {
       sirenDataProvider.updateParams(userToken: 'token', recipientId: '123');
 
       await Future.delayed(
-          const Duration(seconds: Generics.DATA_FETCH_INTERVAL) *
-              (Generics.MAX_RETRIES + 1));
+        const Duration(seconds: Generics.DATA_FETCH_INTERVAL) *
+            (Generics.MAX_RETRIES + 1),
+      );
 
       expect(sirenDataProvider.tokenVerificationStatus, Status.FAILED);
     });
