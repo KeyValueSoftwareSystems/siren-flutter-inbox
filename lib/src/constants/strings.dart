@@ -7,4 +7,5 @@ class Strings {
   static const error_desc =
       'Could not load the notifications. Please refresh the page.';
   static const clear_all = 'Clear All';
+  static const notifications = 'Notifications';
 }

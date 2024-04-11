@@ -62,7 +62,7 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                           (inboxHeaderProps?.showBackButton ?? false) ? 2 : 24,
                     ),
                     child: Text(
-                      inboxHeaderProps?.title ?? 'Notifications',
+                      inboxHeaderProps?.title ?? Strings.notifications,
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
