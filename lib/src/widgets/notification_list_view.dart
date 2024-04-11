@@ -78,26 +78,26 @@ class _NotificationListViewState extends State<NotificationListView> {
         itemBuilder: (context, index) {
           if (index < widget.notifications.length) {
             final isLastIndex = index == widget.notifications.length - 1;
+            final currentNotification = widget.notifications[index];
             final itemWidget = widget.customNotificationCard
-                    ?.call(widget.notifications[index]) ??
+                    ?.call(currentNotification) ??
                 CardWidget(
                   onTap: (notification) {
                     if (!(widget.cardProps?.disableAutoMarkAsRead ?? false)) {
-                      widget.markAsRead(widget.notifications[index].id);
+                      widget.markAsRead(currentNotification.id);
                     }
-                    widget.onNotificationCardClick
-                        ?.call(widget.notifications[index]);
+                    widget.onNotificationCardClick?.call(currentNotification);
                   },
-                  notification: widget.notifications[index],
+                  notification: currentNotification,
                   cardProps: widget.cardProps ?? const CardProps(),
                   styles: widget.customStyles,
                   onDelete: widget.onDelete,
                 );
             return AnimatedOpacity(
-              key: isLastIndex ? _listViewKey : null,
+              key:
+                  isLastIndex ? _listViewKey : ValueKey(currentNotification.id),
               duration: const Duration(milliseconds: 500),
-              opacity: widget.deletingNotificationId ==
-                      widget.notifications[index].id
+              opacity: widget.deletingNotificationId == currentNotification.id
                   ? 0.0
                   : 1.0,
               child: itemWidget,
