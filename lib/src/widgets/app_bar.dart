@@ -27,7 +27,6 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
     if (inboxHeaderProps?.hideHeader ?? false) {
       return const SizedBox.shrink();
     }
-
     return Container(
       decoration: BoxDecoration(
         color: theme.colorScheme.primary,
@@ -86,13 +85,14 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                     child: GestureDetector(
                       key: const Key('siren-header-clear-all'),
                       onTap: onClearAllPressed,
-                      child: const Row(
+                      child: Row(
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(right: 4),
+                            padding: const EdgeInsets.only(right: 4),
                             child: Icon(
                               Icons.clear_all,
                               size: 24,
+                              color: theme.colorScheme.outline,
                             ),
                           ),
                           Text(
@@ -100,6 +100,7 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
+                              color: theme.colorScheme.outline,
                             ),
                           ),
                         ],

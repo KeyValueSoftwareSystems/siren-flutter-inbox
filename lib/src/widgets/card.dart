@@ -199,8 +199,8 @@ class _CardWidgetState extends State<CardWidget> {
 
   Widget _buildFooterRow(ThemeData theme) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 10,
+      padding: const EdgeInsets.only(
+        top: 10,
       ),
       child: Container(
         decoration: widget.styles?.cardFooterRow,
