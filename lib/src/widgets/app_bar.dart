@@ -50,10 +50,15 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                         left: 24,
                         right: 16,
                       ),
-                      child: IconButton(
-                        onPressed: inboxHeaderProps?.onBackPress,
-                        icon: inboxHeaderProps?.backButton ??
-                            const Icon(Icons.arrow_back_ios),
+                      child: Semantics(
+                        label: 'siren-header-back',
+                        hint: 'Tap to view navigate back',
+                        child: IconButton(
+                          key: const Key('siren-header-back'),
+                          onPressed: inboxHeaderProps?.onBackPress,
+                          icon: inboxHeaderProps?.backButton ??
+                              const Icon(Icons.arrow_back_ios),
+                        ),
                       ),
                     ),
                   Padding(
@@ -75,25 +80,30 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                   showClearAllButton)
                 Padding(
                   padding: const EdgeInsets.only(right: 24),
-                  child: GestureDetector(
-                    onTap: onClearAllPressed,
-                    child: const Row(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(right: 4),
-                          child: Icon(
-                            Icons.clear_all,
-                            size: 24,
+                  child: Semantics(
+                    label: 'siren-header-clear-all',
+                    hint: 'Tap to clear all notifications',
+                    child: GestureDetector(
+                      key: const Key('siren-header-clear-all'),
+                      onTap: onClearAllPressed,
+                      child: const Row(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(right: 4),
+                            child: Icon(
+                              Icons.clear_all,
+                              size: 24,
+                            ),
                           ),
-                        ),
-                        Text(
-                          Strings.clear_all,
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
+                          Text(
+                            Strings.clear_all,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),

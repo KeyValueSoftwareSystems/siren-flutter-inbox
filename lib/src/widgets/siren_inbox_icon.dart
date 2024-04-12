@@ -198,15 +198,20 @@ class _SirenInboxIconState extends State<SirenInboxIcon> {
               },
               child: Stack(
                 children: [
-                  SizedBox(
-                    width: size,
-                    height: size,
-                    child: widget.notificationIcon ??
-                        Icon(
-                          Icons.notifications_none_outlined,
-                          size: size,
-                          color: currentTheme.colorScheme.onPrimary,
-                        ),
+                  Semantics(
+                    label: 'siren-notification-icon',
+                    hint: 'Tap to view notifications',
+                    child: SizedBox(
+                      key: const Key('siren-notification-icon'),
+                      width: size,
+                      height: size,
+                      child: widget.notificationIcon ??
+                          Icon(
+                            Icons.notifications_none_outlined,
+                            size: size,
+                            color: currentTheme.colorScheme.onPrimary,
+                          ),
+                    ),
                   ),
                   IconBadge(
                     hideBadge:

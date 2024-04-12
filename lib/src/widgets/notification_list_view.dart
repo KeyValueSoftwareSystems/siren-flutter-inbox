@@ -73,50 +73,56 @@ class _NotificationListViewState extends State<NotificationListView> {
       color: Theme.of(context).colorScheme.secondary,
       backgroundColor: Theme.of(context).colorScheme.primary,
       onRefresh: widget.onRefresh,
-      child: ListView.builder(
-        itemCount: widget.notifications.length + (widget.endReached ? 0 : 1),
-        itemBuilder: (context, index) {
-          if (index < widget.notifications.length) {
-            final isLastIndex = index == widget.notifications.length - 1;
-            final currentNotification = widget.notifications[index];
-            final itemWidget = widget.customNotificationCard
-                    ?.call(currentNotification) ??
-                CardWidget(
-                  onTap: (notification) {
-                    if (!(widget.cardProps?.disableAutoMarkAsRead ?? false)) {
-                      widget.markAsRead(currentNotification.id);
-                    }
-                    widget.onNotificationCardClick?.call(currentNotification);
-                  },
-                  notification: currentNotification,
-                  cardProps: widget.cardProps ?? const CardProps(),
-                  styles: widget.customStyles,
-                  onDelete: widget.onDelete,
-                );
-            return AnimatedOpacity(
-              key:
-                  isLastIndex ? _listViewKey : ValueKey(currentNotification.id),
-              duration: const Duration(milliseconds: 500),
-              opacity: widget.deletingNotificationId == currentNotification.id
-                  ? 0.0
-                  : 1.0,
-              child: itemWidget,
-            );
-          } else {
-            return widget.loadingNextPage
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        color: Theme.of(context).colorScheme.secondary,
+      child: Semantics(
+        label: 'siren-notification-list',
+        hint: 'Swipe up or down to view notifications',
+        child: ListView.builder(
+          key: const Key('siren-notification-list'),
+          itemCount: widget.notifications.length + (widget.endReached ? 0 : 1),
+          itemBuilder: (context, index) {
+            if (index < widget.notifications.length) {
+              final isLastIndex = index == widget.notifications.length - 1;
+              final currentNotification = widget.notifications[index];
+              final itemWidget = widget.customNotificationCard
+                      ?.call(currentNotification) ??
+                  CardWidget(
+                    onTap: (notification) {
+                      if (!(widget.cardProps?.disableAutoMarkAsRead ?? false)) {
+                        widget.markAsRead(currentNotification.id);
+                      }
+                      widget.onNotificationCardClick?.call(currentNotification);
+                    },
+                    notification: currentNotification,
+                    cardProps: widget.cardProps ?? const CardProps(),
+                    styles: widget.customStyles,
+                    onDelete: widget.onDelete,
+                  );
+              return AnimatedOpacity(
+                key: isLastIndex
+                    ? _listViewKey
+                    : ValueKey(currentNotification.id),
+                duration: const Duration(milliseconds: 500),
+                opacity: widget.deletingNotificationId == currentNotification.id
+                    ? 0.0
+                    : 1.0,
+                child: itemWidget,
+              );
+            } else {
+              return widget.loadingNextPage
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
                       ),
-                    ),
-                  )
-                : const SizedBox();
-          }
-        },
-        physics: const AlwaysScrollableScrollPhysics(),
-        controller: widget.scrollController,
+                    )
+                  : const SizedBox();
+            }
+          },
+          physics: const AlwaysScrollableScrollPhysics(),
+          controller: widget.scrollController,
+        ),
       ),
     );
   }
