@@ -26,10 +26,9 @@ void main() {
 
   group('CardProps', () {
     test('constructor should initialize properties with provided values', () {
-      const cardProps = CardProps(hideAvatar: true, showMedia: false);
+      const cardProps = CardProps(hideAvatar: true,);
 
       expect(cardProps.hideAvatar, true);
-      expect(cardProps.showMedia, false);
     });
   });
 

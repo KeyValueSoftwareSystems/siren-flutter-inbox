@@ -6,7 +6,6 @@ class CardProps {
   /// Constructs a [CardProps] with optional parameters.
   const CardProps({
     this.hideAvatar,
-    this.showMedia,
     this.disableAutoMarkAsRead,
     this.deleteWidget,
     this.hideDelete,
@@ -15,9 +14,6 @@ class CardProps {
 
   /// Determines whether to hide the avatar in the notification card in Siren inbox.
   final bool? hideAvatar;
-
-  /// Determines whether to show media content in the notification card in Siren inbox.
-  final bool? showMedia;
 
   /// The flag to turn on and off the mark as read functionality
   final bool? disableAutoMarkAsRead;
