@@ -22,7 +22,6 @@ void main() {
 
   group('NetworkService', () {
     test('NetworkService instance is a singleton', () {
-      // Ensure that the instance is singleton
       final networkServiceInstance1 = NetworkService.instance;
       final networkServiceInstance2 = NetworkService.instance;
 
@@ -30,7 +29,6 @@ void main() {
     });
 
     test('ApiClient is correctly injected into NetworkService', () {
-      // Verify that the ApiClient is correctly injected into NetworkService
       expect(networkService.api, equals(mockApiClient));
     });
   });

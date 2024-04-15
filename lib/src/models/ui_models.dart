@@ -46,9 +46,6 @@ class DefaultIconStyle {
   /// Default font size for the badge count.
   static double get defaultFontSize => 10;
 
-  /// Default inset for the badge count.
-  static double get defaultInset => 1;
-
   /// Default size for the badge count.
   static double get defaultSize => 20;
 
@@ -67,7 +64,6 @@ class BadgeStyle {
   /// Constructs a [BadgeStyle] with optional parameters.
   const BadgeStyle({
     this.fontSize,
-    this.inset,
     this.size,
     this.top,
     this.right,
@@ -75,9 +71,6 @@ class BadgeStyle {
 
   /// The font size of the notification icon badge.
   final double? fontSize;
-
-  /// The inset of the notification icon badge.
-  final double? inset;
 
   /// The size of the notification icon badge.
   final double? size;

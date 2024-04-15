@@ -73,7 +73,6 @@ class SirenInbox extends StatefulWidget {
 }
 
 class _SirenInboxState extends State<SirenInbox> {
-  late ScrollController _scrollController;
   bool isLoading = true;
   bool endReached = false;
   bool isError = false;
@@ -88,6 +87,7 @@ class _SirenInboxState extends State<SirenInbox> {
   late final ReadNotificationById _readNotificationById;
   late Timer? _periodicUpdateRef;
   late StreamSubscription<StreamResponse> _subscription;
+  late ScrollController _scrollController;
 
   @override
   void initState() {

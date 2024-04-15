@@ -23,10 +23,8 @@ void main() {
       );
       await tester.pumpAndSettle(const Duration(seconds: 1));
 
-      // Check if IconBadge is rendered
       expect(find.byType(Positioned), findsOneWidget);
 
-      // Check if Text widget is rendered with correct text
       expect(find.text('5'), findsOneWidget);
     });
 
@@ -48,7 +46,6 @@ void main() {
       );
       await tester.pumpAndSettle(const Duration(seconds: 1));
 
-      // Check if IconBadge is not rendered
       expect(find.byType(Positioned), findsNothing);
     });
 
@@ -71,7 +68,6 @@ void main() {
       );
       await tester.pumpAndSettle(const Duration(seconds: 1));
 
-      // Check if Text widget is rendered with '99+'
       expect(find.text('99+'), findsOneWidget);
     });
   });

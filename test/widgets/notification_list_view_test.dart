@@ -6,8 +6,7 @@ import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
 import 'package:sirenapp_flutter_inbox/src/widgets/notification_list_view.dart';
 
 class MockFunction extends Mock {
-  // Define the mock function signature
-  void call(); // You can define parameters and return types as needed
+  void call();
 }
 
 void main() {

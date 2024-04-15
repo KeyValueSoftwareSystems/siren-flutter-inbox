@@ -15,8 +15,7 @@ import 'package:sirenapp_flutter_inbox/src/theme/app_theme.dart';
 import 'siren_inbox_test.mocks.dart';
 
 class MockFunction extends Mock {
-  // Define the mock function signature
-  void call(); // You can define parameters and return types as needed
+  void call();
 }
 
 @GenerateMocks([SirenDataProvider, FetchUnViewedNotificationsCount])
@@ -110,7 +109,6 @@ void main() {
 
       final primaryColor = AppTheme.darkTheme.colorScheme.primary;
 
-      // Ensure dark theme is applied
       expect(primaryColor, const Color(0xff232326));
     });
 
@@ -124,9 +122,8 @@ void main() {
         ),
       );
 
-      await tester.pumpWidget(Container()); // Dispose the widget
+      await tester.pumpWidget(Container());
 
-      // Verify controllers are closed
       expect(iconController.hasListener, false);
       expect(inboxController.hasListener, false);
     });

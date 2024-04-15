@@ -17,8 +17,6 @@ class MockApiClient extends ApiClient {
     CancelToken? cancelToken,
     ProgressCallback? onReceiveProgress,
   }) async {
-    // Simulate different API responses here
-    // (e.g., return ApiResponse with different status codes, data, and errors)
     final result = DioResponse(
       data: {
         'data': {'status': 'SUCCESS'},
@@ -26,7 +24,7 @@ class MockApiClient extends ApiClient {
       },
       statusCode: 200,
     );
-    return result; // Default to success for now
+    return result;
   }
 }
 
@@ -89,23 +87,16 @@ void main() {
     const notificationId = 'test-notification-id';
 
     test('deleteNotificationById - success', () async {
-      // Arrange
-      // final fakeApi = MockApiClient(apiProvider());
       final deleteNotification = DeleteNotificationById._internal();
 
-      // Act
       final apiResponse = await deleteNotification.deleteNotificationById(
         notificationId: notificationId,
       );
 
-      // Assert
       expect(apiResponse.isLoading, false);
       expect(apiResponse.isSuccess, true);
       expect(apiResponse.isError, false);
-      expect(apiResponse.data, Status.SUCCESS); // No data expected for success
-      // expect(apiResponse.error, ApiErrorDetails( ));
+      expect(apiResponse.data, Status.SUCCESS);
     });
-
-    // Add additional test cases for different API responses (error, network failure, etc.)
   });
 }

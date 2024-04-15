@@ -62,11 +62,16 @@ class InboxBody extends StatelessWidget {
         child: ListView(
           physics: const AlwaysScrollableScrollPhysics(),
           children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.75,
-              width: MediaQuery.of(context).size.width,
-              child: Center(
-                child: customErrorWidget ?? const DefaultErrorWidget(),
+            Semantics(
+              label: 'siren-error-state',
+              hint: 'Notification error state',
+              child: SizedBox(
+                key: const Key('siren-error-state'),
+                height: MediaQuery.of(context).size.height * 0.75,
+                width: MediaQuery.of(context).size.width,
+                child: Center(
+                  child: customErrorWidget ?? const DefaultErrorWidget(),
+                ),
               ),
             ),
           ],
@@ -78,7 +83,12 @@ class InboxBody extends StatelessWidget {
         hideAvatar: cardProps?.hideAvatar ?? false,
       );
     } else if (notifications.isEmpty) {
-      return listEmptyWidget ?? const EmptyWidget();
+      return Semantics(
+        label: 'siren-empty-state',
+        hint: 'Empty notification list',
+        key: const Key('siren-empty-state'),
+        child: listEmptyWidget ?? const EmptyWidget(),
+      );
     } else {
       return NotificationListView(
         notifications: notifications,

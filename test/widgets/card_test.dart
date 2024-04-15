@@ -13,7 +13,6 @@ class MockFunction extends Mock {
 
 void main() {
   testWidgets('CardWidget renders correctly', (WidgetTester tester) async {
-    // Create a mock notification data
     // ignore: unused_local_variable
     final func = MockFunction().call;
     final notification = NotificationDataType(
@@ -54,7 +53,6 @@ void main() {
               },
             ),
             styles: null, // Mock styles
-            // deleteWidget: Image(image: mockImageProvider),
           ),
         ),
       );

@@ -14,7 +14,7 @@ void main() {
           'currentPage': '1',
           'first': 'first',
           'totalElements': '50',
-        }
+        },
       };
       final response = ApiResponse.fromJson(json);
 
@@ -66,6 +66,4 @@ void main() {
       expect(errorDetails.message, 'Error message');
     });
   });
-
-  // Similar tests can be written for DioResponse and StreamResponse classes
 }

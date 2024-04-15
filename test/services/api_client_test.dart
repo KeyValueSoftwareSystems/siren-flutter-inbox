@@ -33,18 +33,15 @@ void main() {
       expect(
         result,
         true,
-      ); // Expect true because status code is in server error range
+      );
     });
 
     test('GET request', () async {
-      // Mock response data
       final responseData = {'key': 'value'};
       const responseStatusCode = 200;
 
-      // Set up mock SirenDataProvider response
       when(mockSirenDataProvider.apiDomain).thenReturn('http://example.com');
 
-      // Set up mock Dio response for GET request
       when(
         mockDio.get(
           any,
@@ -61,7 +58,6 @@ void main() {
         ),
       );
 
-      // Perform GET request
       final response = await apiClient.get(path: '/test');
 
       verify(
@@ -70,20 +66,16 @@ void main() {
         ),
       ).called(1);
 
-      // Verify ApiResponse matches expected result
       expect(response.data, responseData);
       expect(response.statusCode, responseStatusCode);
     });
 
     test('POST request', () async {
-      // Mock response data
       final responseData = {'key': 'value'};
       const responseStatusCode = 201;
 
-      // Set up mock SirenDataProvider response
       when(mockSirenDataProvider.apiDomain).thenReturn('http://example.com');
 
-      // Set up mock Dio response for POST request
       when(
         mockDio.post(
           any,
@@ -102,7 +94,6 @@ void main() {
         ),
       );
 
-      // Perform POST request
       final response =
           await apiClient.post(path: '/test', data: {'key': 'value'});
 
@@ -113,20 +104,16 @@ void main() {
         ),
       ).called(1);
 
-      // Verify ApiResponse matches expected result
       expect(response.data, responseData);
       expect(response.statusCode, responseStatusCode);
     });
 
     test('PATCH request', () async {
-      // Mock response data
       final responseData = {'key': 'value'};
       const responseStatusCode = 200;
 
-      // Set up mock SirenDataProvider response
       when(mockSirenDataProvider.apiDomain).thenReturn('http://example.com');
 
-      // Set up mock Dio response for PATCH request
       when(
         mockDio.patch(
           any,
@@ -145,7 +132,6 @@ void main() {
         ),
       );
 
-      // Perform PATCH request
       final response =
           await apiClient.patch(path: '/test', data: {'key': 'value'});
 
@@ -156,20 +142,16 @@ void main() {
         ),
       ).called(1);
 
-      // Verify ApiResponse matches expected result
       expect(response.data, responseData);
       expect(response.statusCode, responseStatusCode);
     });
 
     test('DELETE request', () async {
-      // Mock response data
       final responseData = {'key': 'value'};
       const responseStatusCode = 200;
 
-      // Set up mock SirenDataProvider response
       when(mockSirenDataProvider.apiDomain).thenReturn('http://example.com');
 
-      // Set up mock Dio response for DELETE request
       when(
         mockDio.delete(
           any,
@@ -197,7 +179,6 @@ void main() {
     });
 
     test('Handles DioException on GET request', () async {
-      // Simulate DioException when making a GET request
       when(mockDio.get(any, queryParameters: anyNamed('queryParameters')))
           .thenThrow(
         DioException(
@@ -210,7 +191,6 @@ void main() {
         ),
       );
 
-      // Perform the GET request using ApiClient
       final result = await apiClient.get(path: '/example');
 
       expect(result.data, 'Error message');
@@ -221,7 +201,6 @@ void main() {
     });
 
     test('Handles DioException on POST request', () async {
-      // Simulate DioException when making a GET request
       when(mockDio.post(any, queryParameters: anyNamed('queryParameters')))
           .thenThrow(
         DioException(
@@ -234,7 +213,6 @@ void main() {
         ),
       );
 
-      // Perform the GET request using ApiClient
       final result = await apiClient.post(path: '/example');
 
       expect(result.data, 'Error message');
@@ -245,7 +223,6 @@ void main() {
     });
 
     test('Handles DioException on Patch request', () async {
-      // Simulate DioException when making a GET request
       when(mockDio.patch(any, queryParameters: anyNamed('queryParameters')))
           .thenThrow(
         DioException(
@@ -258,7 +235,6 @@ void main() {
         ),
       );
 
-      // Perform the GET request using ApiClient
       final result = await apiClient.patch(path: '/example');
 
       expect(result.data, 'Error message');
@@ -269,7 +245,6 @@ void main() {
     });
 
     test('Handles DioException on delete request', () async {
-      // Simulate DioException when making a GET request
       when(mockDio.delete(any, queryParameters: anyNamed('queryParameters')))
           .thenThrow(
         DioException(
@@ -282,7 +257,6 @@ void main() {
         ),
       );
 
-      // Perform the GET request using ApiClient
       final result = await apiClient.delete(path: '/example');
 
       expect(result.data, 'Error message');

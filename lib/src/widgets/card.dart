@@ -45,6 +45,7 @@ class _CardWidgetState extends State<CardWidget> {
     final currentTheme = Theme.of(context);
 
     return GestureDetector(
+      key: Key('siren-notification-card-${widget.notification.id}'),
       onTap: () {
         widget.onTap(widget.notification);
       },
@@ -81,6 +82,9 @@ class _CardWidgetState extends State<CardWidget> {
                 ),
                 if (!(widget.cardProps.hideDelete ?? false))
                   GestureDetector(
+                    key: Key(
+                      'siren-notification-delete-${widget.notification.id}',
+                    ),
                     onTap: () => widget.onDelete(widget.notification.id),
                     child: widget.cardProps.deleteWidget ??
                         _buildDefaultDeleteButton(currentTheme),
@@ -122,6 +126,7 @@ class _CardWidgetState extends State<CardWidget> {
   Widget _buildDefaultAvatarContainer(ThemeData theme) {
     final avatarUrl = widget.notification.message.avatar?.url;
     return GestureDetector(
+      key: Key('siren-notification-avatar-${widget.notification.id}'),
       onTap: () {
         widget.cardProps.onAvatarClick?.call(widget.notification);
       },
@@ -194,8 +199,8 @@ class _CardWidgetState extends State<CardWidget> {
 
   Widget _buildFooterRow(ThemeData theme) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 10,
+      padding: const EdgeInsets.only(
+        top: 10,
       ),
       child: Container(
         decoration: widget.styles?.cardFooterRow,
