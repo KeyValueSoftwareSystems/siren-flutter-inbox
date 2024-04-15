@@ -24,11 +24,9 @@ import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
 void main() {
   runApp(
     SirenProvider(
-      config: SirenConfig(
         userToken: 'your_user_token',
         recipientId: 'your_recipient_id',
-      ),
-      child: MyApp(),
+        child: MyApp(),
     ),
   );
 }
@@ -80,7 +78,6 @@ customStyles: SirenStyleProps(
         badgeStyle: BadgeStyle(
         fontSize: 10,
         size: 18,
-        inset: 1,
         top: 2,
         right: 0,
     ))
@@ -135,9 +132,6 @@ theme: CustomThemeColors(
     textColor: const Color.fromRGBO(0, 0, 0, 1),
     dateColor: const Color.fromRGBO(0, 0, 0, 1),
     timerIcon: const Color.fromRGBO(133, 146, 230, 1),
-    badgeBackgroundColor: const Color.fromRGBO(103, 58, 183, 1),
-    badgeColor: const Color.fromRGBO(103, 58, 183, 1),
-    iconColor: const Color.fromRGBO(0, 0, 0, 1),
     inboxTitleColor: const Color.fromRGBO(0, 0, 0, 1),
     ),
 ```

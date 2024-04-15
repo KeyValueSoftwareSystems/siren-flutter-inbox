@@ -24,8 +24,8 @@ class IconBadge extends StatelessWidget {
             child: Container(
               width: badgeStyle?.size ?? DefaultIconStyle.defaultSize,
               height: badgeStyle?.size ?? DefaultIconStyle.defaultSize,
-              padding: EdgeInsets.all(
-                badgeStyle?.inset ?? DefaultIconStyle.defaultInset,
+              padding: const EdgeInsets.all(
+                1,
               ),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,

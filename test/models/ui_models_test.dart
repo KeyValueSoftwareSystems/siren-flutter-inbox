@@ -44,14 +44,12 @@ void main() {
   group('DefaultIconStyle', () {
     test('iconSize should return default size for the notification icon', () {
       final defaultFontSize = DefaultIconStyle.defaultFontSize;
-      final defaultInset = DefaultIconStyle.defaultInset;
       final defaultSize = DefaultIconStyle.defaultSize;
       final defaultTop = DefaultIconStyle.defaultTop;
       final defaultRight = DefaultIconStyle.defaultRight;
       final iconSize = DefaultIconStyle.iconSize;
 
       expect(defaultFontSize, 10);
-      expect(defaultInset, 1);
       expect(defaultSize, 20);
       expect(defaultTop, 0);
       expect(defaultRight, 2);
