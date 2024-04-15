@@ -68,8 +68,7 @@ class AppTheme {
         outlineVariant:
             customColors.deleteIcon ?? baseTheme.colorScheme.outlineVariant,
         primary: customColors.backgroundColor ?? baseTheme.colorScheme.primary,
-        secondary: customColors.highlightedCardBorderColor ??
-            baseTheme.colorScheme.secondary,
+        secondary: customColors.primary ?? baseTheme.colorScheme.secondary,
         secondaryContainer: customColors.highlightedCardColor ??
             baseTheme.colorScheme.secondaryContainer,
         surfaceTint:

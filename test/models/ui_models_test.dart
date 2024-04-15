@@ -68,13 +68,14 @@ void main() {
 
   group('SirenStyleProps', () {
     test('constructor should initialize properties with provided values', () {
-      const sirenStyleProps = SirenStyleProps(
-        container: BoxDecoration(color: Colors.blue),
-        iconStyle: IconStyle(size: 24),
-        badgeStyle: BadgeStyle(fontSize: 16),
+      final sirenStyleProps = SirenStyleProps(
+        cardContainer:
+            ContainerStyle(decoration: const BoxDecoration(color: Colors.blue)),
+        iconStyle: const IconStyle(size: 24),
+        badgeStyle: const BadgeStyle(fontSize: 16),
       );
 
-      expect(sirenStyleProps.container!.color, Colors.blue);
+      expect(sirenStyleProps.cardContainer!.decoration!.color, Colors.blue);
       expect(sirenStyleProps.iconStyle!.size, 24.0);
       expect(sirenStyleProps.badgeStyle!.fontSize, 16.0);
     });
@@ -84,12 +85,12 @@ void main() {
     test('constructor should initialize properties with provided values', () {
       final customThemeColors = CustomThemeColors(
         backgroundColor: Colors.white,
-        highlightedCardBorderColor: Colors.grey,
+        primary: Colors.grey,
         badgeColor: Colors.red,
       );
 
       expect(customThemeColors.backgroundColor, Colors.white);
-      expect(customThemeColors.highlightedCardBorderColor, Colors.grey);
+      expect(customThemeColors.primary, Colors.grey);
       expect(customThemeColors.badgeColor, Colors.red);
     });
   });

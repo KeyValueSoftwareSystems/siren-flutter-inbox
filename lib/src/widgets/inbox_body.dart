@@ -90,22 +90,26 @@ class InboxBody extends StatelessWidget {
         child: listEmptyWidget ?? const EmptyWidget(),
       );
     } else {
-      return NotificationListView(
-        notifications: notifications,
-        isLoading: isLoading,
-        endReached: endReached,
-        onRefresh: onRefresh,
-        onEndReached: onEndReached,
-        loadingNextPage: loadingNextPage,
-        customStyles: customStyles,
-        scrollController: scrollController,
-        onDelete: deleteNotification,
-        markAsRead: markAsRead,
-        customNotificationCard: customNotificationCard,
-        onNotificationCardClick: onNotificationCardClick,
-        deletingNotificationId: deletingNotificationId,
-        totalElements: totalElements,
-        cardProps: cardProps,
+      return Container(
+        decoration: customStyles?.container?.decoration,
+        padding: customStyles?.container?.padding,
+        child: NotificationListView(
+          notifications: notifications,
+          isLoading: isLoading,
+          endReached: endReached,
+          onRefresh: onRefresh,
+          onEndReached: onEndReached,
+          loadingNextPage: loadingNextPage,
+          customStyles: customStyles,
+          scrollController: scrollController,
+          onDelete: deleteNotification,
+          markAsRead: markAsRead,
+          customNotificationCard: customNotificationCard,
+          onNotificationCardClick: onNotificationCardClick,
+          deletingNotificationId: deletingNotificationId,
+          totalElements: totalElements,
+          cardProps: cardProps,
+        ),
       );
     }
   }

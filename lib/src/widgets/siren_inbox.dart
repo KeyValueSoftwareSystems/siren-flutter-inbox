@@ -473,6 +473,7 @@ class _SirenInboxState extends State<SirenInbox> {
               onClearAllPressed: onBulkDelete,
               showClearAllButton: shouldShowClearAllButton(),
               inboxHeaderProps: widget.inboxHeaderProps,
+              styles: widget.customStyles,
             ),
             body: InboxBody(
               currentTheme: currentTheme,

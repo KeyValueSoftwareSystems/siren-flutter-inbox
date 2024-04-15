@@ -9,11 +9,13 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     this.onClearAllPressed,
     this.inboxHeaderProps,
+    this.styles,
   });
   final ThemeData theme;
   final VoidCallback? onClearAllPressed;
   final bool showClearAllButton;
   final InboxHeaderProps? inboxHeaderProps;
+  final SirenStyleProps? styles;
 
   @override
   Size get preferredSize {
@@ -32,54 +34,52 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
         color: theme.colorScheme.primary,
         border: Border(
           bottom: BorderSide(
+            width: styles?.appBarStyle?.borderWidth ?? 1,
             color: theme.colorScheme.surfaceTint,
           ),
         ),
       ),
       height: preferredSize.height,
-      child: inboxHeaderProps?.customHeader ??
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  if (inboxHeaderProps?.showBackButton ?? false)
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: 24,
-                        right: 16,
-                      ),
-                      child: Semantics(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        child: inboxHeaderProps?.customHeader ??
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    if (inboxHeaderProps?.showBackButton ?? false)
+                      Semantics(
                         label: 'siren-header-back',
                         hint: 'Tap to view navigate back',
-                        child: IconButton(
+                        child: GestureDetector(
                           key: const Key('siren-header-back'),
-                          onPressed: inboxHeaderProps?.onBackPress,
-                          icon: inboxHeaderProps?.backButton ??
-                              const Icon(Icons.arrow_back_ios),
+                          onTap: inboxHeaderProps?.onBackPress,
+                          child: inboxHeaderProps?.backButton ??
+                              Icon(
+                                Icons.arrow_back_ios,
+                                color: theme.colorScheme.onBackground,
+                              ),
                         ),
                       ),
-                    ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal:
-                          (inboxHeaderProps?.showBackButton ?? false) ? 2 : 24,
-                    ),
-                    child: Text(
-                      inboxHeaderProps?.title ?? Strings.notifications,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
+                    Padding(
+                      padding:
+                          styles?.appBarStyle?.titlePadding ?? EdgeInsets.zero,
+                      child: Text(
+                        inboxHeaderProps?.title ?? Strings.notifications,
+                        style: styles?.appBarStyle?.headerTextStyle ??
+                            TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: theme.colorScheme.onBackground,
+                            ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              if (!(inboxHeaderProps?.hideClearAll ?? false) &&
-                  showClearAllButton)
-                Padding(
-                  padding: const EdgeInsets.only(right: 24),
-                  child: Semantics(
+                  ],
+                ),
+                if (!(inboxHeaderProps?.hideClearAll ?? false) &&
+                    showClearAllButton)
+                  Semantics(
                     label: 'siren-header-clear-all',
                     hint: 'Tap to clear all notifications',
                     child: GestureDetector(
@@ -91,7 +91,7 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                             padding: const EdgeInsets.only(right: 4),
                             child: Icon(
                               Icons.clear_all,
-                              size: 24,
+                              size: styles?.clearAllIconSize ?? 24,
                               color: theme.colorScheme.outline,
                             ),
                           ),
@@ -107,9 +107,9 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                     ),
                   ),
-                ),
-            ],
-          ),
+              ],
+            ),
+      ),
     );
   }
 }

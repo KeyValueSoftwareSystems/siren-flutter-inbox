@@ -87,33 +87,27 @@ class SirenStyleProps {
   /// Constructs a [SirenStyleProps] with optional parameters.
   const SirenStyleProps({
     this.container,
-    this.contentContainer,
-    this.subHeaderText,
-    this.cardAvatarContainer,
-    this.cardContentContainer,
+    this.cardContainer,
+    this.cardSubtitle,
     this.cardTitle,
     this.cardDescription,
-    this.cardFooterRow,
     this.dateStyle,
+    this.appBarStyle,
     this.iconStyle,
     this.badgeStyle,
-    this.defaultHeaderTextStyle,
+    this.deleteIconSize,
+    this.dateIconSize,
+    this.clearAllIconSize,
   });
 
-  /// The decoration for the outer container of the card in Siren inbox.
-  final BoxDecoration? container;
+  /// The decoration for the Siren inbox list.
+  final ContainerStyle? container;
 
-  /// The decoration for the content container of the card in Siren inbox.
-  final BoxDecoration? contentContainer;
+  /// The decoration for each card in Siren inbox.
+  final ContainerStyle? cardContainer;
 
   /// The text style for the sub-header text in Siren inbox.
-  final TextStyle? subHeaderText;
-
-  /// The decoration for the avatar container of the card in Siren inbox.
-  final BoxDecoration? cardAvatarContainer;
-
-  /// The decoration for the content container of the card in Siren inbox.
-  final BoxDecoration? cardContentContainer;
+  final TextStyle? cardSubtitle;
 
   /// The text style for the card title in Siren inbox.
   final TextStyle? cardTitle;
@@ -121,11 +115,11 @@ class SirenStyleProps {
   /// The text style for the card description in Siren inbox.
   final TextStyle? cardDescription;
 
-  /// The decoration for the footer row of the card in Siren inbox.
-  final BoxDecoration? cardFooterRow;
-
   /// The text style for the date text in Siren inbox.
   final TextStyle? dateStyle;
+
+  /// The style for default app bar
+  final InboxHeaderStyle? appBarStyle;
 
   /// The style for the notification icon.
   final IconStyle? iconStyle;
@@ -133,8 +127,14 @@ class SirenStyleProps {
   /// The style for the notification icon badge.
   final BadgeStyle? badgeStyle;
 
-  /// Text style for the header provided by the sdk.
-  final TextStyle? defaultHeaderTextStyle;
+  /// Size of delete icon in inbox list card
+  final double? deleteIconSize;
+
+  /// Size of date icon in inbox list card
+  final double? dateIconSize;
+
+  /// Size of clear all icon in inbox default header
+  final double? clearAllIconSize;
 }
 
 /// Custom theme colors to configure the appearance of UI elements.
@@ -142,7 +142,7 @@ class CustomThemeColors {
   /// Constructs a [CustomThemeColors] with optional parameters.
   CustomThemeColors({
     this.backgroundColor,
-    this.highlightedCardBorderColor,
+    this.primary,
     this.highlightedCardColor,
     this.borderColor,
     this.deleteIcon,
@@ -160,7 +160,7 @@ class CustomThemeColors {
   final Color? backgroundColor;
 
   /// The color for the border of active cards in Siren inbox.
-  final Color? highlightedCardBorderColor;
+  final Color? primary;
 
   /// The color for active cards in Siren inbox.
   final Color? highlightedCardColor;
@@ -228,4 +228,30 @@ class InboxHeaderProps {
 
   /// Callback function for handling back navigation.
   final void Function()? onBackPress;
+}
+
+/// Properties to configure the style of container
+class ContainerStyle {
+  ContainerStyle({this.padding, this.decoration});
+
+  /// The padding values for all sides of a container
+  final EdgeInsetsGeometry? padding;
+
+  /// The appearance of the container, including
+  /// properties like background color, border, border radius, etc. of a container
+  final BoxDecoration? decoration;
+}
+
+/// Properties to configure the style of default inbox header
+class InboxHeaderStyle {
+  InboxHeaderStyle({this.headerTextStyle, this.titlePadding, this.borderWidth});
+
+  /// Text style for the default header text
+  final TextStyle? headerTextStyle;
+
+  /// Padding values for all sides for header text
+  final EdgeInsetsGeometry? titlePadding;
+
+  /// Border bottom with of default header container
+  final double? borderWidth;
 }

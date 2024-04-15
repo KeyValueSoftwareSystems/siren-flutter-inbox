@@ -50,48 +50,47 @@ class _CardWidgetState extends State<CardWidget> {
         widget.onTap(widget.notification);
       },
       child: Container(
-        decoration: widget.styles?.container ??
+        decoration: widget.styles?.cardContainer?.decoration ??
             _getDefaultContainerDecoration(currentTheme),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-          child: Container(
-            decoration: widget.styles?.contentContainer,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (!(widget.cardProps.hideAvatar ?? false))
-                  _buildDefaultAvatarContainer(currentTheme),
-                Expanded(
-                  child: Container(
-                    decoration: widget.styles?.cardContentContainer,
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        right: 16,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildHeaderText(currentTheme),
-                          _buildSubHeaderText(currentTheme),
-                          _buildBodyText(currentTheme),
-                          _buildFooterRow(currentTheme),
-                        ],
-                      ),
-                    ),
-                  ),
+        padding: widget.styles?.cardContainer?.padding ??
+            const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (!(widget.cardProps.hideAvatar ?? false))
+              _buildDefaultAvatarContainer(currentTheme),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  right: 16,
                 ),
-                if (!(widget.cardProps.hideDelete ?? false))
-                  GestureDetector(
-                    key: Key(
-                      'siren-notification-delete-${widget.notification.id}',
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildHeaderText(currentTheme),
+                    _buildSubHeaderText(currentTheme),
+                    _buildBodyText(currentTheme),
+                    _buildFooterRow(
+                      currentTheme,
+                      widget.styles?.dateIconSize ?? 14,
                     ),
-                    onTap: () => widget.onDelete(widget.notification.id),
-                    child: widget.cardProps.deleteWidget ??
-                        _buildDefaultDeleteButton(currentTheme),
-                  ),
-              ],
+                  ],
+                ),
+              ),
             ),
-          ),
+            if (!(widget.cardProps.hideDelete ?? false))
+              GestureDetector(
+                key: Key(
+                  'siren-notification-delete-${widget.notification.id}',
+                ),
+                onTap: () => widget.onDelete(widget.notification.id),
+                child: widget.cardProps.deleteWidget ??
+                    _buildDefaultDeleteButton(
+                      currentTheme,
+                      widget.styles?.deleteIconSize ?? 18,
+                    ),
+              ),
+          ],
         ),
       ),
     );
@@ -132,23 +131,20 @@ class _CardWidgetState extends State<CardWidget> {
       },
       child: Padding(
         padding: const EdgeInsets.only(
-          right: 24,
+          right: 10,
         ),
-        child: Container(
-          decoration: widget.styles?.cardAvatarContainer,
-          child: CircleAvatar(
-            radius: 21,
-            backgroundImage: avatarUrl != null && avatarUrl.isNotEmpty
-                ? NetworkImage(avatarUrl)
-                : null,
-            backgroundColor: theme.colorScheme.onSecondary,
-            child: avatarUrl == null || avatarUrl.isEmpty
-                ? Icon(
-                    Icons.landscape_rounded,
-                    color: theme.colorScheme.surfaceVariant,
-                  )
-                : null,
-          ),
+        child: CircleAvatar(
+          radius: 21,
+          backgroundImage: avatarUrl != null && avatarUrl.isNotEmpty
+              ? NetworkImage(avatarUrl)
+              : null,
+          backgroundColor: theme.colorScheme.onSecondary,
+          child: avatarUrl == null || avatarUrl.isEmpty
+              ? Icon(
+                  Icons.landscape_rounded,
+                  color: theme.colorScheme.surfaceVariant,
+                )
+              : null,
         ),
       ),
     );
@@ -173,7 +169,7 @@ class _CardWidgetState extends State<CardWidget> {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: NullableText(
         text: widget.notification.message.subHeader,
-        style: widget.styles?.subHeaderText ??
+        style: widget.styles?.cardSubtitle ??
             TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
@@ -197,19 +193,18 @@ class _CardWidgetState extends State<CardWidget> {
     );
   }
 
-  Widget _buildFooterRow(ThemeData theme) {
+  Widget _buildFooterRow(ThemeData theme, double size) {
     return Padding(
       padding: const EdgeInsets.only(
         top: 10,
       ),
       child: Container(
-        decoration: widget.styles?.cardFooterRow,
-        child: _buildTimestampText(theme),
+        child: _buildTimestampText(theme, size),
       ),
     );
   }
 
-  Widget _buildTimestampText(ThemeData theme) {
+  Widget _buildTimestampText(ThemeData theme, double size) {
     return Row(
       children: [
         Padding(
@@ -217,7 +212,7 @@ class _CardWidgetState extends State<CardWidget> {
           child: Icon(
             Icons.access_time_sharp,
             color: theme.colorScheme.scrim,
-            size: 14,
+            size: size,
           ),
         ),
         Text(
@@ -235,11 +230,11 @@ class _CardWidgetState extends State<CardWidget> {
     );
   }
 
-  Widget _buildDefaultDeleteButton(ThemeData theme) {
+  Widget _buildDefaultDeleteButton(ThemeData theme, double size) {
     return Icon(
       Icons.close,
       color: theme.colorScheme.outlineVariant,
-      size: 18,
+      size: size,
     );
   }
 }
