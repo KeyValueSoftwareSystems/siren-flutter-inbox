@@ -60,36 +60,19 @@ class _CardWidgetState extends State<CardWidget> {
             if (!(widget.cardProps.hideAvatar ?? false))
               _buildDefaultAvatarContainer(currentTheme),
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  right: 16,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildHeaderText(currentTheme),
-                    _buildSubHeaderText(currentTheme),
-                    _buildBodyText(currentTheme),
-                    _buildFooterRow(
-                      currentTheme,
-                      widget.styles?.dateIconSize ?? 14,
-                    ),
-                  ],
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildHeaderText(currentTheme),
+                  _buildSubHeaderText(currentTheme),
+                  _buildBodyText(currentTheme),
+                  _buildFooterRow(
+                    currentTheme,
+                    widget.styles?.dateIconSize ?? 14,
+                  ),
+                ],
               ),
             ),
-            if (!(widget.cardProps.hideDelete ?? false))
-              GestureDetector(
-                key: Key(
-                  'siren-notification-delete-${widget.notification.id}',
-                ),
-                onTap: () => widget.onDelete(widget.notification.id),
-                child: widget.cardProps.deleteWidget ??
-                    _buildDefaultDeleteButton(
-                      currentTheme,
-                      widget.styles?.deleteIconSize ?? 18,
-                    ),
-              ),
           ],
         ),
       ),
@@ -151,16 +134,38 @@ class _CardWidgetState extends State<CardWidget> {
   }
 
   Widget _buildHeaderText(ThemeData theme) {
-    return Text(
-      widget.notification.message.header ?? '',
-      maxLines: 2,
-      overflow: TextOverflow.ellipsis,
-      style: widget.styles?.cardTitle ??
-          TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: theme.colorScheme.tertiary,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Text(
+            widget.notification.message.header ?? '',
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: widget.styles?.cardTitle ??
+                TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: theme.colorScheme.tertiary,
+                ),
           ),
+        ),
+        if (!(widget.cardProps.hideDelete ?? false)) ...[
+          const SizedBox(width: 8),
+          GestureDetector(
+            key: Key(
+              'siren-notification-delete-${widget.notification.id}',
+            ),
+            onTap: () => widget.onDelete(widget.notification.id),
+            child: widget.cardProps.deleteWidget ??
+                _buildDefaultDeleteButton(
+                  theme,
+                  widget.styles?.deleteIconSize ?? 18,
+                ),
+          ),
+        ],
+      ],
     );
   }
 
