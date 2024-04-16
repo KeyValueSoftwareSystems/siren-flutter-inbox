@@ -68,7 +68,7 @@ Widget _buildCircle(ThemeData theme) {
         right: 50,
         top: 55,
         child: Container(
-          padding: const EdgeInsets.all(4),
+          padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
             shape: BoxShape.circle,

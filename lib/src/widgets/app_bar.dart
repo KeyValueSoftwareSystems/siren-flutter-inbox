@@ -5,7 +5,7 @@ import 'package:sirenapp_flutter_inbox/src/models/ui_models.dart';
 class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
   const SirenAppBar({
     required this.theme,
-    required this.showClearAllButton,
+    required this.isNonEmptyNotifications,
     super.key,
     this.onClearAllPressed,
     this.inboxHeaderProps,
@@ -13,7 +13,7 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
   });
   final ThemeData theme;
   final VoidCallback? onClearAllPressed;
-  final bool showClearAllButton;
+  final bool isNonEmptyNotifications;
   final InboxHeaderProps? inboxHeaderProps;
   final SirenStyleProps? styles;
 
@@ -78,33 +78,40 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                   ],
                 ),
-                if (!(inboxHeaderProps?.hideClearAll ?? false) &&
-                    showClearAllButton)
+                if (!(inboxHeaderProps?.hideClearAll ?? false))
                   Semantics(
                     label: 'siren-header-clear-all',
                     hint: 'Tap to clear all notifications',
                     child: GestureDetector(
                       key: const Key('siren-header-clear-all'),
-                      onTap: onClearAllPressed,
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 4),
-                            child: Icon(
-                              Icons.clear_all,
-                              size: styles?.clearAllIconSize ?? 24,
-                              color: theme.colorScheme.outline,
+                      onTap: () {
+                        if (isNonEmptyNotifications &&
+                            onClearAllPressed != null) {
+                          onClearAllPressed!();
+                        }
+                      },
+                      child: Opacity(
+                        opacity: isNonEmptyNotifications ? 1 : 0.4,
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 4),
+                              child: Icon(
+                                Icons.clear_all,
+                                size: styles?.clearAllIconSize ?? 24,
+                                color: theme.colorScheme.outline,
+                              ),
                             ),
-                          ),
-                          Text(
-                            Strings.clear_all,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: theme.colorScheme.outline,
+                            Text(
+                              Strings.clear_all,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: theme.colorScheme.outline,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),

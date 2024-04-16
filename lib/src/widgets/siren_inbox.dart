@@ -471,7 +471,7 @@ class _SirenInboxState extends State<SirenInbox> {
             appBar: SirenAppBar(
               theme: currentTheme,
               onClearAllPressed: onBulkDelete,
-              showClearAllButton: shouldShowClearAllButton(),
+              isNonEmptyNotifications: shouldShowClearAllButton(),
               inboxHeaderProps: widget.inboxHeaderProps,
               styles: widget.customStyles,
             ),
