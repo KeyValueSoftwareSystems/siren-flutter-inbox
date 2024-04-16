@@ -60,17 +60,20 @@ class _CardWidgetState extends State<CardWidget> {
             if (!(widget.cardProps.hideAvatar ?? false))
               _buildDefaultAvatarContainer(currentTheme),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildHeaderText(currentTheme),
-                  _buildSubHeaderText(currentTheme),
-                  _buildBodyText(currentTheme),
-                  _buildFooterRow(
-                    currentTheme,
-                    widget.styles?.dateIconSize ?? 14,
-                  ),
-                ],
+              child: Padding(
+                padding: const EdgeInsets.only(left: 6),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildHeaderText(currentTheme),
+                    _buildSubHeaderText(currentTheme),
+                    _buildBodyText(currentTheme),
+                    _buildFooterRow(
+                      currentTheme,
+                      widget.styles?.dateIconSize ?? 14,
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -114,7 +117,8 @@ class _CardWidgetState extends State<CardWidget> {
       },
       child: Padding(
         padding: const EdgeInsets.only(
-          right: 10,
+          right: 6,
+          left: 6,
         ),
         child: CircleAvatar(
           radius: 21,
