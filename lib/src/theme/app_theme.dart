@@ -11,7 +11,7 @@ class AppTheme {
     colorScheme: ThemeData.light().colorScheme.copyWith(
           background: AppColors.emptyWidgetBgLightTheme,
           inversePrimary: AppColors.grey500,
-          onBackground: Colors.black,
+          onBackground: AppColors.grey300Complementary,
           onPrimary: AppColors.black100,
           onSecondary: AppColors.avatarPlaceholderBgLight,
           onTertiary: Colors.white,

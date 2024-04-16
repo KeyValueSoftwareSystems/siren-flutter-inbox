@@ -41,7 +41,7 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       height: preferredSize.height,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
+        padding: const EdgeInsets.only(right: 16, left: 20),
         child: inboxHeaderProps?.customHeader ??
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -59,6 +59,7 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                               Icon(
                                 Icons.arrow_back_ios,
                                 color: theme.colorScheme.onBackground,
+                                size: 20,
                               ),
                         ),
                       ),

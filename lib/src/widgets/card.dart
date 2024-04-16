@@ -175,7 +175,7 @@ class _CardWidgetState extends State<CardWidget> {
 
   Widget _buildSubHeaderText(ThemeData theme) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: NullableText(
         text: widget.notification.message.subHeader,
         style: widget.styles?.cardSubtitle ??
