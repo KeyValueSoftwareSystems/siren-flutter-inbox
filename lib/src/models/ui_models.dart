@@ -146,10 +146,11 @@ class CustomThemeColors {
     this.textColor,
     this.dateColor,
     this.timerIcon,
-    this.badgeBackgroundColor,
-    this.badgeColor,
-    this.iconColor,
-    this.inboxTitleColor,
+    this.notificationIconColor,
+    this.refreshIndicatorColor,
+    this.inboxHeaderColors,
+    this.badgeColors,
+    this.cardColors,
   });
 
   /// The background color for Siren inbox.
@@ -179,17 +180,82 @@ class CustomThemeColors {
   /// The color of timer icon
   final Color? timerIcon;
 
-  /// The background color for notification icon badge.
-  final Color? badgeBackgroundColor;
-
-  /// The text color for notification icon badge.
-  final Color? badgeColor;
-
   /// The color for notification icon.
-  final Color? iconColor;
+  final Color? notificationIconColor;
 
-  /// The color for window title in Siren inbox.
-  final Color? inboxTitleColor;
+  /// The color for refresh indicator in inbox list.
+  final Color? refreshIndicatorColor;
+
+  /// The colors for inbox list card
+  final CardColors? cardColors;
+
+  /// The colors for inbox header
+  final InboxHeaderColors? inboxHeaderColors;
+
+  /// The colors for inbox list card
+  final BadgeColors? badgeColors;
+}
+
+/// Custom theme colors to configure the appearance inbox list item.
+class CardColors {
+  CardColors({
+    this.borderColor,
+    this.background,
+    this.titleColor,
+    this.subtitleColor,
+    this.descriptionColor,
+  });
+
+  /// The border color inbox  of list item
+  final Color? borderColor;
+
+  /// The default background color of inbox list item
+  final Color? background;
+
+  /// The title color inbox of list item
+  final Color? titleColor;
+
+  /// The sub title color of inbox list item
+  final Color? subtitleColor;
+
+  /// The description text color of inbox list item
+  final Color? descriptionColor;
+}
+
+/// Custom theme colors to configure the inbox header
+class InboxHeaderColors {
+  InboxHeaderColors({
+    this.background,
+    this.titleColor,
+    this.headerActionColor,
+    this.borderColor,
+  });
+
+  /// The background color of inbox header
+  final Color? background;
+
+  /// The title color of inbox header
+  final Color? titleColor;
+
+  /// The action texts color of inbox header
+  final Color? headerActionColor;
+
+  /// The border color of inbox header
+  final Color? borderColor;
+}
+
+/// Custom theme colors to configure icon badge
+class BadgeColors {
+  BadgeColors({
+    this.color,
+    this.textColor,
+  });
+
+  /// The icon badge color
+  final Color? color;
+
+  /// The text color of icon badge
+  final Color? textColor;
 }
 
 /// Properties for configuring the appearance of the notification window app bar.

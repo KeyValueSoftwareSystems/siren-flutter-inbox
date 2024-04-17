@@ -29,7 +29,8 @@ class IconBadge extends StatelessWidget {
               ),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: currentTheme.colorScheme.tertiaryContainer,
+                color: currentTheme.badgeTheme.backgroundColor ??
+                    currentTheme.colorScheme.tertiaryContainer,
               ),
               child: Align(
                 child: Text(
@@ -37,7 +38,8 @@ class IconBadge extends StatelessWidget {
                       ? '99+'
                       : notificationsCount.toString(),
                   style: TextStyle(
-                    color: currentTheme.colorScheme.onTertiary,
+                    color: currentTheme.badgeTheme.textColor ??
+                        currentTheme.colorScheme.onInverseSurface,
                     fontSize: badgeStyle?.fontSize ??
                         DefaultIconStyle.defaultFontSize,
                   ),

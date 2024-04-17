@@ -56,7 +56,7 @@ class InboxBody extends StatelessWidget {
   Widget build(BuildContext context) {
     if (isError) {
       return RefreshIndicator(
-        color: currentTheme.colorScheme.secondary,
+        color: currentTheme.colorScheme.onTertiary,
         backgroundColor: currentTheme.colorScheme.primary,
         onRefresh: onRefresh,
         child: ListView(
@@ -109,6 +109,7 @@ class InboxBody extends StatelessWidget {
           deletingNotificationId: deletingNotificationId,
           totalElements: totalElements,
           cardProps: cardProps,
+          loadingIndicator: currentTheme.colorScheme.onTertiary,
         ),
       );
     }

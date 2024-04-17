@@ -31,11 +31,12 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
     }
     return Container(
       decoration: BoxDecoration(
-        color: theme.colorScheme.primary,
+        color: theme.appBarTheme.backgroundColor ?? theme.colorScheme.primary,
         border: Border(
           bottom: BorderSide(
             width: styles?.appBarStyle?.borderWidth ?? 1,
-            color: theme.colorScheme.surfaceTint,
+            color:
+                theme.appBarTheme.shadowColor ?? theme.colorScheme.surfaceTint,
           ),
         ),
       ),
@@ -58,7 +59,8 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                           child: inboxHeaderProps?.backButton ??
                               Icon(
                                 Icons.arrow_back_ios,
-                                color: theme.colorScheme.onBackground,
+                                color: theme.bannerTheme.dividerColor ??
+                                    theme.colorScheme.onBackground,
                                 size: 20,
                               ),
                         ),
@@ -72,7 +74,8 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                             TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
-                              color: theme.colorScheme.onBackground,
+                              color: theme.bannerTheme.dividerColor ??
+                                  theme.colorScheme.onBackground,
                             ),
                       ),
                     ),
@@ -107,7 +110,8 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
-                                color: theme.colorScheme.outline,
+                                color: theme.appBarTheme.foregroundColor ??
+                                    theme.colorScheme.outline,
                               ),
                             ),
                           ],

@@ -87,12 +87,10 @@ void main() {
       final customThemeColors = CustomThemeColors(
         backgroundColor: Colors.white,
         primary: Colors.grey,
-        badgeColor: Colors.red,
       );
 
       expect(customThemeColors.backgroundColor, Colors.white);
       expect(customThemeColors.primary, Colors.grey);
-      expect(customThemeColors.badgeColor, Colors.red);
     });
   });
 

@@ -84,7 +84,7 @@ class _CardWidgetState extends State<CardWidget> {
 
   BorderSide _getDefaultBorderDecoration(ThemeData theme) {
     return BorderSide(
-      color: theme.colorScheme.surfaceTint,
+      color: theme.cardTheme.shadowColor ?? theme.colorScheme.surfaceTint,
       width: 0.5,
     );
   }
@@ -94,7 +94,7 @@ class _CardWidgetState extends State<CardWidget> {
       border: Border(
         left: BorderSide(
           color: widget.notification.isRead
-              ? theme.colorScheme.primary
+              ? Colors.transparent
               : theme.colorScheme.secondary,
           width: 4,
         ),
@@ -103,7 +103,7 @@ class _CardWidgetState extends State<CardWidget> {
       ),
       color: widget.notification.cardColor ??
           (widget.notification.isRead
-              ? null
+              ? theme.cardTheme.color ?? Colors.transparent
               : theme.colorScheme.secondaryContainer),
     );
   }
@@ -151,7 +151,8 @@ class _CardWidgetState extends State<CardWidget> {
                 TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: theme.colorScheme.tertiary,
+                  color: theme.cardTheme.surfaceTintColor ??
+                      theme.colorScheme.tertiary,
                 ),
           ),
         ),
@@ -182,7 +183,8 @@ class _CardWidgetState extends State<CardWidget> {
             TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: theme.colorScheme.tertiary,
+              color: theme.bannerTheme.backgroundColor ??
+                  theme.colorScheme.tertiary,
             ),
       ),
     );
@@ -195,7 +197,8 @@ class _CardWidgetState extends State<CardWidget> {
           TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w400,
-            color: theme.colorScheme.tertiary,
+            color: theme.bannerTheme.surfaceTintColor ??
+                theme.colorScheme.tertiary,
           ),
       maxLines: 2,
       overflow: TextOverflow.ellipsis,

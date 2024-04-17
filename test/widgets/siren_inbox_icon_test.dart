@@ -197,7 +197,7 @@ void main() {
         home: Scaffold(
           body: SirenInboxIcon(
             darkMode: true,
-            theme: CustomThemeColors(iconColor: Colors.amber),
+            theme: CustomThemeColors(notificationIconColor: Colors.amber),
           ),
         ),
       );

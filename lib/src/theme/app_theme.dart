@@ -14,7 +14,7 @@ class AppTheme {
           onBackground: AppColors.grey300Complementary,
           onPrimary: AppColors.black100,
           onSecondary: AppColors.avatarPlaceholderBgLight,
-          onTertiary: Colors.white,
+          onTertiary: AppColors.primary200,
           outline: AppColors.grey500,
           outlineVariant: AppColors.grey400,
           primary: Colors.white,
@@ -27,6 +27,7 @@ class AppTheme {
           surfaceVariant: AppColors.avatarIconLight,
           tertiary: AppColors.grey700,
           tertiaryContainer: AppColors.red,
+          onInverseSurface: Colors.white,
         ),
   );
 
@@ -37,7 +38,7 @@ class AppTheme {
           onBackground: AppColors.grey50,
           onPrimary: Colors.white,
           onSecondary: AppColors.avatarPlaceholderBgDark,
-          onTertiary: Colors.white,
+          onTertiary: AppColors.primary200Complementary,
           outline: AppColors.grey500Complementary,
           outlineVariant: AppColors.grey400Complementary,
           primary: AppColors.black100,
@@ -50,6 +51,7 @@ class AppTheme {
           surfaceVariant: AppColors.avatarIconDark,
           tertiary: AppColors.grey700Complementary,
           tertiaryContainer: AppColors.red,
+          onInverseSurface: Colors.white,
         ),
   );
 
@@ -62,8 +64,10 @@ class AppTheme {
       baseTheme.colorScheme.copyWith(
         inversePrimary:
             customColors.dateColor ?? baseTheme.colorScheme.inversePrimary,
-        onPrimary: customColors.iconColor ?? baseTheme.colorScheme.onPrimary,
-        onTertiary: customColors.badgeColor ?? baseTheme.colorScheme.onTertiary,
+        onPrimary: customColors.notificationIconColor ??
+            baseTheme.colorScheme.onPrimary,
+        onTertiary: customColors.refreshIndicatorColor ??
+            baseTheme.colorScheme.onTertiary,
         outline: customColors.clearAllIcon ?? baseTheme.colorScheme.outline,
         outlineVariant:
             customColors.deleteIcon ?? baseTheme.colorScheme.outlineVariant,
@@ -74,17 +78,51 @@ class AppTheme {
         surfaceTint:
             customColors.borderColor ?? baseTheme.colorScheme.surfaceTint,
         tertiary: customColors.textColor ?? baseTheme.colorScheme.tertiary,
-        tertiaryContainer: customColors.badgeBackgroundColor ??
-            baseTheme.colorScheme.tertiaryContainer,
         scrim: customColors.timerIcon ?? baseTheme.colorScheme.scrim,
-        onBackground:
-            customColors.inboxTitleColor ?? baseTheme.colorScheme.onBackground,
         background: baseTheme.colorScheme.background,
         onSecondary: baseTheme.colorScheme.onSecondary,
         shadow: baseTheme.colorScheme.shadow,
         surface: baseTheme.colorScheme.surface,
         surfaceVariant: baseTheme.colorScheme.surfaceVariant,
+        onInverseSurface: baseTheme.colorScheme.onInverseSurface,
       ),
-    );
+    )
+        .copyWith(
+          badgeTheme: baseTheme.badgeTheme.copyWith(
+            backgroundColor: customColors.badgeColors?.color ??
+                baseTheme.badgeTheme.backgroundColor,
+            textColor: customColors.badgeColors?.textColor ??
+                baseTheme.badgeTheme.textColor,
+          ),
+        )
+        .copyWith(
+          appBarTheme: baseTheme.appBarTheme.copyWith(
+            backgroundColor: customColors.inboxHeaderColors?.background ??
+                baseTheme.appBarTheme.backgroundColor,
+            foregroundColor:
+                customColors.inboxHeaderColors?.headerActionColor ??
+                    baseTheme.appBarTheme.foregroundColor,
+            shadowColor: customColors.inboxHeaderColors?.borderColor ??
+                baseTheme.appBarTheme.shadowColor,
+          ),
+        )
+        .copyWith(
+          cardTheme: baseTheme.cardTheme.copyWith(
+            color: customColors.cardColors?.background, //  Card background
+            shadowColor: customColors.cardColors?.borderColor, //  Card border
+            surfaceTintColor:
+                customColors.cardColors?.titleColor, //  Card title color
+          ),
+        )
+        .copyWith(
+          bannerTheme: baseTheme.bannerTheme.copyWith(
+            backgroundColor:
+                customColors.cardColors?.subtitleColor, // Card sub title color
+            surfaceTintColor: customColors
+                .cardColors?.descriptionColor, // Card description color
+            dividerColor: customColors
+                .inboxHeaderColors?.titleColor, // Header title color
+          ),
+        );
   }
 }

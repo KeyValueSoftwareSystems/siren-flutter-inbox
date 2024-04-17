@@ -19,6 +19,7 @@ class NotificationListView extends StatefulWidget {
     this.deletingNotificationId,
     this.totalElements,
     this.cardProps,
+    this.loadingIndicator,
     super.key,
   });
 
@@ -37,6 +38,7 @@ class NotificationListView extends StatefulWidget {
   final String? deletingNotificationId;
   final int? totalElements;
   final CardProps? cardProps;
+  final Color? loadingIndicator;
 
   @override
   State<NotificationListView> createState() => _NotificationListViewState();
@@ -70,7 +72,7 @@ class _NotificationListViewState extends State<NotificationListView> {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      color: Theme.of(context).colorScheme.secondary,
+      color: widget.loadingIndicator ?? Theme.of(context).colorScheme.secondary,
       backgroundColor: Theme.of(context).colorScheme.primary,
       onRefresh: widget.onRefresh,
       child: Semantics(
@@ -113,7 +115,8 @@ class _NotificationListViewState extends State<NotificationListView> {
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       child: Center(
                         child: CircularProgressIndicator(
-                          color: Theme.of(context).colorScheme.secondary,
+                          color: widget.loadingIndicator ??
+                              Theme.of(context).colorScheme.secondary,
                         ),
                       ),
                     )
