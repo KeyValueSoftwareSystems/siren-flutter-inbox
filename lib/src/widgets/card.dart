@@ -50,9 +50,9 @@ class _CardWidgetState extends State<CardWidget> {
         widget.onTap(widget.notification);
       },
       child: Container(
-        decoration: widget.styles?.cardContainer?.decoration ??
+        decoration: widget.styles?.cardStyle?.cardContainer?.decoration ??
             _getDefaultContainerDecoration(currentTheme),
-        padding: widget.styles?.cardContainer?.padding ??
+        padding: widget.styles?.cardStyle?.cardContainer?.padding ??
             const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,7 +121,7 @@ class _CardWidgetState extends State<CardWidget> {
           left: 6,
         ),
         child: CircleAvatar(
-          radius: 21,
+          radius: widget.styles?.cardStyle?.avatarSize ?? 21,
           backgroundImage: avatarUrl != null && avatarUrl.isNotEmpty
               ? NetworkImage(avatarUrl)
               : null,
@@ -147,7 +147,7 @@ class _CardWidgetState extends State<CardWidget> {
             widget.notification.message.header ?? '',
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: widget.styles?.cardTitle ??
+            style: widget.styles?.cardStyle?.cardTitle ??
                 TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -163,7 +163,7 @@ class _CardWidgetState extends State<CardWidget> {
               'siren-notification-delete-${widget.notification.id}',
             ),
             onTap: () => widget.onDelete(widget.notification.id),
-            child: widget.cardProps.deleteWidget ??
+            child: widget.cardProps.deleteIcon ??
                 _buildDefaultDeleteButton(
                   theme,
                   widget.styles?.deleteIconSize ?? 18,
@@ -179,7 +179,7 @@ class _CardWidgetState extends State<CardWidget> {
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: NullableText(
         text: widget.notification.message.subHeader,
-        style: widget.styles?.cardSubtitle ??
+        style: widget.styles?.cardStyle?.cardSubtitle ??
             TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
@@ -193,7 +193,7 @@ class _CardWidgetState extends State<CardWidget> {
   Widget _buildBodyText(ThemeData theme) {
     return Text(
       widget.notification.message.body ?? '',
-      style: widget.styles?.cardDescription ??
+      style: widget.styles?.cardStyle?.cardDescription ??
           TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w400,
@@ -231,7 +231,7 @@ class _CardWidgetState extends State<CardWidget> {
           generateElapsedTimeText(
             DateTime.parse(widget.notification.createdAt),
           ),
-          style: widget.styles?.dateStyle ??
+          style: widget.styles?.cardStyle?.dateStyle ??
               TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w400,

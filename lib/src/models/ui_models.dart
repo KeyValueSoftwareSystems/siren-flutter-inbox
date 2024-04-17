@@ -7,7 +7,7 @@ class CardProps {
   const CardProps({
     this.hideAvatar,
     this.disableAutoMarkAsRead,
-    this.deleteWidget,
+    this.deleteIcon,
     this.hideDelete,
     this.onAvatarClick,
   });
@@ -19,7 +19,7 @@ class CardProps {
   final bool? disableAutoMarkAsRead;
 
   /// Custom widget that can be used instead of default delete in the card (x)
-  final Widget? deleteWidget;
+  final Widget? deleteIcon;
 
   /// Determines whether to hide the avatar in the notification card in Siren inbox.
   final bool? hideDelete;
@@ -29,9 +29,9 @@ class CardProps {
 }
 
 /// Customizable style for the Siren notification icon.
-class IconStyle {
-  /// Constructs an [IconStyle] with optional parameters.
-  const IconStyle({this.size});
+class NotificationIconStyle {
+  /// Constructs an [NotificationIconStyle] with optional parameters.
+  const NotificationIconStyle({this.size});
 
   /// Size of the notification icon.
   final double? size;
@@ -83,13 +83,9 @@ class SirenStyleProps {
   /// Constructs a [SirenStyleProps] with optional parameters.
   const SirenStyleProps({
     this.container,
-    this.cardContainer,
-    this.cardSubtitle,
-    this.cardTitle,
-    this.cardDescription,
-    this.dateStyle,
+    this.cardStyle,
     this.appBarStyle,
-    this.iconStyle,
+    this.notificationIconStyle,
     this.badgeStyle,
     this.deleteIconSize,
     this.dateIconSize,
@@ -99,26 +95,14 @@ class SirenStyleProps {
   /// The decoration for the Siren inbox list.
   final ContainerStyle? container;
 
-  /// The decoration for each card in Siren inbox.
-  final ContainerStyle? cardContainer;
-
-  /// The text style for the sub-header text in Siren inbox.
-  final TextStyle? cardSubtitle;
-
-  /// The text style for the card title in Siren inbox.
-  final TextStyle? cardTitle;
-
-  /// The text style for the card description in Siren inbox.
-  final TextStyle? cardDescription;
-
-  /// The text style for the date text in Siren inbox.
-  final TextStyle? dateStyle;
+  // The styles for inbox list item
+  final CardStyle? cardStyle;
 
   /// The style for default app bar
   final InboxHeaderStyle? appBarStyle;
 
   /// The style for the notification icon.
-  final IconStyle? iconStyle;
+  final NotificationIconStyle? notificationIconStyle;
 
   /// The style for the notification icon badge.
   final BadgeStyle? badgeStyle;
@@ -316,4 +300,33 @@ class InboxHeaderStyle {
 
   /// Border bottom with of default header container
   final double? borderWidth;
+}
+
+class CardStyle {
+  CardStyle({
+    this.cardContainer,
+    this.cardTitle,
+    this.cardSubtitle,
+    this.cardDescription,
+    this.dateStyle,
+    this.avatarSize,
+  });
+
+  /// The decoration for each card in Siren inbox.
+  final ContainerStyle? cardContainer;
+
+  /// The text style for the card title in Siren inbox.
+  final TextStyle? cardTitle;
+
+  /// The text style for the sub-header text in Siren inbox.
+  final TextStyle? cardSubtitle;
+
+  /// The text style for the card description in Siren inbox.
+  final TextStyle? cardDescription;
+
+  /// The text style for the date text in Siren inbox.
+  final TextStyle? dateStyle;
+
+  /// The size of avatar image
+  final double? avatarSize;
 }

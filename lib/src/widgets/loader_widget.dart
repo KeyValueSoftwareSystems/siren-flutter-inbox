@@ -64,7 +64,7 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
       ),
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -103,7 +103,7 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
                   _buildAnimatedWidget(
                     theme: currentTheme,
                     builder: (context, child) => Container(
@@ -115,7 +115,7 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
                   _buildAnimatedWidget(
                     theme: currentTheme,
                     builder: (context, child) => Container(
@@ -127,7 +127,7 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
                   Row(
                     children: [
                       _buildAnimatedWidget(
@@ -142,7 +142,7 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
                           ),
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: 12),
                       Expanded(
                         child: _buildAnimatedWidget(
                           theme: currentTheme,

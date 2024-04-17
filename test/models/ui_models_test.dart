@@ -36,7 +36,7 @@ void main() {
 
   group('IconStyle', () {
     test('constructor should initialize size property with provided value', () {
-      const iconStyle = IconStyle(size: 24);
+      const iconStyle = NotificationIconStyle(size: 24);
 
       expect(iconStyle.size, 24.0);
     });
@@ -70,14 +70,20 @@ void main() {
   group('SirenStyleProps', () {
     test('constructor should initialize properties with provided values', () {
       final sirenStyleProps = SirenStyleProps(
-        cardContainer:
-            ContainerStyle(decoration: const BoxDecoration(color: Colors.blue)),
-        iconStyle: const IconStyle(size: 24),
+        cardStyle: CardStyle(
+          cardContainer: ContainerStyle(
+            decoration: const BoxDecoration(color: Colors.blue),
+          ),
+        ),
+        notificationIconStyle: const NotificationIconStyle(size: 24),
         badgeStyle: const BadgeStyle(fontSize: 16),
       );
 
-      expect(sirenStyleProps.cardContainer!.decoration!.color, Colors.blue);
-      expect(sirenStyleProps.iconStyle!.size, 24.0);
+      expect(
+        sirenStyleProps.cardStyle?.cardContainer!.decoration!.color,
+        Colors.blue,
+      );
+      expect(sirenStyleProps.notificationIconStyle!.size, 24.0);
       expect(sirenStyleProps.badgeStyle!.fontSize, 16.0);
     });
   });
@@ -100,10 +106,10 @@ void main() {
 
     const cardParams = CardProps(
       hideAvatar: hideAvatar,
-      deleteWidget: deleteWidget,
+      deleteIcon: deleteWidget,
     );
 
     expect(cardParams.hideAvatar, hideAvatar);
-    expect(cardParams.deleteWidget, deleteWidget);
+    expect(cardParams.deleteIcon, deleteWidget);
   });
 }
