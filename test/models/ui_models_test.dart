@@ -67,9 +67,9 @@ void main() {
     });
   });
 
-  group('SirenStyleProps', () {
+  group('CustomStyles', () {
     test('constructor should initialize properties with provided values', () {
-      final sirenStyleProps = SirenStyleProps(
+      final sirenStyleProps = CustomStyles(
         cardStyle: CardStyle(
           cardContainer: ContainerStyle(
             decoration: const BoxDecoration(color: Colors.blue),

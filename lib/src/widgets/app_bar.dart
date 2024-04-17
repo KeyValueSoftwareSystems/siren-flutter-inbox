@@ -15,7 +15,7 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onClearAllPressed;
   final bool isNonEmptyNotifications;
   final InboxHeaderProps? inboxHeaderProps;
-  final SirenStyleProps? styles;
+  final CustomStyles? styles;
 
   @override
   Size get preferredSize {

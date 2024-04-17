@@ -34,7 +34,7 @@ class SirenInbox extends StatefulWidget {
   });
 
   /// Custom styles for the card of each notification.
-  final SirenStyleProps? customStyles;
+  final CustomStyles? customStyles;
 
   /// Widget to display when the notification list is empty.
   final Widget? listEmptyWidget;

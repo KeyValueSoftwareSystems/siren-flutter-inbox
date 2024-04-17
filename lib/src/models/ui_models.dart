@@ -79,9 +79,9 @@ class BadgeStyle {
 }
 
 /// Style properties for customizing the appearance of various UI elements in the Siren theme.
-class SirenStyleProps {
-  /// Constructs a [SirenStyleProps] with optional parameters.
-  const SirenStyleProps({
+class CustomStyles {
+  /// Constructs a [CustomStyles] with optional parameters.
+  const CustomStyles({
     this.container,
     this.cardStyle,
     this.appBarStyle,

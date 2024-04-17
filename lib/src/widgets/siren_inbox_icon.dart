@@ -34,7 +34,7 @@ class SirenInboxIcon extends StatefulWidget {
   final CustomThemeColors? theme;
 
   /// Custom styles for the inbox icon.
-  final SirenStyleProps? customStyles;
+  final CustomStyles? customStyles;
 
   /// Callback function to handle errors.
   final void Function(ApiErrorDetails)? onError;

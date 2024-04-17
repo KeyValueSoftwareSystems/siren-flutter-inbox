@@ -25,7 +25,7 @@ class CardWidget extends StatefulWidget {
   final CardProps cardProps;
 
   /// Styles to be applied to various elements of the card.
-  final SirenStyleProps? styles;
+  final CustomStyles? styles;
 
   /// Callback function invoked when the card is deleted.
   final void Function(String) onDelete;

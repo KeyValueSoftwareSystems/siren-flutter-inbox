@@ -29,7 +29,7 @@ class NotificationListView extends StatefulWidget {
   final bool loadingNextPage;
   final Future<void> Function() onRefresh;
   final VoidCallback onEndReached;
-  final SirenStyleProps? customStyles;
+  final CustomStyles? customStyles;
   final ScrollController scrollController;
   final Future<void> Function(String) onDelete;
   final void Function(String) markAsRead;

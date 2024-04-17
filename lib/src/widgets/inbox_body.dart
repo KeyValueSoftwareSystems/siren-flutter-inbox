@@ -46,7 +46,7 @@ class InboxBody extends StatelessWidget {
   final Widget? customErrorWidget;
   final Widget? customLoader;
   final bool endReached;
-  final SirenStyleProps? customStyles;
+  final CustomStyles? customStyles;
   final CardProps? cardProps;
   final VoidCallback onEndReached;
   final ScrollController scrollController;
