@@ -23,7 +23,7 @@ class Siren {
   /// Marks notifications as read by date until a specific date.
   /// [startDate] is the date until a specific date in the format "yyyy-MM-dd'T'HH:mm:ss'Z'".
   /// Returns the response from the API call.
-  static Future markNotificationsAsReadByDate({
+  static Future markAsReadByDate({
     required String startDate,
   }) async {
     final data = {
@@ -40,7 +40,7 @@ class Siren {
   /// Marks notifications as viewed until a specific date.
   /// [startDate] is the date until a specific date in the format "yyyy-MM-dd'T'HH:mm:ss'Z'".
   /// Returns the response from the API call.
-  static Future markNotificationsAsViewed({
+  static Future markAllAsViewed({
     required String startDate,
   }) async {
     final response = await MarkAllNotificationsAsViewed.instance
@@ -53,7 +53,7 @@ class Siren {
   /// Deletes a notification by its ID.
   /// [id] is the notification id to be deleted.
   /// Returns the response from the API call.
-  static Future deleteNotification({
+  static Future deleteById({
     required String id,
   }) async {
     final response = await DeleteNotificationById.instance

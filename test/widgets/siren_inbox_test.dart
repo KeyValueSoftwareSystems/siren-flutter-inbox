@@ -55,7 +55,7 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: SirenInbox(
-              inboxHeaderProps: InboxHeaderProps(
+              headerParams: HeaderParams(
                 title: 'Notifications Header',
               ),
               darkMode: true,
@@ -77,7 +77,7 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: SirenInbox(
-              inboxHeaderProps: InboxHeaderProps(
+              headerParams: HeaderParams(
                 showBackButton: true,
                 onBackPress: () {
                   backButtonPressed = true;

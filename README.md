@@ -86,8 +86,8 @@ Inbox is a paginated list view for displaying notifications.
 
 ```dart
  SirenInbox(
-    inboxHeaderProps: InboxHeaderProps(showBackButton: true),
-    cardProps: CardProps(hideAvatar: false),
+    headerParams: HeaderParams(showBackButton: true),
+    cardParams: CardParams(hideAvatar: false),
     onError: (error) {
         // Handle Error
     },
@@ -103,12 +103,12 @@ Given below are the arguments of Siren Inbox Widget.
 | darkMode                | Toggle to enable dark mode when custom theme is not passed           | boolean                        | false                                                                                                                                                               |
 | itemsPerFetch           | Number of notifications fetch per api request (have a max cap of 50) | int                            | 20                                                                                                                                                                  |
 | listEmptyWidget         | Custom widget for empty notification list                            | Widget                         | null                                                                                                                                                                |
-| customNotificationCard  | Custom widget to display the notification cards                      | Widget                         | null                                                                                                                                                                |
+| customCard  | Custom widget to display the notification cards                      | Widget                         | null                                                                                                                                                                |
 | customLoader            | Custom widget to display the initial loading state                   | Widget                         | null                                                                                                                                                                |
 | customErrorWidget       | Custom error widget                                                  | Widget                         | null                                                                                                                                                                |
-| cardProps               | Properties of notification card                                      | CardProps                      | CardProps(hideAvatar: false, disableAutoMarkAsRead: false, hideDelete: false, deleteIcon: Icon(Icons.close), onAvatarClick: Function(NotificationDataType))         |
-| inboxHeaderProps        | Properties of notification window header                             | InboxHeaderProps               | InboxHeaderProps(hideHeader: false, hideClearAll: false,title: 'Notifications', customHeader: null showBackButton:false, backButton: null, onBackPress: ()=> null ) |
-| onNotificationCardClick | Custom click handler for notification cards                          | Function(NotificationDataType) | null                                                                                                                                                                |
+| cardParams               | Properties of notification card                                      | CardParams                      | CardParams(hideAvatar: false, disableAutoMarkAsRead: false, hideDelete: false, deleteIcon: Icon(Icons.close), onAvatarClick: Function(NotificationDataType))         |
+| headerParams        | Properties of notification window header                             | HeaderParams               | HeaderParams(hideHeader: false, hideClearAll: false,title: 'Notifications', customHeader: null showBackButton:false, backButton: null, onBackPress: ()=> null ) |
+| onCardClick | Custom click handler for notification cards                          | Function(NotificationDataType) | null                                                                                                                                                                |
 | onError                 | Callback for handling errors                                         | Function(ApiErrorDetails)      | null                                                                                                                                                                |
 | theme                   | Theme properties for custom color theme                              | CustomThemeColors              | null                                                                                                                                                                |
 | customStyles            | Style properties for custom styling                                  | CustomStyles                   | null                                                                                                                                                                |

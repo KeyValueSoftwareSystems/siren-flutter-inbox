@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:sirenapp_flutter_inbox/src/models/notification_model.dart';
 
 /// Properties for configuring the appearance of the notification card.
-class CardProps {
-  /// Constructs a [CardProps] with optional parameters.
-  const CardProps({
+class CardParams {
+  /// Constructs a [CardParams] with optional parameters.
+  const CardParams({
     this.hideAvatar,
     this.disableAutoMarkAsRead,
     this.deleteIcon,
@@ -243,8 +243,8 @@ class BadgeColors {
 }
 
 /// Properties for configuring the appearance of the notification window app bar.
-class InboxHeaderProps {
-  InboxHeaderProps({
+class HeaderParams {
+  HeaderParams({
     this.title,
     this.hideHeader,
     this.showBackButton,

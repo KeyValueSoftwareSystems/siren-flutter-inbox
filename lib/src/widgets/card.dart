@@ -9,7 +9,7 @@ class CardWidget extends StatefulWidget {
   const CardWidget({
     required this.onTap,
     required this.notification,
-    required this.cardProps,
+    required this.cardParams,
     required this.styles,
     required this.onDelete,
     super.key,
@@ -22,7 +22,7 @@ class CardWidget extends StatefulWidget {
   final NotificationDataType notification;
 
   /// Properties for customizing the card.
-  final CardProps cardProps;
+  final CardParams cardParams;
 
   /// Styles to be applied to various elements of the card.
   final CustomStyles? styles;
@@ -57,7 +57,7 @@ class _CardWidgetState extends State<CardWidget> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (!(widget.cardProps.hideAvatar ?? false))
+            if (!(widget.cardParams.hideAvatar ?? false))
               _buildDefaultAvatarContainer(currentTheme),
             Expanded(
               child: Padding(
@@ -113,7 +113,7 @@ class _CardWidgetState extends State<CardWidget> {
     return GestureDetector(
       key: Key('siren-notification-avatar-${widget.notification.id}'),
       onTap: () {
-        widget.cardProps.onAvatarClick?.call(widget.notification);
+        widget.cardParams.onAvatarClick?.call(widget.notification);
       },
       child: Padding(
         padding: const EdgeInsets.only(
@@ -156,14 +156,14 @@ class _CardWidgetState extends State<CardWidget> {
                 ),
           ),
         ),
-        if (!(widget.cardProps.hideDelete ?? false)) ...[
+        if (!(widget.cardParams.hideDelete ?? false)) ...[
           const SizedBox(width: 8),
           GestureDetector(
             key: Key(
               'siren-notification-delete-${widget.notification.id}',
             ),
             onTap: () => widget.onDelete(widget.notification.id),
-            child: widget.cardProps.deleteIcon ??
+            child: widget.cardParams.deleteIcon ??
                 _buildDefaultDeleteButton(
                   theme,
                   widget.styles?.deleteIconSize ?? 18,

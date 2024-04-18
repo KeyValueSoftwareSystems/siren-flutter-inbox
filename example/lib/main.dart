@@ -56,7 +56,7 @@ class MyHomePageState extends State<MyHomePage> {
                     icon: const Icon(Icons.delete_forever)),
                 IconButton(
                     onPressed: () {
-                      Siren.markNotificationsAsReadByDate(
+                      Siren.markAsReadByDate(
                           startDate: DateTime.now().toUtc().toIso8601String());
                     },
                     icon: const Icon(Icons.mark_email_read)),

@@ -11,7 +11,7 @@ void main() {
         home: Scaffold(
           appBar: SirenAppBar(
             theme: ThemeData(),
-            inboxHeaderProps: InboxHeaderProps(
+            headerParams: HeaderParams(
               title: title,
               showBackButton: false,
             ),
@@ -31,7 +31,7 @@ void main() {
         home: Scaffold(
           appBar: SirenAppBar(
             theme: ThemeData(),
-            inboxHeaderProps: InboxHeaderProps(
+            headerParams: HeaderParams(
               title: 'Title',
               showBackButton: true,
             ),
@@ -52,7 +52,7 @@ void main() {
         home: Scaffold(
           appBar: SirenAppBar(
             theme: ThemeData(),
-            inboxHeaderProps: InboxHeaderProps(
+            headerParams: HeaderParams(
               title: 'Title',
               showBackButton: false,
               hideClearAll: true,
@@ -74,7 +74,7 @@ void main() {
         home: Scaffold(
           appBar: SirenAppBar(
             theme: ThemeData(),
-            inboxHeaderProps: InboxHeaderProps(
+            headerParams: HeaderParams(
               title: 'Title',
               showBackButton: false,
             ),
@@ -96,7 +96,7 @@ void main() {
         home: Scaffold(
           appBar: SirenAppBar(
             theme: ThemeData(),
-            inboxHeaderProps: InboxHeaderProps(
+            headerParams: HeaderParams(
               title: 'Title',
               showBackButton: true,
               onBackPress: () {
@@ -122,7 +122,7 @@ void main() {
         home: Scaffold(
           appBar: SirenAppBar(
             theme: ThemeData(),
-            inboxHeaderProps: InboxHeaderProps(
+            headerParams: HeaderParams(
               title: 'Title',
               showBackButton: false,
             ),

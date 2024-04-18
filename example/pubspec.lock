@@ -174,10 +174,9 @@ packages:
   sirenapp_flutter_inbox:
     dependency: "direct main"
     description:
-      name: sirenapp_flutter_inbox
-      sha256: "3abd9c5d42acbf062a3eef8cfe5691600e10e33b32533d1a2a1c9ed0a1063106"
-      url: "https://pub.dev"
-    source: hosted
+      path: ".."
+      relative: true
+    source: path
     version: "1.0.0"
   sky_engine:
     dependency: transitive

@@ -53,7 +53,7 @@ void main() {
               scrollController: ScrollController(),
               onDelete: (id) async {},
               markAsRead: (id) {},
-              onNotificationCardClick: (n) {
+              onCardClick: (n) {
                 func();
               },
             ),
@@ -87,12 +87,12 @@ void main() {
               onEndReached: () {},
               customStyles: null,
               scrollController: ScrollController(),
-              customNotificationCard: (n) {
+              customCard: (n) {
                 return Text(n.message.subHeader.toString());
               },
               onDelete: (id) async {},
               markAsRead: (id) {},
-              onNotificationCardClick: (n) {
+              onCardClick: (n) {
                 func();
               },
             ),

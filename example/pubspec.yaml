@@ -36,7 +36,8 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  sirenapp_flutter_inbox: ^1.0.0
+  sirenapp_flutter_inbox: 
+    path: ../
   network_logger: ^1.0.4
 
 

@@ -22,12 +22,12 @@ class SirenInbox extends StatefulWidget {
     this.darkMode,
     this.itemsPerFetch,
     this.listEmptyWidget,
-    this.customNotificationCard,
+    this.customCard,
     this.customLoader,
     this.customErrorWidget,
-    this.cardProps,
-    this.inboxHeaderProps,
-    this.onNotificationCardClick,
+    this.cardParams,
+    this.headerParams,
+    this.onCardClick,
     this.onError,
     this.theme,
     this.customStyles,
@@ -43,7 +43,7 @@ class SirenInbox extends StatefulWidget {
   final Widget? listEmptyWidget;
 
   /// Custom builder for notification cards.
-  final Widget Function(NotificationDataType)? customNotificationCard;
+  final Widget Function(NotificationDataType)? customCard;
 
   /// Custom loader widget.
   final Widget? customLoader;
@@ -52,13 +52,13 @@ class SirenInbox extends StatefulWidget {
   final Widget? customErrorWidget;
 
   ///Custom props for Card properties
-  final CardProps? cardProps;
+  final CardParams? cardParams;
 
   /// Custom props for header properties
-  final InboxHeaderProps? inboxHeaderProps;
+  final HeaderParams? headerParams;
 
   /// Callback function when a notification card is clicked.
-  final void Function(NotificationDataType)? onNotificationCardClick;
+  final void Function(NotificationDataType)? onCardClick;
 
   /// Callback function for handling errors.
   final void Function(ApiErrorDetails)? onError;
@@ -473,7 +473,7 @@ class _SirenInboxState extends State<SirenInbox> {
               theme: currentTheme,
               onClearAllPressed: onBulkDelete,
               isNonEmptyNotifications: shouldShowClearAllButton(),
-              inboxHeaderProps: widget.inboxHeaderProps,
+              headerParams: widget.headerParams,
               styles: widget.customStyles,
             ),
             body: InboxBody(
@@ -484,18 +484,18 @@ class _SirenInboxState extends State<SirenInbox> {
               notifications: notifications,
               deleteNotification: deleteNotification,
               markAsRead: _markNotificationAsRead,
-              customNotificationCard: widget.customNotificationCard,
-              onNotificationCardClick: widget.onNotificationCardClick,
+              customCard: widget.customCard,
+              onCardClick: widget.onCardClick,
               deletingNotificationId: deletingNotificationId,
               disableAutoMarkAsRead:
-                  widget.cardProps?.disableAutoMarkAsRead ?? false,
+                  widget.cardParams?.disableAutoMarkAsRead ?? false,
               totalElements: totalElements,
               onRefresh: onRefresh,
               customErrorWidget: widget.customErrorWidget,
               customLoader: widget.customLoader,
               endReached: endReached,
               customStyles: widget.customStyles,
-              cardProps: widget.cardProps,
+              cardParams: widget.cardParams,
               scrollController: _scrollController,
               onEndReached: onEndReached,
               listEmptyWidget: widget.listEmptyWidget,

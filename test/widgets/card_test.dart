@@ -45,7 +45,7 @@ void main() {
               deletePressed = true;
             },
             notification: notification,
-            cardProps: CardProps(
+            cardParams: CardParams(
               hideAvatar: false,
               hideDelete: false,
               onAvatarClick: (notification) {
