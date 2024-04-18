@@ -64,13 +64,13 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
       ),
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (!widget.hideAvatar)
             Padding(
-              padding: const EdgeInsets.only(right: 24),
+              padding: const EdgeInsets.only(right: 6, left: 6),
               child: _buildAnimatedWidget(
                 theme: currentTheme,
                 builder: (context, child) => Container(
@@ -87,7 +87,7 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(
-                right: 24,
+                right: 12,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,7 +103,7 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
                   _buildAnimatedWidget(
                     theme: currentTheme,
                     builder: (context, child) => Container(
@@ -115,7 +115,7 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
                   _buildAnimatedWidget(
                     theme: currentTheme,
                     builder: (context, child) => Container(
@@ -127,7 +127,7 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
                   Row(
                     children: [
                       _buildAnimatedWidget(
@@ -142,7 +142,7 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
                           ),
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: 12),
                       Expanded(
                         child: _buildAnimatedWidget(
                           theme: currentTheme,
@@ -183,9 +183,12 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
     required ThemeData theme,
     required Widget Function(BuildContext, Widget?) builder,
   }) {
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: builder,
+    return Padding(
+      padding: const EdgeInsets.only(left: 6),
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: builder,
+      ),
     );
   }
 }

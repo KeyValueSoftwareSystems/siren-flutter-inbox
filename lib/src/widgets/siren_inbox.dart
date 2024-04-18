@@ -26,15 +26,18 @@ class SirenInbox extends StatefulWidget {
     this.customLoader,
     this.customErrorWidget,
     this.cardProps,
+    this.inboxHeaderProps,
     this.onNotificationCardClick,
     this.onError,
     this.theme,
     this.customStyles,
-    this.inboxHeaderProps,
   });
 
-  /// Custom styles for the card of each notification.
-  final SirenStyleProps? customStyles;
+  /// Flag for enabling dark mode.
+  final bool? darkMode;
+
+  /// Notifications to be fetched in each request
+  final int? itemsPerFetch;
 
   /// Widget to display when the notification list is empty.
   final Widget? listEmptyWidget;
@@ -42,32 +45,30 @@ class SirenInbox extends StatefulWidget {
   /// Custom builder for notification cards.
   final Widget Function(NotificationDataType)? customNotificationCard;
 
-  /// Callback function when a notification card is clicked.
-  final void Function(NotificationDataType)? onNotificationCardClick;
-
-  /// Callback function for handling errors.
-  final void Function(ApiErrorDetails)? onError;
-
-  /// Flag for enabling dark mode.
-  final bool? darkMode;
-
-  /// Custom theme colors for the inbox, this focuses on the idea of colorSchemes in flutter theme.
-  final CustomThemeColors? theme;
-
   /// Custom loader widget.
   final Widget? customLoader;
 
   /// Custom error widget.
   final Widget? customErrorWidget;
 
-  /// Notifications to be fetched in each request
-  final int? itemsPerFetch;
-
   ///Custom props for Card properties
   final CardProps? cardProps;
 
   /// Custom props for header properties
   final InboxHeaderProps? inboxHeaderProps;
+
+  /// Callback function when a notification card is clicked.
+  final void Function(NotificationDataType)? onNotificationCardClick;
+
+  /// Callback function for handling errors.
+  final void Function(ApiErrorDetails)? onError;
+
+  /// Custom theme colors for the inbox, this focuses on the idea of colorSchemes in flutter theme.
+  final CustomThemeColors? theme;
+
+  /// Custom styles for the card of each notification.
+  final CustomStyles? customStyles;
+
   @override
   State<SirenInbox> createState() => _SirenInboxState();
 }
@@ -471,8 +472,9 @@ class _SirenInboxState extends State<SirenInbox> {
             appBar: SirenAppBar(
               theme: currentTheme,
               onClearAllPressed: onBulkDelete,
-              showClearAllButton: shouldShowClearAllButton(),
+              isNonEmptyNotifications: shouldShowClearAllButton(),
               inboxHeaderProps: widget.inboxHeaderProps,
+              styles: widget.customStyles,
             ),
             body: InboxBody(
               currentTheme: currentTheme,

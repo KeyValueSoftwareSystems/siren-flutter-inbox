@@ -46,7 +46,7 @@ class InboxBody extends StatelessWidget {
   final Widget? customErrorWidget;
   final Widget? customLoader;
   final bool endReached;
-  final SirenStyleProps? customStyles;
+  final CustomStyles? customStyles;
   final CardProps? cardProps;
   final VoidCallback onEndReached;
   final ScrollController scrollController;
@@ -56,7 +56,7 @@ class InboxBody extends StatelessWidget {
   Widget build(BuildContext context) {
     if (isError) {
       return RefreshIndicator(
-        color: currentTheme.colorScheme.secondary,
+        color: currentTheme.colorScheme.onTertiary,
         backgroundColor: currentTheme.colorScheme.primary,
         onRefresh: onRefresh,
         child: ListView(
@@ -90,22 +90,27 @@ class InboxBody extends StatelessWidget {
         child: listEmptyWidget ?? const EmptyWidget(),
       );
     } else {
-      return NotificationListView(
-        notifications: notifications,
-        isLoading: isLoading,
-        endReached: endReached,
-        onRefresh: onRefresh,
-        onEndReached: onEndReached,
-        loadingNextPage: loadingNextPage,
-        customStyles: customStyles,
-        scrollController: scrollController,
-        onDelete: deleteNotification,
-        markAsRead: markAsRead,
-        customNotificationCard: customNotificationCard,
-        onNotificationCardClick: onNotificationCardClick,
-        deletingNotificationId: deletingNotificationId,
-        totalElements: totalElements,
-        cardProps: cardProps,
+      return Container(
+        decoration: customStyles?.container?.decoration,
+        padding: customStyles?.container?.padding,
+        child: NotificationListView(
+          notifications: notifications,
+          isLoading: isLoading,
+          endReached: endReached,
+          onRefresh: onRefresh,
+          onEndReached: onEndReached,
+          loadingNextPage: loadingNextPage,
+          customStyles: customStyles,
+          scrollController: scrollController,
+          onDelete: deleteNotification,
+          markAsRead: markAsRead,
+          customNotificationCard: customNotificationCard,
+          onNotificationCardClick: onNotificationCardClick,
+          deletingNotificationId: deletingNotificationId,
+          totalElements: totalElements,
+          cardProps: cardProps,
+          loadingIndicator: currentTheme.colorScheme.onTertiary,
+        ),
       );
     }
   }

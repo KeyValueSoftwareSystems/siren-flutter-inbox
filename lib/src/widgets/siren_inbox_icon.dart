@@ -34,7 +34,7 @@ class SirenInboxIcon extends StatefulWidget {
   final CustomThemeColors? theme;
 
   /// Custom styles for the inbox icon.
-  final SirenStyleProps? customStyles;
+  final CustomStyles? customStyles;
 
   /// Callback function to handle errors.
   final void Function(ApiErrorDetails)? onError;
@@ -175,8 +175,8 @@ class _SirenInboxIconState extends State<SirenInboxIcon> {
           : (widget.darkMode ? AppTheme.darkTheme : AppTheme.lightTheme),
       child: Builder(
         builder: (context) {
-          final size =
-              widget.customStyles?.iconStyle?.size ?? DefaultIconStyle.iconSize;
+          final size = widget.customStyles?.notificationIconStyle?.size ??
+              DefaultIconStyle.iconSize;
           final currentTheme = Theme.of(context);
           return IgnorePointer(
             ignoring: widget.disabled,

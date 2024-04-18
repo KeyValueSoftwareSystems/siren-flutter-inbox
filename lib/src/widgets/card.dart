@@ -25,7 +25,7 @@ class CardWidget extends StatefulWidget {
   final CardProps cardProps;
 
   /// Styles to be applied to various elements of the card.
-  final SirenStyleProps? styles;
+  final CustomStyles? styles;
 
   /// Callback function invoked when the card is deleted.
   final void Function(String) onDelete;
@@ -50,48 +50,33 @@ class _CardWidgetState extends State<CardWidget> {
         widget.onTap(widget.notification);
       },
       child: Container(
-        decoration: widget.styles?.container ??
+        decoration: widget.styles?.cardStyle?.cardContainer?.decoration ??
             _getDefaultContainerDecoration(currentTheme),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-          child: Container(
-            decoration: widget.styles?.contentContainer,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (!(widget.cardProps.hideAvatar ?? false))
-                  _buildDefaultAvatarContainer(currentTheme),
-                Expanded(
-                  child: Container(
-                    decoration: widget.styles?.cardContentContainer,
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        right: 16,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildHeaderText(currentTheme),
-                          _buildSubHeaderText(currentTheme),
-                          _buildBodyText(currentTheme),
-                          _buildFooterRow(currentTheme),
-                        ],
-                      ),
+        padding: widget.styles?.cardStyle?.cardContainer?.padding ??
+            const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (!(widget.cardProps.hideAvatar ?? false))
+              _buildDefaultAvatarContainer(currentTheme),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 6),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildHeaderText(currentTheme),
+                    _buildSubHeaderText(currentTheme),
+                    _buildBodyText(currentTheme),
+                    _buildFooterRow(
+                      currentTheme,
+                      widget.styles?.dateIconSize ?? 14,
                     ),
-                  ),
+                  ],
                 ),
-                if (!(widget.cardProps.hideDelete ?? false))
-                  GestureDetector(
-                    key: Key(
-                      'siren-notification-delete-${widget.notification.id}',
-                    ),
-                    onTap: () => widget.onDelete(widget.notification.id),
-                    child: widget.cardProps.deleteWidget ??
-                        _buildDefaultDeleteButton(currentTheme),
-                  ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -99,7 +84,7 @@ class _CardWidgetState extends State<CardWidget> {
 
   BorderSide _getDefaultBorderDecoration(ThemeData theme) {
     return BorderSide(
-      color: theme.colorScheme.surfaceTint,
+      color: theme.cardTheme.shadowColor ?? theme.colorScheme.surfaceTint,
       width: 0.5,
     );
   }
@@ -109,7 +94,7 @@ class _CardWidgetState extends State<CardWidget> {
       border: Border(
         left: BorderSide(
           color: widget.notification.isRead
-              ? theme.colorScheme.primary
+              ? Colors.transparent
               : theme.colorScheme.secondary,
           width: 4,
         ),
@@ -118,7 +103,7 @@ class _CardWidgetState extends State<CardWidget> {
       ),
       color: widget.notification.cardColor ??
           (widget.notification.isRead
-              ? null
+              ? theme.cardTheme.color ?? Colors.transparent
               : theme.colorScheme.secondaryContainer),
     );
   }
@@ -132,52 +117,74 @@ class _CardWidgetState extends State<CardWidget> {
       },
       child: Padding(
         padding: const EdgeInsets.only(
-          right: 24,
+          right: 6,
+          left: 6,
         ),
-        child: Container(
-          decoration: widget.styles?.cardAvatarContainer,
-          child: CircleAvatar(
-            radius: 21,
-            backgroundImage: avatarUrl != null && avatarUrl.isNotEmpty
-                ? NetworkImage(avatarUrl)
-                : null,
-            backgroundColor: theme.colorScheme.onSecondary,
-            child: avatarUrl == null || avatarUrl.isEmpty
-                ? Icon(
-                    Icons.landscape_rounded,
-                    color: theme.colorScheme.surfaceVariant,
-                  )
-                : null,
-          ),
+        child: CircleAvatar(
+          radius: widget.styles?.cardStyle?.avatarSize ?? 21,
+          backgroundImage: avatarUrl != null && avatarUrl.isNotEmpty
+              ? NetworkImage(avatarUrl)
+              : null,
+          backgroundColor: theme.colorScheme.onSecondary,
+          child: avatarUrl == null || avatarUrl.isEmpty
+              ? Icon(
+                  Icons.landscape_rounded,
+                  color: theme.colorScheme.surfaceVariant,
+                )
+              : null,
         ),
       ),
     );
   }
 
   Widget _buildHeaderText(ThemeData theme) {
-    return Text(
-      widget.notification.message.header ?? '',
-      maxLines: 2,
-      overflow: TextOverflow.ellipsis,
-      style: widget.styles?.cardTitle ??
-          TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: theme.colorScheme.tertiary,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Text(
+            widget.notification.message.header ?? '',
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: widget.styles?.cardStyle?.cardTitle ??
+                TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: theme.cardTheme.surfaceTintColor ??
+                      theme.colorScheme.tertiary,
+                ),
           ),
+        ),
+        if (!(widget.cardProps.hideDelete ?? false)) ...[
+          const SizedBox(width: 8),
+          GestureDetector(
+            key: Key(
+              'siren-notification-delete-${widget.notification.id}',
+            ),
+            onTap: () => widget.onDelete(widget.notification.id),
+            child: widget.cardProps.deleteIcon ??
+                _buildDefaultDeleteButton(
+                  theme,
+                  widget.styles?.deleteIconSize ?? 18,
+                ),
+          ),
+        ],
+      ],
     );
   }
 
   Widget _buildSubHeaderText(ThemeData theme) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: NullableText(
         text: widget.notification.message.subHeader,
-        style: widget.styles?.subHeaderText ??
+        style: widget.styles?.cardStyle?.cardSubtitle ??
             TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: theme.colorScheme.tertiary,
+              color: theme.bannerTheme.backgroundColor ??
+                  theme.colorScheme.tertiary,
             ),
       ),
     );
@@ -186,30 +193,30 @@ class _CardWidgetState extends State<CardWidget> {
   Widget _buildBodyText(ThemeData theme) {
     return Text(
       widget.notification.message.body ?? '',
-      style: widget.styles?.cardDescription ??
+      style: widget.styles?.cardStyle?.cardDescription ??
           TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w400,
-            color: theme.colorScheme.tertiary,
+            color: theme.bannerTheme.surfaceTintColor ??
+                theme.colorScheme.tertiary,
           ),
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
     );
   }
 
-  Widget _buildFooterRow(ThemeData theme) {
+  Widget _buildFooterRow(ThemeData theme, double size) {
     return Padding(
       padding: const EdgeInsets.only(
         top: 10,
       ),
       child: Container(
-        decoration: widget.styles?.cardFooterRow,
-        child: _buildTimestampText(theme),
+        child: _buildTimestampText(theme, size),
       ),
     );
   }
 
-  Widget _buildTimestampText(ThemeData theme) {
+  Widget _buildTimestampText(ThemeData theme, double size) {
     return Row(
       children: [
         Padding(
@@ -217,14 +224,14 @@ class _CardWidgetState extends State<CardWidget> {
           child: Icon(
             Icons.access_time_sharp,
             color: theme.colorScheme.scrim,
-            size: 14,
+            size: size,
           ),
         ),
         Text(
           generateElapsedTimeText(
             DateTime.parse(widget.notification.createdAt),
           ),
-          style: widget.styles?.dateStyle ??
+          style: widget.styles?.cardStyle?.dateStyle ??
               TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w400,
@@ -235,11 +242,11 @@ class _CardWidgetState extends State<CardWidget> {
     );
   }
 
-  Widget _buildDefaultDeleteButton(ThemeData theme) {
+  Widget _buildDefaultDeleteButton(ThemeData theme, double size) {
     return Icon(
       Icons.close,
       color: theme.colorScheme.outlineVariant,
-      size: 18,
+      size: size,
     );
   }
 }

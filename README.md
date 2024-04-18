@@ -24,8 +24,8 @@ import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
 void main() {
   runApp(
     SirenProvider(
-        userToken: 'your_user_token',
-        recipientId: 'your_recipient_id',
+        userToken: 'YOUR_USER_TOKEN',
+        recipientId: 'YOUR_RECIPIENT_ID',
         child: MyApp(),
     ),
   );
@@ -55,17 +55,18 @@ Below are optional arguments available for the icon widget:
 | onError          | Callback for handling errors                               | Function(ApiErrorDetails) | null          |
 | onTap            | Custom click handler for notification icon                 | VoidCallback              | null          |
 | theme            | Theme properties for custom color theme                    | CustomThemeColors         | null          |
-| customStyles     | Style properties for custom styling                        | SirenStyleProps           | null          |
+| customStyles     | Style properties for custom styling                        | CustomStyles              | null          |
 
 #### Theme customization
 
 Here are the available theme options:
 
 ```dart
-theme: CustomThemeColors(
-    badgeBackgroundColor: Colors.deepPurpleAccent,
-    iconColor: Colors.white,
-    badgeColor: Colors.white)
+ theme: CustomThemeColors(
+    notificationIconColor: Colors.purple,
+    badgeColors: BadgeColors(
+    color: Colors.greenAccent, textColor: Colors.black),
+ )
 ```
 
 #### Style customization
@@ -73,14 +74,10 @@ theme: CustomThemeColors(
 Here are the custom style options for the notification icon:
 
 ```dart
-customStyles: SirenStyleProps(
-    iconStyle: IconStyle(size: 35),
-        badgeStyle: BadgeStyle(
-        fontSize: 10,
-        size: 18,
-        top: 2,
-        right: 0,
-    ))
+ customStyles: CustomStyles(
+    notificationIconStyle: NotificationIconStyle(size: 20),
+    badgeStyle: BadgeStyle(fontSize: 9, size: 5),
+ )
 ```
 
 ### 2.3. Configure notification inbox
@@ -88,14 +85,13 @@ customStyles: SirenStyleProps(
 Inbox is a paginated list view for displaying notifications.
 
 ```dart
-SirenInbox(
-  theme: customTheme,
-  hideHeader: false,
-  darkMode: true,
-  onError: (error) () {
-    // Handle error
-  },
-);
+ SirenInbox(
+    inboxHeaderProps: InboxHeaderProps(showBackButton: true),
+    cardProps: CardProps(hideAvatar: false),
+    onError: (error) {
+        // Handle Error
+    },
+ )
 ```
 
 #### Arguments for the notification inbox
@@ -110,30 +106,32 @@ Given below are the arguments of Siren Inbox Widget.
 | customNotificationCard  | Custom widget to display the notification cards                      | Widget                         | null                                                                                                                                                                |
 | customLoader            | Custom widget to display the initial loading state                   | Widget                         | null                                                                                                                                                                |
 | customErrorWidget       | Custom error widget                                                  | Widget                         | null                                                                                                                                                                |
-| cardProps               | Properties of notification card                                      | CardProps                      | CardProps(hideAvatar: false, disableAutoMarkAsRead: false, hideDelete: false, deleteWidget: Icon(Icons.close), onAvatarClick: Function(NotificationDataType))       |
+| cardProps               | Properties of notification card                                      | CardProps                      | CardProps(hideAvatar: false, disableAutoMarkAsRead: false, hideDelete: false, deleteIcon: Icon(Icons.close), onAvatarClick: Function(NotificationDataType))         |
 | inboxHeaderProps        | Properties of notification window header                             | InboxHeaderProps               | InboxHeaderProps(hideHeader: false, hideClearAll: false,title: 'Notifications', customHeader: null showBackButton:false, backButton: null, onBackPress: ()=> null ) |
 | onNotificationCardClick | Custom click handler for notification cards                          | Function(NotificationDataType) | null                                                                                                                                                                |
 | onError                 | Callback for handling errors                                         | Function(ApiErrorDetails)      | null                                                                                                                                                                |
 | theme                   | Theme properties for custom color theme                              | CustomThemeColors              | null                                                                                                                                                                |
-| customStyles            | Style properties for custom styling                                  | SirenStyleProps                | null                                                                                                                                                                |
+| customStyles            | Style properties for custom styling                                  | CustomStyles                   | null                                                                                                                                                                |
 
 #### Theme customization
 
-Here are the available theme options:
+Here are some of the available theme options:
 
 ```dart
 theme: CustomThemeColors(
-    backgroundColor: const Color.fromRGBO(218, 223, 254, 1),
-    highlightedCardBorderColor: const Color.fromRGBO(103, 58, 183, 1),
-    highlightedCardColor: const Color.fromRGBO(171, 242, 251, 1),
-    borderColor: const Color.fromRGBO(133, 146, 230, 1),
-    deleteIcon: const Color.fromRGBO(103, 58, 183, 1),
-    clearAllIcon: const Color.fromRGBO(103, 58, 183, 1),
-    textColor: const Color.fromRGBO(0, 0, 0, 1),
-    dateColor: const Color.fromRGBO(0, 0, 0, 1),
-    timerIcon: const Color.fromRGBO(133, 146, 230, 1),
-    inboxTitleColor: const Color.fromRGBO(0, 0, 0, 1),
-    ),
+            primary: Colors.blue,
+            highlightedCardColor: Colors.blueAccent,
+            textColor: Colors.green,
+            cardColors: CardColors(
+                titleColor: Colors.grey,
+                subtitleColor: Colors.grey,
+            ),
+            inboxHeaderColors: InboxHeaderColors(
+                titleColor:  Colors.redAccent,
+                headerActionColor: Colors.purpleAccent,
+                borderColor: Colors.cyanAccent
+            ),
+        ),
 ```
 
 #### Style options
@@ -141,34 +139,33 @@ theme: CustomThemeColors(
 Here are some of the custom style options for the notification inbox:
 
 ```dart
-customStyles: SirenStyleProps(
-    cardAvatarContainer: BoxDecoration(
-        border: Border.all(
-            color: AppColors.primaryBlue,
-            width: 1,
-            ),
-            shape: BoxShape.circle,
+customStyles: CustomStyles(
+    container: ContainerStyle(
+        padding: EdgeInsets.all(20),
+        decoration: BoxDecoration(color: Colors.yellow)),
+    cardStyle: CardStyle(
+        cardContainer: ContainerStyle(
+            padding: EdgeInsets.all(20),
+            decoration: BoxDecoration(
+                color: Colors.yellow,
+                border: Border.all(color: Colors.red))),
+            cardTitle: TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
+            cardSubtitle:
+                TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+            cardDescription:
+                TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            dateStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                avatarSize: 30,
         ),
-        container: BoxDecoration(
-            border: Border.all(
-              color: Colors.black,
-        ),
-    ),
-    contentContainer: BoxDecoration(
-        border: Border.all(
-            color: Colors.red,
-        ),
-    ),
-    subHeaderText: TextStyle(
-        color: Colors.red,
-    ),
-    cardTitle: TextStyle(
-        color: Colors.black,
-    ),
-    dateStyle: TextStyle(
-        color: Colors.green,
-    ),
-)
+        appBarStyle: InboxHeaderStyle(
+            headerTextStyle:
+            TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
+                  titlePadding: EdgeInsets.symmetric(horizontal: 30),
+            borderWidth: 5),
+        dateIconSize: 30,
+        deleteIconSize: 30,
+        clearAllIconSize: 40
+),
 ```
 
 ## 3. Siren Class
@@ -224,8 +221,8 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return SirenProvider(
-        userToken: 'your-token',
-        recipientId: 'your-recipient-id',
+        userToken: 'YOUR_USER_TOKEN',
+        recipientId: 'YOUR_RECIPIENT_ID',
         child: MaterialApp(
           title: 'Siren Flutter Inbox',
           theme: ThemeData(
