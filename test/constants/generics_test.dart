@@ -10,8 +10,8 @@ void main() {
       expect(Generics.PAGE_SIZE, 20);
       expect(Generics.MAX_RETRIES, 2);
       expect(Generics.ENV_PATH, 'packages/sirenapp_flutter_inbox/env');
-      expect(Generics.defaultError.type, ErrorTypes.API_ERROR);
-      expect(Generics.defaultError.code, 'INTERNAL SERVER ERROR');
+      expect(Generics.defaultError.code, ErrorTypes.API_ERROR);
+      expect(Generics.defaultError.type, 'INTERNAL SERVER ERROR');
       expect(
         Generics.defaultError.message,
         'Oops something went wrong, if issue persist please contact Siren Team',

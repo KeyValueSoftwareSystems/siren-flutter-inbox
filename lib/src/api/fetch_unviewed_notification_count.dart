@@ -20,10 +20,10 @@ class FetchUnViewedNotificationsCount {
   Future<ApiResponse> fetchUnViewedNotificationsCount() async {
     final result = ApiResponse()..isLoading = true;
     final apiError = ApiErrorDetails()
-      ..type = ErrorTypes.UNVIEWED_COUNT_FETCH_FAILED;
+      ..code = ErrorTypes.UNVIEWED_COUNT_FETCH_FAILED;
 
     if (SirenDataProvider.instance.tokenVerificationStatus != Status.SUCCESS) {
-      apiError.type = ErrorTypes.AUTHENTICATION_FAILED;
+      apiError.code = ErrorTypes.AUTHENTICATION_FAILED;
       result
         ..isLoading = false
         ..isError = true
@@ -44,7 +44,7 @@ class FetchUnViewedNotificationsCount {
       final notificationCount =
           UnViewedNotificationsCountModel.fromJson(data ?? {});
       apiError
-        ..code = ApiResponse.fromJson(apiResponse.data).error?.code
+        ..type = ApiResponse.fromJson(apiResponse.data).error?.type
         ..message = ApiResponse.fromJson(apiResponse.data).error?.message;
       count = notificationCount.totalUnViewed;
       result

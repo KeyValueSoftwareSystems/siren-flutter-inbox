@@ -50,7 +50,7 @@ class DeleteNotificationById {
     required String notificationId,
   }) async {
     final result = ApiResponse()..isLoading = true;
-    final apiError = ApiErrorDetails()..type = ErrorTypes.DELETE_FAILED;
+    final apiError = ApiErrorDetails()..code = ErrorTypes.DELETE_FAILED;
 
     final apiResponse = await api.delete(
       path: '$_apiPath/$notificationId',
@@ -59,7 +59,7 @@ class DeleteNotificationById {
       final deletionStatus = convertJsonToDeletionStatus(apiResponse.data);
 
       apiError
-        ..code = ApiResponse.fromJson(apiResponse.data).error?.code
+        ..type = ApiResponse.fromJson(apiResponse.data).error?.type
         ..message = ApiResponse.fromJson(apiResponse.data).error?.message;
       result
         ..isLoading = false

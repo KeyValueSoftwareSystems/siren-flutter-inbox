@@ -24,7 +24,7 @@ class VerifyToken {
 
   Future<ApiResponse> verifyToken() async {
     final result = ApiResponse()..isLoading = true;
-    final apiError = ApiErrorDetails()..type = ErrorTypes.AUTHENTICATION_FAILED;
+    final apiError = ApiErrorDetails()..code = ErrorTypes.AUTHENTICATION_FAILED;
 
     final apiResponse = await api.get(
       path:
@@ -34,7 +34,7 @@ class VerifyToken {
       final verificationStatus =
           convertJsonToVerificationStatus(apiResponse.data);
       apiError
-        ..code = ApiResponse.fromJson(apiResponse.data).error?.code
+        ..type = ApiResponse.fromJson(apiResponse.data).error?.type
         ..message = ApiResponse.fromJson(apiResponse.data).error?.message;
 
       result

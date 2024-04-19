@@ -12,8 +12,8 @@ class Generics {
   static const String ENV_PATH = 'packages/sirenapp_flutter_inbox/env';
 
   static final defaultError = ApiErrorDetails(
-    type: ErrorTypes.API_ERROR,
-    code: 'INTERNAL SERVER ERROR',
+    code: ErrorTypes.API_ERROR,
+    type: 'INTERNAL SERVER ERROR',
     message:
         'Oops something went wrong, if issue persist please contact Siren Team',
   );

@@ -19,14 +19,14 @@ class MarkAllNotificationsAsViewed {
     final api = ApiClient(apiProvider());
     final result = ApiResponse()..isLoading;
     final apiError = ApiErrorDetails()
-      ..type = ErrorTypes.MARK_ALL_AS_VIEWED_FAILED;
+      ..code = ErrorTypes.MARK_ALL_AS_VIEWED_FAILED;
 
     final data = {
       'lastOpenedAt': untilDate,
     };
 
     if (SirenDataProvider.instance.tokenVerificationStatus != Status.SUCCESS) {
-      apiError.type = ErrorTypes.AUTHENTICATION_FAILED;
+      apiError.code = ErrorTypes.AUTHENTICATION_FAILED;
       result
         ..isLoading = false
         ..isError = true
@@ -43,7 +43,7 @@ class MarkAllNotificationsAsViewed {
     );
     if (apiResponse.statusCode != 0 && apiResponse.data != null) {
       apiError
-        ..code = ApiResponse.fromJson(apiResponse.data).error?.code
+        ..type = ApiResponse.fromJson(apiResponse.data).error?.type
         ..message = ApiResponse.fromJson(apiResponse.data).error?.message;
       result
         ..isLoading = false
