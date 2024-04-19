@@ -33,8 +33,7 @@ class FetchAllNotifications {
     String? end,
   }) async {
     final result = ApiResponse()..isLoading = true;
-    final apiError = ApiErrorDetails()
-      ..code = ErrorTypes.NOTIFICATION_FETCH_FAILED;
+    var apiError = Generics.notificationFetchFailedError;
 
     // Manually construct query parameters
     final queryParams = {
@@ -54,7 +53,7 @@ class FetchAllNotifications {
         queryParams.entries.map((e) => '${e.key}=${e.value}').join('&');
 
     if (SirenDataProvider.instance.tokenVerificationStatus != Status.SUCCESS) {
-      apiError.code = ErrorTypes.AUTHENTICATION_FAILED;
+      apiError = Generics.authenticationFailed;
       result
         ..isLoading = false
         ..isError = true

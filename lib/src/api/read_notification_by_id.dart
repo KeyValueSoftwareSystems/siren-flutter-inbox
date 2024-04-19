@@ -17,11 +17,10 @@ class ReadNotificationById {
     required String notificationId,
   }) async {
     final result = ApiResponse()..isLoading = true;
-    final apiError = ApiErrorDetails()
-      ..code = ErrorTypes.NOTIFICATION_READ_FAILED;
+    var apiError = Generics.markAsReadFailedError;
 
     if (SirenDataProvider.instance.tokenVerificationStatus != Status.SUCCESS) {
-      apiError.code = ErrorTypes.AUTHENTICATION_FAILED;
+      apiError = Generics.authenticationFailed;
       result
         ..isLoading = false
         ..isError = true

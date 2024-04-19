@@ -31,7 +31,8 @@ class Siren {
       'operation': BulkUpdateType.MARK_AS_READ.name,
     };
     final response = await NotificationsBulkUpdate.instance
-        .notificationsBulkUpdate(data: data);
+        .notificationsBulkUpdate(
+            data: data, operation: BulkUpdateType.MARK_AS_READ.name);
     SirenDataProvider.instance.inboxController.sink
         .add(StreamResponse(response, UpdateEvents.READ_ALL, ''));
     return response.rawResponse;
@@ -74,7 +75,8 @@ class Siren {
       'operation': BulkUpdateType.MARK_AS_DELETED.name,
     };
     final response = await NotificationsBulkUpdate.instance
-        .notificationsBulkUpdate(data: data);
+        .notificationsBulkUpdate(
+            data: data, operation: BulkUpdateType.MARK_AS_DELETED.name);
     SirenDataProvider.instance.inboxController.sink
         .add(StreamResponse(response, UpdateEvents.DELETE_ALL, ''));
     return response.rawResponse;

@@ -25,10 +25,10 @@ class DeleteNotificationById {
     required String notificationId,
   }) async {
     final result = ApiResponse()..isLoading = true;
-    final apiError = ApiErrorDetails()..code = ErrorTypes.DELETE_FAILED;
+    var apiError = Generics.deleteFailedError;
 
     if (SirenDataProvider.instance.tokenVerificationStatus != Status.SUCCESS) {
-      apiError.code = ErrorTypes.AUTHENTICATION_FAILED;
+      apiError = Generics.authenticationFailed;
       result
         ..isLoading = false
         ..isError = true

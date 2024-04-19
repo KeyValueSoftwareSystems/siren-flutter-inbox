@@ -1,4 +1,5 @@
 import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
+import 'package:sirenapp_flutter_inbox/src/constants/strings.dart';
 
 class Generics {
   Generics._();
@@ -13,9 +14,68 @@ class Generics {
 
   static final defaultError = ApiErrorDetails(
     code: ErrorTypes.API_ERROR,
-    type: 'INTERNAL SERVER ERROR',
-    message:
-        'Oops something went wrong, if issue persist please contact Siren Team',
+    type: Strings.error_type_error,
+    message: 'Something went wrong',
+  );
+
+  static final authenticationFailed = ApiErrorDetails(
+    code: ErrorTypes.AUTHENTICATION_FAILED,
+    type: Strings.error_type_error,
+    message: 'Failed to authenticate given credentials',
+  );
+
+  static final fetchUnViewedCountFailedError = ApiErrorDetails(
+    code: ErrorTypes.UNVIEWED_COUNT_FETCH_FAILED,
+    type: Strings.error_type_error,
+    message: 'Failed to fetch unviewed notifications count',
+  );
+
+  static final notificationFetchFailedError = ApiErrorDetails(
+    code: ErrorTypes.NOTIFICATION_FETCH_FAILED,
+    type: Strings.error_type_error,
+    message: 'Failed to fetch notifications',
+  );
+
+  static final markAsReadFailedError = ApiErrorDetails(
+    code: ErrorTypes.MARK_AS_READ_FAILED,
+    type: Strings.error_type_error,
+    message: 'Failed to mark notification as read',
+  );
+
+  static final deleteFailedError = ApiErrorDetails(
+    code: ErrorTypes.DELETE_FAILED,
+    type: Strings.error_type_error,
+    message: 'Failed to delete notification',
+  );
+
+  static final deleteAllFailedError = ApiErrorDetails(
+    code: ErrorTypes.BULK_DELETE_FAILED,
+    type: Strings.error_type_error,
+    message: 'Bulk deletion of notifications failed',
+  );
+
+  static final markAllAsViewedError = ApiErrorDetails(
+    code: ErrorTypes.MARK_ALL_AS_VIEWED_FAILED,
+    type: Strings.error_type_error,
+    message: 'Failed to mark notification as viewed',
+  );
+
+  static final outsideSirenContextError = ApiErrorDetails(
+    code: ErrorTypes.OUTSIDE_SIREN_CONTEXT,
+    type: Strings.error_type_error,
+    message: 'Trying to invoke function outside the siren context',
+  );
+
+  static final authenticationPending = ApiErrorDetails(
+    code: ErrorTypes.AUTHENTICATION_PENDING,
+    type: Strings.error_type_error,
+    message: 'Authentication in progress',
+  );
+
+  static final unauthorizedOperationError = ApiErrorDetails(
+    code: ErrorTypes.UNAUTHORIZED_OPERATION,
+    type: Strings.error_type_error,
+    message: 'This operation require valid credentials',
   );
 
   static const rawResponseError =
@@ -52,4 +112,10 @@ enum ErrorTypes {
   NOTIFICATION_READ_FAILED,
   DELETE_FAILED,
   MARK_ALL_AS_VIEWED_FAILED,
+  MARK_AS_READ_FAILED,
+  OUTSIDE_SIREN_CONTEXT,
+  AUTHENTICATION_PENDING,
+  UNAUTHORIZED_OPERATION,
+  BULK_DELETE_FAILED,
+  MARK_ALL_AS_READ_FAILED,
 }

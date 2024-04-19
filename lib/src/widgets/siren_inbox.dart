@@ -344,6 +344,7 @@ class _SirenInboxState extends State<SirenInbox> {
     final deleteAllResponse =
         await NotificationsBulkUpdate.instance.notificationsBulkUpdate(
       data: data,
+      operation: BulkUpdateType.MARK_AS_DELETED.name,
     );
     if (deleteAllResponse.isSuccess) {
       SirenDataProvider.instance.inboxController.sink.add(
