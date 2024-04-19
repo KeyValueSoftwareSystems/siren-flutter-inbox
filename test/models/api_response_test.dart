@@ -19,7 +19,7 @@ void main() {
       final response = ApiResponse.fromJson(json);
 
       expect(response.data, 'testData');
-      expect(response.error?.errorCode, '123');
+      expect(response.error?.code, '123');
       expect(response.meta?.last, 'last');
       expect(response.meta?.totalPages, 5);
     });
@@ -62,7 +62,7 @@ void main() {
       };
       final errorDetails = ApiErrorDetails.fromJson(json);
 
-      expect(errorDetails.errorCode, '123');
+      expect(errorDetails.code, '123');
       expect(errorDetails.message, 'Error message');
     });
   });

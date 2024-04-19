@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
 
 /// Provides an instance of Dio with configured interceptors.
@@ -33,5 +34,13 @@ Dio apiProvider() {
       },
     ),
   );
+  if (kDebugMode) {
+    dio.interceptors.add(
+      LogInterceptor(
+        responseBody: true,
+        requestBody: true,
+      ),
+    );
+  }
   return dio;
 }

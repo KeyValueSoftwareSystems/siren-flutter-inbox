@@ -12,8 +12,8 @@ class Generics {
   static const String ENV_PATH = 'packages/sirenapp_flutter_inbox/env';
 
   static final defaultError = ApiErrorDetails(
-    errorType: ErrorTypes.GENERIC_API_ERROR,
-    errorCode: 'INTERNAL SERVER ERROR',
+    type: ErrorTypes.API_ERROR,
+    code: 'INTERNAL SERVER ERROR',
     message:
         'Oops something went wrong, if issue persist please contact Siren Team',
   );
@@ -45,11 +45,11 @@ enum UpdateEvents {
 }
 
 enum ErrorTypes {
-  GENERIC_API_ERROR,
+  API_ERROR,
   AUTHENTICATION_FAILED,
-  FETCH_COUNT_FAILED,
+  UNVIEWED_COUNT_FETCH_FAILED,
   NOTIFICATION_FETCH_FAILED,
   NOTIFICATION_READ_FAILED,
-  NOTIFICATION_DELETE_FAILED,
-  UPDATE_VIEWED_FAILED,
+  DELETE_FAILED,
+  MARK_ALL_AS_VIEWED_FAILED,
 }

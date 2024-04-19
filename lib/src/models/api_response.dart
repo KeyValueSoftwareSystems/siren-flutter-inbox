@@ -99,28 +99,27 @@ class MetaResponse {
 class ApiErrorDetails {
   /// Constructs an [ApiErrorDetails] instance.
   ApiErrorDetails({
-    this.errorCode,
+    this.code,
     this.message,
-    this.errorType,
+    this.type,
   });
 
   /// Factory method to create ApiErrorDetails from JSON.
   factory ApiErrorDetails.fromJson(Map<String, dynamic>? json) {
     return ApiErrorDetails(
-      errorCode:
-          json?['errorCode'] != null ? (json?['errorCode'] as String) : '',
+      code: json?['errorCode'] != null ? (json?['errorCode'] as String) : '',
       message: json?['message'] != null ? (json?['message'] as String) : '',
     );
   }
 
   /// The error code associated with the error.
-  String? errorCode;
+  String? code;
 
   /// The message describing the error.
   String? message;
 
   /// The type of error.
-  ErrorTypes? errorType;
+  ErrorTypes? type;
 }
 
 /// Represents a response from Dio HTTP client.

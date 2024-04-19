@@ -190,13 +190,13 @@ Given below are all possible error codes thrown by the package:
 
 | Error code                 | Description                                                         |
 | -------------------------- | ------------------------------------------------------------------- |
-| GENERIC_API_ERROR          | Occurrence of an unexpected api error                               |
+| API_ERROR                  | Occurrence of an unexpected api error                               |
 | AUTHENTICATION_FAILED      | Verification of the given tokens has failed                         |
-| FETCH_COUNT_FAILED         | An error occurred while fetching unviewed count                     |
+| UNVIEWED_COUNT_FETCH_FAILED| An error occurred while fetching unviewed count                     |
 | NOTIFICATION_FETCH_FAILED  | An error occurred while fetching notifications                      |
 | NOTIFICATION_READ_FAILED   | An error occurred while marking notifications as read               |
-| NOTIFICATION_DELETE_FAILED | An error occurred while deleting notifications                      |
-| UPDATE_VIEWED_FAILED       | An error occurred while updating the viewed status of notifications |
+| DELETE_FAILED              | An error occurred while deleting notifications                      |
+| MARK_ALL_AS_VIEWED_FAILED  | An error occurred while updating the viewed status of notifications |
 
 ## Example
 
