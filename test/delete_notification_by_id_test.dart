@@ -50,7 +50,7 @@ class DeleteNotificationById {
     required String notificationId,
   }) async {
     final result = ApiResponse()..isLoading = true;
-    final apiError = ApiErrorDetails()..code = ErrorTypes.DELETE_FAILED.name;
+    final apiError = ApiErrorDetails()..code = ErrorCodes.DELETE_FAILED.name;
 
     final apiResponse = await api.delete(
       path: '$_apiPath/$notificationId',

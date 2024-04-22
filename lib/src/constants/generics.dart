@@ -13,67 +13,67 @@ class Generics {
   static const String ENV_PATH = 'packages/sirenapp_flutter_inbox/env';
 
   static final defaultError = ApiErrorDetails(
-    code: ErrorTypes.API_ERROR.name,
+    code: ErrorCodes.API_ERROR.name,
     type: Strings.error_type_error,
-    message: 'Something went wrong',
+    message: Strings.something_went_wrong,
   );
 
   static final authenticationFailed = ApiErrorDetails(
-    code: ErrorTypes.AUTHENTICATION_FAILED.name,
+    code: ErrorCodes.AUTHENTICATION_FAILED.name,
     type: Strings.error_type_error,
     message: Strings.authenticationFailed,
   );
 
   static final fetchUnViewedCountFailedError = ApiErrorDetails(
-    code: ErrorTypes.UNVIEWED_COUNT_FETCH_FAILED.name,
+    code: ErrorCodes.UNVIEWED_COUNT_FETCH_FAILED.name,
     type: Strings.error_type_error,
     message: Strings.fetchUnViewedCountFailedError,
   );
 
   static final notificationFetchFailedError = ApiErrorDetails(
-    code: ErrorTypes.NOTIFICATION_FETCH_FAILED.name,
+    code: ErrorCodes.NOTIFICATION_FETCH_FAILED.name,
     type: Strings.error_type_error,
     message: Strings.notificationFetchFailedError,
   );
 
   static final markAsReadFailedError = ApiErrorDetails(
-    code: ErrorTypes.MARK_AS_READ_FAILED.name,
+    code: ErrorCodes.MARK_AS_READ_FAILED.name,
     type: Strings.error_type_error,
     message: Strings.markAsReadFailedError,
   );
 
   static final deleteFailedError = ApiErrorDetails(
-    code: ErrorTypes.DELETE_FAILED.name,
+    code: ErrorCodes.DELETE_FAILED.name,
     type: Strings.error_type_error,
     message: Strings.deleteFailedError,
   );
 
   static final deleteAllFailedError = ApiErrorDetails(
-    code: ErrorTypes.BULK_DELETE_FAILED.name,
+    code: ErrorCodes.BULK_DELETE_FAILED.name,
     type: Strings.error_type_error,
     message: Strings.deleteAllFailedError,
   );
 
   static final markAllAsViewedError = ApiErrorDetails(
-    code: ErrorTypes.MARK_ALL_AS_VIEWED_FAILED.name,
+    code: ErrorCodes.MARK_ALL_AS_VIEWED_FAILED.name,
     type: Strings.error_type_error,
     message: Strings.markAllAsViewedError,
   );
 
   static final outsideSirenContextError = ApiErrorDetails(
-    code: ErrorTypes.OUTSIDE_SIREN_CONTEXT.name,
+    code: ErrorCodes.OUTSIDE_SIREN_CONTEXT.name,
     type: Strings.error_type_error,
     message: Strings.outsideSirenContextError,
   );
 
   static final authenticationPending = ApiErrorDetails(
-    code: ErrorTypes.AUTHENTICATION_PENDING.name,
+    code: ErrorCodes.AUTHENTICATION_PENDING.name,
     type: Strings.error_type_error,
     message: Strings.authenticationPending,
   );
 
   static final unauthorizedOperationError = ApiErrorDetails(
-    code: ErrorTypes.UNAUTHORIZED_OPERATION.name,
+    code: ErrorCodes.UNAUTHORIZED_OPERATION.name,
     type: Strings.error_type_error,
     message: Strings.unauthorizedOperationError,
   );
@@ -95,28 +95,29 @@ enum BulkUpdateType {
 }
 
 enum UpdateEvents {
-  READ_BY_ID,
-  READ_ALL,
-  DELETE_BY_ID,
   DELETE_ALL,
-  VIEW_ALL,
+  DELETE_BY_ID,
   PARAMS_CHANGED,
-  TOKEN_VERIFIED,
+  READ_ALL,
+  READ_BY_ID,
   SHOW_ERROR,
+  TOKEN_VERIFIED,
+  VIEW_ALL,
 }
 
-enum ErrorTypes {
+enum ErrorCodes {
   API_ERROR,
   AUTHENTICATION_FAILED,
-  UNVIEWED_COUNT_FETCH_FAILED,
-  NOTIFICATION_FETCH_FAILED,
-  NOTIFICATION_READ_FAILED,
+  AUTHENTICATION_PENDING,
+  BULK_DELETE_FAILED,
   DELETE_FAILED,
+  INVALID_CREDENTIALS,
+  MARK_ALL_AS_READ_FAILED,
   MARK_ALL_AS_VIEWED_FAILED,
   MARK_AS_READ_FAILED,
+  NOTIFICATION_FETCH_FAILED,
+  NOTIFICATION_READ_FAILED,
   OUTSIDE_SIREN_CONTEXT,
-  AUTHENTICATION_PENDING,
   UNAUTHORIZED_OPERATION,
-  BULK_DELETE_FAILED,
-  MARK_ALL_AS_READ_FAILED,
+  UNVIEWED_COUNT_FETCH_FAILED,
 }
