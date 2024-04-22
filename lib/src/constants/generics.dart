@@ -78,6 +78,12 @@ class Generics {
     message: Strings.unauthorizedOperationError,
   );
 
+  static final invalidCredentialsError = ApiErrorDetails(
+    code: ErrorCodes.INVALID_CREDENTIALS.name,
+    type: Strings.error_type_error,
+    message: Strings.invalidCredentialsError,
+  );
+
   static const rawResponseError =
       '{"data": null,"error": "AUTHENTICATION FAILED","errors":null,"meta":null}';
 }
@@ -87,6 +93,7 @@ enum Status {
   SUCCESS,
   FAILED,
   IN_PROGRESS,
+  INVALID_CREDENTIALS,
 }
 
 enum BulkUpdateType {

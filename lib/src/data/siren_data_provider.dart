@@ -87,28 +87,39 @@ class SirenDataProvider {
       if (_retryCount < Generics.MAX_RETRIES &&
           _tokenVerificationStatus != Status.SUCCESS) {
         _retryCount++;
+        if (SirenDataProvider.instance.userToken.isEmpty ||
+            SirenDataProvider.instance.recipientId.isEmpty) {
+          _retryCount = Generics.MAX_RETRIES;
+          _tokenVerificationStatus = Status.INVALID_CREDENTIALS;
+          triggerError();
+          return;
+        }
         Future.delayed(
           const Duration(seconds: Generics.DATA_FETCH_INTERVAL),
           _verifyToken,
         );
       } else if (_retryCount >= Generics.MAX_RETRIES) {
         _tokenVerificationStatus = Status.FAILED;
-        SirenDataProvider.instance.inboxController.sink.add(
-          StreamResponse(
-            _tokenVerificationResponse,
-            UpdateEvents.SHOW_ERROR,
-            '',
-          ),
-        );
-        SirenDataProvider.instance.iconController.sink.add(
-          StreamResponse(
-            _tokenVerificationResponse,
-            UpdateEvents.SHOW_ERROR,
-            '',
-          ),
-        );
+        triggerError();
       }
     }
+  }
+
+  void triggerError() {
+    SirenDataProvider.instance.inboxController.sink.add(
+      StreamResponse(
+        _tokenVerificationResponse,
+        UpdateEvents.SHOW_ERROR,
+        '',
+      ),
+    );
+    SirenDataProvider.instance.iconController.sink.add(
+      StreamResponse(
+        _tokenVerificationResponse,
+        UpdateEvents.SHOW_ERROR,
+        '',
+      ),
+    );
   }
 
   ApiErrorDetails getVerificationErrorType() {
@@ -116,8 +127,12 @@ class SirenDataProvider {
       return Generics.outsideSirenContextError;
     } else if (_tokenVerificationStatus == Status.IN_PROGRESS) {
       return Generics.authenticationPending;
+    } else if (_tokenVerificationStatus == Status.FAILED) {
+      return Generics.unauthorizedOperationError;
+    } else if (_tokenVerificationStatus == Status.INVALID_CREDENTIALS) {
+      return Generics.invalidCredentialsError;
     }
-    return Generics.unauthorizedOperationError;
+    return Generics.authenticationFailed;
   }
 
   /// Disposes the icon controller.

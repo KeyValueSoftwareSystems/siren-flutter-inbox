@@ -26,4 +26,6 @@ class Strings {
   static const authenticationPending = 'Authentication in progress';
   static const unauthorizedOperationError =
       'This operation require valid credentials';
+  static const invalidCredentialsError =
+      'Failed to authenticate given credentials';
 }
