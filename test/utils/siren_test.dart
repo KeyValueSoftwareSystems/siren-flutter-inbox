@@ -22,8 +22,10 @@ class MockReadNotificationById extends Mock implements ReadNotificationById {
 class MockNotificationsBulkUpdate extends Mock
     implements NotificationsBulkUpdate {
   @override
-  Future<ApiResponse> notificationsBulkUpdate(
-      {required Map<String, dynamic> data, required String operation,}) {
+  Future<ApiResponse> notificationsBulkUpdate({
+    required Map<String, dynamic> data,
+    required String operation,
+  }) {
     final result = ApiResponse()..data = 'SUCCESS';
     result.error = null;
     return Future(() => result);
@@ -64,7 +66,9 @@ void main() {
     final mockResponse = ApiResponse(data: 'SUCCESS');
     final response =
         await mockMockNotificationsBulkUpdate.notificationsBulkUpdate(
-            data: mockData, operation: BulkUpdateType.MARK_AS_READ.name,);
+      data: mockData,
+      operation: BulkUpdateType.MARK_AS_READ.name,
+    );
 
     expect(mockResponse.data, response.data);
   });

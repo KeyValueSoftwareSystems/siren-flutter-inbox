@@ -56,7 +56,7 @@ Widget _buildCircle(ThemeData theme) {
         height: 160,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: theme.colorScheme.background,
+          color: theme.colorScheme.primaryContainer,
         ),
       ),
       Icon(
@@ -73,7 +73,7 @@ Widget _buildCircle(ThemeData theme) {
             color: theme.colorScheme.surface,
             shape: BoxShape.circle,
             border: Border.all(
-              color: theme.colorScheme.background,
+              color: theme.colorScheme.primaryContainer,
               width: 3,
             ),
           ),

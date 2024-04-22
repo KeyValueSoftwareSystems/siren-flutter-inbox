@@ -55,7 +55,7 @@ Widget _buildCircle(ThemeData theme) {
     height: 160,
     decoration: BoxDecoration(
       shape: BoxShape.circle,
-      color: theme.colorScheme.background,
+      color: theme.colorScheme.primaryContainer,
     ),
     child: Icon(
       Icons.warning_rounded,

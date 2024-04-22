@@ -9,9 +9,10 @@ class AppTheme {
 
   static ThemeData lightTheme = ThemeData.light().copyWith(
     colorScheme: ThemeData.light().colorScheme.copyWith(
-          background: AppColors.emptyWidgetBgLightTheme,
+          primaryContainer: AppColors.emptyWidgetBgLightTheme,
           inversePrimary: AppColors.grey500,
-          onBackground: AppColors.grey300Complementary,
+          onPrimaryContainer: AppColors.grey300Complementary,
+          onInverseSurface: Colors.white,
           onPrimary: AppColors.black100,
           onSecondary: AppColors.avatarPlaceholderBgLight,
           onTertiary: AppColors.primary200,
@@ -24,18 +25,18 @@ class AppTheme {
           shadow: AppColors.emptyWidgetBellLight,
           surface: AppColors.emptyWidgetBadgeLight,
           surfaceTint: AppColors.grey300,
-          surfaceVariant: AppColors.avatarIconLight,
+          onTertiaryContainer: AppColors.avatarIconLight,
           tertiary: AppColors.grey700,
           tertiaryContainer: AppColors.red,
-          onInverseSurface: Colors.white,
         ),
   );
 
   static ThemeData darkTheme = ThemeData.dark().copyWith(
     colorScheme: ThemeData.dark().colorScheme.copyWith(
-          background: AppColors.emptyWidgetBgDarkTheme,
+          primaryContainer: AppColors.emptyWidgetBgDarkTheme,
           inversePrimary: AppColors.grey400,
-          onBackground: AppColors.grey50,
+          onPrimaryContainer: AppColors.grey50,
+          onInverseSurface: Colors.white,
           onPrimary: Colors.white,
           onSecondary: AppColors.avatarPlaceholderBgDark,
           onTertiary: AppColors.primary200Complementary,
@@ -48,10 +49,9 @@ class AppTheme {
           shadow: AppColors.emptyWidgetBellDark,
           surface: AppColors.emptyWidgetBadgeDark,
           surfaceTint: AppColors.grey300Complementary,
-          surfaceVariant: AppColors.avatarIconDark,
+          onTertiaryContainer: AppColors.avatarIconDark,
           tertiary: AppColors.grey700Complementary,
           tertiaryContainer: AppColors.red,
-          onInverseSurface: Colors.white,
         ),
   );
 
@@ -79,12 +79,13 @@ class AppTheme {
             customColors.borderColor ?? baseTheme.colorScheme.surfaceTint,
         tertiary: customColors.textColor ?? baseTheme.colorScheme.tertiary,
         scrim: customColors.timerIcon ?? baseTheme.colorScheme.scrim,
-        background: baseTheme.colorScheme.background,
+        primaryContainer: baseTheme.colorScheme.primaryContainer,
         onSecondary: baseTheme.colorScheme.onSecondary,
         shadow: baseTheme.colorScheme.shadow,
         surface: baseTheme.colorScheme.surface,
-        surfaceVariant: baseTheme.colorScheme.surfaceVariant,
+        onTertiaryContainer: baseTheme.colorScheme.onTertiaryContainer,
         onInverseSurface: baseTheme.colorScheme.onInverseSurface,
+        onPrimaryContainer: baseTheme.colorScheme.onPrimaryContainer,
       ),
     )
         .copyWith(

@@ -13,8 +13,10 @@ class NotificationsBulkUpdate {
   static final NotificationsBulkUpdate instance =
       NotificationsBulkUpdate._internal();
 
-  Future<ApiResponse> notificationsBulkUpdate(
-      {required Map<String, dynamic> data, required String operation,}) async {
+  Future<ApiResponse> notificationsBulkUpdate({
+    required Map<String, dynamic> data,
+    required String operation,
+  }) async {
     final api = ApiClient(apiProvider());
     final apiPath =
         '${Generics.V2}${Generics.BASE_URL}${SirenDataProvider.instance.recipientId}/notifications/bulk-update';

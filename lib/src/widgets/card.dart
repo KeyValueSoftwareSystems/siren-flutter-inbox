@@ -129,7 +129,7 @@ class _CardWidgetState extends State<CardWidget> {
           child: avatarUrl == null || avatarUrl.isEmpty
               ? Icon(
                   Icons.landscape_rounded,
-                  color: theme.colorScheme.surfaceVariant,
+                  color: theme.colorScheme.onTertiaryContainer,
                 )
               : null,
         ),
