@@ -25,7 +25,7 @@ class MarkAllNotificationsAsViewed {
     };
 
     if (SirenDataProvider.instance.tokenVerificationStatus != Status.SUCCESS) {
-      apiError = Generics.authenticationFailed;
+      apiError = SirenDataProvider.instance.getVerificationErrorType();
       result
         ..isLoading = false
         ..isError = true
@@ -41,9 +41,6 @@ class MarkAllNotificationsAsViewed {
       data: data,
     );
     if (apiResponse.statusCode != 0 && apiResponse.data != null) {
-      apiError
-        ..type = ApiResponse.fromJson(apiResponse.data).error?.type
-        ..message = ApiResponse.fromJson(apiResponse.data).error?.message;
       result
         ..isLoading = false
         ..isSuccess = apiResponse.statusCode == 200

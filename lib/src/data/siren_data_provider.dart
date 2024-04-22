@@ -64,6 +64,7 @@ class SirenDataProvider {
 
   /// Verifies the user token.
   Future<void> _verifyToken() async {
+    _tokenVerificationStatus = Status.IN_PROGRESS;
     _tokenVerificationResponse = await VerifyToken.instance.verifyToken();
     if (_tokenVerificationResponse.isSuccess) {
       _retryCount = 0;
@@ -85,13 +86,13 @@ class SirenDataProvider {
     } else {
       if (_retryCount < Generics.MAX_RETRIES &&
           _tokenVerificationStatus != Status.SUCCESS) {
-        _tokenVerificationStatus = Status.FAILED;
         _retryCount++;
         Future.delayed(
           const Duration(seconds: Generics.DATA_FETCH_INTERVAL),
           _verifyToken,
         );
       } else if (_retryCount >= Generics.MAX_RETRIES) {
+        _tokenVerificationStatus = Status.FAILED;
         SirenDataProvider.instance.inboxController.sink.add(
           StreamResponse(
             _tokenVerificationResponse,
@@ -108,6 +109,15 @@ class SirenDataProvider {
         );
       }
     }
+  }
+
+  ApiErrorDetails getVerificationErrorType() {
+    if (_tokenVerificationStatus == Status.PENDING) {
+      return Generics.outsideSirenContextError;
+    } else if (_tokenVerificationStatus == Status.IN_PROGRESS) {
+      return Generics.authenticationPending;
+    }
+    return Generics.unauthorizedOperationError;
   }
 
   /// Disposes the icon controller.

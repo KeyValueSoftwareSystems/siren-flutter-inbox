@@ -17,7 +17,7 @@ class Siren {
         .readNotificationById(notificationId: id);
     SirenDataProvider.instance.inboxController.sink
         .add(StreamResponse(response, UpdateEvents.READ_BY_ID, id));
-    return response.rawResponse;
+    return response.isError ? response.error : response.rawResponse;
   }
 
   /// Marks notifications as read by date until a specific date.
@@ -37,7 +37,7 @@ class Siren {
     );
     SirenDataProvider.instance.inboxController.sink
         .add(StreamResponse(response, UpdateEvents.READ_ALL, ''));
-    return response.rawResponse;
+    return response.isError ? response.error : response.rawResponse;
   }
 
   /// Marks notifications as viewed until a specific date.
@@ -50,7 +50,7 @@ class Siren {
         .markAllNotificationsAsViewed(untilDate: startDate);
     SirenDataProvider.instance.inboxController.sink
         .add(StreamResponse(response, UpdateEvents.VIEW_ALL, ''));
-    return response.rawResponse;
+    return response.isError ? response.error : response.rawResponse;
   }
 
   /// Deletes a notification by its ID.
@@ -63,7 +63,7 @@ class Siren {
         .deleteNotificationById(notificationId: id);
     SirenDataProvider.instance.inboxController.sink
         .add(StreamResponse(response, UpdateEvents.DELETE_BY_ID, id));
-    return response.rawResponse;
+    return response.isError ? response.error : response.rawResponse;
   }
 
   /// Deletes notifications by date until a specific date.
@@ -83,6 +83,6 @@ class Siren {
     );
     SirenDataProvider.instance.inboxController.sink
         .add(StreamResponse(response, UpdateEvents.DELETE_ALL, ''));
-    return response.rawResponse;
+    return response.isError ? response.error : response.rawResponse;
   }
 }

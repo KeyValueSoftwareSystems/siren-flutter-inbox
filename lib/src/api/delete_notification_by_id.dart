@@ -28,7 +28,7 @@ class DeleteNotificationById {
     var apiError = Generics.deleteFailedError;
 
     if (SirenDataProvider.instance.tokenVerificationStatus != Status.SUCCESS) {
-      apiError = Generics.authenticationFailed;
+      apiError = SirenDataProvider.instance.getVerificationErrorType();
       result
         ..isLoading = false
         ..isError = true
@@ -43,10 +43,6 @@ class DeleteNotificationById {
     );
     if (apiResponse.statusCode != 0 && apiResponse.data != null) {
       final deletionStatus = convertJsonToDeletionStatus(apiResponse.data);
-
-      apiError
-        ..type = ApiResponse.fromJson(apiResponse.data).error?.type
-        ..message = ApiResponse.fromJson(apiResponse.data).error?.message;
       result
         ..isLoading = false
         ..isSuccess = apiResponse.statusCode == 200

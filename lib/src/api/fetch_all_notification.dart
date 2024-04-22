@@ -53,7 +53,7 @@ class FetchAllNotifications {
         queryParams.entries.map((e) => '${e.key}=${e.value}').join('&');
 
     if (SirenDataProvider.instance.tokenVerificationStatus != Status.SUCCESS) {
-      apiError = Generics.authenticationFailed;
+      apiError = SirenDataProvider.instance.getVerificationErrorType();
       result
         ..isLoading = false
         ..isError = true
@@ -71,9 +71,6 @@ class FetchAllNotifications {
       final dataList =
           ApiResponse.fromJson(apiResponse.data).data as List<dynamic>?;
       final metaData = ApiResponse.fromJson(apiResponse.data).meta;
-      apiError
-        ..type = ApiResponse.fromJson(apiResponse.data).error?.type
-        ..message = ApiResponse.fromJson(apiResponse.data).error?.message;
       result
         ..isLoading = false
         ..isSuccess = apiResponse.statusCode == 200

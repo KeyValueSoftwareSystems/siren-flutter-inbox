@@ -21,14 +21,14 @@ class NotificationsBulkUpdate {
     final apiPath =
         '${Generics.V2}${Generics.BASE_URL}${SirenDataProvider.instance.recipientId}/notifications/bulk-update';
     final result = ApiResponse()..isLoading;
-    var apiError = Generics.markAllAsViewedError;
+    var apiError = Generics.markAsReadFailedError;
 
     if (operation == BulkUpdateType.MARK_AS_DELETED.name) {
       apiError = Generics.deleteAllFailedError;
     }
 
     if (SirenDataProvider.instance.tokenVerificationStatus != Status.SUCCESS) {
-      apiError = Generics.authenticationFailed;
+      apiError = SirenDataProvider.instance.getVerificationErrorType();
       result
         ..isLoading = false
         ..isError = true
@@ -43,10 +43,6 @@ class NotificationsBulkUpdate {
       data: data,
     );
     if (apiResponse.statusCode != 0 && apiResponse.data != null) {
-      apiError
-        ..type = ApiResponse.fromJson(apiResponse.data).error?.type
-        ..message = ApiResponse.fromJson(apiResponse.data).error?.message;
-
       result
         ..isLoading = false
         ..isSuccess = apiResponse.statusCode == 200

@@ -22,7 +22,7 @@ class FetchUnViewedNotificationsCount {
     var apiError = Generics.fetchUnViewedCountFailedError;
 
     if (SirenDataProvider.instance.tokenVerificationStatus != Status.SUCCESS) {
-      apiError = Generics.authenticationFailed;
+      apiError = SirenDataProvider.instance.getVerificationErrorType();
       result
         ..isLoading = false
         ..isError = true
@@ -42,9 +42,6 @@ class FetchUnViewedNotificationsCount {
           ApiResponse.fromJson(apiResponse.data).data as Map<String, dynamic>?;
       final notificationCount =
           UnViewedNotificationsCountModel.fromJson(data ?? {});
-      apiError
-        ..type = ApiResponse.fromJson(apiResponse.data).error?.type
-        ..message = ApiResponse.fromJson(apiResponse.data).error?.message;
       count = notificationCount.totalUnViewed;
       result
         ..isLoading = false

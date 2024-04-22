@@ -11,4 +11,18 @@ class Strings {
   static const authentication_failed_message =
       'Failed to authenticate given credentials';
   static const error_type_error = 'ERROR';
+  static const authenticationFailed =
+      'Failed to authenticate given credentials';
+  static const fetchUnViewedCountFailedError =
+      'Failed to fetch unviewed notifications count';
+  static const notificationFetchFailedError = 'Failed to fetch notifications';
+  static const markAsReadFailedError = 'Failed to mark notification as read';
+  static const deleteFailedError = 'Failed to delete notification';
+  static const deleteAllFailedError = 'Bulk deletion of notifications failed';
+  static const markAllAsViewedError = 'Failed to mark notifications as viewed';
+  static const outsideSirenContextError =
+      'Trying to invoke function outside the siren context';
+  static const authenticationPending = 'Authentication in progress';
+  static const unauthorizedOperationError =
+      'This operation require valid credentials';
 }

@@ -119,7 +119,7 @@ class ApiErrorDetails {
   String? message;
 
   /// The type of error.
-  ErrorTypes? code;
+  String? code;
 }
 
 /// Represents a response from Dio HTTP client.

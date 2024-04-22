@@ -33,9 +33,6 @@ class VerifyToken {
     if (apiResponse.statusCode != 0 && apiResponse.data != null) {
       final verificationStatus =
           convertJsonToVerificationStatus(apiResponse.data);
-      apiError
-        ..type = ApiResponse.fromJson(apiResponse.data).error?.type
-        ..message = ApiResponse.fromJson(apiResponse.data).error?.message;
 
       result
         ..isLoading = false
