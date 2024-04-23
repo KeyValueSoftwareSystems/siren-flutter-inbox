@@ -27,5 +27,5 @@ class Strings {
   static const unauthorizedOperationError =
       'This operation require valid credentials';
   static const invalidCredentialsError =
-      'Failed to authenticate given credentials';
+      'Invalid credentials found. Please check your token and recipient ID';
 }
