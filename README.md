@@ -46,16 +46,16 @@ SirenInboxIcon()
 
 Below are optional arguments available for the icon widget:
 
-| Arguments        | Description                                                | Type                      | Default value |
-| ---------------- | ---------------------------------------------------------- | ------------------------- | ------------- |
-| darkMode         | Toggle to enable dark mode when custom theme is not passed | boolean                   | false         |
-| disabled         | Toggle to disable click on icon                            | boolean                   | false         |
-| hideBadge        | Toggle to hide unviewed count badge                        | boolean                   | false         |
-| notificationIcon | Option to use custom notification icon                     | Widget                    | null          |
-| onError          | Callback for handling errors                               | Function(ApiErrorDetails) | null          |
-| onTap            | Custom click handler for notification icon                 | VoidCallback              | null          |
-| theme            | Theme properties for custom color theme                    | CustomThemeColors         | null          |
-| customStyles     | Style properties for custom styling                        | CustomStyles              | null          |
+| Arguments        | Description                                                | Type                     | Default value |
+| ---------------- | ---------------------------------------------------------- | ------------------------ | ------------- |
+| darkMode         | Toggle to enable dark mode when custom theme is not passed | bool                     | false         |
+| disabled         | Toggle to disable click on icon                            | bool                     | false         |
+| hideBadge        | Toggle to hide unviewed count badge                        | bool                     | false         |
+| notificationIcon | Option to use custom notification icon                     | Widget                   | null          |
+| onError          | Callback for handling errors                               | Function(SirenErrorType) | null          |
+| onTap            | Custom click handler for notification icon                 | VoidCallback             | null          |
+| theme            | Theme properties for custom color theme                    | CustomThemeColors        | null          |
+| customStyles     | Style properties for custom styling                        | CustomStyles             | null          |
 
 #### Theme customization
 
@@ -98,20 +98,20 @@ Inbox is a paginated list view for displaying notifications.
 
 Given below are the arguments of Siren Inbox Widget.
 
-| Arguments               | Description                                                          | Type                           | Default value                                                                                                                                                       |
-| ----------------------- | -------------------------------------------------------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| darkMode                | Toggle to enable dark mode when custom theme is not passed           | boolean                        | false                                                                                                                                                               |
-| itemsPerFetch           | Number of notifications fetch per api request (have a max cap of 50) | int                            | 20                                                                                                                                                                  |
-| listEmptyWidget         | Custom widget for empty notification list                            | Widget                         | null                                                                                                                                                                |
-| customCard  | Custom widget to display the notification cards                      | Widget                         | null                                                                                                                                                                |
-| customLoader            | Custom widget to display the initial loading state                   | Widget                         | null                                                                                                                                                                |
-| customErrorWidget       | Custom error widget                                                  | Widget                         | null                                                                                                                                                                |
-| cardParams               | Properties of notification card                                      | CardParams                      | CardParams(hideAvatar: false, disableAutoMarkAsRead: false, hideDelete: false, deleteIcon: Icon(Icons.close), onAvatarClick: Function(NotificationDataType))         |
-| headerParams        | Properties of notification window header                             | HeaderParams               | HeaderParams(hideHeader: false, hideClearAll: false,title: 'Notifications', customHeader: null showBackButton:false, backButton: null, onBackPress: ()=> null ) |
-| onCardClick | Custom click handler for notification cards                          | Function(NotificationDataType) | null                                                                                                                                                                |
-| onError                 | Callback for handling errors                                         | Function(ApiErrorDetails)      | null                                                                                                                                                                |
-| theme                   | Theme properties for custom color theme                              | CustomThemeColors              | null                                                                                                                                                                |
-| customStyles            | Style properties for custom styling                                  | CustomStyles                   | null                                                                                                                                                                |
+| Arguments         | Description                                                          | Type                       | Default value                                                                                                                                                   |
+| ----------------- | -------------------------------------------------------------------- | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| darkMode          | Toggle to enable dark mode when custom theme is not passed           | bool                       | false                                                                                                                                                           |
+| itemsPerFetch     | Number of notifications fetch per api request (have a max cap of 50) | int                        | 20                                                                                                                                                              |
+| listEmptyWidget   | Custom widget for empty notification list                            | Widget                     | null                                                                                                                                                            |
+| customCard        | Custom widget to display the notification cards                      | Widget                     | null                                                                                                                                                            |
+| customLoader      | Custom widget to display the initial loading state                   | Widget                     | null                                                                                                                                                            |
+| customErrorWidget | Custom error widget                                                  | Widget                     | null                                                                                                                                                            |
+| cardParams        | Properties of notification card                                      | CardParams                 | CardParams(hideAvatar: false, disableAutoMarkAsRead: false, hideDelete: false, deleteIcon: Icon(Icons.close), onAvatarClick: Function(NotificationType))        |
+| headerParams      | Properties of notification window header                             | HeaderParams               | HeaderParams(hideHeader: false, hideClearAll: false,title: 'Notifications', customHeader: null showBackButton:false, backButton: null, onBackPress: ()=> null ) |
+| onCardClick       | Custom click handler for notification cards                          | Function(NotificationType) | null                                                                                                                                                            |
+| onError           | Callback for handling errors                                         | Function(SirenErrorType)   | null                                                                                                                                                            |
+| theme             | Theme properties for custom color theme                              | CustomThemeColors          | null                                                                                                                                                            |
+| customStyles      | Style properties for custom styling                                  | CustomStyles               | null                                                                                                                                                            |
 
 #### Theme customization
 
@@ -178,25 +178,11 @@ Siren.markAsRead(id: 'notification-id');
 
 | Function                         | Arguments | Type            | Description                                                          |
 | -------------------------------- | --------- | --------------- | -------------------------------------------------------------------- |
-| markAllNotificationsAsReadByDate | startDate | ISO date string | Sets the read status of notifications to true until the given date   |
-| markAsRead                       | id        | string          | Set read status of a notification to true                            |
-| deleteNotification               | id        | string          | Delete a notification by id                                          |
-| deleteNotificationsByDate        | startDate | ISO date string | Delete all notifications until given date                            |
-| markNotificationsAsViewed        | startDate | ISO date string | Sets the viewed status of notifications to true until the given date |
-
-## 4. Error Codes
-
-Given below are all possible error codes thrown by the package:
-
-| Error code                 | Description                                                         |
-| -------------------------- | ------------------------------------------------------------------- |
-| API_ERROR                  | Occurrence of an unexpected api error                               |
-| AUTHENTICATION_FAILED      | Verification of the given tokens has failed                         |
-| UNVIEWED_COUNT_FETCH_FAILED| An error occurred while fetching unviewed count                     |
-| NOTIFICATION_FETCH_FAILED  | An error occurred while fetching notifications                      |
-| NOTIFICATION_READ_FAILED   | An error occurred while marking notifications as read               |
-| DELETE_FAILED              | An error occurred while deleting notifications                      |
-| MARK_ALL_AS_VIEWED_FAILED  | An error occurred while updating the viewed status of notifications |
+| markAsReadByDate                 | startDate | ISO date string | Sets the read status of notifications to true until the given date   |
+| markAsReadById                   | id        | string          | Set read status of a notification to true                            |
+| deleteById                       | id        | string          | Delete a notification by id                                          |
+| deleteByDate                     | startDate | ISO date string | Delete all notifications until given date                            |
+| markAllAsViewed                  | startDate | ISO date string | Sets the viewed status of notifications to true until the given date |
 
 ## Example
 
