@@ -38,17 +38,6 @@ void main() {
       iconController.close();
       inboxController.close();
     });
-    testWidgets('Initial loading state', (WidgetTester tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: Scaffold(
-            body: SirenInbox(),
-          ),
-        ),
-      );
-
-      expect(find.byType(LoaderWidget), findsOneWidget);
-    });
 
     testWidgets('Test Title', (WidgetTester tester) async {
       await tester.pumpWidget(
@@ -63,8 +52,6 @@ void main() {
           ),
         ),
       );
-
-      expect(find.byType(LoaderWidget), findsOneWidget);
 
       await tester.pump();
 

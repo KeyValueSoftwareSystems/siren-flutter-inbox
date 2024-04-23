@@ -161,6 +161,8 @@ class _SirenInboxIconState extends State<SirenInboxIcon> {
       } else if (response.isError) {
         widget.onError?.call(response.error ?? ApiErrorDetails());
       }
+    } else if (!SirenDataProvider.instance.isProviderInitialized) {
+      widget.onError?.call(Generics.outsideSirenContextError);
     }
   }
 

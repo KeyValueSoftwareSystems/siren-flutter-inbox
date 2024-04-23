@@ -116,7 +116,9 @@ class _SirenInboxState extends State<SirenInbox> {
     if (SirenDataProvider.instance.tokenVerificationStatus == Status.SUCCESS) {
       await initialFetchNotification();
     } else if (SirenDataProvider.instance.tokenVerificationStatus ==
-        Status.FAILED) {
+            Status.FAILED ||
+        !SirenDataProvider.instance.isProviderInitialized) {
+      widget.onError?.call(Generics.outsideSirenContextError);
       if (mounted) {
         setState(() {
           isError = true;
