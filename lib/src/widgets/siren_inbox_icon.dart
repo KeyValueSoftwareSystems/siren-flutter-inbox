@@ -37,7 +37,7 @@ class SirenInboxIcon extends StatefulWidget {
   final CustomStyles? customStyles;
 
   /// Callback function to handle errors.
-  final void Function(ApiErrorDetails)? onError;
+  final void Function(SirenErrorType)? onError;
 
   /// Callback function when the inbox icon is tapped.
   final VoidCallback? onTap;
@@ -100,7 +100,7 @@ class _SirenInboxIconState extends State<SirenInboxIcon> {
           }
         } else if (streamResponse.response?.isError ?? false) {
           widget.onError
-              ?.call(streamResponse.response?.error ?? ApiErrorDetails());
+              ?.call(streamResponse.response?.error ?? SirenErrorType());
         }
       },
     );
@@ -159,7 +159,7 @@ class _SirenInboxIconState extends State<SirenInboxIcon> {
           );
         }
       } else if (response.isError) {
-        widget.onError?.call(response.error ?? ApiErrorDetails());
+        widget.onError?.call(response.error ?? SirenErrorType());
       }
     } else if (!SirenDataProvider.instance.isProviderInitialized) {
       widget.onError?.call(Generics.outsideSirenContextError);

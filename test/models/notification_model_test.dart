@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sirenapp_flutter_inbox/src/models/notification_model.dart';
 
 void main() {
-  group('NotificationDataType', () {
+  group('NotificationType', () {
     test('fromJson() should parse JSON correctly', () {
       final json = {
         'id': 'notificationId',
@@ -21,7 +21,7 @@ void main() {
         'isRead': true,
         'cardColor': Colors.blue,
       };
-      final notification = NotificationDataType.fromJson(json);
+      final notification = NotificationType.fromJson(json);
 
       expect(notification.id, 'notificationId');
       expect(notification.createdAt, '2022-01-01T00:00:00Z');
@@ -39,7 +39,7 @@ void main() {
     });
 
     test('markAsRead() should mark the notification as read', () {
-      final notification = NotificationDataType(
+      final notification = NotificationType(
         id: 'notificationId',
         createdAt: '2022-01-01T00:00:00Z',
         message: MessageData(

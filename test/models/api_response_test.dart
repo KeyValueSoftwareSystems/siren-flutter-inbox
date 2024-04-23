@@ -54,13 +54,13 @@ void main() {
     });
   });
 
-  group('ApiErrorDetails', () {
+  group('SirenErrorType', () {
     test('fromJson() should parse JSON correctly', () {
       final json = {
         'errorCode': '123',
         'message': 'Error message',
       };
-      final errorDetails = ApiErrorDetails.fromJson(json);
+      final errorDetails = SirenErrorType.fromJson(json);
 
       expect(errorDetails.type, '123');
       expect(errorDetails.message, 'Error message');

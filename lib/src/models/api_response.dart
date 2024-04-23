@@ -14,7 +14,7 @@ class ApiResponse {
     return ApiResponse(
       data: json['data'],
       error: json['error'] != null
-          ? ApiErrorDetails.fromJson(json['error'] as Map<String, dynamic>?)
+          ? SirenErrorType.fromJson(json['error'] as Map<String, dynamic>?)
           : null,
       meta: json['meta'] != null
           ? MetaResponse.fromJson(json?['meta'] as Map<String, dynamic>?)
@@ -29,7 +29,7 @@ class ApiResponse {
   late MetaResponse? meta;
 
   /// Details about any errors that occurred during the request.
-  late ApiErrorDetails? error;
+  late SirenErrorType? error;
 
   /// Indicates whether the response is still loading.
   bool isLoading = true;
@@ -96,17 +96,17 @@ class MetaResponse {
 }
 
 /// Represents details of an API error.
-class ApiErrorDetails {
-  /// Constructs an [ApiErrorDetails] instance.
-  ApiErrorDetails({
+class SirenErrorType {
+  /// Constructs an [SirenErrorType] instance.
+  SirenErrorType({
     this.type,
     this.message,
     this.code,
   });
 
-  /// Factory method to create ApiErrorDetails from JSON.
-  factory ApiErrorDetails.fromJson(Map<String, dynamic>? json) {
-    return ApiErrorDetails(
+  /// Factory method to create SirenErrorType from JSON.
+  factory SirenErrorType.fromJson(Map<String, dynamic>? json) {
+    return SirenErrorType(
       type: json?['errorCode'] != null ? (json?['errorCode'] as String) : '',
       message: json?['message'] != null ? (json?['message'] as String) : '',
     );

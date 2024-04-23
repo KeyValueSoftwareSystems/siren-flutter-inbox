@@ -14,12 +14,12 @@ class FetchAllNotifications {
   static final String _apiPath =
       '${Generics.V2}${Generics.BASE_URL}${SirenDataProvider.instance.recipientId}/notifications';
 
-  List<NotificationDataType> convertJsonToNotificationList(
+  List<NotificationType> convertJsonToNotificationList(
     List<dynamic> dataList,
   ) {
     return dataList.map((json) {
       if (json is Map<String, dynamic>) {
-        return NotificationDataType.fromJson(json);
+        return NotificationType.fromJson(json);
       }
       throw const FormatException('Invalid JSON format');
     }).toList();

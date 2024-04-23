@@ -65,8 +65,8 @@ void main() {
   });
 
   testWidgets('InboxBody displays notifications', (WidgetTester tester) async {
-    final notifications = <NotificationDataType>[
-      NotificationDataType(
+    final notifications = <NotificationType>[
+      NotificationType(
         id: '1',
         createdAt: '2024-03-15T04:07:14.577928Z',
         message: MessageData(

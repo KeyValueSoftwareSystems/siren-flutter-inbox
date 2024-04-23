@@ -23,7 +23,7 @@ class NotificationListView extends StatefulWidget {
     super.key,
   });
 
-  final List<NotificationDataType> notifications;
+  final List<NotificationType> notifications;
   final bool isLoading;
   final bool endReached;
   final bool loadingNextPage;
@@ -33,8 +33,8 @@ class NotificationListView extends StatefulWidget {
   final ScrollController scrollController;
   final Future<void> Function(String) onDelete;
   final void Function(String) markAsRead;
-  final Widget Function(NotificationDataType)? customCard;
-  final void Function(NotificationDataType)? onCardClick;
+  final Widget Function(NotificationType)? customCard;
+  final void Function(NotificationType)? onCardClick;
   final String? deletingNotificationId;
   final int? totalElements;
   final CardParams? cardParams;

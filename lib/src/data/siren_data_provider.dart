@@ -127,7 +127,7 @@ class SirenDataProvider {
     );
   }
 
-  ApiErrorDetails getVerificationErrorType() {
+  SirenErrorType getVerificationErrorType() {
     if (_tokenVerificationStatus == Status.PENDING) {
       return Generics.outsideSirenContextError;
     } else if (_tokenVerificationStatus == Status.IN_PROGRESS) {

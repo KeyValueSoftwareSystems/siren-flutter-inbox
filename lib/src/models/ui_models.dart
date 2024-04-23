@@ -25,7 +25,7 @@ class CardParams {
   final bool? hideDelete;
 
   /// Callback function when a notification card is clicked.
-  final void Function(NotificationDataType)? onAvatarClick;
+  final void Function(NotificationType)? onAvatarClick;
 }
 
 /// Customizable style for the Siren notification icon.

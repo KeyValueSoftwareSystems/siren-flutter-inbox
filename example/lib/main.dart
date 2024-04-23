@@ -176,4 +176,3 @@ class SirenWindowWidget extends StatelessWidget {
     );
   }
 }
-

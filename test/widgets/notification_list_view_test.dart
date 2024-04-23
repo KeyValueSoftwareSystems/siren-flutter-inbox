@@ -10,8 +10,8 @@ class MockFunction extends Mock {
 }
 
 void main() {
-  final notificationsList = <NotificationDataType>[
-    NotificationDataType(
+  final notificationsList = <NotificationType>[
+    NotificationType(
       id: '1',
       createdAt: '2024-03-15T04:07:14.577928Z',
       message: MessageData(

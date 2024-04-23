@@ -34,11 +34,11 @@ class InboxBody extends StatelessWidget {
   final bool isLoading;
   final bool loadingNextPage;
   final bool isError;
-  final List<NotificationDataType> notifications;
+  final List<NotificationType> notifications;
   final Future<void> Function(String) deleteNotification;
   final void Function(String) markAsRead;
-  final Widget Function(NotificationDataType)? customCard;
-  final void Function(NotificationDataType)? onCardClick;
+  final Widget Function(NotificationType)? customCard;
+  final void Function(NotificationType)? onCardClick;
   final String? deletingNotificationId;
   final bool disableAutoMarkAsRead;
   final int totalElements;

@@ -19,7 +19,7 @@ class CardWidget extends StatefulWidget {
   final Function onTap;
 
   /// Notification data to be displayed.
-  final NotificationDataType notification;
+  final NotificationType notification;
 
   /// Properties for customizing the card.
   final CardParams cardParams;
