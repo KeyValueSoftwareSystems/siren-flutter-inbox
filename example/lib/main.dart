@@ -50,7 +50,7 @@ class MyHomePageState extends State<MyHomePage> {
             : [
                 IconButton(
                     onPressed: () {
-                      Siren.deleteNotificationByDate(
+                      Siren.deleteByDate(
                           startDate: DateTime.now().toUtc().toIso8601String());
                     },
                     icon: const Icon(Icons.delete_forever)),
