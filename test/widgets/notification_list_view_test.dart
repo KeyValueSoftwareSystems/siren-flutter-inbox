@@ -100,7 +100,7 @@ void main() {
         ),
       );
       await tester.pumpAndSettle(const Duration(seconds: 1));
-      expect(find.text('Test SubHeader'), findsOne);
+      expect(find.text('Test SubHeader'), findsOneWidget);
     });
   });
 }

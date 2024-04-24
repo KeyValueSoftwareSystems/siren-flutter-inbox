@@ -40,7 +40,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: CardWidget(
-            onTap: (notification) {},
+            onTap: (NotificationType notification) {},
             onDelete: (id) {
               deletePressed = true;
             },

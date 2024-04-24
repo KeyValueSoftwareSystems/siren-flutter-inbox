@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_redundant_argument_values
+
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -26,6 +28,7 @@ void main() {
     test('Test server error ', () {
       final apiClient = ApiClient(Dio());
       final response = Response(
+        data: null,
         statusCode: 500,
         requestOptions: RequestOptions(),
       );

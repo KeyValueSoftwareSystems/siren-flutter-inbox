@@ -374,7 +374,7 @@ class _SirenInboxState extends State<SirenInbox> {
         });
       }
 
-      await Future.delayed(const Duration(milliseconds: 500));
+      await Future<void>.delayed(const Duration(milliseconds: 500));
       SirenDataProvider.instance.inboxController.sink.add(
         StreamResponse(
           deletionStatus,

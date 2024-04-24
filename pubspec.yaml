@@ -11,8 +11,8 @@ keywords:
   - notifications
 
 environment:
-  sdk: '>=2.18.0 <4.0.0'
-  flutter: ">=1.17.0"
+  sdk: '>=2.17.0 <4.0.0'
+  flutter: ">=3.0.0"
 
 dependencies:
   flutter:
@@ -23,11 +23,11 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
-  very_good_analysis: ^5.1.0
+  very_good_analysis: ^2.0.0
   husky: ^0.1.7
-  mockito: ^5.1.0
+  mockito: ^5.0.0
   network_image_mock: ^2.0.1
-  build_runner: ^2.1.11
+  build_runner: ^2.0.0
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

@@ -202,8 +202,8 @@ class _CardWidgetState extends State<CardWidget> {
           TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w400,
-            color: theme.bannerTheme.surfaceTintColor ??
-                theme.colorScheme.tertiary,
+            color:
+                theme.dialogTheme.backgroundColor ?? theme.colorScheme.tertiary,
           ),
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
@@ -228,7 +228,7 @@ class _CardWidgetState extends State<CardWidget> {
           padding: const EdgeInsets.only(right: 4),
           child: Icon(
             Icons.access_time_sharp,
-            color: theme.colorScheme.scrim,
+            color: theme.colorScheme.onErrorContainer,
             size: size,
           ),
         ),
@@ -250,7 +250,7 @@ class _CardWidgetState extends State<CardWidget> {
   Widget _buildDefaultDeleteButton(ThemeData theme, double size) {
     return Icon(
       Icons.close,
-      color: theme.colorScheme.outlineVariant,
+      color: theme.colorScheme.errorContainer,
       size: size,
     );
   }

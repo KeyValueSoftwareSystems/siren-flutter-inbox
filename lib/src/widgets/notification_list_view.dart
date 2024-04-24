@@ -53,7 +53,7 @@ class _NotificationListViewState extends State<NotificationListView> {
     super.initState();
   }
 
-  void _afterLayout(_) {
+  void _afterLayout(dynamic _) {
     _getPositions();
   }
 
@@ -87,7 +87,7 @@ class _NotificationListViewState extends State<NotificationListView> {
               final currentNotification = widget.notifications[index];
               final itemWidget = widget.customCard?.call(currentNotification) ??
                   CardWidget(
-                    onTap: (notification) {
+                    onTap: (NotificationType notification) {
                       if (!(widget.cardParams?.disableAutoMarkAsRead ??
                           false)) {
                         widget.markAsRead(currentNotification.id);

@@ -59,7 +59,7 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                           child: headerParams?.backButton ??
                               Icon(
                                 Icons.arrow_back_ios,
-                                color: theme.bannerTheme.dividerColor ??
+                                color: theme.dividerTheme.color ??
                                     theme.colorScheme.onPrimaryContainer,
                                 size: 20,
                               ),
@@ -74,7 +74,7 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                             TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
-                              color: theme.bannerTheme.dividerColor ??
+                              color: theme.dialogTheme.backgroundColor ??
                                   theme.colorScheme.onPrimaryContainer,
                             ),
                       ),

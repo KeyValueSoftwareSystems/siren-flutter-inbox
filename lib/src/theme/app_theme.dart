@@ -17,9 +17,9 @@ class AppTheme {
           onSecondary: AppColors.avatarPlaceholderBgLight,
           onTertiary: AppColors.primary200,
           outline: AppColors.grey500,
-          outlineVariant: AppColors.grey400,
+          errorContainer: AppColors.grey400,
           primary: Colors.white,
-          scrim: AppColors.grey500,
+          onErrorContainer: AppColors.grey500,
           secondary: AppColors.primary200,
           secondaryContainer: AppColors.primary50,
           shadow: AppColors.emptyWidgetBellLight,
@@ -41,9 +41,9 @@ class AppTheme {
           onSecondary: AppColors.avatarPlaceholderBgDark,
           onTertiary: AppColors.primary200Complementary,
           outline: AppColors.grey500Complementary,
-          outlineVariant: AppColors.grey400Complementary,
+          errorContainer: AppColors.grey400Complementary,
           primary: AppColors.black100,
-          scrim: AppColors.grey400,
+          onErrorContainer: AppColors.grey400,
           secondary: AppColors.primary200Complementary,
           secondaryContainer: AppColors.primary50Complementary,
           shadow: AppColors.emptyWidgetBellDark,
@@ -69,8 +69,8 @@ class AppTheme {
         onTertiary: customColors.refreshIndicatorColor ??
             baseTheme.colorScheme.onTertiary,
         outline: customColors.clearAllIcon ?? baseTheme.colorScheme.outline,
-        outlineVariant:
-            customColors.deleteIcon ?? baseTheme.colorScheme.outlineVariant,
+        errorContainer:
+            customColors.deleteIcon ?? baseTheme.colorScheme.errorContainer,
         primary: customColors.backgroundColor ?? baseTheme.colorScheme.primary,
         secondary: customColors.primary ?? baseTheme.colorScheme.secondary,
         secondaryContainer: customColors.highlightedCardColor ??
@@ -78,7 +78,8 @@ class AppTheme {
         surfaceTint:
             customColors.borderColor ?? baseTheme.colorScheme.surfaceTint,
         tertiary: customColors.textColor ?? baseTheme.colorScheme.tertiary,
-        scrim: customColors.timerIcon ?? baseTheme.colorScheme.scrim,
+        onErrorContainer:
+            customColors.timerIcon ?? baseTheme.colorScheme.onErrorContainer,
         primaryContainer: baseTheme.colorScheme.primaryContainer,
         onSecondary: baseTheme.colorScheme.onSecondary,
         shadow: baseTheme.colorScheme.shadow,
@@ -89,11 +90,16 @@ class AppTheme {
       ),
     )
         .copyWith(
-          badgeTheme: baseTheme.badgeTheme.copyWith(
-            backgroundColor: customColors.badgeColors?.color ??
-                baseTheme.badgeTheme.backgroundColor,
-            textColor: customColors.badgeColors?.textColor ??
-                baseTheme.badgeTheme.textColor,
+          iconTheme: baseTheme.iconTheme.copyWith(
+            // badge text color
+            color: customColors.badgeColors?.color ?? baseTheme.iconTheme.color,
+          ),
+        )
+        .copyWith(
+          primaryIconTheme: baseTheme.primaryIconTheme.copyWith(
+            // badge text color
+            color: customColors.badgeColors?.textColor ??
+                baseTheme.primaryIconTheme.color,
           ),
         )
         .copyWith(
@@ -119,9 +125,17 @@ class AppTheme {
           bannerTheme: baseTheme.bannerTheme.copyWith(
             backgroundColor:
                 customColors.cardColors?.subtitleColor, // Card sub title color
-            surfaceTintColor: customColors
+          ),
+        )
+        .copyWith(
+          dialogTheme: baseTheme.dialogTheme.copyWith(
+            backgroundColor: customColors
                 .cardColors?.descriptionColor, // Card description color
-            dividerColor: customColors
+          ),
+        )
+        .copyWith(
+          dividerTheme: baseTheme.dividerTheme.copyWith(
+            color: customColors
                 .inboxHeaderColors?.titleColor, // Header title color
           ),
         );
