@@ -10,8 +10,8 @@ class MockFunction extends Mock {
 }
 
 void main() {
-  final notificationsList = <NotificationDataType>[
-    NotificationDataType(
+  final notificationsList = <NotificationType>[
+    NotificationType(
       id: '1',
       createdAt: '2024-03-15T04:07:14.577928Z',
       message: MessageData(
@@ -53,7 +53,7 @@ void main() {
               scrollController: ScrollController(),
               onDelete: (id) async {},
               markAsRead: (id) {},
-              onNotificationCardClick: (n) {
+              onCardClick: (n) {
                 func();
               },
             ),
@@ -87,12 +87,12 @@ void main() {
               onEndReached: () {},
               customStyles: null,
               scrollController: ScrollController(),
-              customNotificationCard: (n) {
+              customCard: (n) {
                 return Text(n.message.subHeader.toString());
               },
               onDelete: (id) async {},
               markAsRead: (id) {},
-              onNotificationCardClick: (n) {
+              onCardClick: (n) {
                 func();
               },
             ),

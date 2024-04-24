@@ -22,12 +22,12 @@ class SirenInbox extends StatefulWidget {
     this.darkMode,
     this.itemsPerFetch,
     this.listEmptyWidget,
-    this.customNotificationCard,
+    this.customCard,
     this.customLoader,
     this.customErrorWidget,
-    this.cardProps,
-    this.inboxHeaderProps,
-    this.onNotificationCardClick,
+    this.cardParams,
+    this.headerParams,
+    this.onCardClick,
     this.onError,
     this.theme,
     this.customStyles,
@@ -43,7 +43,7 @@ class SirenInbox extends StatefulWidget {
   final Widget? listEmptyWidget;
 
   /// Custom builder for notification cards.
-  final Widget Function(NotificationDataType)? customNotificationCard;
+  final Widget Function(NotificationType)? customCard;
 
   /// Custom loader widget.
   final Widget? customLoader;
@@ -52,16 +52,16 @@ class SirenInbox extends StatefulWidget {
   final Widget? customErrorWidget;
 
   ///Custom props for Card properties
-  final CardProps? cardProps;
+  final CardParams? cardParams;
 
   /// Custom props for header properties
-  final InboxHeaderProps? inboxHeaderProps;
+  final HeaderParams? headerParams;
 
   /// Callback function when a notification card is clicked.
-  final void Function(NotificationDataType)? onNotificationCardClick;
+  final void Function(NotificationType)? onCardClick;
 
   /// Callback function for handling errors.
-  final void Function(ApiErrorDetails)? onError;
+  final void Function(SirenErrorType)? onError;
 
   /// Custom theme colors for the inbox, this focuses on the idea of colorSchemes in flutter theme.
   final CustomThemeColors? theme;
@@ -83,7 +83,7 @@ class _SirenInboxState extends State<SirenInbox> {
   String? deletingNotificationId;
   int pageSize = 20;
 
-  List<NotificationDataType> notifications = [];
+  List<NotificationType> notifications = [];
   late final DeleteNotificationById _deleteNotificationById;
   late final ReadNotificationById _readNotificationById;
   late Timer? _periodicUpdateRef;
@@ -116,7 +116,9 @@ class _SirenInboxState extends State<SirenInbox> {
     if (SirenDataProvider.instance.tokenVerificationStatus == Status.SUCCESS) {
       await initialFetchNotification();
     } else if (SirenDataProvider.instance.tokenVerificationStatus ==
-        Status.FAILED) {
+            Status.FAILED ||
+        !SirenDataProvider.instance.isProviderInitialized) {
+      widget.onError?.call(Generics.outsideSirenContextError);
       if (mounted) {
         setState(() {
           isError = true;
@@ -159,7 +161,7 @@ class _SirenInboxState extends State<SirenInbox> {
           }
         } else if (streamResponse.response?.isError ?? false) {
           widget.onError
-              ?.call(streamResponse.response?.error ?? ApiErrorDetails());
+              ?.call(streamResponse.response?.error ?? SirenErrorType());
         }
       },
     );
@@ -231,7 +233,7 @@ class _SirenInboxState extends State<SirenInbox> {
   }
 
   void fetchNewNotifications() {
-    late var newNotifications = <NotificationDataType>[];
+    late var newNotifications = <NotificationType>[];
     _periodicUpdateRef?.cancel();
     _periodicUpdateRef = Timer.periodic(
       const Duration(seconds: Generics.DATA_FETCH_INTERVAL),
@@ -249,7 +251,7 @@ class _SirenInboxState extends State<SirenInbox> {
           if ((fetchedNotifications.meta?.totalElements ?? 0) > 0) {
             unawaited(markAllNotificationsAsViewed());
             newNotifications.addAll(
-              fetchedNotifications.data as Iterable<NotificationDataType>,
+              fetchedNotifications.data as Iterable<NotificationType>,
             );
             if (mounted) {
               setState(
@@ -273,7 +275,7 @@ class _SirenInboxState extends State<SirenInbox> {
             newNotifications = [];
           }
         } else if (fetchedNotifications.isError) {
-          widget.onError?.call(fetchedNotifications.error ?? ApiErrorDetails());
+          widget.onError?.call(fetchedNotifications.error ?? SirenErrorType());
         }
       },
     );
@@ -288,7 +290,7 @@ class _SirenInboxState extends State<SirenInbox> {
 
     if (notificationsMarkedAsViewed.isError) {
       widget.onError?.call(
-        notificationsMarkedAsViewed.error ?? ApiErrorDetails(),
+        notificationsMarkedAsViewed.error ?? SirenErrorType(),
       );
     }
   }
@@ -309,7 +311,7 @@ class _SirenInboxState extends State<SirenInbox> {
       unawaited(markAllNotificationsAsViewed());
       setState(() {
         notifications.addAll(
-          fetchedNotifications.data as Iterable<NotificationDataType>,
+          fetchedNotifications.data as Iterable<NotificationType>,
         );
         isLoading = false;
         isError = false;
@@ -322,7 +324,7 @@ class _SirenInboxState extends State<SirenInbox> {
           isError = fetchedNotifications.isError;
         });
       }
-      widget.onError?.call(fetchedNotifications.error ?? ApiErrorDetails());
+      widget.onError?.call(fetchedNotifications.error ?? SirenErrorType());
     }
   }
 
@@ -344,6 +346,7 @@ class _SirenInboxState extends State<SirenInbox> {
     final deleteAllResponse =
         await NotificationsBulkUpdate.instance.notificationsBulkUpdate(
       data: data,
+      operation: BulkUpdateType.MARK_AS_DELETED.name,
     );
     if (deleteAllResponse.isSuccess) {
       SirenDataProvider.instance.inboxController.sink.add(
@@ -355,7 +358,7 @@ class _SirenInboxState extends State<SirenInbox> {
       );
       _deleteAllNotifications();
     } else if (deleteAllResponse.isError) {
-      widget.onError?.call(deleteAllResponse.error ?? ApiErrorDetails());
+      widget.onError?.call(deleteAllResponse.error ?? SirenErrorType());
     }
   }
 
@@ -391,7 +394,7 @@ class _SirenInboxState extends State<SirenInbox> {
         onEndReached();
       }
     } else if (deletionStatus.isError) {
-      widget.onError?.call(deletionStatus.error ?? ApiErrorDetails());
+      widget.onError?.call(deletionStatus.error ?? SirenErrorType());
     }
   }
 
@@ -417,7 +420,7 @@ class _SirenInboxState extends State<SirenInbox> {
           if (mounted) {
             setState(() {
               notifications.addAll(
-                fetchedNotifications.data as Iterable<NotificationDataType>,
+                fetchedNotifications.data as Iterable<NotificationType>,
               );
               isLoading = false;
               loadingNextPage = false;
@@ -430,7 +433,7 @@ class _SirenInboxState extends State<SirenInbox> {
               loadingNextPage = false;
             });
           }
-          widget.onError?.call(fetchedNotifications.error ?? ApiErrorDetails());
+          widget.onError?.call(fetchedNotifications.error ?? SirenErrorType());
         }
       });
     }
@@ -449,7 +452,7 @@ class _SirenInboxState extends State<SirenInbox> {
       );
       _markNotificationAsReadById(id);
     } else if (readStatus.isError) {
-      widget.onError?.call(readStatus.error ?? ApiErrorDetails());
+      widget.onError?.call(readStatus.error ?? SirenErrorType());
     }
   }
 
@@ -473,7 +476,7 @@ class _SirenInboxState extends State<SirenInbox> {
               theme: currentTheme,
               onClearAllPressed: onBulkDelete,
               isNonEmptyNotifications: shouldShowClearAllButton(),
-              inboxHeaderProps: widget.inboxHeaderProps,
+              headerParams: widget.headerParams,
               styles: widget.customStyles,
             ),
             body: InboxBody(
@@ -484,18 +487,18 @@ class _SirenInboxState extends State<SirenInbox> {
               notifications: notifications,
               deleteNotification: deleteNotification,
               markAsRead: _markNotificationAsRead,
-              customNotificationCard: widget.customNotificationCard,
-              onNotificationCardClick: widget.onNotificationCardClick,
+              customCard: widget.customCard,
+              onCardClick: widget.onCardClick,
               deletingNotificationId: deletingNotificationId,
               disableAutoMarkAsRead:
-                  widget.cardProps?.disableAutoMarkAsRead ?? false,
+                  widget.cardParams?.disableAutoMarkAsRead ?? false,
               totalElements: totalElements,
               onRefresh: onRefresh,
               customErrorWidget: widget.customErrorWidget,
               customLoader: widget.customLoader,
               endReached: endReached,
               customStyles: widget.customStyles,
-              cardProps: widget.cardProps,
+              cardParams: widget.cardParams,
               scrollController: _scrollController,
               onEndReached: onEndReached,
               listEmptyWidget: widget.listEmptyWidget,

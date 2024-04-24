@@ -24,13 +24,13 @@ void main() {
     });
   });
 
-  group('CardProps', () {
+  group('CardParams', () {
     test('constructor should initialize properties with provided values', () {
-      const cardProps = CardProps(
+      const cardParams = CardParams(
         hideAvatar: true,
       );
 
-      expect(cardProps.hideAvatar, true);
+      expect(cardParams.hideAvatar, true);
     });
   });
 
@@ -104,7 +104,7 @@ void main() {
     const hideAvatar = true;
     const Widget deleteWidget = Icon(Icons.delete);
 
-    const cardParams = CardProps(
+    const cardParams = CardParams(
       hideAvatar: hideAvatar,
       deleteIcon: deleteWidget,
     );

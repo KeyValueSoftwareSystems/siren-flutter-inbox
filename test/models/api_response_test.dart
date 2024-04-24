@@ -19,7 +19,7 @@ void main() {
       final response = ApiResponse.fromJson(json);
 
       expect(response.data, 'testData');
-      expect(response.error?.errorCode, '123');
+      expect(response.error?.type, '123');
       expect(response.meta?.last, 'last');
       expect(response.meta?.totalPages, 5);
     });
@@ -54,15 +54,15 @@ void main() {
     });
   });
 
-  group('ApiErrorDetails', () {
+  group('SirenErrorType', () {
     test('fromJson() should parse JSON correctly', () {
       final json = {
         'errorCode': '123',
         'message': 'Error message',
       };
-      final errorDetails = ApiErrorDetails.fromJson(json);
+      final errorDetails = SirenErrorType.fromJson(json);
 
-      expect(errorDetails.errorCode, '123');
+      expect(errorDetails.type, '123');
       expect(errorDetails.message, 'Error message');
     });
   });

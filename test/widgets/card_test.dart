@@ -15,7 +15,7 @@ void main() {
   testWidgets('CardWidget renders correctly', (WidgetTester tester) async {
     // ignore: unused_local_variable
     final func = MockFunction().call;
-    final notification = NotificationDataType(
+    final notification = NotificationType(
       id: '123',
       createdAt: '2024-03-15T04:07:14.577928Z',
       message: MessageData(
@@ -45,7 +45,7 @@ void main() {
               deletePressed = true;
             },
             notification: notification,
-            cardProps: CardProps(
+            cardParams: CardParams(
               hideAvatar: false,
               hideDelete: false,
               onAvatarClick: (notification) {

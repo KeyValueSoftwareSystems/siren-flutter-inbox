@@ -15,16 +15,20 @@ class NotificationsBulkUpdate {
 
   Future<ApiResponse> notificationsBulkUpdate({
     required Map<String, dynamic> data,
+    required String operation,
   }) async {
     final api = ApiClient(apiProvider());
     final apiPath =
         '${Generics.V2}${Generics.BASE_URL}${SirenDataProvider.instance.recipientId}/notifications/bulk-update';
     final result = ApiResponse()..isLoading;
-    final apiError = ApiErrorDetails()
-      ..errorType = ErrorTypes.NOTIFICATION_DELETE_FAILED;
+    var apiError = Generics.markAsReadFailedError;
+
+    if (operation == BulkUpdateType.MARK_AS_DELETED.name) {
+      apiError = Generics.deleteAllFailedError;
+    }
 
     if (SirenDataProvider.instance.tokenVerificationStatus != Status.SUCCESS) {
-      apiError.errorType = ErrorTypes.AUTHENTICATION_FAILED;
+      apiError = SirenDataProvider.instance.getVerificationErrorType();
       result
         ..isLoading = false
         ..isError = true
@@ -39,10 +43,6 @@ class NotificationsBulkUpdate {
       data: data,
     );
     if (apiResponse.statusCode != 0 && apiResponse.data != null) {
-      apiError
-        ..errorCode = ApiResponse.fromJson(apiResponse.data).error?.errorCode
-        ..message = ApiResponse.fromJson(apiResponse.data).error?.message;
-
       result
         ..isLoading = false
         ..isSuccess = apiResponse.statusCode == 200

@@ -24,8 +24,19 @@ class VerifyToken {
 
   Future<ApiResponse> verifyToken() async {
     final result = ApiResponse()..isLoading = true;
-    final apiError = ApiErrorDetails()
-      ..errorType = ErrorTypes.AUTHENTICATION_FAILED;
+    var apiError = Generics.authenticationFailed;
+
+    if (SirenDataProvider.instance.userToken.isEmpty ||
+        SirenDataProvider.instance.recipientId.isEmpty) {
+      apiError = Generics.invalidCredentialsError;
+      result
+        ..isLoading = false
+        ..isError = true
+        ..data = null
+        ..rawResponse = Generics.rawResponseError
+        ..error = apiError;
+      return result;
+    }
 
     final apiResponse = await api.get(
       path:
@@ -34,9 +45,6 @@ class VerifyToken {
     if (apiResponse.statusCode != 0 && apiResponse.data != null) {
       final verificationStatus =
           convertJsonToVerificationStatus(apiResponse.data);
-      apiError
-        ..errorCode = ApiResponse.fromJson(apiResponse.data).error?.errorCode
-        ..message = ApiResponse.fromJson(apiResponse.data).error?.message;
 
       result
         ..isLoading = false

@@ -8,25 +8,25 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.isNonEmptyNotifications,
     super.key,
     this.onClearAllPressed,
-    this.inboxHeaderProps,
+    this.headerParams,
     this.styles,
   });
   final ThemeData theme;
   final VoidCallback? onClearAllPressed;
   final bool isNonEmptyNotifications;
-  final InboxHeaderProps? inboxHeaderProps;
+  final HeaderParams? headerParams;
   final CustomStyles? styles;
 
   @override
   Size get preferredSize {
-    return inboxHeaderProps?.hideHeader ?? false
+    return headerParams?.hideHeader ?? false
         ? Size.zero
         : const Size.fromHeight(kToolbarHeight);
   }
 
   @override
   Widget build(BuildContext context) {
-    if (inboxHeaderProps?.hideHeader ?? false) {
+    if (headerParams?.hideHeader ?? false) {
       return const SizedBox.shrink();
     }
     return Container(
@@ -43,24 +43,24 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
       height: preferredSize.height,
       child: Padding(
         padding: const EdgeInsets.only(right: 16, left: 20),
-        child: inboxHeaderProps?.customHeader ??
+        child: headerParams?.customHeader ??
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
                   children: [
-                    if (inboxHeaderProps?.showBackButton ?? false)
+                    if (headerParams?.showBackButton ?? false)
                       Semantics(
                         label: 'siren-header-back',
                         hint: 'Tap to view navigate back',
                         child: GestureDetector(
                           key: const Key('siren-header-back'),
-                          onTap: inboxHeaderProps?.onBackPress,
-                          child: inboxHeaderProps?.backButton ??
+                          onTap: headerParams?.onBackPress,
+                          child: headerParams?.backButton ??
                               Icon(
                                 Icons.arrow_back_ios,
                                 color: theme.bannerTheme.dividerColor ??
-                                    theme.colorScheme.onBackground,
+                                    theme.colorScheme.onPrimaryContainer,
                                 size: 20,
                               ),
                         ),
@@ -69,19 +69,19 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                       padding:
                           styles?.appBarStyle?.titlePadding ?? EdgeInsets.zero,
                       child: Text(
-                        inboxHeaderProps?.title ?? Strings.notifications,
+                        headerParams?.title ?? Strings.notifications,
                         style: styles?.appBarStyle?.headerTextStyle ??
                             TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
                               color: theme.bannerTheme.dividerColor ??
-                                  theme.colorScheme.onBackground,
+                                  theme.colorScheme.onPrimaryContainer,
                             ),
                       ),
                     ),
                   ],
                 ),
-                if (!(inboxHeaderProps?.hideClearAll ?? false))
+                if (!(headerParams?.hideClearAll ?? false))
                   Semantics(
                     label: 'siren-header-clear-all',
                     hint: 'Tap to clear all notifications',

@@ -14,16 +14,16 @@ class NotificationListView extends StatefulWidget {
     required this.scrollController,
     required this.onDelete,
     required this.markAsRead,
-    this.customNotificationCard,
-    this.onNotificationCardClick,
+    this.customCard,
+    this.onCardClick,
     this.deletingNotificationId,
     this.totalElements,
-    this.cardProps,
+    this.cardParams,
     this.loadingIndicator,
     super.key,
   });
 
-  final List<NotificationDataType> notifications;
+  final List<NotificationType> notifications;
   final bool isLoading;
   final bool endReached;
   final bool loadingNextPage;
@@ -33,11 +33,11 @@ class NotificationListView extends StatefulWidget {
   final ScrollController scrollController;
   final Future<void> Function(String) onDelete;
   final void Function(String) markAsRead;
-  final Widget Function(NotificationDataType)? customNotificationCard;
-  final void Function(NotificationDataType)? onNotificationCardClick;
+  final Widget Function(NotificationType)? customCard;
+  final void Function(NotificationType)? onCardClick;
   final String? deletingNotificationId;
   final int? totalElements;
-  final CardProps? cardProps;
+  final CardParams? cardParams;
   final Color? loadingIndicator;
 
   @override
@@ -85,17 +85,17 @@ class _NotificationListViewState extends State<NotificationListView> {
             if (index < widget.notifications.length) {
               final isLastIndex = index == widget.notifications.length - 1;
               final currentNotification = widget.notifications[index];
-              final itemWidget = widget.customNotificationCard
-                      ?.call(currentNotification) ??
+              final itemWidget = widget.customCard?.call(currentNotification) ??
                   CardWidget(
                     onTap: (notification) {
-                      if (!(widget.cardProps?.disableAutoMarkAsRead ?? false)) {
+                      if (!(widget.cardParams?.disableAutoMarkAsRead ??
+                          false)) {
                         widget.markAsRead(currentNotification.id);
                       }
-                      widget.onNotificationCardClick?.call(currentNotification);
+                      widget.onCardClick?.call(currentNotification);
                     },
                     notification: currentNotification,
-                    cardProps: widget.cardProps ?? const CardProps(),
+                    cardParams: widget.cardParams ?? const CardParams(),
                     styles: widget.customStyles,
                     onDelete: widget.onDelete,
                   );

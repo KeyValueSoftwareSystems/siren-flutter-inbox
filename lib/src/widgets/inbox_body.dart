@@ -14,8 +14,8 @@ class InboxBody extends StatelessWidget {
     required this.notifications,
     required this.deleteNotification,
     required this.markAsRead,
-    required this.customNotificationCard,
-    required this.onNotificationCardClick,
+    required this.customCard,
+    required this.onCardClick,
     required this.deletingNotificationId,
     required this.disableAutoMarkAsRead,
     required this.totalElements,
@@ -26,7 +26,7 @@ class InboxBody extends StatelessWidget {
     this.customErrorWidget,
     this.customLoader,
     this.customStyles,
-    this.cardProps,
+    this.cardParams,
     this.listEmptyWidget,
     super.key,
   });
@@ -34,11 +34,11 @@ class InboxBody extends StatelessWidget {
   final bool isLoading;
   final bool loadingNextPage;
   final bool isError;
-  final List<NotificationDataType> notifications;
+  final List<NotificationType> notifications;
   final Future<void> Function(String) deleteNotification;
   final void Function(String) markAsRead;
-  final Widget Function(NotificationDataType)? customNotificationCard;
-  final void Function(NotificationDataType)? onNotificationCardClick;
+  final Widget Function(NotificationType)? customCard;
+  final void Function(NotificationType)? onCardClick;
   final String? deletingNotificationId;
   final bool disableAutoMarkAsRead;
   final int totalElements;
@@ -47,7 +47,7 @@ class InboxBody extends StatelessWidget {
   final Widget? customLoader;
   final bool endReached;
   final CustomStyles? customStyles;
-  final CardProps? cardProps;
+  final CardParams? cardParams;
   final VoidCallback onEndReached;
   final ScrollController scrollController;
   final Widget? listEmptyWidget;
@@ -80,7 +80,7 @@ class InboxBody extends StatelessWidget {
     } else if (isLoading && !loadingNextPage) {
       return LoaderWidget(
         customLoader: customLoader,
-        hideAvatar: cardProps?.hideAvatar ?? false,
+        hideAvatar: cardParams?.hideAvatar ?? false,
       );
     } else if (notifications.isEmpty) {
       return Semantics(
@@ -104,11 +104,11 @@ class InboxBody extends StatelessWidget {
           scrollController: scrollController,
           onDelete: deleteNotification,
           markAsRead: markAsRead,
-          customNotificationCard: customNotificationCard,
-          onNotificationCardClick: onNotificationCardClick,
+          customCard: customCard,
+          onCardClick: onCardClick,
           deletingNotificationId: deletingNotificationId,
           totalElements: totalElements,
-          cardProps: cardProps,
+          cardParams: cardParams,
           loadingIndicator: currentTheme.colorScheme.onTertiary,
         ),
       );

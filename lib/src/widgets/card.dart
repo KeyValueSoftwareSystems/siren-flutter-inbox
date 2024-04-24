@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sirenapp_flutter_inbox/src/constants/strings.dart';
 import 'package:sirenapp_flutter_inbox/src/models/notification_model.dart';
 import 'package:sirenapp_flutter_inbox/src/models/ui_models.dart';
 import 'package:sirenapp_flutter_inbox/src/utils/common_utils.dart';
@@ -9,7 +10,7 @@ class CardWidget extends StatefulWidget {
   const CardWidget({
     required this.onTap,
     required this.notification,
-    required this.cardProps,
+    required this.cardParams,
     required this.styles,
     required this.onDelete,
     super.key,
@@ -19,10 +20,10 @@ class CardWidget extends StatefulWidget {
   final Function onTap;
 
   /// Notification data to be displayed.
-  final NotificationDataType notification;
+  final NotificationType notification;
 
   /// Properties for customizing the card.
-  final CardProps cardProps;
+  final CardParams cardParams;
 
   /// Styles to be applied to various elements of the card.
   final CustomStyles? styles;
@@ -57,7 +58,7 @@ class _CardWidgetState extends State<CardWidget> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (!(widget.cardProps.hideAvatar ?? false))
+            if (!(widget.cardParams.hideAvatar ?? false))
               _buildDefaultAvatarContainer(currentTheme),
             Expanded(
               child: Padding(
@@ -113,7 +114,7 @@ class _CardWidgetState extends State<CardWidget> {
     return GestureDetector(
       key: Key('siren-notification-avatar-${widget.notification.id}'),
       onTap: () {
-        widget.cardProps.onAvatarClick?.call(widget.notification);
+        widget.cardParams.onAvatarClick?.call(widget.notification);
       },
       child: Padding(
         padding: const EdgeInsets.only(
@@ -122,14 +123,18 @@ class _CardWidgetState extends State<CardWidget> {
         ),
         child: CircleAvatar(
           radius: widget.styles?.cardStyle?.avatarSize ?? 21,
-          backgroundImage: avatarUrl != null && avatarUrl.isNotEmpty
+          backgroundImage: avatarUrl != null &&
+                  avatarUrl.isNotEmpty &&
+                  avatarUrl != Strings.string_null
               ? NetworkImage(avatarUrl)
               : null,
           backgroundColor: theme.colorScheme.onSecondary,
-          child: avatarUrl == null || avatarUrl.isEmpty
+          child: avatarUrl == null ||
+                  avatarUrl.isEmpty ||
+                  avatarUrl == Strings.string_null
               ? Icon(
                   Icons.landscape_rounded,
-                  color: theme.colorScheme.surfaceVariant,
+                  color: theme.colorScheme.onTertiaryContainer,
                 )
               : null,
         ),
@@ -156,14 +161,14 @@ class _CardWidgetState extends State<CardWidget> {
                 ),
           ),
         ),
-        if (!(widget.cardProps.hideDelete ?? false)) ...[
+        if (!(widget.cardParams.hideDelete ?? false)) ...[
           const SizedBox(width: 8),
           GestureDetector(
             key: Key(
               'siren-notification-delete-${widget.notification.id}',
             ),
             onTap: () => widget.onDelete(widget.notification.id),
-            child: widget.cardProps.deleteIcon ??
+            child: widget.cardParams.deleteIcon ??
                 _buildDefaultDeleteButton(
                   theme,
                   widget.styles?.deleteIconSize ?? 18,

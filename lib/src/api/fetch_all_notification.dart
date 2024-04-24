@@ -14,12 +14,12 @@ class FetchAllNotifications {
   static final String _apiPath =
       '${Generics.V2}${Generics.BASE_URL}${SirenDataProvider.instance.recipientId}/notifications';
 
-  List<NotificationDataType> convertJsonToNotificationList(
+  List<NotificationType> convertJsonToNotificationList(
     List<dynamic> dataList,
   ) {
     return dataList.map((json) {
       if (json is Map<String, dynamic>) {
-        return NotificationDataType.fromJson(json);
+        return NotificationType.fromJson(json);
       }
       throw const FormatException('Invalid JSON format');
     }).toList();
@@ -33,8 +33,7 @@ class FetchAllNotifications {
     String? end,
   }) async {
     final result = ApiResponse()..isLoading = true;
-    final apiError = ApiErrorDetails()
-      ..errorType = ErrorTypes.NOTIFICATION_FETCH_FAILED;
+    var apiError = Generics.notificationFetchFailedError;
 
     // Manually construct query parameters
     final queryParams = {
@@ -54,7 +53,7 @@ class FetchAllNotifications {
         queryParams.entries.map((e) => '${e.key}=${e.value}').join('&');
 
     if (SirenDataProvider.instance.tokenVerificationStatus != Status.SUCCESS) {
-      apiError.errorType = ErrorTypes.AUTHENTICATION_FAILED;
+      apiError = SirenDataProvider.instance.getVerificationErrorType();
       result
         ..isLoading = false
         ..isError = true
@@ -72,9 +71,6 @@ class FetchAllNotifications {
       final dataList =
           ApiResponse.fromJson(apiResponse.data).data as List<dynamic>?;
       final metaData = ApiResponse.fromJson(apiResponse.data).meta;
-      apiError
-        ..errorCode = ApiResponse.fromJson(apiResponse.data).error?.errorCode
-        ..message = ApiResponse.fromJson(apiResponse.data).error?.message;
       result
         ..isLoading = false
         ..isSuccess = apiResponse.statusCode == 200

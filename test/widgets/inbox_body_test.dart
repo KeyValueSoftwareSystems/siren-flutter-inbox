@@ -20,8 +20,8 @@ void main() {
           notifications: const [],
           deleteNotification: (id) async {},
           markAsRead: (id) {},
-          customNotificationCard: null,
-          onNotificationCardClick: null,
+          customCard: null,
+          onCardClick: null,
           deletingNotificationId: null,
           disableAutoMarkAsRead: false,
           totalElements: 0,
@@ -48,8 +48,8 @@ void main() {
           notifications: const [],
           deleteNotification: (id) async {},
           markAsRead: (id) {},
-          customNotificationCard: null,
-          onNotificationCardClick: null,
+          customCard: null,
+          onCardClick: null,
           deletingNotificationId: null,
           disableAutoMarkAsRead: false,
           totalElements: 0,
@@ -65,8 +65,8 @@ void main() {
   });
 
   testWidgets('InboxBody displays notifications', (WidgetTester tester) async {
-    final notifications = <NotificationDataType>[
-      NotificationDataType(
+    final notifications = <NotificationType>[
+      NotificationType(
         id: '1',
         createdAt: '2024-03-15T04:07:14.577928Z',
         message: MessageData(
@@ -97,8 +97,8 @@ void main() {
             notifications: notifications,
             deleteNotification: (id) async {},
             markAsRead: (id) {},
-            customNotificationCard: null,
-            onNotificationCardClick: null,
+            customCard: null,
+            onCardClick: null,
             deletingNotificationId: null,
             disableAutoMarkAsRead: false,
             totalElements: 1,
