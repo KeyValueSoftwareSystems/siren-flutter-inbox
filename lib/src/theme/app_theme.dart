@@ -66,8 +66,8 @@ class AppTheme {
             customColors.dateColor ?? baseTheme.colorScheme.inversePrimary,
         onPrimary: customColors.notificationIconColor ??
             baseTheme.colorScheme.onPrimary,
-        onTertiary: customColors.refreshIndicatorColor ??
-            baseTheme.colorScheme.onTertiary,
+        onTertiary:
+            customColors.loaderColorColor ?? baseTheme.colorScheme.onTertiary,
         outline: customColors.clearAllIcon ?? baseTheme.colorScheme.outline,
         errorContainer:
             customColors.deleteIcon ?? baseTheme.colorScheme.errorContainer,
@@ -92,13 +92,14 @@ class AppTheme {
         .copyWith(
           iconTheme: baseTheme.iconTheme.copyWith(
             // badge text color
-            color: customColors.badgeColors?.color ?? baseTheme.iconTheme.color,
+            color: customColors.badgeColors?.backgroundColor ??
+                baseTheme.iconTheme.color,
           ),
         )
         .copyWith(
           primaryIconTheme: baseTheme.primaryIconTheme.copyWith(
             // badge text color
-            color: customColors.badgeColors?.textColor ??
+            color: customColors.badgeColors?.color ??
                 baseTheme.primaryIconTheme.color,
           ),
         )
