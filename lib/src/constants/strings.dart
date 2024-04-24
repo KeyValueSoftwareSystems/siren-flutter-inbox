@@ -9,6 +9,7 @@ class Strings {
       'Could not load the notifications. Please refresh the page.';
   static const clear_all = 'Clear All';
   static const notifications = 'Notifications';
+  static const string_null = 'null';
   static const authentication_failed_message =
       'Failed to authenticate given credentials';
   static const error_type_error = 'ERROR';

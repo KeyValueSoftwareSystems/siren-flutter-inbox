@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sirenapp_flutter_inbox/src/constants/strings.dart';
 import 'package:sirenapp_flutter_inbox/src/models/notification_model.dart';
 import 'package:sirenapp_flutter_inbox/src/models/ui_models.dart';
 import 'package:sirenapp_flutter_inbox/src/utils/common_utils.dart';
@@ -122,11 +123,15 @@ class _CardWidgetState extends State<CardWidget> {
         ),
         child: CircleAvatar(
           radius: widget.styles?.cardStyle?.avatarSize ?? 21,
-          backgroundImage: avatarUrl != null && avatarUrl.isNotEmpty
+          backgroundImage: avatarUrl != null &&
+                  avatarUrl.isNotEmpty &&
+                  avatarUrl != Strings.string_null
               ? NetworkImage(avatarUrl)
               : null,
           backgroundColor: theme.colorScheme.onSecondary,
-          child: avatarUrl == null || avatarUrl.isEmpty
+          child: avatarUrl == null ||
+                  avatarUrl.isEmpty ||
+                  avatarUrl == Strings.string_null
               ? Icon(
                   Icons.landscape_rounded,
                   color: theme.colorScheme.onTertiaryContainer,
