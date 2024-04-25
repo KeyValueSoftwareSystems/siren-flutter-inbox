@@ -131,7 +131,7 @@ class CustomThemeColors {
     this.dateColor,
     this.timerIcon,
     this.notificationIconColor,
-    this.loaderColorColor,
+    this.loaderColor,
     this.inboxHeaderColors,
     this.badgeColors,
     this.cardColors,
@@ -168,7 +168,7 @@ class CustomThemeColors {
   final Color? notificationIconColor;
 
   /// The color for refresh indicator in inbox list.
-  final Color? loaderColorColor;
+  final Color? loaderColor;
 
   /// The colors for inbox list card
   final CardColors? cardColors;

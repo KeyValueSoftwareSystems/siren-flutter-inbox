@@ -67,7 +67,7 @@ class AppTheme {
         onPrimary: customColors.notificationIconColor ??
             baseTheme.colorScheme.onPrimary,
         onTertiary:
-            customColors.loaderColorColor ?? baseTheme.colorScheme.onTertiary,
+            customColors.loaderColor ?? baseTheme.colorScheme.onTertiary,
         outline: customColors.clearAllIcon ?? baseTheme.colorScheme.outline,
         errorContainer:
             customColors.deleteIcon ?? baseTheme.colorScheme.errorContainer,
