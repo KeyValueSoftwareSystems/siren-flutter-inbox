@@ -248,7 +248,9 @@ class _SirenInboxState extends State<SirenInbox> {
               : null,
         );
         if (fetchedNotifications.isSuccess) {
-          if ((fetchedNotifications.meta?.totalElements ?? 0) > 0) {
+          final count =
+              (fetchedNotifications.data as Iterable<NotificationType>).length;
+          if (count > 0) {
             unawaited(markAllNotificationsAsViewed());
             newNotifications.addAll(
               fetchedNotifications.data as Iterable<NotificationType>,
@@ -270,8 +272,7 @@ class _SirenInboxState extends State<SirenInbox> {
                 );
               }
             }
-            totalElements =
-                totalElements + (fetchedNotifications.meta?.totalElements ?? 0);
+            totalElements = totalElements + count;
             newNotifications = [];
           }
         } else if (fetchedNotifications.isError) {
@@ -315,7 +316,8 @@ class _SirenInboxState extends State<SirenInbox> {
         );
         isLoading = false;
         isError = false;
-        totalElements = fetchedNotifications.meta?.totalElements ?? 0;
+        totalElements =
+            (fetchedNotifications.data as Iterable<NotificationType>).length;
       });
       fetchNewNotifications();
     } else if (fetchedNotifications.isError) {
