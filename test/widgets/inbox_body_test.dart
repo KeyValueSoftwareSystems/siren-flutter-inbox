@@ -13,7 +13,6 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: InboxBody(
-          currentTheme: ThemeData(),
           isLoading: true,
           loadingNextPage: false,
           isError: false,
@@ -41,7 +40,6 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: InboxBody(
-          currentTheme: ThemeData(),
           isLoading: false,
           loadingNextPage: false,
           isError: true,
@@ -90,7 +88,6 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: InboxBody(
-            currentTheme: ThemeData(),
             isLoading: false,
             loadingNextPage: false,
             isError: false,

@@ -10,7 +10,6 @@ void main() {
       MaterialApp(
         home: Scaffold(
           appBar: SirenAppBar(
-            theme: ThemeData(),
             headerParams: HeaderParams(
               title: title,
               showBackButton: false,
@@ -30,7 +29,6 @@ void main() {
       MaterialApp(
         home: Scaffold(
           appBar: SirenAppBar(
-            theme: ThemeData(),
             headerParams: HeaderParams(
               title: 'Title',
               showBackButton: true,
@@ -51,7 +49,6 @@ void main() {
       MaterialApp(
         home: Scaffold(
           appBar: SirenAppBar(
-            theme: ThemeData(),
             headerParams: HeaderParams(
               title: 'Title',
               showBackButton: false,
@@ -73,7 +70,6 @@ void main() {
       MaterialApp(
         home: Scaffold(
           appBar: SirenAppBar(
-            theme: ThemeData(),
             headerParams: HeaderParams(
               title: 'Title',
               showBackButton: false,
@@ -95,7 +91,6 @@ void main() {
       MaterialApp(
         home: Scaffold(
           appBar: SirenAppBar(
-            theme: ThemeData(),
             headerParams: HeaderParams(
               title: 'Title',
               showBackButton: true,
@@ -121,7 +116,6 @@ void main() {
       MaterialApp(
         home: Scaffold(
           appBar: SirenAppBar(
-            theme: ThemeData(),
             headerParams: HeaderParams(
               title: 'Title',
               showBackButton: false,

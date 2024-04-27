@@ -6,16 +6,19 @@ class IconBadge extends StatelessWidget {
     required this.badgeStyle,
     required this.notificationsCount,
     required this.hideBadge,
+    required this.badgeBackgroundColor,
+    required this.color,
     super.key,
   });
 
   final BadgeStyle? badgeStyle;
   final int notificationsCount;
   final bool hideBadge;
+  final Color badgeBackgroundColor;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Theme.of(context);
     return hideBadge
         ? const SizedBox()
         : Positioned(
@@ -29,8 +32,7 @@ class IconBadge extends StatelessWidget {
               ),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: currentTheme.iconTheme.color ??
-                    currentTheme.colorScheme.tertiaryContainer,
+                color: badgeBackgroundColor,
               ),
               child: Align(
                 child: Text(
@@ -38,8 +40,7 @@ class IconBadge extends StatelessWidget {
                       ? '99+'
                       : notificationsCount.toString(),
                   style: TextStyle(
-                    color: currentTheme.primaryIconTheme.color ??
-                        currentTheme.colorScheme.onInverseSurface,
+                    color: color,
                     fontSize: badgeStyle?.fontSize ??
                         DefaultIconStyle.defaultFontSize,
                   ),

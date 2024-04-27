@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:sirenapp_flutter_inbox/src/constants/strings.dart';
 import 'package:sirenapp_flutter_inbox/src/models/ui_models.dart';
+import 'package:sirenapp_flutter_inbox/src/theme/app_theme.dart';
 
 class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
   const SirenAppBar({
-    required this.theme,
     required this.isNonEmptyNotifications,
-    super.key,
     this.onClearAllPressed,
     this.headerParams,
     this.styles,
+    this.colors,
+    this.isDarkMode,
+    super.key,
   });
-  final ThemeData theme;
   final VoidCallback? onClearAllPressed;
   final bool isNonEmptyNotifications;
   final HeaderParams? headerParams;
   final CustomStyles? styles;
+  final CustomThemeColors? colors;
+  final bool? isDarkMode;
 
   @override
   Size get preferredSize {
@@ -29,14 +32,16 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
     if (headerParams?.hideHeader ?? false) {
       return const SizedBox.shrink();
     }
+    final defaultColors = SirenAppTheme.colors(isDarkMode: isDarkMode ?? false);
     return Container(
       decoration: BoxDecoration(
-        color: theme.appBarTheme.backgroundColor ?? theme.colorScheme.primary,
+        color: colors?.inboxHeaderColors?.background ??
+            defaultColors.backgroundColor,
         border: Border(
           bottom: BorderSide(
             width: styles?.appBarStyle?.borderWidth ?? 1,
-            color:
-                theme.appBarTheme.shadowColor ?? theme.colorScheme.surfaceTint,
+            color: colors?.inboxHeaderColors?.borderColor ??
+                defaultColors.appBarBorderColor,
           ),
         ),
       ),
@@ -59,8 +64,8 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                           child: headerParams?.backButton ??
                               Icon(
                                 Icons.arrow_back_ios,
-                                color: theme.dividerTheme.color ??
-                                    theme.colorScheme.onPrimaryContainer,
+                                color: colors?.inboxHeaderColors?.titleColor ??
+                                    defaultColors.appBarBackIcon,
                                 size: 20,
                               ),
                         ),
@@ -74,8 +79,8 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                             TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
-                              color: theme.dialogTheme.backgroundColor ??
-                                  theme.colorScheme.onPrimaryContainer,
+                              color: colors?.inboxHeaderColors?.titleColor ??
+                                  defaultColors.appBarTextColor,
                             ),
                       ),
                     ),
@@ -102,7 +107,8 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                               child: Icon(
                                 Icons.clear_all,
                                 size: styles?.clearAllIconSize ?? 24,
-                                color: theme.colorScheme.outline,
+                                color: colors?.clearAllIcon ??
+                                    defaultColors.appBarActionText,
                               ),
                             ),
                             Text(
@@ -110,8 +116,9 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
-                                color: theme.appBarTheme.foregroundColor ??
-                                    theme.colorScheme.outline,
+                                color: colors?.inboxHeaderColors
+                                        ?.headerActionColor ??
+                                    defaultColors.appBarActionText,
                               ),
                             ),
                           ],

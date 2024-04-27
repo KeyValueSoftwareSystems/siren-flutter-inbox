@@ -460,53 +460,43 @@ class _SirenInboxState extends State<SirenInbox> {
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: widget.theme != null
-          ? AppTheme.customTheme(
-              widget.theme!,
-              isDarkMode: widget.darkMode ?? false,
-            )
-          : (widget.darkMode ?? false
-              ? AppTheme.darkTheme
-              : AppTheme.lightTheme),
-      child: Builder(
-        builder: (context) {
-          final currentTheme = Theme.of(context);
-          return Scaffold(
-            backgroundColor: currentTheme.colorScheme.primary,
-            appBar: SirenAppBar(
-              theme: currentTheme,
-              onClearAllPressed: onBulkDelete,
-              isNonEmptyNotifications: shouldShowClearAllButton(),
-              headerParams: widget.headerParams,
-              styles: widget.customStyles,
-            ),
-            body: InboxBody(
-              currentTheme: currentTheme,
-              isLoading: isLoading,
-              loadingNextPage: loadingNextPage,
-              isError: isError,
-              notifications: notifications,
-              deleteNotification: deleteNotification,
-              markAsRead: _markNotificationAsRead,
-              customCard: widget.customCard,
-              onCardClick: widget.onCardClick,
-              deletingNotificationId: deletingNotificationId,
-              disableAutoMarkAsRead:
-                  widget.cardParams?.disableAutoMarkAsRead ?? false,
-              totalElements: totalElements,
-              onRefresh: onRefresh,
-              customErrorWidget: widget.customErrorWidget,
-              customLoader: widget.customLoader,
-              endReached: endReached,
-              customStyles: widget.customStyles,
-              cardParams: widget.cardParams,
-              scrollController: _scrollController,
-              onEndReached: onEndReached,
-              listEmptyWidget: widget.listEmptyWidget,
-            ),
-          );
-        },
+    final colors = SirenAppTheme.colors(isDarkMode: widget.darkMode ?? false);
+
+    return Scaffold(
+      backgroundColor:
+          widget.theme?.backgroundColor ?? colors.scaffoldBackgroundColor,
+      appBar: SirenAppBar(
+        colors: widget.theme,
+        isDarkMode: widget.darkMode,
+        onClearAllPressed: onBulkDelete,
+        isNonEmptyNotifications: shouldShowClearAllButton(),
+        headerParams: widget.headerParams,
+        styles: widget.customStyles,
+      ),
+      body: InboxBody(
+        colors: widget.theme,
+        isDarkMode: widget.darkMode,
+        isLoading: isLoading,
+        loadingNextPage: loadingNextPage,
+        isError: isError,
+        notifications: notifications,
+        deleteNotification: deleteNotification,
+        markAsRead: _markNotificationAsRead,
+        customCard: widget.customCard,
+        onCardClick: widget.onCardClick,
+        deletingNotificationId: deletingNotificationId,
+        disableAutoMarkAsRead:
+            widget.cardParams?.disableAutoMarkAsRead ?? false,
+        totalElements: totalElements,
+        onRefresh: onRefresh,
+        customErrorWidget: widget.customErrorWidget,
+        customLoader: widget.customLoader,
+        endReached: endReached,
+        customStyles: widget.customStyles,
+        cardParams: widget.cardParams,
+        scrollController: _scrollController,
+        onEndReached: onEndReached,
+        listEmptyWidget: widget.listEmptyWidget,
       ),
     );
   }

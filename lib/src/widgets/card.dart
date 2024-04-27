@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sirenapp_flutter_inbox/src/constants/strings.dart';
 import 'package:sirenapp_flutter_inbox/src/models/notification_model.dart';
 import 'package:sirenapp_flutter_inbox/src/models/ui_models.dart';
+import 'package:sirenapp_flutter_inbox/src/theme/app_colors.dart';
+import 'package:sirenapp_flutter_inbox/src/theme/app_theme.dart';
 import 'package:sirenapp_flutter_inbox/src/utils/common_utils.dart';
 import 'package:sirenapp_flutter_inbox/src/widgets/common/nullable_text.dart';
 
@@ -13,6 +15,8 @@ class CardWidget extends StatefulWidget {
     required this.cardParams,
     required this.styles,
     required this.onDelete,
+    this.colors,
+    this.isDarkMode,
     super.key,
   });
 
@@ -31,6 +35,12 @@ class CardWidget extends StatefulWidget {
   /// Callback function invoked when the card is deleted.
   final void Function(String) onDelete;
 
+  /// Colors to be applied to various elements of the card.
+  final CustomThemeColors? colors;
+
+  /// Flag to check id dark mode colors are to be applied
+  final bool? isDarkMode;
+
   @override
   State<CardWidget> createState() => _CardWidgetState();
 }
@@ -43,7 +53,8 @@ class _CardWidgetState extends State<CardWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Theme.of(context);
+    final defaultColors =
+        SirenAppTheme.colors(isDarkMode: widget.isDarkMode ?? false);
 
     return GestureDetector(
       key: Key('siren-notification-card-${widget.notification.id}'),
@@ -52,25 +63,26 @@ class _CardWidgetState extends State<CardWidget> {
       },
       child: Container(
         decoration: widget.styles?.cardStyle?.cardContainer?.decoration ??
-            _getDefaultContainerDecoration(currentTheme),
+            _getDefaultContainerDecoration(widget.colors, defaultColors),
         padding: widget.styles?.cardStyle?.cardContainer?.padding ??
             const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (!(widget.cardParams.hideAvatar ?? false))
-              _buildDefaultAvatarContainer(currentTheme),
+              _buildDefaultAvatarContainer(widget.colors, defaultColors),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.only(left: 6),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildHeaderText(currentTheme),
-                    _buildSubHeaderText(currentTheme),
-                    _buildBodyText(currentTheme),
+                    _buildHeaderText(widget.colors, defaultColors),
+                    _buildSubHeaderText(widget.colors, defaultColors),
+                    _buildBodyText(widget.colors, defaultColors),
                     _buildFooterRow(
-                      currentTheme,
+                      widget.colors,
+                      defaultColors,
                       widget.styles?.dateIconSize ?? 14,
                     ),
                   ],
@@ -83,33 +95,42 @@ class _CardWidgetState extends State<CardWidget> {
     );
   }
 
-  BorderSide _getDefaultBorderDecoration(ThemeData theme) {
+  BorderSide _getDefaultBorderDecoration(
+    CustomThemeColors? colors,
+    AppColors defaultColors,
+  ) {
     return BorderSide(
-      color: theme.cardTheme.shadowColor ?? theme.colorScheme.surfaceTint,
+      color: colors?.cardColors?.borderColor ?? defaultColors.cardBorderColor,
       width: 0.5,
     );
   }
 
-  BoxDecoration _getDefaultContainerDecoration(ThemeData theme) {
+  BoxDecoration _getDefaultContainerDecoration(
+    CustomThemeColors? colors,
+    AppColors defaultColors,
+  ) {
     return BoxDecoration(
       border: Border(
         left: BorderSide(
           color: widget.notification.isRead
               ? Colors.transparent
-              : theme.colorScheme.secondary,
+              : defaultColors.cardBorderUnread,
           width: 4,
         ),
-        right: _getDefaultBorderDecoration(theme),
-        bottom: _getDefaultBorderDecoration(theme),
+        right: _getDefaultBorderDecoration(colors, defaultColors),
+        bottom: _getDefaultBorderDecoration(colors, defaultColors),
       ),
       color: widget.notification.cardColor ??
           (widget.notification.isRead
-              ? theme.cardTheme.color ?? Colors.transparent
-              : theme.colorScheme.secondaryContainer),
+              ? colors?.cardColors?.background ?? Colors.transparent
+              : defaultColors.cardBackgroundUnread),
     );
   }
 
-  Widget _buildDefaultAvatarContainer(ThemeData theme) {
+  Widget _buildDefaultAvatarContainer(
+    CustomThemeColors? colors,
+    AppColors defaultColors,
+  ) {
     final avatarUrl = widget.notification.message.avatar?.url;
     return GestureDetector(
       key: Key('siren-notification-avatar-${widget.notification.id}'),
@@ -128,13 +149,13 @@ class _CardWidgetState extends State<CardWidget> {
                   avatarUrl != Strings.string_null
               ? NetworkImage(avatarUrl)
               : null,
-          backgroundColor: theme.colorScheme.onSecondary,
+          backgroundColor: defaultColors.avatarBackground,
           child: avatarUrl == null ||
                   avatarUrl.isEmpty ||
                   avatarUrl == Strings.string_null
               ? Icon(
                   Icons.landscape_rounded,
-                  color: theme.colorScheme.onTertiaryContainer,
+                  color: defaultColors.avatarIconColor,
                 )
               : null,
         ),
@@ -142,7 +163,7 @@ class _CardWidgetState extends State<CardWidget> {
     );
   }
 
-  Widget _buildHeaderText(ThemeData theme) {
+  Widget _buildHeaderText(CustomThemeColors? colors, AppColors defaultColors) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -156,8 +177,9 @@ class _CardWidgetState extends State<CardWidget> {
                 TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: theme.cardTheme.surfaceTintColor ??
-                      theme.colorScheme.tertiary,
+                  color: colors?.cardColors?.titleColor ??
+                      colors?.textColor ??
+                      defaultColors.textColor,
                 ),
           ),
         ),
@@ -170,7 +192,8 @@ class _CardWidgetState extends State<CardWidget> {
             onTap: () => widget.onDelete(widget.notification.id),
             child: widget.cardParams.deleteIcon ??
                 _buildDefaultDeleteButton(
-                  theme,
+                  colors,
+                  defaultColors,
                   widget.styles?.deleteIconSize ?? 18,
                 ),
           ),
@@ -179,7 +202,10 @@ class _CardWidgetState extends State<CardWidget> {
     );
   }
 
-  Widget _buildSubHeaderText(ThemeData theme) {
+  Widget _buildSubHeaderText(
+    CustomThemeColors? colors,
+    AppColors defaultColors,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: NullableText(
@@ -188,47 +214,57 @@ class _CardWidgetState extends State<CardWidget> {
             TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: theme.bannerTheme.backgroundColor ??
-                  theme.colorScheme.tertiary,
+              color: colors?.cardColors?.subtitleColor ??
+                  colors?.textColor ??
+                  defaultColors.textColor,
             ),
       ),
     );
   }
 
-  Widget _buildBodyText(ThemeData theme) {
+  Widget _buildBodyText(CustomThemeColors? colors, AppColors defaultColors) {
     return Text(
       widget.notification.message.body ?? '',
       style: widget.styles?.cardStyle?.cardDescription ??
           TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w400,
-            color:
-                theme.dialogTheme.backgroundColor ?? theme.colorScheme.tertiary,
+            color: colors?.cardColors?.descriptionColor ??
+                colors?.textColor ??
+                defaultColors.textColor,
           ),
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
     );
   }
 
-  Widget _buildFooterRow(ThemeData theme, double size) {
+  Widget _buildFooterRow(
+    CustomThemeColors? colors,
+    AppColors defaultColors,
+    double size,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(
         top: 10,
       ),
       child: Container(
-        child: _buildTimestampText(theme, size),
+        child: _buildTimestampText(colors, defaultColors, size),
       ),
     );
   }
 
-  Widget _buildTimestampText(ThemeData theme, double size) {
+  Widget _buildTimestampText(
+    CustomThemeColors? colors,
+    AppColors defaultColors,
+    double size,
+  ) {
     return Row(
       children: [
         Padding(
           padding: const EdgeInsets.only(right: 4),
           child: Icon(
             Icons.access_time_sharp,
-            color: theme.colorScheme.onErrorContainer,
+            color: colors?.timerIcon ?? defaultColors.timerIcon,
             size: size,
           ),
         ),
@@ -240,17 +276,21 @@ class _CardWidgetState extends State<CardWidget> {
               TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w400,
-                color: theme.colorScheme.inversePrimary,
+                color: colors?.dateColor ?? defaultColors.dateColor,
               ),
         ),
       ],
     );
   }
 
-  Widget _buildDefaultDeleteButton(ThemeData theme, double size) {
+  Widget _buildDefaultDeleteButton(
+    CustomThemeColors? colors,
+    AppColors defaultColors,
+    double size,
+  ) {
     return Icon(
       Icons.close,
-      color: theme.colorScheme.errorContainer,
+      color: colors?.deleteIcon ?? defaultColors.deleteIcon,
       size: size,
     );
   }

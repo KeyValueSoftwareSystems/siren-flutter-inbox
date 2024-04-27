@@ -10,7 +10,7 @@ import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
 import 'package:sirenapp_flutter_inbox/src/api/fetch_unviewed_notification_count.dart';
 import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
 import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
-import 'package:sirenapp_flutter_inbox/src/theme/app_theme.dart';
+import 'package:sirenapp_flutter_inbox/src/theme/app_colors.dart';
 
 import 'siren_inbox_test.mocks.dart';
 
@@ -107,9 +107,9 @@ void main() {
         ),
       );
 
-      final primaryColor = AppTheme.darkTheme.colorScheme.primary;
+      final primaryColor = AppColors.darkColorTheme().primary;
 
-      expect(primaryColor, const Color(0xff232326));
+      expect(primaryColor, const Color(0xfffa9874));
     });
 
     testWidgets('Widget disposes controllers on dispose',
