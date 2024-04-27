@@ -53,6 +53,15 @@ void main() {
               },
             ),
             styles: null, // Mock styles
+            colors: CustomThemeColors(
+              cardColors: CardColors(
+                borderColor: Colors.red,
+                background: Colors.blue,
+                titleColor: Colors.yellow,
+                subtitleColor: Colors.brown,
+                descriptionColor: Colors.orange,
+              ),
+            ),
           ),
         ),
       );
@@ -65,6 +74,22 @@ void main() {
     verify(func()).called(1);
     await tester.tap(find.byType(GestureDetector).at(2));
     await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    final textFinder = find.byType(Text).at(0);
+    final textWidget = tester.widget<Text>(textFinder);
+    final textColor = textWidget.style?.color;
+    expect(textColor, equals(Colors.yellow));
+
+    final textFinder2 = find.byType(Text).at(1);
+    final textWidget2 = tester.widget<Text>(textFinder2);
+    final textColor2 = textWidget2.style?.color;
+    expect(textColor2, equals(Colors.brown));
+
+    final textFinder3 = find.byType(Text).at(2);
+    final textWidget3 = tester.widget<Text>(textFinder3);
+    final textColor3 = textWidget3.style?.color;
+    expect(textColor3, equals(Colors.orange));
+
     expect(deletePressed, true);
   });
 }

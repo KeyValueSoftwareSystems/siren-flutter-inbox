@@ -63,7 +63,7 @@ class SirenInbox extends StatefulWidget {
   /// Callback function for handling errors.
   final void Function(SirenErrorType)? onError;
 
-  /// Custom theme colors for the inbox, this focuses on the idea of colorSchemes in flutter theme.
+  /// Custom theme colors for the inbox.
   final CustomThemeColors? theme;
 
   /// Custom styles for the card of each notification.

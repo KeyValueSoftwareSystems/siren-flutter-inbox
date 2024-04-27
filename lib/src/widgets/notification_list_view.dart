@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
+import 'package:sirenapp_flutter_inbox/src/theme/app_theme.dart';
 import 'package:sirenapp_flutter_inbox/src/widgets/card.dart';
 
 class NotificationListView extends StatefulWidget {
@@ -75,9 +76,11 @@ class _NotificationListViewState extends State<NotificationListView> {
 
   @override
   Widget build(BuildContext context) {
+    final defaultColors =
+        SirenAppTheme.colors(isDarkMode: widget.isDarkMode ?? false);
     return RefreshIndicator(
-      color: widget.loadingIndicator ?? Theme.of(context).colorScheme.secondary,
-      backgroundColor: Theme.of(context).colorScheme.primary,
+      color: widget.colors?.loaderColor ?? defaultColors.loadingIndicator,
+      backgroundColor: defaultColors.loadingIndicatorBackground,
       onRefresh: widget.onRefresh,
       child: Semantics(
         label: 'siren-notification-list',
@@ -122,7 +125,7 @@ class _NotificationListViewState extends State<NotificationListView> {
                       child: Center(
                         child: CircularProgressIndicator(
                           color: widget.loadingIndicator ??
-                              Theme.of(context).colorScheme.secondary,
+                              defaultColors.loaderColor,
                         ),
                       ),
                     )

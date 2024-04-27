@@ -116,7 +116,7 @@ class _CardWidgetState extends State<CardWidget> {
         left: BorderSide(
           color: widget.notification.isRead
               ? Colors.transparent
-              : defaultColors.cardBorderUnread,
+              : colors?.primary ?? defaultColors.cardBorderUnread,
           width: 4,
         ),
         right: _getDefaultBorderDecoration(colors, defaultColors),
