@@ -32,7 +32,7 @@ final lightColors = AppColors(
   loaderColor: SirenAppColors.primary200,
   loadingIndicator: SirenAppColors.primary200,
   loadingIndicatorBackground: SirenAppColors.emptyWidgetBgLightTheme,
-  notificationIconColor: SirenAppColors.black100,
+  notificationIconColor: SirenAppColors.emptyWidgetBadgeLight,
   primary: SirenAppColors.primary200,
   scaffoldBackgroundColor: Colors.white,
   skeletonLoaderColor: SirenAppColors.avatarPlaceholderBgLight,

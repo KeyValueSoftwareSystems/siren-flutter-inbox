@@ -21,6 +21,7 @@ class NotificationListView extends StatefulWidget {
     this.cardParams,
     this.loadingIndicator,
     this.isDarkMode,
+    this.colors,
     super.key,
   });
 
@@ -41,6 +42,7 @@ class NotificationListView extends StatefulWidget {
   final CardParams? cardParams;
   final Color? loadingIndicator;
   final bool? isDarkMode;
+  final CustomThemeColors? colors;
 
   @override
   State<NotificationListView> createState() => _NotificationListViewState();
@@ -101,6 +103,7 @@ class _NotificationListViewState extends State<NotificationListView> {
                     styles: widget.customStyles,
                     onDelete: widget.onDelete,
                     isDarkMode: widget.isDarkMode,
+                    colors: widget.colors,
                   );
               return AnimatedOpacity(
                 key: isLastIndex

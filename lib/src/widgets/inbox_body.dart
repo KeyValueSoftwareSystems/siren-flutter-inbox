@@ -102,6 +102,7 @@ class InboxBody extends StatelessWidget {
         decoration: customStyles?.container?.decoration,
         padding: customStyles?.container?.padding,
         child: NotificationListView(
+          colors: colors,
           notifications: notifications,
           isLoading: isLoading,
           endReached: endReached,

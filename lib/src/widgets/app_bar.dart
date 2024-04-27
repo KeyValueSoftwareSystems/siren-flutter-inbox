@@ -80,6 +80,7 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
                               color: colors?.inboxHeaderColors?.titleColor ??
+                                  colors?.textColor ??
                                   defaultColors.appBarTextColor,
                             ),
                       ),

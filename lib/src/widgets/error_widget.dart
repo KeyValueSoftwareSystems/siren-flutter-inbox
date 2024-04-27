@@ -43,7 +43,7 @@ class DefaultErrorWidget extends StatelessWidget {
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w400,
-                color: colors.errorWidgetText1,
+                color: colors.errorWidgetText2,
               ),
               textAlign: TextAlign.center,
             ),

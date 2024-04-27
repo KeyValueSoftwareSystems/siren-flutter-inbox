@@ -16,15 +16,27 @@ class LoaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final defaultColors = SirenAppTheme.colors(isDarkMode: isDarkMode ?? false);
     return customLoader ??
         ListView.builder(
           itemCount: Generics.PAGE_SIZE,
           itemBuilder: (context, index) {
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
-              child: CardLoaderWidget(
-                hideAvatar: hideAvatar,
-                isDarkMode: isDarkMode,
+              child: Container(
+                padding: const EdgeInsets.only(bottom: 5),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: defaultColors.cardBorderColor,
+                      width: 0.25,
+                    ),
+                  ),
+                ),
+                child: CardLoaderWidget(
+                  hideAvatar: hideAvatar,
+                  isDarkMode: isDarkMode,
+                ),
               ),
             );
           },

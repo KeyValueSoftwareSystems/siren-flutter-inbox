@@ -100,7 +100,9 @@ class _CardWidgetState extends State<CardWidget> {
     AppColors defaultColors,
   ) {
     return BorderSide(
-      color: colors?.cardColors?.borderColor ?? defaultColors.cardBorderColor,
+      color: colors?.cardColors?.borderColor ??
+          colors?.borderColor ??
+          defaultColors.cardBorderColor,
       width: 0.5,
     );
   }
@@ -123,7 +125,8 @@ class _CardWidgetState extends State<CardWidget> {
       color: widget.notification.cardColor ??
           (widget.notification.isRead
               ? colors?.cardColors?.background ?? Colors.transparent
-              : defaultColors.cardBackgroundUnread),
+              : colors?.highlightedCardColor ??
+                  defaultColors.cardBackgroundUnread),
     );
   }
 
@@ -276,7 +279,9 @@ class _CardWidgetState extends State<CardWidget> {
               TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w400,
-                color: colors?.dateColor ?? defaultColors.dateColor,
+                color: colors?.dateColor ??
+                    colors?.textColor ??
+                    defaultColors.dateColor,
               ),
         ),
       ],
