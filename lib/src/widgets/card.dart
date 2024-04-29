@@ -38,7 +38,7 @@ class CardWidget extends StatefulWidget {
   /// Colors to be applied to various elements of the card.
   final CustomThemeColors? colors;
 
-  /// Flag to check id dark mode colors are to be applied
+  /// Flag to check if dark mode colors are to be applied
   final bool? isDarkMode;
 
   @override

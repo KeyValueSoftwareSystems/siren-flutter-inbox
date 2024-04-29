@@ -21,6 +21,8 @@ class AppColors {
     required this.clearAllIcon,
     required this.dateColor,
     required this.deleteIcon,
+    required this.emptyScreenDescription,
+    required this.emptyScreenTitle,
     required this.emptyWidgetBackground,
     required this.emptyWidgetBorderColor,
     required this.emptyWidgetIconColor,
@@ -61,6 +63,8 @@ class AppColors {
   Color clearAllIcon;
   Color dateColor;
   Color deleteIcon;
+  Color emptyScreenTitle;
+  Color emptyScreenDescription;
   Color emptyWidgetBackground;
   Color emptyWidgetBorderColor;
   Color emptyWidgetIconColor;

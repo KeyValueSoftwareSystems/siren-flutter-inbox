@@ -32,7 +32,7 @@ class EmptyWidget extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: colors.textColor,
+                color: colors.emptyScreenTitle,
               ),
             ),
             const SizedBox(
@@ -43,7 +43,7 @@ class EmptyWidget extends StatelessWidget {
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w400,
-                color: colors.textColor,
+                color: colors.emptyScreenDescription,
               ),
               textAlign: TextAlign.center,
             ),

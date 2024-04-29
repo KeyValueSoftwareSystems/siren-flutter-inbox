@@ -20,6 +20,8 @@ final darkColors = AppColors(
   clearAllIcon: SirenAppColors.grey500Complementary,
   dateColor: SirenAppColors.grey400,
   deleteIcon: SirenAppColors.grey400Complementary,
+  emptyScreenDescription: SirenAppColors.grey500Complementary,
+  emptyScreenTitle: SirenAppColors.grey700Complementary,
   emptyWidgetBackground: SirenAppColors.emptyWidgetBgDarkTheme,
   emptyWidgetBorderColor: SirenAppColors.emptyWidgetBgDarkTheme,
   emptyWidgetIconColor: SirenAppColors.emptyWidgetBadgeDark,

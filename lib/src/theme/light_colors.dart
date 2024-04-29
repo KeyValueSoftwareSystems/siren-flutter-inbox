@@ -20,6 +20,8 @@ final lightColors = AppColors(
   clearAllIcon: SirenAppColors.grey500,
   dateColor: SirenAppColors.grey500,
   deleteIcon: SirenAppColors.grey400,
+  emptyScreenDescription: SirenAppColors.grey500,
+  emptyScreenTitle: SirenAppColors.grey700,
   emptyWidgetBackground: SirenAppColors.emptyWidgetBgLightTheme,
   emptyWidgetBorderColor: SirenAppColors.emptyWidgetBgLightTheme,
   emptyWidgetIconColor: SirenAppColors.emptyWidgetBellLight,
