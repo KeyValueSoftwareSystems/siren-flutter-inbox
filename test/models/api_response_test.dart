@@ -13,7 +13,6 @@ void main() {
           'pageSize': '10',
           'currentPage': '1',
           'first': 'first',
-          'totalElements': '50',
         },
       };
       final response = ApiResponse.fromJson(json);
@@ -41,7 +40,6 @@ void main() {
         'pageSize': '10',
         'currentPage': '1',
         'first': 'first',
-        'totalElements': '50',
       };
       final meta = MetaResponse.fromJson(json);
 
@@ -50,7 +48,6 @@ void main() {
       expect(meta.pageSize, 10);
       expect(meta.currentPage, 1);
       expect(meta.first, 'first');
-      expect(meta.totalElements, 50);
     });
   });
 

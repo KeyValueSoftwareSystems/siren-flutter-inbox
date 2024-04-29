@@ -18,7 +18,6 @@ class NotificationListView extends StatefulWidget {
     this.customCard,
     this.onCardClick,
     this.deletingNotificationId,
-    this.totalElements,
     this.cardParams,
     this.loadingIndicator,
     this.isDarkMode,
@@ -39,7 +38,6 @@ class NotificationListView extends StatefulWidget {
   final Widget Function(NotificationType)? customCard;
   final void Function(NotificationType)? onCardClick;
   final String? deletingNotificationId;
-  final int? totalElements;
   final CardParams? cardParams;
   final Color? loadingIndicator;
   final bool? isDarkMode;

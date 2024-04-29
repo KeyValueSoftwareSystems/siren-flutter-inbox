@@ -18,7 +18,6 @@ class InboxBody extends StatelessWidget {
     required this.onCardClick,
     required this.deletingNotificationId,
     required this.disableAutoMarkAsRead,
-    required this.totalElements,
     required this.onRefresh,
     required this.endReached,
     required this.onEndReached,
@@ -43,7 +42,6 @@ class InboxBody extends StatelessWidget {
   final void Function(NotificationType)? onCardClick;
   final String? deletingNotificationId;
   final bool disableAutoMarkAsRead;
-  final int totalElements;
   final Future<void> Function() onRefresh;
   final Widget? customErrorWidget;
   final Widget? customLoader;
@@ -118,7 +116,6 @@ class InboxBody extends StatelessWidget {
           onEndReached: onEndReached,
           onRefresh: onRefresh,
           scrollController: scrollController,
-          totalElements: totalElements,
           loadingIndicator:
               colors?.loaderColor ?? defaultColors.loadingIndicator,
         ),

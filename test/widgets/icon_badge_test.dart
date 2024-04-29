@@ -7,10 +7,10 @@ void main() {
   group('IconBadge Widget Test', () {
     testWidgets('Testing with valid parameters', (WidgetTester tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
             body: Stack(
-              children: const [
+              children: [
                 IconBadge(
                   badgeStyle: BadgeStyle(),
                   notificationsCount: 5,
@@ -32,10 +32,10 @@ void main() {
 
     testWidgets('Testing with hideBadge true', (WidgetTester tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
             body: Stack(
-              children: const [
+              children: [
                 IconBadge(
                   badgeStyle: BadgeStyle(),
                   notificationsCount: 5,
@@ -56,10 +56,10 @@ void main() {
     testWidgets('Testing with notificationsCount > 99',
         (WidgetTester tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
             body: Stack(
-              children: const [
+              children: [
                 IconBadge(
                   badgeStyle: BadgeStyle(),
                   notificationsCount: 100,

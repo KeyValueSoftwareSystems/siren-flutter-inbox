@@ -75,11 +75,10 @@ class SirenInbox extends StatefulWidget {
 
 class _SirenInboxState extends State<SirenInbox> {
   bool isLoading = true;
-  bool endReached = false;
+  bool isEndReached = false;
   bool isError = false;
   bool loadingNextPage = false;
   int currentPage = 0;
-  int totalElements = 0;
   String? deletingNotificationId;
   int pageSize = 20;
 
@@ -172,8 +171,7 @@ class _SirenInboxState extends State<SirenInbox> {
       setState(() {
         isLoading = true;
         notifications = [];
-        endReached = false;
-        totalElements = 0;
+        isEndReached = false;
         currentPage = 0;
       });
     }
@@ -210,7 +208,6 @@ class _SirenInboxState extends State<SirenInbox> {
       setState(() {
         notifications
             .removeWhere((notification) => notification.id == notificationId);
-        totalElements = totalElements - 1;
       });
     }
   }
@@ -219,7 +216,6 @@ class _SirenInboxState extends State<SirenInbox> {
     if (mounted) {
       setState(() {
         notifications = [];
-        totalElements = 0;
       });
     }
   }
@@ -272,7 +268,6 @@ class _SirenInboxState extends State<SirenInbox> {
                 );
               }
             }
-            totalElements = totalElements + count;
             newNotifications = [];
           }
         } else if (fetchedNotifications.isError) {
@@ -316,8 +311,6 @@ class _SirenInboxState extends State<SirenInbox> {
         );
         isLoading = false;
         isError = false;
-        totalElements =
-            (fetchedNotifications.data as Iterable<NotificationType>).length;
       });
       fetchNewNotifications();
     } else if (fetchedNotifications.isError) {
@@ -388,11 +381,10 @@ class _SirenInboxState extends State<SirenInbox> {
         setState(() {
           deletingNotificationId = null;
           _deleteById(id);
-          totalElements = totalElements - 1;
         });
       }
       if (notifications.length < pageSize &&
-          notifications.length < totalElements) {
+          notifications.length < Generics.AVERAGE_ITEMS_ON_SCREEN) {
         onEndReached();
       }
     } else if (deletionStatus.isError) {
@@ -401,9 +393,7 @@ class _SirenInboxState extends State<SirenInbox> {
   }
 
   void onEndReached() {
-    if (!isLoading &&
-        !loadingNextPage &&
-        totalElements > notifications.length) {
+    if (!isLoading && !loadingNextPage && !isEndReached) {
       if (mounted) {
         setState(() {
           loadingNextPage = true;
@@ -419,6 +409,8 @@ class _SirenInboxState extends State<SirenInbox> {
           size: pageSize,
         );
         if (fetchedNotifications.isSuccess) {
+          final count =
+              (fetchedNotifications.data as Iterable<NotificationType>).length;
           if (mounted) {
             setState(() {
               notifications.addAll(
@@ -426,7 +418,7 @@ class _SirenInboxState extends State<SirenInbox> {
               );
               isLoading = false;
               loadingNextPage = false;
-              endReached = totalElements == notifications.length;
+              isEndReached = count < pageSize;
             });
           }
         } else if (fetchedNotifications.isError) {
@@ -484,7 +476,7 @@ class _SirenInboxState extends State<SirenInbox> {
         deletingNotificationId: deletingNotificationId,
         disableAutoMarkAsRead:
             widget.cardParams?.disableAutoMarkAsRead ?? false,
-        endReached: endReached,
+        endReached: isEndReached,
         isDarkMode: widget.darkMode,
         isError: isError,
         isLoading: isLoading,
@@ -496,7 +488,6 @@ class _SirenInboxState extends State<SirenInbox> {
         onEndReached: onEndReached,
         onRefresh: onRefresh,
         scrollController: _scrollController,
-        totalElements: totalElements,
       ),
     );
   }

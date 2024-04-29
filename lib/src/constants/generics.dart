@@ -9,6 +9,7 @@ class Generics {
 
   static const int DATA_FETCH_INTERVAL = 5;
   static const int PAGE_SIZE = 20;
+  static const int AVERAGE_ITEMS_ON_SCREEN = 7;
   static const int MAX_RETRIES = 2;
   static const String ENV_PATH = 'packages/sirenapp_flutter_inbox/env';
 
