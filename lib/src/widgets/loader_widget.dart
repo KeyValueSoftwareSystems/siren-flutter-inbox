@@ -1,25 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
+import 'package:sirenapp_flutter_inbox/src/theme/app_theme.dart';
 
 class LoaderWidget extends StatelessWidget {
   const LoaderWidget({
     required this.hideAvatar,
-    super.key,
     this.customLoader,
+    this.isDarkMode,
+    super.key,
   });
 
   final Widget? customLoader;
   final bool hideAvatar;
+  final bool? isDarkMode;
 
   @override
   Widget build(BuildContext context) {
+    final defaultColors = SirenAppTheme.colors(isDarkMode: isDarkMode ?? false);
     return customLoader ??
         ListView.builder(
           itemCount: Generics.PAGE_SIZE,
           itemBuilder: (context, index) {
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
-              child: CardLoaderWidget(hideAvatar: hideAvatar),
+              child: Container(
+                padding: const EdgeInsets.only(bottom: 5),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: defaultColors.cardBorderColor,
+                      width: 0.25,
+                    ),
+                  ),
+                ),
+                child: CardLoaderWidget(
+                  hideAvatar: hideAvatar,
+                  isDarkMode: isDarkMode,
+                ),
+              ),
             );
           },
         );
@@ -29,10 +47,12 @@ class LoaderWidget extends StatelessWidget {
 class CardLoaderWidget extends StatefulWidget {
   const CardLoaderWidget({
     required this.hideAvatar,
+    this.isDarkMode,
     super.key,
   });
 
   final bool hideAvatar;
+  final bool? isDarkMode;
 
   @override
   CardLoaderWidgetState createState() => CardLoaderWidgetState();
@@ -59,7 +79,8 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Theme.of(context);
+    final defaultColors =
+        SirenAppTheme.colors(isDarkMode: widget.isDarkMode ?? false);
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
@@ -72,13 +93,12 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
             Padding(
               padding: const EdgeInsets.only(right: 6, left: 6),
               child: _buildAnimatedWidget(
-                theme: currentTheme,
                 builder: (context, child) => Container(
                   width: 42,
                   height: 42,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: currentTheme.colorScheme.onSecondary
+                    color: defaultColors.skeletonLoaderColor
                         .withOpacity(0.5 + 0.5 * _controller.value),
                   ),
                 ),
@@ -93,11 +113,10 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildAnimatedWidget(
-                    theme: currentTheme,
                     builder: (context, child) => Container(
                       height: 18,
                       decoration: BoxDecoration(
-                        color: currentTheme.colorScheme.onSecondary
+                        color: defaultColors.skeletonLoaderColor
                             .withOpacity(0.5 + 0.5 * _controller.value),
                         borderRadius: BorderRadius.circular(4),
                       ),
@@ -105,11 +124,10 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
                   ),
                   const SizedBox(height: 12),
                   _buildAnimatedWidget(
-                    theme: currentTheme,
                     builder: (context, child) => Container(
                       height: 18,
                       decoration: BoxDecoration(
-                        color: currentTheme.colorScheme.onSecondary
+                        color: defaultColors.skeletonLoaderColor
                             .withOpacity(0.5 + 0.5 * _controller.value),
                         borderRadius: BorderRadius.circular(4),
                       ),
@@ -117,11 +135,10 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
                   ),
                   const SizedBox(height: 12),
                   _buildAnimatedWidget(
-                    theme: currentTheme,
                     builder: (context, child) => Container(
                       height: 18,
                       decoration: BoxDecoration(
-                        color: currentTheme.colorScheme.onSecondary
+                        color: defaultColors.skeletonLoaderColor
                             .withOpacity(0.5 + 0.5 * _controller.value),
                         borderRadius: BorderRadius.circular(4),
                       ),
@@ -131,13 +148,12 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
                   Row(
                     children: [
                       _buildAnimatedWidget(
-                        theme: currentTheme,
                         builder: (context, child) => Container(
                           width: 10,
                           height: 10,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: currentTheme.colorScheme.onSecondary
+                            color: defaultColors.skeletonLoaderColor
                                 .withOpacity(0.5 + 0.5 * _controller.value),
                           ),
                         ),
@@ -145,11 +161,10 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
                       const SizedBox(width: 12),
                       Expanded(
                         child: _buildAnimatedWidget(
-                          theme: currentTheme,
                           builder: (context, child) => Container(
                             height: 12,
                             decoration: BoxDecoration(
-                              color: currentTheme.colorScheme.onSecondary
+                              color: defaultColors.skeletonLoaderColor
                                   .withOpacity(0.5 + 0.5 * _controller.value),
                               borderRadius: BorderRadius.circular(4),
                             ),
@@ -163,12 +178,11 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
             ),
           ),
           _buildAnimatedWidget(
-            theme: currentTheme,
             builder: (context, child) => Container(
               width: 16,
               height: 16,
               decoration: BoxDecoration(
-                color: currentTheme.colorScheme.onSecondary
+                color: defaultColors.skeletonLoaderColor
                     .withOpacity(0.5 + 0.5 * _controller.value),
                 borderRadius: BorderRadius.circular(4),
               ),
@@ -180,7 +194,6 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
   }
 
   Widget _buildAnimatedWidget({
-    required ThemeData theme,
     required Widget Function(BuildContext, Widget?) builder,
   }) {
     return Padding(

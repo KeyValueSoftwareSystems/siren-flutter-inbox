@@ -131,7 +131,7 @@ class CustomThemeColors {
     this.dateColor,
     this.timerIcon,
     this.notificationIconColor,
-    this.refreshIndicatorColor,
+    this.loaderColor,
     this.inboxHeaderColors,
     this.badgeColors,
     this.cardColors,
@@ -168,7 +168,7 @@ class CustomThemeColors {
   final Color? notificationIconColor;
 
   /// The color for refresh indicator in inbox list.
-  final Color? refreshIndicatorColor;
+  final Color? loaderColor;
 
   /// The colors for inbox list card
   final CardColors? cardColors;
@@ -231,15 +231,15 @@ class InboxHeaderColors {
 /// Custom theme colors to configure icon badge
 class BadgeColors {
   BadgeColors({
+    this.backgroundColor,
     this.color,
-    this.textColor,
   });
 
-  /// The icon badge color
-  final Color? color;
+  /// The icon badge background color
+  final Color? backgroundColor;
 
   /// The text color of icon badge
-  final Color? textColor;
+  final Color? color;
 }
 
 /// Properties for configuring the appearance of the notification window app bar.

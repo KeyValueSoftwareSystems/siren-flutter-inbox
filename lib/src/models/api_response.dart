@@ -53,7 +53,6 @@ class MetaResponse {
     required this.pageSize,
     required this.currentPage,
     required this.first,
-    required this.totalElements,
   });
 
   /// Factory method to create MetaResponse from JSON.
@@ -70,9 +69,6 @@ class MetaResponse {
           ? int.tryParse(json?['currentPage'] as String)
           : null,
       first: json?['first'] != null ? (json?['first'] as String) : null,
-      totalElements: json?['totalElements'] != null
-          ? int.tryParse(json?['totalElements'] as String)
-          : null,
     );
   }
 
@@ -90,9 +86,6 @@ class MetaResponse {
 
   /// The ID of the first element.
   final String? first;
-
-  /// The total number of elements.
-  final int? totalElements;
 }
 
 /// Represents details of an API error.

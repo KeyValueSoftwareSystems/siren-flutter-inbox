@@ -17,7 +17,7 @@ class FetchAllNotifications {
   List<NotificationType> convertJsonToNotificationList(
     List<dynamic> dataList,
   ) {
-    return dataList.map((json) {
+    return dataList.map((dynamic json) {
       if (json is Map<String, dynamic>) {
         return NotificationType.fromJson(json);
       }

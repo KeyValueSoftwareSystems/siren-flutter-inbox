@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
+import 'package:sirenapp_flutter_inbox/src/theme/app_theme.dart';
 import 'package:sirenapp_flutter_inbox/src/widgets/empty_widget.dart';
 import 'package:sirenapp_flutter_inbox/src/widgets/error_widget.dart';
 import 'package:sirenapp_flutter_inbox/src/widgets/loader_widget.dart';
@@ -7,7 +8,6 @@ import 'package:sirenapp_flutter_inbox/src/widgets/notification_list_view.dart';
 
 class InboxBody extends StatelessWidget {
   const InboxBody({
-    required this.currentTheme,
     required this.isLoading,
     required this.loadingNextPage,
     required this.isError,
@@ -18,7 +18,6 @@ class InboxBody extends StatelessWidget {
     required this.onCardClick,
     required this.deletingNotificationId,
     required this.disableAutoMarkAsRead,
-    required this.totalElements,
     required this.onRefresh,
     required this.endReached,
     required this.onEndReached,
@@ -28,9 +27,11 @@ class InboxBody extends StatelessWidget {
     this.customStyles,
     this.cardParams,
     this.listEmptyWidget,
+    this.colors,
+    this.isDarkMode,
     super.key,
   });
-  final ThemeData currentTheme;
+  final CustomThemeColors? colors;
   final bool isLoading;
   final bool loadingNextPage;
   final bool isError;
@@ -41,7 +42,6 @@ class InboxBody extends StatelessWidget {
   final void Function(NotificationType)? onCardClick;
   final String? deletingNotificationId;
   final bool disableAutoMarkAsRead;
-  final int totalElements;
   final Future<void> Function() onRefresh;
   final Widget? customErrorWidget;
   final Widget? customLoader;
@@ -51,13 +51,15 @@ class InboxBody extends StatelessWidget {
   final VoidCallback onEndReached;
   final ScrollController scrollController;
   final Widget? listEmptyWidget;
+  final bool? isDarkMode;
 
   @override
   Widget build(BuildContext context) {
+    final defaultColors = SirenAppTheme.colors(isDarkMode: isDarkMode ?? false);
     if (isError) {
       return RefreshIndicator(
-        color: currentTheme.colorScheme.onTertiary,
-        backgroundColor: currentTheme.colorScheme.primary,
+        color: colors?.loaderColor ?? defaultColors.loadingIndicator,
+        backgroundColor: defaultColors.loadingIndicatorBackground,
         onRefresh: onRefresh,
         child: ListView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -70,7 +72,10 @@ class InboxBody extends StatelessWidget {
                 height: MediaQuery.of(context).size.height * 0.75,
                 width: MediaQuery.of(context).size.width,
                 child: Center(
-                  child: customErrorWidget ?? const DefaultErrorWidget(),
+                  child: customErrorWidget ??
+                      DefaultErrorWidget(
+                        isDarkMode: isDarkMode,
+                      ),
                 ),
               ),
             ),
@@ -81,35 +86,38 @@ class InboxBody extends StatelessWidget {
       return LoaderWidget(
         customLoader: customLoader,
         hideAvatar: cardParams?.hideAvatar ?? false,
+        isDarkMode: isDarkMode,
       );
     } else if (notifications.isEmpty) {
       return Semantics(
         label: 'siren-empty-state',
         hint: 'Empty notification list',
         key: const Key('siren-empty-state'),
-        child: listEmptyWidget ?? const EmptyWidget(),
+        child: listEmptyWidget ?? EmptyWidget(isDarkMode: isDarkMode),
       );
     } else {
       return Container(
         decoration: customStyles?.container?.decoration,
         padding: customStyles?.container?.padding,
         child: NotificationListView(
-          notifications: notifications,
-          isLoading: isLoading,
-          endReached: endReached,
-          onRefresh: onRefresh,
-          onEndReached: onEndReached,
-          loadingNextPage: loadingNextPage,
-          customStyles: customStyles,
-          scrollController: scrollController,
-          onDelete: deleteNotification,
-          markAsRead: markAsRead,
-          customCard: customCard,
-          onCardClick: onCardClick,
-          deletingNotificationId: deletingNotificationId,
-          totalElements: totalElements,
+          isDarkMode: isDarkMode,
           cardParams: cardParams,
-          loadingIndicator: currentTheme.colorScheme.onTertiary,
+          colors: colors,
+          customCard: customCard,
+          customStyles: customStyles,
+          deletingNotificationId: deletingNotificationId,
+          endReached: endReached,
+          isLoading: isLoading,
+          loadingNextPage: loadingNextPage,
+          markAsRead: markAsRead,
+          notifications: notifications,
+          onCardClick: onCardClick,
+          onDelete: deleteNotification,
+          onEndReached: onEndReached,
+          onRefresh: onRefresh,
+          scrollController: scrollController,
+          loadingIndicator:
+              colors?.loaderColor ?? defaultColors.loadingIndicator,
         ),
       );
     }

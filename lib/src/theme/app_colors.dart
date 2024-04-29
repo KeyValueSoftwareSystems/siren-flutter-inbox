@@ -1,0 +1,86 @@
+import 'package:flutter/material.dart';
+import 'package:sirenapp_flutter_inbox/src/theme/dark_colors.dart';
+import 'package:sirenapp_flutter_inbox/src/theme/light_colors.dart';
+
+class AppColors {
+  AppColors({
+    required this.appBarActionText,
+    required this.appBarBackIcon,
+    required this.appBarBorderColor,
+    required this.appBarTextColor,
+    required this.avatarBackground,
+    required this.avatarIconColor,
+    required this.backgroundColor,
+    required this.badgeBackgroundColor,
+    required this.badgeTextColor,
+    required this.borderColor,
+    required this.borderDecorationColor,
+    required this.cardBackgroundUnread,
+    required this.cardBorderColor,
+    required this.cardBorderUnread,
+    required this.clearAllIcon,
+    required this.dateColor,
+    required this.deleteIcon,
+    required this.emptyScreenDescription,
+    required this.emptyScreenTitle,
+    required this.emptyWidgetBackground,
+    required this.emptyWidgetBorderColor,
+    required this.emptyWidgetIconColor,
+    required this.emptyWidgetNotificationColor,
+    required this.errorWidgetIconColor,
+    required this.errorWidgetIconContainer,
+    required this.errorWidgetText1,
+    required this.errorWidgetText2,
+    required this.highlightedCardColor,
+    required this.loaderColor,
+    required this.loadingIndicator,
+    required this.loadingIndicatorBackground,
+    required this.notificationIconColor,
+    required this.primary,
+    required this.scaffoldBackgroundColor,
+    required this.skeletonLoaderColor,
+    required this.textColor,
+    required this.timerIcon,
+  });
+  factory AppColors.lightColorTheme() => lightColors;
+
+  factory AppColors.darkColorTheme() => darkColors;
+
+  Color appBarActionText;
+  Color appBarBackIcon;
+  Color appBarBorderColor;
+  Color appBarTextColor;
+  Color avatarBackground;
+  Color avatarIconColor;
+  Color backgroundColor;
+  Color badgeBackgroundColor;
+  Color badgeTextColor;
+  Color borderColor;
+  Color borderDecorationColor;
+  Color cardBackgroundUnread;
+  Color cardBorderColor;
+  Color cardBorderUnread;
+  Color clearAllIcon;
+  Color dateColor;
+  Color deleteIcon;
+  Color emptyScreenTitle;
+  Color emptyScreenDescription;
+  Color emptyWidgetBackground;
+  Color emptyWidgetBorderColor;
+  Color emptyWidgetIconColor;
+  Color emptyWidgetNotificationColor;
+  Color errorWidgetIconColor;
+  Color errorWidgetIconContainer;
+  Color errorWidgetText1;
+  Color errorWidgetText2;
+  Color highlightedCardColor;
+  Color loaderColor;
+  Color loadingIndicator;
+  Color loadingIndicatorBackground;
+  Color notificationIconColor;
+  Color primary;
+  Color scaffoldBackgroundColor;
+  Color skeletonLoaderColor;
+  Color textColor;
+  Color timerIcon;
+}

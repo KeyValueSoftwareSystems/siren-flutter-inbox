@@ -13,7 +13,6 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: InboxBody(
-          currentTheme: ThemeData(),
           isLoading: true,
           loadingNextPage: false,
           isError: false,
@@ -24,7 +23,6 @@ void main() {
           onCardClick: null,
           deletingNotificationId: null,
           disableAutoMarkAsRead: false,
-          totalElements: 0,
           onRefresh: () async {},
           endReached: false,
           onEndReached: () {},
@@ -41,7 +39,6 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: InboxBody(
-          currentTheme: ThemeData(),
           isLoading: false,
           loadingNextPage: false,
           isError: true,
@@ -52,7 +49,6 @@ void main() {
           onCardClick: null,
           deletingNotificationId: null,
           disableAutoMarkAsRead: false,
-          totalElements: 0,
           onRefresh: () async {},
           endReached: false,
           onEndReached: () {},
@@ -90,7 +86,6 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: InboxBody(
-            currentTheme: ThemeData(),
             isLoading: false,
             loadingNextPage: false,
             isError: false,
@@ -101,7 +96,6 @@ void main() {
             onCardClick: null,
             deletingNotificationId: null,
             disableAutoMarkAsRead: false,
-            totalElements: 1,
             onRefresh: () async {},
             endReached: false,
             onEndReached: () {},

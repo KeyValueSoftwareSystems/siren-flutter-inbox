@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:sirenapp_flutter_inbox/src/constants/strings.dart';
+import 'package:sirenapp_flutter_inbox/src/theme/app_colors.dart';
+import 'package:sirenapp_flutter_inbox/src/theme/app_theme.dart';
 
 class EmptyWidget extends StatelessWidget {
-  const EmptyWidget({super.key});
+  const EmptyWidget({
+    this.isDarkMode,
+    super.key,
+  });
+
+  final bool? isDarkMode;
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Theme.of(context);
+    final colors = SirenAppTheme.colors(isDarkMode: isDarkMode ?? false);
 
     return Center(
       child: Padding(
@@ -16,7 +23,7 @@ class EmptyWidget extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildCircle(currentTheme),
+            _buildCircle(colors),
             const SizedBox(
               height: 10,
             ),
@@ -25,7 +32,7 @@ class EmptyWidget extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: currentTheme.colorScheme.tertiary,
+                color: colors.emptyScreenTitle,
               ),
             ),
             const SizedBox(
@@ -36,7 +43,7 @@ class EmptyWidget extends StatelessWidget {
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w400,
-                color: currentTheme.colorScheme.outline,
+                color: colors.emptyScreenDescription,
               ),
               textAlign: TextAlign.center,
             ),
@@ -47,7 +54,7 @@ class EmptyWidget extends StatelessWidget {
   }
 }
 
-Widget _buildCircle(ThemeData theme) {
+Widget _buildCircle(AppColors colors) {
   return Stack(
     alignment: Alignment.center,
     children: [
@@ -56,13 +63,13 @@ Widget _buildCircle(ThemeData theme) {
         height: 160,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: theme.colorScheme.primaryContainer,
+          color: colors.emptyWidgetBackground,
         ),
       ),
       Icon(
         Icons.notifications,
         size: 84,
-        color: theme.colorScheme.shadow,
+        color: colors.emptyWidgetIconColor,
       ),
       Positioned(
         right: 50,
@@ -70,10 +77,10 @@ Widget _buildCircle(ThemeData theme) {
         child: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: theme.colorScheme.surface,
+            color: colors.notificationIconColor,
             shape: BoxShape.circle,
             border: Border.all(
-              color: theme.colorScheme.primaryContainer,
+              color: colors.emptyWidgetBorderColor,
               width: 3,
             ),
           ),

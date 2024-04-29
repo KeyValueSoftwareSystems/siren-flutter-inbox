@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
+import 'package:sirenapp_flutter_inbox/src/theme/app_theme.dart';
 import 'package:sirenapp_flutter_inbox/src/widgets/card.dart';
 
 class NotificationListView extends StatefulWidget {
@@ -17,9 +18,10 @@ class NotificationListView extends StatefulWidget {
     this.customCard,
     this.onCardClick,
     this.deletingNotificationId,
-    this.totalElements,
     this.cardParams,
     this.loadingIndicator,
+    this.isDarkMode,
+    this.colors,
     super.key,
   });
 
@@ -36,9 +38,10 @@ class NotificationListView extends StatefulWidget {
   final Widget Function(NotificationType)? customCard;
   final void Function(NotificationType)? onCardClick;
   final String? deletingNotificationId;
-  final int? totalElements;
   final CardParams? cardParams;
   final Color? loadingIndicator;
+  final bool? isDarkMode;
+  final CustomThemeColors? colors;
 
   @override
   State<NotificationListView> createState() => _NotificationListViewState();
@@ -53,7 +56,7 @@ class _NotificationListViewState extends State<NotificationListView> {
     super.initState();
   }
 
-  void _afterLayout(_) {
+  void _afterLayout(dynamic _) {
     _getPositions();
   }
 
@@ -71,9 +74,11 @@ class _NotificationListViewState extends State<NotificationListView> {
 
   @override
   Widget build(BuildContext context) {
+    final defaultColors =
+        SirenAppTheme.colors(isDarkMode: widget.isDarkMode ?? false);
     return RefreshIndicator(
-      color: widget.loadingIndicator ?? Theme.of(context).colorScheme.secondary,
-      backgroundColor: Theme.of(context).colorScheme.primary,
+      color: widget.colors?.loaderColor ?? defaultColors.loadingIndicator,
+      backgroundColor: defaultColors.loadingIndicatorBackground,
       onRefresh: widget.onRefresh,
       child: Semantics(
         label: 'siren-notification-list',
@@ -87,7 +92,7 @@ class _NotificationListViewState extends State<NotificationListView> {
               final currentNotification = widget.notifications[index];
               final itemWidget = widget.customCard?.call(currentNotification) ??
                   CardWidget(
-                    onTap: (notification) {
+                    onTap: (NotificationType notification) {
                       if (!(widget.cardParams?.disableAutoMarkAsRead ??
                           false)) {
                         widget.markAsRead(currentNotification.id);
@@ -98,6 +103,8 @@ class _NotificationListViewState extends State<NotificationListView> {
                     cardParams: widget.cardParams ?? const CardParams(),
                     styles: widget.customStyles,
                     onDelete: widget.onDelete,
+                    isDarkMode: widget.isDarkMode,
+                    colors: widget.colors,
                   );
               return AnimatedOpacity(
                 key: isLastIndex
@@ -116,7 +123,7 @@ class _NotificationListViewState extends State<NotificationListView> {
                       child: Center(
                         child: CircularProgressIndicator(
                           color: widget.loadingIndicator ??
-                              Theme.of(context).colorScheme.secondary,
+                              defaultColors.loaderColor,
                         ),
                       ),
                     )

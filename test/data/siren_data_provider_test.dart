@@ -52,7 +52,7 @@ void main() {
 
       sirenDataProvider.updateParams(userToken: 'token', recipientId: '123');
 
-      await Future.delayed(
+      await Future<void>.delayed(
         const Duration(seconds: Generics.DATA_FETCH_INTERVAL) *
             (Generics.MAX_RETRIES + 1),
       );

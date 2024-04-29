@@ -63,7 +63,7 @@ class SirenInbox extends StatefulWidget {
   /// Callback function for handling errors.
   final void Function(SirenErrorType)? onError;
 
-  /// Custom theme colors for the inbox, this focuses on the idea of colorSchemes in flutter theme.
+  /// Custom theme colors for the inbox.
   final CustomThemeColors? theme;
 
   /// Custom styles for the card of each notification.
@@ -75,11 +75,10 @@ class SirenInbox extends StatefulWidget {
 
 class _SirenInboxState extends State<SirenInbox> {
   bool isLoading = true;
-  bool endReached = false;
+  bool isEndReached = false;
   bool isError = false;
   bool loadingNextPage = false;
   int currentPage = 0;
-  int totalElements = 0;
   String? deletingNotificationId;
   int pageSize = 20;
 
@@ -172,8 +171,7 @@ class _SirenInboxState extends State<SirenInbox> {
       setState(() {
         isLoading = true;
         notifications = [];
-        endReached = false;
-        totalElements = 0;
+        isEndReached = false;
         currentPage = 0;
       });
     }
@@ -210,7 +208,6 @@ class _SirenInboxState extends State<SirenInbox> {
       setState(() {
         notifications
             .removeWhere((notification) => notification.id == notificationId);
-        totalElements = totalElements - 1;
       });
     }
   }
@@ -219,7 +216,6 @@ class _SirenInboxState extends State<SirenInbox> {
     if (mounted) {
       setState(() {
         notifications = [];
-        totalElements = 0;
       });
     }
   }
@@ -248,7 +244,9 @@ class _SirenInboxState extends State<SirenInbox> {
               : null,
         );
         if (fetchedNotifications.isSuccess) {
-          if ((fetchedNotifications.meta?.totalElements ?? 0) > 0) {
+          final count =
+              (fetchedNotifications.data as Iterable<NotificationType>).length;
+          if (count > 0) {
             unawaited(markAllNotificationsAsViewed());
             newNotifications.addAll(
               fetchedNotifications.data as Iterable<NotificationType>,
@@ -270,8 +268,6 @@ class _SirenInboxState extends State<SirenInbox> {
                 );
               }
             }
-            totalElements =
-                totalElements + (fetchedNotifications.meta?.totalElements ?? 0);
             newNotifications = [];
           }
         } else if (fetchedNotifications.isError) {
@@ -315,7 +311,6 @@ class _SirenInboxState extends State<SirenInbox> {
         );
         isLoading = false;
         isError = false;
-        totalElements = fetchedNotifications.meta?.totalElements ?? 0;
       });
       fetchNewNotifications();
     } else if (fetchedNotifications.isError) {
@@ -374,7 +369,7 @@ class _SirenInboxState extends State<SirenInbox> {
         });
       }
 
-      await Future.delayed(const Duration(milliseconds: 500));
+      await Future<void>.delayed(const Duration(milliseconds: 500));
       SirenDataProvider.instance.inboxController.sink.add(
         StreamResponse(
           deletionStatus,
@@ -386,11 +381,10 @@ class _SirenInboxState extends State<SirenInbox> {
         setState(() {
           deletingNotificationId = null;
           _deleteById(id);
-          totalElements = totalElements - 1;
         });
       }
       if (notifications.length < pageSize &&
-          notifications.length < totalElements) {
+          notifications.length < Generics.AVERAGE_ITEMS_ON_SCREEN) {
         onEndReached();
       }
     } else if (deletionStatus.isError) {
@@ -399,9 +393,7 @@ class _SirenInboxState extends State<SirenInbox> {
   }
 
   void onEndReached() {
-    if (!isLoading &&
-        !loadingNextPage &&
-        totalElements > notifications.length) {
+    if (!isLoading && !loadingNextPage && !isEndReached) {
       if (mounted) {
         setState(() {
           loadingNextPage = true;
@@ -417,6 +409,8 @@ class _SirenInboxState extends State<SirenInbox> {
           size: pageSize,
         );
         if (fetchedNotifications.isSuccess) {
+          final count =
+              (fetchedNotifications.data as Iterable<NotificationType>).length;
           if (mounted) {
             setState(() {
               notifications.addAll(
@@ -424,7 +418,7 @@ class _SirenInboxState extends State<SirenInbox> {
               );
               isLoading = false;
               loadingNextPage = false;
-              endReached = totalElements == notifications.length;
+              isEndReached = count < pageSize;
             });
           }
         } else if (fetchedNotifications.isError) {
@@ -458,53 +452,42 @@ class _SirenInboxState extends State<SirenInbox> {
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: widget.theme != null
-          ? AppTheme.customTheme(
-              widget.theme!,
-              isDarkMode: widget.darkMode ?? false,
-            )
-          : (widget.darkMode ?? false
-              ? AppTheme.darkTheme
-              : AppTheme.lightTheme),
-      child: Builder(
-        builder: (context) {
-          final currentTheme = Theme.of(context);
-          return Scaffold(
-            backgroundColor: currentTheme.colorScheme.primary,
-            appBar: SirenAppBar(
-              theme: currentTheme,
-              onClearAllPressed: onBulkDelete,
-              isNonEmptyNotifications: shouldShowClearAllButton(),
-              headerParams: widget.headerParams,
-              styles: widget.customStyles,
-            ),
-            body: InboxBody(
-              currentTheme: currentTheme,
-              isLoading: isLoading,
-              loadingNextPage: loadingNextPage,
-              isError: isError,
-              notifications: notifications,
-              deleteNotification: deleteNotification,
-              markAsRead: _markNotificationAsRead,
-              customCard: widget.customCard,
-              onCardClick: widget.onCardClick,
-              deletingNotificationId: deletingNotificationId,
-              disableAutoMarkAsRead:
-                  widget.cardParams?.disableAutoMarkAsRead ?? false,
-              totalElements: totalElements,
-              onRefresh: onRefresh,
-              customErrorWidget: widget.customErrorWidget,
-              customLoader: widget.customLoader,
-              endReached: endReached,
-              customStyles: widget.customStyles,
-              cardParams: widget.cardParams,
-              scrollController: _scrollController,
-              onEndReached: onEndReached,
-              listEmptyWidget: widget.listEmptyWidget,
-            ),
-          );
-        },
+    final colors = SirenAppTheme.colors(isDarkMode: widget.darkMode ?? false);
+
+    return Scaffold(
+      backgroundColor:
+          widget.theme?.backgroundColor ?? colors.scaffoldBackgroundColor,
+      appBar: SirenAppBar(
+        colors: widget.theme,
+        isDarkMode: widget.darkMode,
+        onClearAllPressed: onBulkDelete,
+        isNonEmptyNotifications: shouldShowClearAllButton(),
+        headerParams: widget.headerParams,
+        styles: widget.customStyles,
+      ),
+      body: InboxBody(
+        cardParams: widget.cardParams,
+        colors: widget.theme,
+        customCard: widget.customCard,
+        customErrorWidget: widget.customErrorWidget,
+        customLoader: widget.customLoader,
+        customStyles: widget.customStyles,
+        deleteNotification: deleteNotification,
+        deletingNotificationId: deletingNotificationId,
+        disableAutoMarkAsRead:
+            widget.cardParams?.disableAutoMarkAsRead ?? false,
+        endReached: isEndReached,
+        isDarkMode: widget.darkMode,
+        isError: isError,
+        isLoading: isLoading,
+        listEmptyWidget: widget.listEmptyWidget,
+        loadingNextPage: loadingNextPage,
+        markAsRead: _markNotificationAsRead,
+        notifications: notifications,
+        onCardClick: widget.onCardClick,
+        onEndReached: onEndReached,
+        onRefresh: onRefresh,
+        scrollController: _scrollController,
       ),
     );
   }
