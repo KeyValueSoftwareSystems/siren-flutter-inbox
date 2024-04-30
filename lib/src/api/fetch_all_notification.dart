@@ -1,5 +1,6 @@
 import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
 import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
+import 'package:sirenapp_flutter_inbox/src/errors/errors.dart';
 import 'package:sirenapp_flutter_inbox/src/models/api_response.dart';
 import 'package:sirenapp_flutter_inbox/src/models/notification_model.dart';
 import 'package:sirenapp_flutter_inbox/src/services/api_client.dart';
@@ -33,7 +34,7 @@ class FetchAllNotifications {
     String? end,
   }) async {
     final result = ApiResponse()..isLoading = true;
-    var apiError = Generics.notificationFetchFailedError;
+    var apiError = Errors.notificationFetchFailedError;
 
     // Manually construct query parameters
     final queryParams = {
@@ -58,7 +59,7 @@ class FetchAllNotifications {
         ..isLoading = false
         ..isError = true
         ..data = null
-        ..rawResponse = Generics.rawResponseError
+        ..rawResponse = Errors.rawResponseError
         ..error = apiError;
       return result;
     }
@@ -85,7 +86,7 @@ class FetchAllNotifications {
         ..isSuccess = false
         ..isError = true
         ..rawResponse = apiResponse
-        ..error = Generics.defaultError;
+        ..error = Errors.defaultError;
     }
 
     return result;

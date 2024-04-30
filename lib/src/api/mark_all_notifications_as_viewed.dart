@@ -1,5 +1,6 @@
 import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
 import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
+import 'package:sirenapp_flutter_inbox/src/errors/errors.dart';
 import 'package:sirenapp_flutter_inbox/src/models/api_response.dart';
 import 'package:sirenapp_flutter_inbox/src/services/api_client.dart';
 import 'package:sirenapp_flutter_inbox/src/services/api_provider.dart';
@@ -18,7 +19,7 @@ class MarkAllNotificationsAsViewed {
   }) async {
     final api = ApiClient(apiProvider());
     final result = ApiResponse()..isLoading;
-    var apiError = Generics.markAllAsViewedError;
+    var apiError = Errors.markAllAsViewedError;
 
     final data = {
       'lastOpenedAt': untilDate,
@@ -30,7 +31,7 @@ class MarkAllNotificationsAsViewed {
         ..isLoading = false
         ..isError = true
         ..data = null
-        ..rawResponse = Generics.rawResponseError
+        ..rawResponse = Errors.rawResponseError
         ..error = apiError;
       return result;
     }
@@ -53,7 +54,7 @@ class MarkAllNotificationsAsViewed {
         ..isSuccess = false
         ..isError = true
         ..rawResponse = apiResponse
-        ..error = Generics.defaultError;
+        ..error = Errors.defaultError;
     }
 
     return result;

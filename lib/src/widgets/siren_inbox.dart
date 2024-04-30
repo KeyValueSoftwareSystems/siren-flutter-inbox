@@ -10,6 +10,7 @@ import 'package:sirenapp_flutter_inbox/src/api/notifications_bulk_update.dart';
 import 'package:sirenapp_flutter_inbox/src/api/read_notification_by_id.dart';
 import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
 import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
+import 'package:sirenapp_flutter_inbox/src/errors/errors.dart';
 import 'package:sirenapp_flutter_inbox/src/theme/app_theme.dart';
 import 'package:sirenapp_flutter_inbox/src/utils/common_utils.dart';
 import 'package:sirenapp_flutter_inbox/src/widgets/app_bar.dart';
@@ -117,7 +118,7 @@ class _SirenInboxState extends State<SirenInbox> {
     } else if (SirenDataProvider.instance.tokenVerificationStatus ==
             Status.FAILED ||
         !SirenDataProvider.instance.isProviderInitialized) {
-      widget.onError?.call(Generics.outsideSirenContextError);
+      widget.onError?.call(Errors.outsideSirenContextError);
       if (mounted) {
         setState(() {
           isError = true;

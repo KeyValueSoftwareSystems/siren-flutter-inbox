@@ -1,5 +1,6 @@
 import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
 import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
+import 'package:sirenapp_flutter_inbox/src/errors/errors.dart';
 import 'package:sirenapp_flutter_inbox/src/models/api_response.dart';
 import 'package:sirenapp_flutter_inbox/src/services/api_client.dart';
 import 'package:sirenapp_flutter_inbox/src/services/api_provider.dart';
@@ -17,7 +18,7 @@ class ReadNotificationById {
     required String notificationId,
   }) async {
     final result = ApiResponse()..isLoading = true;
-    var apiError = Generics.markAsReadFailedError;
+    var apiError = Errors.markAsReadFailedError;
 
     if (SirenDataProvider.instance.tokenVerificationStatus != Status.SUCCESS) {
       apiError = SirenDataProvider.instance.getVerificationErrorType();
@@ -25,7 +26,7 @@ class ReadNotificationById {
         ..isLoading = false
         ..isError = true
         ..data = null
-        ..rawResponse = Generics.rawResponseError
+        ..rawResponse = Errors.rawResponseError
         ..error = apiError;
       return result;
     }
@@ -50,7 +51,7 @@ class ReadNotificationById {
         ..isSuccess = false
         ..isError = true
         ..rawResponse = apiResponse
-        ..error = Generics.defaultError;
+        ..error = Errors.defaultError;
     }
     return result;
   }

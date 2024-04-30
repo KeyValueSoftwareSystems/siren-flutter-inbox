@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
 import 'package:sirenapp_flutter_inbox/src/api/verify_token.dart';
 import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
+import 'package:sirenapp_flutter_inbox/src/errors/errors.dart';
 import 'package:sirenapp_flutter_inbox/src/utils/common_utils.dart';
 
 /// Singleton class responsible for providing data to the Siren Inbox and Icon.
@@ -74,20 +75,7 @@ class SirenDataProvider {
     if (_tokenVerificationResponse.isSuccess) {
       _retryCount = 0;
       _tokenVerificationStatus = _tokenVerificationResponse.data as Status;
-      SirenDataProvider.instance.iconController.sink.add(
-        StreamResponse(
-          _tokenVerificationResponse,
-          UpdateEvents.TOKEN_VERIFIED,
-          '',
-        ),
-      );
-      SirenDataProvider.instance.inboxController.sink.add(
-        StreamResponse(
-          _tokenVerificationResponse,
-          UpdateEvents.TOKEN_VERIFIED,
-          '',
-        ),
-      );
+      triggerEvent(UpdateEvents.TOKEN_VERIFIED);
     } else {
       if (_retryCount < Generics.MAX_RETRIES &&
           _tokenVerificationStatus != Status.SUCCESS) {
@@ -96,7 +84,7 @@ class SirenDataProvider {
             SirenDataProvider.instance.recipientId.isEmpty) {
           _retryCount = Generics.MAX_RETRIES;
           _tokenVerificationStatus = Status.INVALID_CREDENTIALS;
-          triggerError();
+          triggerEvent(UpdateEvents.SHOW_ERROR);
           return;
         }
         Future.delayed(
@@ -105,39 +93,40 @@ class SirenDataProvider {
         );
       } else if (_retryCount >= Generics.MAX_RETRIES) {
         _tokenVerificationStatus = Status.FAILED;
-        triggerError();
+        triggerEvent(UpdateEvents.SHOW_ERROR);
       }
     }
   }
 
-  void triggerError() {
+  void triggerEvent(UpdateEvents event) {
     SirenDataProvider.instance.inboxController.sink.add(
       StreamResponse(
         _tokenVerificationResponse,
-        UpdateEvents.SHOW_ERROR,
+        event,
         '',
       ),
     );
     SirenDataProvider.instance.iconController.sink.add(
       StreamResponse(
         _tokenVerificationResponse,
-        UpdateEvents.SHOW_ERROR,
+        event,
         '',
       ),
     );
   }
 
+  /// Return error code based on the token verification status value
   SirenErrorType getVerificationErrorType() {
     if (_tokenVerificationStatus == Status.PENDING) {
-      return Generics.outsideSirenContextError;
+      return Errors.outsideSirenContextError;
     } else if (_tokenVerificationStatus == Status.IN_PROGRESS) {
-      return Generics.authenticationPending;
+      return Errors.authenticationPending;
     } else if (_tokenVerificationStatus == Status.FAILED) {
-      return Generics.unauthorizedOperationError;
+      return Errors.unauthorizedOperationError;
     } else if (_tokenVerificationStatus == Status.INVALID_CREDENTIALS) {
-      return Generics.invalidCredentialsError;
+      return Errors.invalidCredentialsError;
     }
-    return Generics.authenticationFailed;
+    return Errors.authenticationFailed;
   }
 
   /// Disposes the icon controller.

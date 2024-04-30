@@ -1,5 +1,6 @@
 import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
 import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
+import 'package:sirenapp_flutter_inbox/src/errors/errors.dart';
 import 'package:sirenapp_flutter_inbox/src/models/api_response.dart';
 import 'package:sirenapp_flutter_inbox/src/services/api_client.dart';
 import 'package:sirenapp_flutter_inbox/src/services/api_provider.dart';
@@ -24,16 +25,16 @@ class VerifyToken {
 
   Future<ApiResponse> verifyToken() async {
     final result = ApiResponse()..isLoading = true;
-    var apiError = Generics.authenticationFailed;
+    var apiError = Errors.authenticationFailed;
 
     if (SirenDataProvider.instance.userToken.isEmpty ||
         SirenDataProvider.instance.recipientId.isEmpty) {
-      apiError = Generics.invalidCredentialsError;
+      apiError = Errors.invalidCredentialsError;
       result
         ..isLoading = false
         ..isError = true
         ..data = null
-        ..rawResponse = Generics.rawResponseError
+        ..rawResponse = Errors.rawResponseError
         ..error = apiError;
       return result;
     }
@@ -58,7 +59,7 @@ class VerifyToken {
         ..isSuccess = false
         ..isError = true
         ..data = Status.FAILED
-        ..error = Generics.defaultError;
+        ..error = Errors.defaultError;
     }
 
     return result;
