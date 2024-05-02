@@ -10,6 +10,8 @@ class CardParams {
     this.deleteIcon,
     this.hideDelete,
     this.onAvatarClick,
+    this.hideMediaThumbnail,
+    this.onMediaThumbnailClick,
   });
 
   /// Determines whether to hide the avatar in the notification card in Siren inbox.
@@ -26,6 +28,12 @@ class CardParams {
 
   /// Callback function when a notification card is clicked.
   final void Function(NotificationType)? onAvatarClick;
+
+  /// The flag to show media thumbnail
+  final bool? hideMediaThumbnail;
+
+  /// Callback function when a thumbnail media is clicked.
+  final void Function(NotificationType)? onMediaThumbnailClick;
 }
 
 /// Customizable style for the Siren notification icon.

@@ -24,6 +24,7 @@ void main() {
         body: 'Test Body',
         channel: 'Test Channel',
         actionUrl: 'Test Action Url',
+        thumbnailUrl: 'https://picsum.photos/200/300',
         avatar: AvatarData(
           altText: 'Test alt text',
           url: 'https://picsum.photos/200/300',
@@ -36,6 +37,7 @@ void main() {
     );
 
     var deletePressed = false;
+    var thumbnailPressed = false;
     await mockNetworkImagesFor(() async {
       await tester.pumpWidget(
         MaterialApp(
@@ -48,6 +50,10 @@ void main() {
             cardParams: CardParams(
               hideAvatar: false,
               hideDelete: false,
+              hideMediaThumbnail: false,
+              onMediaThumbnailClick: (NotificationType notification) {
+                thumbnailPressed = true;
+              },
               onAvatarClick: (notification) {
                 func();
               },
@@ -74,6 +80,10 @@ void main() {
     verify(func()).called(1);
     await tester.tap(find.byType(GestureDetector).at(2));
     await tester.pumpAndSettle(const Duration(seconds: 1));
+
+    await tester.tap(find.byType(GestureDetector).last);
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    expect(thumbnailPressed, true);
 
     final textFinder = find.byType(Text).at(0);
     final textWidget = tester.widget<Text>(textFinder);
