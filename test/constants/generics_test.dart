@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
+import 'package:sirenapp_flutter_inbox/src/errors/errors.dart';
 
 void main() {
   group('Generics', () {
@@ -10,10 +11,10 @@ void main() {
       expect(Generics.PAGE_SIZE, 20);
       expect(Generics.MAX_RETRIES, 2);
       expect(Generics.ENV_PATH, 'packages/sirenapp_flutter_inbox/env');
-      expect(Generics.defaultError.code, ErrorCodes.API_ERROR.name);
-      expect(Generics.defaultError.type, 'ERROR');
+      expect(Errors.defaultError.code, ErrorCodes.API_ERROR.name);
+      expect(Errors.defaultError.type, 'ERROR');
       expect(
-        Generics.defaultError.message,
+        Errors.defaultError.message,
         'Something went wrong',
       );
     });

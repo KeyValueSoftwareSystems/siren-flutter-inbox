@@ -6,6 +6,7 @@ import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
 import 'package:sirenapp_flutter_inbox/src/api/fetch_unviewed_notification_count.dart';
 import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
 import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
+import 'package:sirenapp_flutter_inbox/src/errors/errors.dart';
 import 'package:sirenapp_flutter_inbox/src/theme/app_theme.dart';
 import 'package:sirenapp_flutter_inbox/src/widgets/icon_badge.dart';
 
@@ -162,7 +163,7 @@ class _SirenInboxIconState extends State<SirenInboxIcon> {
         widget.onError?.call(response.error ?? SirenErrorType());
       }
     } else if (!SirenDataProvider.instance.isProviderInitialized) {
-      widget.onError?.call(Generics.outsideSirenContextError);
+      widget.onError?.call(Errors.outsideSirenContextError);
     }
   }
 
