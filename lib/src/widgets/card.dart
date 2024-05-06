@@ -6,6 +6,7 @@ import 'package:sirenapp_flutter_inbox/src/theme/app_colors.dart';
 import 'package:sirenapp_flutter_inbox/src/theme/app_theme.dart';
 import 'package:sirenapp_flutter_inbox/src/utils/common_utils.dart';
 import 'package:sirenapp_flutter_inbox/src/widgets/common/nullable_text.dart';
+import 'package:sirenapp_flutter_inbox/src/widgets/media_error_widget.dart';
 
 class CardWidget extends StatefulWidget {
   /// Widget for displaying a notification card.
@@ -277,10 +278,8 @@ class _CardWidgetState extends State<CardWidget> {
                   Object exception,
                   StackTrace? stackTrace,
                 ) {
-                  return Icon(
-                    Icons.landscape_rounded,
-                    color: defaultColors.avatarIconColor,
-                    size: 40,
+                  return MediaErrorWidget(
+                    isDarkMode: widget.isDarkMode ?? false,
                   );
                 },
               ),
