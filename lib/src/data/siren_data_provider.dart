@@ -89,7 +89,11 @@ class SirenDataProvider {
         }
         Future.delayed(
           const Duration(seconds: Generics.DATA_FETCH_INTERVAL),
-          _verifyToken,
+          () {
+            if (_tokenVerificationStatus != Status.SUCCESS) {
+              _verifyToken();
+            }
+          },
         );
       } else if (_retryCount >= Generics.MAX_RETRIES) {
         _tokenVerificationStatus = Status.FAILED;
