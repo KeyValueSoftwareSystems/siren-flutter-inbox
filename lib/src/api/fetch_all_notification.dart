@@ -12,9 +12,6 @@ class FetchAllNotifications {
       FetchAllNotifications._internal();
   final ApiClient api = ApiClient(apiProvider());
 
-  static final String _apiPath =
-      '${Generics.V2}${Generics.BASE_URL}${SirenDataProvider.instance.recipientId}/notifications';
-
   List<NotificationType> convertJsonToNotificationList(
     List<dynamic> dataList,
   ) {
@@ -33,6 +30,8 @@ class FetchAllNotifications {
     String? start,
     String? end,
   }) async {
+    final _apiPath =
+        '${Generics.V2}${Generics.BASE_URL}${SirenDataProvider.instance.recipientId}/notifications';
     final result = ApiResponse()..isLoading = true;
     var apiError = Errors.notificationFetchFailedError;
 

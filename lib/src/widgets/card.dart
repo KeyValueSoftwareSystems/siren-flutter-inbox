@@ -6,6 +6,7 @@ import 'package:sirenapp_flutter_inbox/src/theme/app_colors.dart';
 import 'package:sirenapp_flutter_inbox/src/theme/app_theme.dart';
 import 'package:sirenapp_flutter_inbox/src/utils/common_utils.dart';
 import 'package:sirenapp_flutter_inbox/src/widgets/common/nullable_text.dart';
+import 'package:sirenapp_flutter_inbox/src/widgets/media_error_widget.dart';
 
 class CardWidget extends StatefulWidget {
   /// Widget for displaying a notification card.
@@ -55,7 +56,7 @@ class _CardWidgetState extends State<CardWidget> {
   Widget build(BuildContext context) {
     final defaultColors =
         SirenAppTheme.colors(isDarkMode: widget.isDarkMode ?? false);
-
+    final thumbnailUrl = widget.notification.message.thumbnailUrl ?? '';
     return GestureDetector(
       key: Key('siren-notification-card-${widget.notification.id}'),
       onTap: () {
@@ -80,6 +81,10 @@ class _CardWidgetState extends State<CardWidget> {
                     _buildHeaderText(widget.colors, defaultColors),
                     _buildSubHeaderText(widget.colors, defaultColors),
                     _buildBodyText(widget.colors, defaultColors),
+                    if (thumbnailUrl.isNotEmpty &&
+                        thumbnailUrl != Strings.string_null &&
+                        !(widget.cardParams.hideMediaThumbnail ?? false))
+                      _buildMediaContent(defaultColors, thumbnailUrl),
                     _buildFooterRow(
                       widget.colors,
                       defaultColors,
@@ -238,6 +243,50 @@ class _CardWidgetState extends State<CardWidget> {
           ),
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
+    );
+  }
+
+  Widget _buildMediaContent(AppColors defaultColors, String url) {
+    return Column(
+      children: [
+        const SizedBox(
+          height: 10,
+        ),
+        GestureDetector(
+          onTap: () {
+            if (widget.cardParams.onMediaThumbnailClick != null) {
+              widget.cardParams.onMediaThumbnailClick
+                  ?.call(widget.notification);
+            }
+          },
+          child: Container(
+            height: 140,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(6),
+              color: defaultColors.avatarBackground,
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(6),
+              child: Image.network(
+                url,
+                height: 140,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                errorBuilder: (
+                  _,
+                  Object exception,
+                  StackTrace? stackTrace,
+                ) {
+                  return MediaErrorWidget(
+                    isDarkMode: widget.isDarkMode ?? false,
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 

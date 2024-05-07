@@ -59,6 +59,7 @@ class MessageData {
     required this.actionUrl,
     required this.avatar,
     required this.additionalData,
+    this.thumbnailUrl,
     this.subHeader,
   });
 
@@ -73,6 +74,9 @@ class MessageData {
       avatar: json?['avatar'] != null
           ? AvatarData.fromJson(json?['avatar'] as Map<String, dynamic>)
           : null,
+      thumbnailUrl: json?['thumbnailUrl'] != null
+          ? (json?['thumbnailUrl'] as String?)
+          : '',
       additionalData: json?['additionalData'] as String?,
     );
   }
@@ -97,6 +101,9 @@ class MessageData {
 
   /// Additional data related to the message.
   final String? additionalData;
+
+  /// The thumbnail URL associated with the message to display
+  final String? thumbnailUrl;
 }
 
 /// Class representing the data structure of an avatar.

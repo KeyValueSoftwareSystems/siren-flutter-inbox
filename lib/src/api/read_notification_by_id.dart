@@ -11,15 +11,13 @@ class ReadNotificationById {
 
   final ApiClient api = ApiClient(apiProvider());
 
-  static final String _apiPath =
-      '${Generics.V2}${Generics.BASE_URL}${SirenDataProvider.instance.recipientId}/notifications';
-
   Future<ApiResponse> readNotificationById({
     required String notificationId,
   }) async {
     final result = ApiResponse()..isLoading = true;
     var apiError = Errors.markAsReadFailedError;
-
+    final _apiPath =
+        '${Generics.V2}${Generics.BASE_URL}${SirenDataProvider.instance.recipientId}/notifications';
     if (SirenDataProvider.instance.tokenVerificationStatus != Status.SUCCESS) {
       apiError = SirenDataProvider.instance.getVerificationErrorType();
       result
