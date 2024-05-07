@@ -19,12 +19,11 @@ class DeleteNotificationById {
 
   final ApiClient api = ApiClient(apiProvider());
 
-  static final String _apiPath =
-      '${Generics.V2}${Generics.BASE_URL}${SirenDataProvider.instance.recipientId}/notifications';
-
   Future<ApiResponse> deleteNotificationById({
     required String notificationId,
   }) async {
+    final _apiPath =
+        '${Generics.V2}${Generics.BASE_URL}${SirenDataProvider.instance.recipientId}/notifications';
     final result = ApiResponse()..isLoading = true;
     var apiError = Errors.deleteFailedError;
 
