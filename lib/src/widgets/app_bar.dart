@@ -107,7 +107,7 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                               padding: const EdgeInsets.only(right: 4),
                               child: Icon(
                                 Icons.clear_all,
-                                size: styles?.clearAllIconSize ?? 24,
+                                size: styles?.clearAllIconStyle?.size ?? 24,
                                 color: colors?.clearAllIcon ??
                                     defaultColors.appBarActionText,
                               ),

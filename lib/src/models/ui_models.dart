@@ -95,9 +95,9 @@ class CustomStyles {
     this.appBarStyle,
     this.notificationIconStyle,
     this.badgeStyle,
-    this.deleteIconSize,
-    this.dateIconSize,
-    this.clearAllIconSize,
+    this.timerIconStyle,
+    this.deleteIconStyle,
+    this.clearAllIconStyle,
   });
 
   /// The decoration for the Siren inbox list.
@@ -115,14 +115,41 @@ class CustomStyles {
   /// The style for the notification icon badge.
   final BadgeStyle? badgeStyle;
 
-  /// Size of delete icon in inbox list card
-  final double? deleteIconSize;
+  /// Style of delete icon in inbox list card
+  final TimerIconStyle? timerIconStyle;
 
-  /// Size of date icon in inbox list card
-  final double? dateIconSize;
+  /// Style of delete icon in inbox list card
+  final DeleteIconStyle? deleteIconStyle;
+
+  /// Style of clear all icon in inbox default header
+  final ClearAllIconStyle? clearAllIconStyle;
+}
+
+class TimerIconStyle {
+  TimerIconStyle({
+    this.size,
+  });
+
+  /// Size of timer icon in inbox list card
+  final double? size;
+}
+
+class DeleteIconStyle {
+  DeleteIconStyle({
+    this.size,
+  });
+
+  /// Size of delete icon in inbox list card
+  final double? size;
+}
+
+class ClearAllIconStyle {
+  ClearAllIconStyle({
+    this.size,
+  });
 
   /// Size of clear all icon in inbox default header
-  final double? clearAllIconSize;
+  final double? size;
 }
 
 /// Custom theme colors to configure the appearance of UI elements.

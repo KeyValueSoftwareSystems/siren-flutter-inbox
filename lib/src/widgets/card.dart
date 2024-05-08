@@ -88,7 +88,7 @@ class _CardWidgetState extends State<CardWidget> {
                     _buildFooterRow(
                       widget.colors,
                       defaultColors,
-                      widget.styles?.dateIconSize ?? 14,
+                      widget.styles?.timerIconStyle?.size ?? 14,
                     ),
                   ],
                 ),
@@ -202,7 +202,7 @@ class _CardWidgetState extends State<CardWidget> {
                 _buildDefaultDeleteButton(
                   colors,
                   defaultColors,
-                  widget.styles?.deleteIconSize ?? 18,
+                  widget.styles?.deleteIconStyle?.size ?? 18,
                 ),
           ),
         ],
