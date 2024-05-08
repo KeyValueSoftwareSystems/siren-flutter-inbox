@@ -157,14 +157,14 @@ customStyles: CustomStyles(
             dateStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 avatarSize: 30,
         ),
-        appBarStyle: InboxHeaderStyle(
-            headerTextStyle:
-            TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
-                  titlePadding: EdgeInsets.symmetric(horizontal: 30),
-            borderWidth: 5),
-        dateIconSize: 30,
-        deleteIconSize: 30,
-        clearAllIconSize: 40
+    appBarStyle: InboxHeaderStyle(
+        headerTextStyle:
+        TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
+                titlePadding: EdgeInsets.symmetric(horizontal: 30),
+        borderWidth: 5),
+    timerIconStyle: TimerIconStyle(size: 30),
+    deleteIconStyle: DeleteIconStyle(size: 30),
+    clearAllIconStyle: ClearAllIconStyle(size: 30),
 ),
 ```
 
