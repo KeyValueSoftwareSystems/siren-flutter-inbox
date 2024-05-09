@@ -17,14 +17,11 @@ void main() {
         ),
       );
 
-      // Verify that EmptyWidget is rendered
       expect(find.byType(EmptyWidget), findsOneWidget);
 
-      // Verify the texts
       expect(find.text(Strings.empty_title), findsOneWidget);
       expect(find.text(Strings.empty_desc), findsOneWidget);
 
-      // Verify the circle widget
       expect(find.byType(Stack), findsOneWidget);
       expect(find.byType(Icon), findsOneWidget);
       expect(find.text('0'), findsOneWidget);
@@ -37,9 +34,7 @@ void main() {
             builder: (context) {
               final theme = Theme.of(context);
               return MaterialApp(
-                theme: theme.copyWith(
-                    // Define your tertiary and outline colors here if needed
-                    ),
+                theme: theme.copyWith(),
                 home: const EmptyWidget(),
               );
             },

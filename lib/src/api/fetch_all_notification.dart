@@ -1,5 +1,6 @@
 import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
 import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
+import 'package:sirenapp_flutter_inbox/src/errors/errors.dart';
 import 'package:sirenapp_flutter_inbox/src/models/api_response.dart';
 import 'package:sirenapp_flutter_inbox/src/models/notification_model.dart';
 import 'package:sirenapp_flutter_inbox/src/services/api_client.dart';
@@ -11,15 +12,12 @@ class FetchAllNotifications {
       FetchAllNotifications._internal();
   final ApiClient api = ApiClient(apiProvider());
 
-  static final String _apiPath =
-      '${Generics.V2}${Generics.BASE_URL}${SirenDataProvider.instance.recipientId}/notifications';
-
-  List<NotificationDataType> convertJsonToNotificationList(
+  List<NotificationType> convertJsonToNotificationList(
     List<dynamic> dataList,
   ) {
-    return dataList.map((json) {
+    return dataList.map((dynamic json) {
       if (json is Map<String, dynamic>) {
-        return NotificationDataType.fromJson(json);
+        return NotificationType.fromJson(json);
       }
       throw const FormatException('Invalid JSON format');
     }).toList();
@@ -32,9 +30,10 @@ class FetchAllNotifications {
     String? start,
     String? end,
   }) async {
+    final _apiPath =
+        '${Generics.V2}${Generics.BASE_URL}${SirenDataProvider.instance.recipientId}/notifications';
     final result = ApiResponse()..isLoading = true;
-    final apiError = ApiErrorDetails()
-      ..errorType = ErrorTypes.NOTIFICATION_FETCH_FAILED;
+    var apiError = Errors.notificationFetchFailedError;
 
     // Manually construct query parameters
     final queryParams = {
@@ -54,12 +53,12 @@ class FetchAllNotifications {
         queryParams.entries.map((e) => '${e.key}=${e.value}').join('&');
 
     if (SirenDataProvider.instance.tokenVerificationStatus != Status.SUCCESS) {
-      apiError.errorType = ErrorTypes.AUTHENTICATION_FAILED;
+      apiError = SirenDataProvider.instance.getVerificationErrorType();
       result
         ..isLoading = false
         ..isError = true
         ..data = null
-        ..rawResponse = Generics.rawResponseError
+        ..rawResponse = Errors.rawResponseError
         ..error = apiError;
       return result;
     }
@@ -72,9 +71,6 @@ class FetchAllNotifications {
       final dataList =
           ApiResponse.fromJson(apiResponse.data).data as List<dynamic>?;
       final metaData = ApiResponse.fromJson(apiResponse.data).meta;
-      apiError
-        ..errorCode = ApiResponse.fromJson(apiResponse.data).error?.errorCode
-        ..message = ApiResponse.fromJson(apiResponse.data).error?.message;
       result
         ..isLoading = false
         ..isSuccess = apiResponse.statusCode == 200
@@ -89,7 +85,7 @@ class FetchAllNotifications {
         ..isSuccess = false
         ..isError = true
         ..rawResponse = apiResponse
-        ..error = Generics.defaultError;
+        ..error = Errors.defaultError;
     }
 
     return result;

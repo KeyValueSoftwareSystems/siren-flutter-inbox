@@ -1,24 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:sirenapp_flutter_inbox/src/models/notification_model.dart';
 
 /// Properties for configuring the appearance of the notification card.
-class CardProps {
-  /// Constructs a [CardProps] with optional parameters.
-  const CardProps({
+class CardParams {
+  /// Constructs a [CardParams] with optional parameters.
+  const CardParams({
     this.hideAvatar,
-    this.showMedia,
+    this.disableAutoMarkAsRead,
+    this.deleteIcon,
+    this.hideDelete,
+    this.onAvatarClick,
+    this.hideMediaThumbnail,
+    this.onMediaThumbnailClick,
   });
 
   /// Determines whether to hide the avatar in the notification card in Siren inbox.
   final bool? hideAvatar;
 
-  /// Determines whether to show media content in the notification card in Siren inbox.
-  final bool? showMedia;
+  /// The flag to turn on and off the mark as read functionality
+  final bool? disableAutoMarkAsRead;
+
+  /// Custom widget that can be used instead of default delete in the card (x)
+  final Widget? deleteIcon;
+
+  /// Determines whether to hide the avatar in the notification card in Siren inbox.
+  final bool? hideDelete;
+
+  /// Callback function when a notification card is clicked.
+  final void Function(NotificationType)? onAvatarClick;
+
+  /// The flag to show media thumbnail
+  final bool? hideMediaThumbnail;
+
+  /// Callback function when a thumbnail media is clicked.
+  final void Function(NotificationType)? onMediaThumbnailClick;
 }
 
 /// Customizable style for the Siren notification icon.
-class IconStyle {
-  /// Constructs an [IconStyle] with optional parameters.
-  const IconStyle({this.size});
+class NotificationIconStyle {
+  /// Constructs an [NotificationIconStyle] with optional parameters.
+  const NotificationIconStyle({this.size});
 
   /// Size of the notification icon.
   final double? size;
@@ -29,11 +50,8 @@ class DefaultIconStyle {
   /// Default font size for the badge count.
   static double get defaultFontSize => 10;
 
-  /// Default inset for the badge count.
-  static double get defaultInset => 1;
-
   /// Default size for the badge count.
-  static double get defaultSize => 18;
+  static double get defaultSize => 20;
 
   /// Default top position for the badge count.
   static double get defaultTop => 0;
@@ -50,7 +68,6 @@ class BadgeStyle {
   /// Constructs a [BadgeStyle] with optional parameters.
   const BadgeStyle({
     this.fontSize,
-    this.inset,
     this.size,
     this.top,
     this.right,
@@ -58,9 +75,6 @@ class BadgeStyle {
 
   /// The font size of the notification icon badge.
   final double? fontSize;
-
-  /// The inset of the notification icon badge.
-  final double? inset;
 
   /// The size of the notification icon badge.
   final double? size;
@@ -73,58 +87,69 @@ class BadgeStyle {
 }
 
 /// Style properties for customizing the appearance of various UI elements in the Siren theme.
-class SirenStyleProps {
-  /// Constructs a [SirenStyleProps] with optional parameters.
-  const SirenStyleProps({
+class CustomStyles {
+  /// Constructs a [CustomStyles] with optional parameters.
+  const CustomStyles({
     this.container,
-    this.contentContainer,
-    this.subHeaderText,
-    this.cardAvatarContainer,
-    this.cardContentContainer,
-    this.cardTitle,
-    this.cardDescription,
-    this.cardFooterRow,
-    this.dateStyle,
-    this.iconStyle,
+    this.cardStyle,
+    this.appBarStyle,
+    this.notificationIconStyle,
     this.badgeStyle,
-    this.defaultHeaderTextStyle,
+    this.timerIconStyle,
+    this.deleteIconStyle,
+    this.clearAllIconStyle,
   });
 
-  /// The decoration for the outer container of the card in Siren inbox.
-  final BoxDecoration? container;
+  /// The decoration for the Siren inbox list.
+  final ContainerStyle? container;
 
-  /// The decoration for the content container of the card in Siren inbox.
-  final BoxDecoration? contentContainer;
+  // The styles for inbox list item
+  final CardStyle? cardStyle;
 
-  /// The text style for the sub-header text in Siren inbox.
-  final TextStyle? subHeaderText;
-
-  /// The decoration for the avatar container of the card in Siren inbox.
-  final BoxDecoration? cardAvatarContainer;
-
-  /// The decoration for the content container of the card in Siren inbox.
-  final BoxDecoration? cardContentContainer;
-
-  /// The text style for the card title in Siren inbox.
-  final TextStyle? cardTitle;
-
-  /// The text style for the card description in Siren inbox.
-  final TextStyle? cardDescription;
-
-  /// The decoration for the footer row of the card in Siren inbox.
-  final BoxDecoration? cardFooterRow;
-
-  /// The text style for the date text in Siren inbox.
-  final TextStyle? dateStyle;
+  /// The style for default app bar
+  final InboxHeaderStyle? appBarStyle;
 
   /// The style for the notification icon.
-  final IconStyle? iconStyle;
+  final NotificationIconStyle? notificationIconStyle;
 
   /// The style for the notification icon badge.
   final BadgeStyle? badgeStyle;
 
-  /// Text style for the header provided by the sdk.
-  final TextStyle? defaultHeaderTextStyle;
+  /// Style of delete icon in inbox list card
+  final TimerIconStyle? timerIconStyle;
+
+  /// Style of delete icon in inbox list card
+  final DeleteIconStyle? deleteIconStyle;
+
+  /// Style of clear all icon in inbox default header
+  final ClearAllIconStyle? clearAllIconStyle;
+}
+
+class TimerIconStyle {
+  TimerIconStyle({
+    this.size,
+  });
+
+  /// Size of timer icon in inbox list card
+  final double? size;
+}
+
+class DeleteIconStyle {
+  DeleteIconStyle({
+    this.size,
+  });
+
+  /// Size of delete icon in inbox list card
+  final double? size;
+}
+
+class ClearAllIconStyle {
+  ClearAllIconStyle({
+    this.size,
+  });
+
+  /// Size of clear all icon in inbox default header
+  final double? size;
 }
 
 /// Custom theme colors to configure the appearance of UI elements.
@@ -132,7 +157,7 @@ class CustomThemeColors {
   /// Constructs a [CustomThemeColors] with optional parameters.
   CustomThemeColors({
     this.backgroundColor,
-    this.highlightedCardBorderColor,
+    this.primary,
     this.highlightedCardColor,
     this.borderColor,
     this.deleteIcon,
@@ -140,17 +165,18 @@ class CustomThemeColors {
     this.textColor,
     this.dateColor,
     this.timerIcon,
-    this.badgeBackgroundColor,
-    this.badgeColor,
-    this.iconColor,
-    this.inboxTitleColor,
+    this.notificationIconColor,
+    this.loaderColor,
+    this.inboxHeaderColors,
+    this.badgeColors,
+    this.cardColors,
   });
 
   /// The background color for Siren inbox.
   final Color? backgroundColor;
 
   /// The color for the border of active cards in Siren inbox.
-  final Color? highlightedCardBorderColor;
+  final Color? primary;
 
   /// The color for active cards in Siren inbox.
   final Color? highlightedCardColor;
@@ -173,29 +199,169 @@ class CustomThemeColors {
   /// The color of timer icon
   final Color? timerIcon;
 
-  /// The background color for notification icon badge.
-  final Color? badgeBackgroundColor;
-
-  /// The text color for notification icon badge.
-  final Color? badgeColor;
-
   /// The color for notification icon.
-  final Color? iconColor;
+  final Color? notificationIconColor;
 
-  /// The color for window title in Siren inbox.
-  final Color? inboxTitleColor;
+  /// The color for refresh indicator in inbox list.
+  final Color? loaderColor;
+
+  /// The colors for inbox list card
+  final CardColors? cardColors;
+
+  /// The colors for inbox header
+  final InboxHeaderColors? inboxHeaderColors;
+
+  /// The colors for inbox list card
+  final BadgeColors? badgeColors;
 }
 
-/// Custom Properties for notification card
-class CardParams {
-  CardParams({
-    this.hideAvatar,
-    this.deleteWidget,
+/// Custom theme colors to configure the appearance inbox list item.
+class CardColors {
+  CardColors({
+    this.borderColor,
+    this.background,
+    this.titleColor,
+    this.subtitleColor,
+    this.descriptionColor,
   });
 
-  /// The Flag to hide or show avatar
-  final bool? hideAvatar;
+  /// The border color inbox  of list item
+  final Color? borderColor;
 
-  /// Custom widget that can be used instead of default delete in the card (x)
-  final Widget? deleteWidget;
+  /// The default background color of inbox list item
+  final Color? background;
+
+  /// The title color inbox of list item
+  final Color? titleColor;
+
+  /// The sub title color of inbox list item
+  final Color? subtitleColor;
+
+  /// The description text color of inbox list item
+  final Color? descriptionColor;
+}
+
+/// Custom theme colors to configure the inbox header
+class InboxHeaderColors {
+  InboxHeaderColors({
+    this.background,
+    this.titleColor,
+    this.headerActionColor,
+    this.borderColor,
+  });
+
+  /// The background color of inbox header
+  final Color? background;
+
+  /// The title color of inbox header
+  final Color? titleColor;
+
+  /// The action texts color of inbox header
+  final Color? headerActionColor;
+
+  /// The border color of inbox header
+  final Color? borderColor;
+}
+
+/// Custom theme colors to configure icon badge
+class BadgeColors {
+  BadgeColors({
+    this.backgroundColor,
+    this.color,
+  });
+
+  /// The icon badge background color
+  final Color? backgroundColor;
+
+  /// The text color of icon badge
+  final Color? color;
+}
+
+/// Properties for configuring the appearance of the notification window app bar.
+class HeaderParams {
+  HeaderParams({
+    this.title,
+    this.hideHeader,
+    this.showBackButton,
+    this.backButton,
+    this.hideClearAll,
+    this.customHeader,
+    this.onBackPress,
+  });
+
+  /// Title of the inbox page or window.
+  final String? title;
+
+  /// Flag to hide the header.
+  final bool? hideHeader;
+
+  /// Flag to show the header back button provided by the sdk.
+  final bool? showBackButton;
+
+  /// Default back button widget for the header provided by the sdk.
+  final Icon? backButton;
+
+  /// Flag to hide the "Clear All" button.
+  final bool? hideClearAll;
+
+  /// Custom header or appBar widget.
+  final Widget? customHeader;
+
+  /// Callback function for handling back navigation.
+  final void Function()? onBackPress;
+}
+
+/// Properties to configure the style of container
+class ContainerStyle {
+  ContainerStyle({this.padding, this.decoration});
+
+  /// The padding values for all sides of a container
+  final EdgeInsetsGeometry? padding;
+
+  /// The appearance of the container, including
+  /// properties like background color, border, border radius, etc. of a container
+  final BoxDecoration? decoration;
+}
+
+/// Properties to configure the style of default inbox header
+class InboxHeaderStyle {
+  InboxHeaderStyle({this.headerTextStyle, this.titlePadding, this.borderWidth});
+
+  /// Text style for the default header text
+  final TextStyle? headerTextStyle;
+
+  /// Padding values for all sides for header text
+  final EdgeInsetsGeometry? titlePadding;
+
+  /// Border bottom with of default header container
+  final double? borderWidth;
+}
+
+class CardStyle {
+  CardStyle({
+    this.cardContainer,
+    this.cardTitle,
+    this.cardSubtitle,
+    this.cardDescription,
+    this.dateStyle,
+    this.avatarSize,
+  });
+
+  /// The decoration for each card in Siren inbox.
+  final ContainerStyle? cardContainer;
+
+  /// The text style for the card title in Siren inbox.
+  final TextStyle? cardTitle;
+
+  /// The text style for the sub-header text in Siren inbox.
+  final TextStyle? cardSubtitle;
+
+  /// The text style for the card description in Siren inbox.
+  final TextStyle? cardDescription;
+
+  /// The text style for the date text in Siren inbox.
+  final TextStyle? dateStyle;
+
+  /// The size of avatar image
+  final double? avatarSize;
 }

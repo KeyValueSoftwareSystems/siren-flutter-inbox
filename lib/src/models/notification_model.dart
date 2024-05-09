@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 /// Class representing the data structure of a notification.
-class NotificationDataType {
-  /// Constructs a [NotificationDataType] instance.
-  NotificationDataType({
+class NotificationType {
+  /// Constructs a [NotificationType] instance.
+  NotificationType({
     required this.id,
     required this.createdAt,
     required this.message,
@@ -12,9 +12,9 @@ class NotificationDataType {
     required this.cardColor,
   });
 
-  /// Factory method to create NotificationDataType from JSON.
-  factory NotificationDataType.fromJson(Map<String, dynamic>? json) {
-    return NotificationDataType(
+  /// Factory method to create NotificationType from JSON.
+  factory NotificationType.fromJson(Map<String, dynamic>? json) {
+    return NotificationType(
       id: json?['id'] as String,
       createdAt: json?['createdAt'] as String,
       message: MessageData.fromJson(json?['message'] as Map<String, dynamic>),
@@ -59,6 +59,7 @@ class MessageData {
     required this.actionUrl,
     required this.avatar,
     required this.additionalData,
+    this.thumbnailUrl,
     this.subHeader,
   });
 
@@ -73,6 +74,9 @@ class MessageData {
       avatar: json?['avatar'] != null
           ? AvatarData.fromJson(json?['avatar'] as Map<String, dynamic>)
           : null,
+      thumbnailUrl: json?['thumbnailUrl'] != null
+          ? (json?['thumbnailUrl'] as String?)
+          : '',
       additionalData: json?['additionalData'] as String?,
     );
   }
@@ -97,6 +101,9 @@ class MessageData {
 
   /// Additional data related to the message.
   final String? additionalData;
+
+  /// The thumbnail URL associated with the message to display
+  final String? thumbnailUrl;
 }
 
 /// Class representing the data structure of an avatar.

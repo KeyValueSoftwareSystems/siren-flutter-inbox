@@ -14,7 +14,7 @@ class ApiResponse {
     return ApiResponse(
       data: json['data'],
       error: json['error'] != null
-          ? ApiErrorDetails.fromJson(json['error'] as Map<String, dynamic>?)
+          ? SirenErrorType.fromJson(json['error'] as Map<String, dynamic>?)
           : null,
       meta: json['meta'] != null
           ? MetaResponse.fromJson(json?['meta'] as Map<String, dynamic>?)
@@ -29,7 +29,7 @@ class ApiResponse {
   late MetaResponse? meta;
 
   /// Details about any errors that occurred during the request.
-  late ApiErrorDetails? error;
+  late SirenErrorType? error;
 
   /// Indicates whether the response is still loading.
   bool isLoading = true;
@@ -53,7 +53,6 @@ class MetaResponse {
     required this.pageSize,
     required this.currentPage,
     required this.first,
-    required this.totalElements,
   });
 
   /// Factory method to create MetaResponse from JSON.
@@ -70,9 +69,6 @@ class MetaResponse {
           ? int.tryParse(json?['currentPage'] as String)
           : null,
       first: json?['first'] != null ? (json?['first'] as String) : null,
-      totalElements: json?['totalElements'] != null
-          ? int.tryParse(json?['totalElements'] as String)
-          : null,
     );
   }
 
@@ -90,37 +86,33 @@ class MetaResponse {
 
   /// The ID of the first element.
   final String? first;
-
-  /// The total number of elements.
-  final int? totalElements;
 }
 
 /// Represents details of an API error.
-class ApiErrorDetails {
-  /// Constructs an [ApiErrorDetails] instance.
-  ApiErrorDetails({
-    this.errorCode,
+class SirenErrorType {
+  /// Constructs an [SirenErrorType] instance.
+  SirenErrorType({
+    this.type,
     this.message,
-    this.errorType,
+    this.code,
   });
 
-  /// Factory method to create ApiErrorDetails from JSON.
-  factory ApiErrorDetails.fromJson(Map<String, dynamic>? json) {
-    return ApiErrorDetails(
-      errorCode:
-          json?['errorCode'] != null ? (json?['errorCode'] as String) : '',
+  /// Factory method to create SirenErrorType from JSON.
+  factory SirenErrorType.fromJson(Map<String, dynamic>? json) {
+    return SirenErrorType(
+      type: json?['errorCode'] != null ? (json?['errorCode'] as String) : '',
       message: json?['message'] != null ? (json?['message'] as String) : '',
     );
   }
 
   /// The error code associated with the error.
-  String? errorCode;
+  String? type;
 
   /// The message describing the error.
   String? message;
 
   /// The type of error.
-  ErrorTypes? errorType;
+  String? code;
 }
 
 /// Represents a response from Dio HTTP client.

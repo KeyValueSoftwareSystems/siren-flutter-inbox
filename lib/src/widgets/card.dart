@@ -1,38 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:sirenapp_flutter_inbox/src/constants/strings.dart';
 import 'package:sirenapp_flutter_inbox/src/models/notification_model.dart';
 import 'package:sirenapp_flutter_inbox/src/models/ui_models.dart';
+import 'package:sirenapp_flutter_inbox/src/theme/app_colors.dart';
+import 'package:sirenapp_flutter_inbox/src/theme/app_theme.dart';
 import 'package:sirenapp_flutter_inbox/src/utils/common_utils.dart';
 import 'package:sirenapp_flutter_inbox/src/widgets/common/nullable_text.dart';
+import 'package:sirenapp_flutter_inbox/src/widgets/media_error_widget.dart';
 
 class CardWidget extends StatefulWidget {
   /// Widget for displaying a notification card.
   const CardWidget({
     required this.onTap,
     required this.notification,
-    required this.cardProps,
+    required this.cardParams,
     required this.styles,
     required this.onDelete,
+    this.colors,
+    this.isDarkMode,
     super.key,
-    this.deleteWidget,
   });
 
   /// Callback function invoked when the card is tapped.
   final Function onTap;
 
   /// Notification data to be displayed.
-  final NotificationDataType notification;
+  final NotificationType notification;
 
   /// Properties for customizing the card.
-  final CardProps cardProps;
+  final CardParams cardParams;
 
   /// Styles to be applied to various elements of the card.
-  final SirenStyleProps? styles;
+  final CustomStyles? styles;
 
   /// Callback function invoked when the card is deleted.
   final void Function(String) onDelete;
 
-  /// Widget to be displayed for deletion, if provided.
-  final Widget? deleteWidget;
+  /// Colors to be applied to various elements of the card.
+  final CustomThemeColors? colors;
+
+  /// Flag to check if dark mode colors are to be applied
+  final bool? isDarkMode;
 
   @override
   State<CardWidget> createState() => _CardWidgetState();
@@ -46,191 +54,298 @@ class _CardWidgetState extends State<CardWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final currentTheme = Theme.of(context);
-
+    final defaultColors =
+        SirenAppTheme.colors(isDarkMode: widget.isDarkMode ?? false);
+    final thumbnailUrl = widget.notification.message.thumbnailUrl ?? '';
     return GestureDetector(
+      key: Key('siren-notification-card-${widget.notification.id}'),
       onTap: () {
         widget.onTap(widget.notification);
       },
       child: Container(
-        decoration: widget.styles?.container ??
-            _getDefaultContainerDecoration(currentTheme),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Container(
-              decoration: widget.styles?.contentContainer,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (!(widget.cardProps.hideAvatar ?? false))
-                    _buildDefaultAvatarContainer(currentTheme),
-                  Expanded(
-                    child: Container(
-                      decoration: widget.styles?.cardContentContainer,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildHeaderText(currentTheme),
-                            _buildSubHeaderText(currentTheme),
-                            _buildBodyText(currentTheme),
-                            _buildFooterRow(currentTheme),
-                          ],
-                        ),
-                      ),
+        decoration: widget.styles?.cardStyle?.cardContainer?.decoration ??
+            _getDefaultContainerDecoration(widget.colors, defaultColors),
+        padding: widget.styles?.cardStyle?.cardContainer?.padding ??
+            const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (!(widget.cardParams.hideAvatar ?? false))
+              _buildDefaultAvatarContainer(widget.colors, defaultColors),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 6),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildHeaderText(widget.colors, defaultColors),
+                    _buildSubHeaderText(widget.colors, defaultColors),
+                    _buildBodyText(widget.colors, defaultColors),
+                    if (thumbnailUrl.isNotEmpty &&
+                        thumbnailUrl != Strings.string_null &&
+                        !(widget.cardParams.hideMediaThumbnail ?? false))
+                      _buildMediaContent(defaultColors, thumbnailUrl),
+                    _buildFooterRow(
+                      widget.colors,
+                      defaultColors,
+                      widget.styles?.timerIconStyle?.size ?? 14,
                     ),
-                  ),
-                  GestureDetector(
-                    onTap: () => widget.onDelete(widget.notification.id),
-                    child: widget.deleteWidget ??
-                        _buildDefaultDeleteButton(currentTheme),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );
   }
 
-  BorderSide _getDefaultBorderDecoration(ThemeData theme) {
+  BorderSide _getDefaultBorderDecoration(
+    CustomThemeColors? colors,
+    AppColors defaultColors,
+  ) {
     return BorderSide(
-      color: theme.colorScheme.surfaceTint,
+      color: colors?.cardColors?.borderColor ??
+          colors?.borderColor ??
+          defaultColors.cardBorderColor,
       width: 0.5,
     );
   }
 
-  BoxDecoration _getDefaultContainerDecoration(ThemeData theme) {
+  BoxDecoration _getDefaultContainerDecoration(
+    CustomThemeColors? colors,
+    AppColors defaultColors,
+  ) {
     return BoxDecoration(
       border: Border(
         left: BorderSide(
           color: widget.notification.isRead
-              ? theme.colorScheme.primary
-              : theme.colorScheme.secondary,
+              ? Colors.transparent
+              : colors?.primary ?? defaultColors.cardBorderUnread,
           width: 4,
         ),
-        right: _getDefaultBorderDecoration(theme),
-        bottom: _getDefaultBorderDecoration(theme),
+        right: _getDefaultBorderDecoration(colors, defaultColors),
+        bottom: _getDefaultBorderDecoration(colors, defaultColors),
       ),
       color: widget.notification.cardColor ??
           (widget.notification.isRead
-              ? null
-              : theme.colorScheme.secondaryContainer),
+              ? colors?.cardColors?.background ?? Colors.transparent
+              : colors?.highlightedCardColor ??
+                  defaultColors.cardBackgroundUnread),
     );
   }
 
-  Widget _buildDefaultAvatarContainer(ThemeData theme) {
+  Widget _buildDefaultAvatarContainer(
+    CustomThemeColors? colors,
+    AppColors defaultColors,
+  ) {
     final avatarUrl = widget.notification.message.avatar?.url;
-    return Container(
-      decoration: widget.styles?.cardAvatarContainer,
-      child: CircleAvatar(
-        radius: 21,
-        backgroundImage: avatarUrl != null && avatarUrl.isNotEmpty
-            ? NetworkImage(avatarUrl)
-            : null,
-        backgroundColor: theme.colorScheme.onSecondary,
-        child: avatarUrl == null || avatarUrl.isEmpty
-            ? Icon(
-                Icons.landscape_rounded,
-                color: theme.colorScheme.surfaceVariant,
-              )
-            : null,
+    return GestureDetector(
+      key: Key('siren-notification-avatar-${widget.notification.id}'),
+      onTap: () {
+        widget.cardParams.onAvatarClick?.call(widget.notification);
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(
+          right: 6,
+          left: 6,
+        ),
+        child: CircleAvatar(
+          radius: widget.styles?.cardStyle?.avatarSize ?? 21,
+          backgroundImage: avatarUrl != null &&
+                  avatarUrl.isNotEmpty &&
+                  avatarUrl != Strings.string_null
+              ? NetworkImage(avatarUrl)
+              : null,
+          backgroundColor: defaultColors.avatarBackground,
+          child: avatarUrl == null ||
+                  avatarUrl.isEmpty ||
+                  avatarUrl == Strings.string_null
+              ? Icon(
+                  Icons.landscape_rounded,
+                  color: defaultColors.avatarIconColor,
+                )
+              : null,
+        ),
       ),
     );
   }
 
-  Widget _buildHeaderText(ThemeData theme) {
-    return Text(
-      widget.notification.message.header ?? '',
-      maxLines: 2,
-      overflow: TextOverflow.ellipsis,
-      style: widget.styles?.cardTitle ??
-          TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: theme.colorScheme.tertiary,
+  Widget _buildHeaderText(CustomThemeColors? colors, AppColors defaultColors) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Text(
+            widget.notification.message.header ?? '',
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: widget.styles?.cardStyle?.cardTitle ??
+                TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: colors?.cardColors?.titleColor ??
+                      colors?.textColor ??
+                      defaultColors.textColor,
+                ),
           ),
+        ),
+        if (!(widget.cardParams.hideDelete ?? false)) ...[
+          const SizedBox(width: 8),
+          GestureDetector(
+            key: Key(
+              'siren-notification-delete-${widget.notification.id}',
+            ),
+            onTap: () => widget.onDelete(widget.notification.id),
+            child: widget.cardParams.deleteIcon ??
+                _buildDefaultDeleteButton(
+                  colors,
+                  defaultColors,
+                  widget.styles?.deleteIconStyle?.size ?? 18,
+                ),
+          ),
+        ],
+      ],
     );
   }
 
-  Widget _buildSubHeaderText(ThemeData theme) {
+  Widget _buildSubHeaderText(
+    CustomThemeColors? colors,
+    AppColors defaultColors,
+  ) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: NullableText(
         text: widget.notification.message.subHeader,
-        style: widget.styles?.subHeaderText ??
+        style: widget.styles?.cardStyle?.cardSubtitle ??
             TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: theme.colorScheme.tertiary,
+              color: colors?.cardColors?.subtitleColor ??
+                  colors?.textColor ??
+                  defaultColors.textColor,
             ),
       ),
     );
   }
 
-  Widget _buildBodyText(ThemeData theme) {
+  Widget _buildBodyText(CustomThemeColors? colors, AppColors defaultColors) {
     return Text(
       widget.notification.message.body ?? '',
-      style: widget.styles?.cardDescription ??
+      style: widget.styles?.cardStyle?.cardDescription ??
           TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w400,
-            color: theme.colorScheme.tertiary,
+            color: colors?.cardColors?.descriptionColor ??
+                colors?.textColor ??
+                defaultColors.textColor,
           ),
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
     );
   }
 
-  Widget _buildFooterRow(ThemeData theme) {
+  Widget _buildMediaContent(AppColors defaultColors, String url) {
+    return Column(
+      children: [
+        const SizedBox(
+          height: 10,
+        ),
+        GestureDetector(
+          onTap: () {
+            if (widget.cardParams.onMediaThumbnailClick != null) {
+              widget.cardParams.onMediaThumbnailClick
+                  ?.call(widget.notification);
+            }
+          },
+          child: Container(
+            height: 140,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(6),
+              color: defaultColors.avatarBackground,
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(6),
+              child: Image.network(
+                url,
+                height: 140,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                errorBuilder: (
+                  _,
+                  Object exception,
+                  StackTrace? stackTrace,
+                ) {
+                  return MediaErrorWidget(
+                    isDarkMode: widget.isDarkMode ?? false,
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFooterRow(
+    CustomThemeColors? colors,
+    AppColors defaultColors,
+    double size,
+  ) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 10,
+      padding: const EdgeInsets.only(
+        top: 10,
       ),
       child: Container(
-        decoration: widget.styles?.cardFooterRow,
-        child: _buildTimestampText(theme),
+        child: _buildTimestampText(colors, defaultColors, size),
       ),
     );
   }
 
-  Widget _buildTimestampText(ThemeData theme) {
+  Widget _buildTimestampText(
+    CustomThemeColors? colors,
+    AppColors defaultColors,
+    double size,
+  ) {
     return Row(
       children: [
         Padding(
           padding: const EdgeInsets.only(right: 4),
           child: Icon(
             Icons.access_time_sharp,
-            color: theme.colorScheme.scrim,
-            size: 14,
+            color: colors?.timerIcon ?? defaultColors.timerIcon,
+            size: size,
           ),
         ),
         Text(
           generateElapsedTimeText(
             DateTime.parse(widget.notification.createdAt),
           ),
-          style: widget.styles?.dateStyle ??
+          style: widget.styles?.cardStyle?.dateStyle ??
               TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w400,
-                color: theme.colorScheme.inversePrimary,
+                color: colors?.dateColor ??
+                    colors?.textColor ??
+                    defaultColors.dateColor,
               ),
         ),
       ],
     );
   }
 
-  Widget _buildDefaultDeleteButton(ThemeData theme) {
+  Widget _buildDefaultDeleteButton(
+    CustomThemeColors? colors,
+    AppColors defaultColors,
+    double size,
+  ) {
     return Icon(
       Icons.close,
-      color: theme.colorScheme.outlineVariant,
-      size: 18,
+      color: colors?.deleteIcon ?? defaultColors.deleteIcon,
+      size: size,
     );
   }
 }

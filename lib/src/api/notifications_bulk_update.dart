@@ -1,5 +1,6 @@
 import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
 import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
+import 'package:sirenapp_flutter_inbox/src/errors/errors.dart';
 import 'package:sirenapp_flutter_inbox/src/models/api_response.dart';
 import 'package:sirenapp_flutter_inbox/src/services/api_client.dart';
 import 'package:sirenapp_flutter_inbox/src/services/api_provider.dart';
@@ -15,21 +16,25 @@ class NotificationsBulkUpdate {
 
   Future<ApiResponse> notificationsBulkUpdate({
     required Map<String, dynamic> data,
+    required String operation,
   }) async {
     final api = ApiClient(apiProvider());
     final apiPath =
         '${Generics.V2}${Generics.BASE_URL}${SirenDataProvider.instance.recipientId}/notifications/bulk-update';
     final result = ApiResponse()..isLoading;
-    final apiError = ApiErrorDetails()
-      ..errorType = ErrorTypes.NOTIFICATION_DELETE_FAILED;
+    var apiError = Errors.markAsReadFailedError;
+
+    if (operation == BulkUpdateType.MARK_AS_DELETED.name) {
+      apiError = Errors.deleteAllFailedError;
+    }
 
     if (SirenDataProvider.instance.tokenVerificationStatus != Status.SUCCESS) {
-      apiError.errorType = ErrorTypes.AUTHENTICATION_FAILED;
+      apiError = SirenDataProvider.instance.getVerificationErrorType();
       result
         ..isLoading = false
         ..isError = true
         ..data = null
-        ..rawResponse = Generics.rawResponseError
+        ..rawResponse = Errors.rawResponseError
         ..error = apiError;
       return result;
     }
@@ -39,10 +44,6 @@ class NotificationsBulkUpdate {
       data: data,
     );
     if (apiResponse.statusCode != 0 && apiResponse.data != null) {
-      apiError
-        ..errorCode = ApiResponse.fromJson(apiResponse.data).error?.errorCode
-        ..message = ApiResponse.fromJson(apiResponse.data).error?.message;
-
       result
         ..isLoading = false
         ..isSuccess = apiResponse.statusCode == 200
@@ -55,7 +56,7 @@ class NotificationsBulkUpdate {
         ..isSuccess = false
         ..isError = true
         ..rawResponse = apiResponse
-        ..error = Generics.defaultError;
+        ..error = Errors.defaultError;
     }
 
     return result;

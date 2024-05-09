@@ -1,5 +1,6 @@
 import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
 import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
+import 'package:sirenapp_flutter_inbox/src/errors/errors.dart';
 import 'package:sirenapp_flutter_inbox/src/models/api_response.dart';
 import 'package:sirenapp_flutter_inbox/src/services/api_client.dart';
 import 'package:sirenapp_flutter_inbox/src/services/api_provider.dart';
@@ -24,8 +25,19 @@ class VerifyToken {
 
   Future<ApiResponse> verifyToken() async {
     final result = ApiResponse()..isLoading = true;
-    final apiError = ApiErrorDetails()
-      ..errorType = ErrorTypes.AUTHENTICATION_FAILED;
+    var apiError = Errors.authenticationFailed;
+
+    if (SirenDataProvider.instance.userToken.isEmpty ||
+        SirenDataProvider.instance.recipientId.isEmpty) {
+      apiError = Errors.invalidCredentialsError;
+      result
+        ..isLoading = false
+        ..isError = true
+        ..data = null
+        ..rawResponse = Errors.rawResponseError
+        ..error = apiError;
+      return result;
+    }
 
     final apiResponse = await api.get(
       path:
@@ -34,9 +46,6 @@ class VerifyToken {
     if (apiResponse.statusCode != 0 && apiResponse.data != null) {
       final verificationStatus =
           convertJsonToVerificationStatus(apiResponse.data);
-      apiError
-        ..errorCode = ApiResponse.fromJson(apiResponse.data).error?.errorCode
-        ..message = ApiResponse.fromJson(apiResponse.data).error?.message;
 
       result
         ..isLoading = false
@@ -50,7 +59,7 @@ class VerifyToken {
         ..isSuccess = false
         ..isError = true
         ..data = Status.FAILED
-        ..error = Generics.defaultError;
+        ..error = Errors.defaultError;
     }
 
     return result;
