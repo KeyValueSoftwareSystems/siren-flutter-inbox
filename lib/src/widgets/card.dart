@@ -261,6 +261,7 @@ class _CardWidgetState extends State<CardWidget> {
           },
           child: Container(
             height: 140,
+            margin: const EdgeInsets.only(right: 10),
             width: double.infinity,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(6),
