@@ -38,6 +38,8 @@ final darkColors = AppColors(
   primary: SirenAppColors.primary200Complementary,
   scaffoldBackgroundColor: SirenAppColors.black100,
   skeletonLoaderColor: SirenAppColors.avatarPlaceholderBgDark,
+  tabBarActiveColor: SirenAppColors.primary400,
+  tabBarInActiveColor: SirenAppColors.grey300,
   textColor: SirenAppColors.grey700Complementary,
   timerIcon: SirenAppColors.grey400,
 );

@@ -29,4 +29,6 @@ class Strings {
       'This operation require valid credentials';
   static const invalidCredentialsError =
       'Invalid credentials found. Please check your token and recipient ID';
+  static const tabAll = 'All';
+  static const tabUnread = 'Unread';
 }

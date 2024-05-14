@@ -9,6 +9,7 @@ import 'package:sirenapp_flutter_inbox/src/api/mark_all_notifications_as_viewed.
 import 'package:sirenapp_flutter_inbox/src/api/notifications_bulk_update.dart';
 import 'package:sirenapp_flutter_inbox/src/api/read_notification_by_id.dart';
 import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
+import 'package:sirenapp_flutter_inbox/src/constants/strings.dart';
 import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
 import 'package:sirenapp_flutter_inbox/src/errors/errors.dart';
 import 'package:sirenapp_flutter_inbox/src/theme/app_theme.dart';
@@ -32,6 +33,7 @@ class SirenInbox extends StatefulWidget {
     this.onError,
     this.theme,
     this.customStyles,
+    this.hideTab,
   });
 
   /// Flag for enabling dark mode.
@@ -69,6 +71,9 @@ class SirenInbox extends StatefulWidget {
 
   /// Custom styles for the card of each notification.
   final CustomStyles? customStyles;
+
+  /// Flag to hide the tab bar.
+  final bool? hideTab;
 
   @override
   State<SirenInbox> createState() => _SirenInboxState();
@@ -455,41 +460,120 @@ class _SirenInboxState extends State<SirenInbox> {
   Widget build(BuildContext context) {
     final colors = SirenAppTheme.colors(isDarkMode: widget.darkMode ?? false);
 
-    return Scaffold(
-      backgroundColor:
-          widget.theme?.backgroundColor ?? colors.scaffoldBackgroundColor,
-      appBar: SirenAppBar(
-        colors: widget.theme,
-        isDarkMode: widget.darkMode,
-        onClearAllPressed: onBulkDelete,
-        isNonEmptyNotifications: shouldShowClearAllButton(),
-        headerParams: widget.headerParams,
-        styles: widget.customStyles,
-      ),
-      body: InboxBody(
-        cardParams: widget.cardParams,
-        colors: widget.theme,
-        customCard: widget.customCard,
-        customErrorWidget: widget.customErrorWidget,
-        customLoader: widget.customLoader,
-        customStyles: widget.customStyles,
-        deleteNotification: deleteNotification,
-        deletingNotificationId: deletingNotificationId,
-        disableAutoMarkAsRead:
-            widget.cardParams?.disableAutoMarkAsRead ?? false,
-        endReached: isEndReached,
-        isDarkMode: widget.darkMode,
-        isError: isError,
-        isLoading: isLoading,
-        listEmptyWidget: widget.listEmptyWidget,
-        loadingNextPage: loadingNextPage,
-        markAsRead: _markNotificationAsRead,
-        notifications: notifications,
-        onCardClick: widget.onCardClick,
-        onEndReached: onEndReached,
-        onRefresh: onRefresh,
-        scrollController: _scrollController,
-      ),
-    );
+    if ((widget.hideTab ?? false) == false) {
+      return DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          backgroundColor:
+              widget.theme?.backgroundColor ?? colors.scaffoldBackgroundColor,
+          appBar: SirenAppBar(
+            colors: widget.theme,
+            isDarkMode: widget.darkMode,
+            onClearAllPressed: onBulkDelete,
+            isNonEmptyNotifications: shouldShowClearAllButton(),
+            headerParams: widget.headerParams,
+            styles: widget.customStyles,
+          ),
+          body: Column(
+            children: [
+              TabBar(
+                isScrollable: true,
+                tabAlignment: TabAlignment.start,
+                indicatorColor: colors.tabBarActiveColor,
+                labelColor: colors.tabBarActiveColor,
+                unselectedLabelColor: colors.tabBarInActiveColor,
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                indicatorSize: TabBarIndicatorSize.tab,
+                labelStyle:
+                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                labelPadding: const EdgeInsets.symmetric(horizontal: 24),
+                indicatorWeight: 4,
+                // onTap: ,
+                tabs: const [
+                  Tab(
+                    child: Text(
+                      Strings.tabAll,
+                    ),
+                  ),
+                  Tab(
+                    child: Text(
+                      Strings.tabUnread,
+                    ),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    InboxBody(
+                      cardParams: widget.cardParams,
+                      colors: widget.theme,
+                      customCard: widget.customCard,
+                      customErrorWidget: widget.customErrorWidget,
+                      customLoader: widget.customLoader,
+                      customStyles: widget.customStyles,
+                      deleteNotification: deleteNotification,
+                      deletingNotificationId: deletingNotificationId,
+                      disableAutoMarkAsRead:
+                          widget.cardParams?.disableAutoMarkAsRead ?? false,
+                      endReached: isEndReached,
+                      isDarkMode: widget.darkMode,
+                      isError: isError,
+                      isLoading: isLoading,
+                      listEmptyWidget: widget.listEmptyWidget,
+                      loadingNextPage: loadingNextPage,
+                      markAsRead: _markNotificationAsRead,
+                      notifications: notifications,
+                      onCardClick: widget.onCardClick,
+                      onEndReached: onEndReached,
+                      onRefresh: onRefresh,
+                      scrollController: _scrollController,
+                    ),
+                    const Text('TAB 2'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
+      return Scaffold(
+        backgroundColor:
+            widget.theme?.backgroundColor ?? colors.scaffoldBackgroundColor,
+        appBar: SirenAppBar(
+          colors: widget.theme,
+          isDarkMode: widget.darkMode,
+          onClearAllPressed: onBulkDelete,
+          isNonEmptyNotifications: shouldShowClearAllButton(),
+          headerParams: widget.headerParams,
+          styles: widget.customStyles,
+        ),
+        body: InboxBody(
+          cardParams: widget.cardParams,
+          colors: widget.theme,
+          customCard: widget.customCard,
+          customErrorWidget: widget.customErrorWidget,
+          customLoader: widget.customLoader,
+          customStyles: widget.customStyles,
+          deleteNotification: deleteNotification,
+          deletingNotificationId: deletingNotificationId,
+          disableAutoMarkAsRead:
+              widget.cardParams?.disableAutoMarkAsRead ?? false,
+          endReached: isEndReached,
+          isDarkMode: widget.darkMode,
+          isError: isError,
+          isLoading: isLoading,
+          listEmptyWidget: widget.listEmptyWidget,
+          loadingNextPage: loadingNextPage,
+          markAsRead: _markNotificationAsRead,
+          notifications: notifications,
+          onCardClick: widget.onCardClick,
+          onEndReached: onEndReached,
+          onRefresh: onRefresh,
+          scrollController: _scrollController,
+        ),
+      );
+    }
   }
 }
