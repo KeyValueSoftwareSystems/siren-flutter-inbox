@@ -13,8 +13,8 @@ This is an update to the package.
 
 ### Added
 - Added support for custom delete icon and a flag to toggle the visibility of the delete icon.
-- Added functionality to display thumbnail URL previews for media content
-- Exposed Avatar click property.
+- Added functionality to display thumbnail URL previews for media content.
+- Exposed avatar click property.
 - Implemented specific error code mapping.
 - Enhanced style and theme customizations.
 
