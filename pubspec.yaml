@@ -1,6 +1,6 @@
 name: sirenapp_flutter_inbox
 description: "Flutter SDK tailored for creating and managing in-app notification inboxes."
-version: 1.0.0
+version: 1.1.0
 homepage: 'https://github.com/KeyValueSoftwareSystems/siren-flutter-inbox#readme'
 repository: 'https://github.com/KeyValueSoftwareSystems/siren-flutter-inbox'
 license: MIT
