@@ -32,9 +32,15 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 flutter:
-
   assets:
     - env
+
+topics:
+  - flutter
+  - siren
+  - in-app
+  - notifications
+
 
 
 
