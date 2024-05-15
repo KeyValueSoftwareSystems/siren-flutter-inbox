@@ -16,6 +16,10 @@ analyzer:
   errors:
     inference_failure_on_instance_creation: false
     inference_failure_on_function_invocation: false
+    implicit_dynamic_list_literal: false
+    implicit_dynamic_map_literal: false
+    implicit_dynamic_method: false
+    implicit_dynamic_type: false
 
 linter:
   # The lint rules applied to this project can be customized in the

@@ -1,5 +1,3 @@
-import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
-
 class Generics {
   Generics._();
 
@@ -8,24 +6,17 @@ class Generics {
 
   static const int DATA_FETCH_INTERVAL = 5;
   static const int PAGE_SIZE = 20;
+  static const int AVERAGE_ITEMS_ON_SCREEN = 7;
   static const int MAX_RETRIES = 2;
   static const String ENV_PATH = 'packages/sirenapp_flutter_inbox/env';
-
-  static final defaultError = ApiErrorDetails(
-    errorType: ErrorTypes.GENERIC_API_ERROR,
-    errorCode: 'INTERNAL SERVER ERROR',
-    message:
-        'Oops something went wrong, if issue persist please contact Siren Team',
-  );
-
-  static const rawResponseError =
-      '{"data": null,"error": "AUTHENTICATION FAILED","errors":null,"meta":null}';
 }
 
 enum Status {
   PENDING,
   SUCCESS,
   FAILED,
+  IN_PROGRESS,
+  INVALID_CREDENTIALS,
 }
 
 enum BulkUpdateType {
@@ -34,22 +25,29 @@ enum BulkUpdateType {
 }
 
 enum UpdateEvents {
-  READ_BY_ID,
-  READ_ALL,
-  DELETE_BY_ID,
   DELETE_ALL,
-  VIEW_ALL,
+  DELETE_BY_ID,
   PARAMS_CHANGED,
-  TOKEN_VERIFIED,
+  READ_ALL,
+  READ_BY_ID,
   SHOW_ERROR,
+  TOKEN_VERIFIED,
+  VIEW_ALL,
 }
 
-enum ErrorTypes {
-  GENERIC_API_ERROR,
+enum ErrorCodes {
+  API_ERROR,
   AUTHENTICATION_FAILED,
-  FETCH_COUNT_FAILED,
+  AUTHENTICATION_PENDING,
+  BULK_DELETE_FAILED,
+  DELETE_FAILED,
+  INVALID_CREDENTIALS,
+  MARK_ALL_AS_READ_FAILED,
+  MARK_ALL_AS_VIEWED_FAILED,
+  MARK_AS_READ_FAILED,
   NOTIFICATION_FETCH_FAILED,
   NOTIFICATION_READ_FAILED,
-  NOTIFICATION_DELETE_FAILED,
-  UPDATE_VIEWED_FAILED,
+  OUTSIDE_SIREN_CONTEXT,
+  UNAUTHORIZED_OPERATION,
+  UNVIEWED_COUNT_FETCH_FAILED,
 }

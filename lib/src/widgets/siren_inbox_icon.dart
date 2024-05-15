@@ -6,7 +6,9 @@ import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
 import 'package:sirenapp_flutter_inbox/src/api/fetch_unviewed_notification_count.dart';
 import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
 import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
+import 'package:sirenapp_flutter_inbox/src/errors/errors.dart';
 import 'package:sirenapp_flutter_inbox/src/theme/app_theme.dart';
+import 'package:sirenapp_flutter_inbox/src/widgets/icon_badge.dart';
 
 /// Widget representing the inbox icon.
 class SirenInboxIcon extends StatefulWidget {
@@ -33,10 +35,10 @@ class SirenInboxIcon extends StatefulWidget {
   final CustomThemeColors? theme;
 
   /// Custom styles for the inbox icon.
-  final SirenStyleProps? customStyles;
+  final CustomStyles? customStyles;
 
   /// Callback function to handle errors.
-  final void Function(ApiErrorDetails)? onError;
+  final void Function(SirenErrorType)? onError;
 
   /// Callback function when the inbox icon is tapped.
   final VoidCallback? onTap;
@@ -73,7 +75,6 @@ class _SirenInboxIconState extends State<SirenInboxIcon> {
     super.dispose();
     _periodicUpdateRef.cancel();
     _subscription.cancel();
-    SirenDataProvider.instance.iconDispose();
   }
 
   void _subscribeToStream() {
@@ -100,7 +101,7 @@ class _SirenInboxIconState extends State<SirenInboxIcon> {
           }
         } else if (streamResponse.response?.isError ?? false) {
           widget.onError
-              ?.call(streamResponse.response?.error ?? ApiErrorDetails());
+              ?.call(streamResponse.response?.error ?? SirenErrorType());
         }
       },
     );
@@ -159,90 +160,65 @@ class _SirenInboxIconState extends State<SirenInboxIcon> {
           );
         }
       } else if (response.isError) {
-        widget.onError?.call(response.error ?? ApiErrorDetails());
+        widget.onError?.call(response.error ?? SirenErrorType());
       }
+    } else if (!SirenDataProvider.instance.isProviderInitialized) {
+      widget.onError?.call(Errors.outsideSirenContextError);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: widget.theme != null
-          ? AppTheme.customTheme(
-              widget.theme!,
-              isDarkMode: widget.darkMode,
-            )
-          : (widget.darkMode ? AppTheme.darkTheme : AppTheme.lightTheme),
-      child: Builder(
-        builder: (context) {
-          final size =
-              widget.customStyles?.iconStyle?.size ?? DefaultIconStyle.iconSize;
-          final currentTheme = Theme.of(context);
-          return IgnorePointer(
-            ignoring: widget.disabled,
-            child: GestureDetector(
-              onTap: () {
-                if (!_processingGesture && mounted) {
-                  setState(() {
-                    _processingGesture = true;
-                  });
-                  if (widget.onTap != null) {
-                    widget.onTap?.call();
-                  }
-                }
-                Future.delayed(const Duration(milliseconds: 500), () {
-                  setState(() {
-                    _processingGesture = false;
-                  });
-                });
-              },
-              child: Stack(
-                children: [
-                  SizedBox(
-                    width: size,
-                    height: size,
-                    child: widget.notificationIcon ??
-                        Icon(
-                          Icons.notifications_none_outlined,
-                          size: size,
-                          color: currentTheme.colorScheme.onPrimary,
-                        ),
-                  ),
-                  if (_notificationsCount > 0 && !(widget.hideBadge ?? false))
-                    _getBadge(context),
-                ],
+    final size = widget.customStyles?.notificationIconStyle?.size ??
+        DefaultIconStyle.iconSize;
+    final colors = SirenAppTheme.colors(isDarkMode: widget.darkMode);
+    return IgnorePointer(
+      ignoring: widget.disabled,
+      child: GestureDetector(
+        onTap: () {
+          if (!_processingGesture && mounted) {
+            setState(() {
+              _processingGesture = true;
+            });
+            if (widget.onTap != null) {
+              widget.onTap?.call();
+            }
+          }
+          Future.delayed(const Duration(milliseconds: 500), () {
+            setState(() {
+              _processingGesture = false;
+            });
+          });
+        },
+        child: Stack(
+          children: [
+            Semantics(
+              label: 'siren-notification-icon',
+              hint: 'Tap to view notifications',
+              child: SizedBox(
+                key: const Key('siren-notification-icon'),
+                width: size,
+                height: size,
+                child: widget.notificationIcon ??
+                    Icon(
+                      Icons.notifications_none_outlined,
+                      size: size,
+                      color: widget.theme?.notificationIconColor ??
+                          colors.notificationIconColor,
+                    ),
               ),
             ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _getBadge(BuildContext context) {
-    final badgeStyle = widget.customStyles?.badgeStyle;
-    final currentTheme = Theme.of(context);
-    return Positioned(
-      right: badgeStyle?.right ?? DefaultIconStyle.defaultRight,
-      top: badgeStyle?.top ?? DefaultIconStyle.defaultTop,
-      child: Container(
-        width: badgeStyle?.size ?? DefaultIconStyle.defaultSize,
-        height: badgeStyle?.size ?? DefaultIconStyle.defaultSize,
-        padding:
-            EdgeInsets.all(badgeStyle?.inset ?? DefaultIconStyle.defaultInset),
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: currentTheme.colorScheme.tertiaryContainer,
-        ),
-        child: Align(
-          child: Text(
-            _notificationsCount > 99 ? '99+' : _notificationsCount.toString(),
-            style: TextStyle(
-              color: currentTheme.colorScheme.onTertiary,
-              fontSize:
-                  badgeStyle?.fontSize ?? DefaultIconStyle.defaultFontSize,
+            IconBadge(
+              hideBadge:
+                  _notificationsCount == 0 || (widget.hideBadge ?? false),
+              badgeStyle: widget.customStyles?.badgeStyle,
+              notificationsCount: _notificationsCount,
+              badgeBackgroundColor:
+                  widget.theme?.badgeColors?.backgroundColor ??
+                      colors.badgeBackgroundColor,
+              color: widget.theme?.badgeColors?.color ?? colors.badgeTextColor,
             ),
-          ),
+          ],
         ),
       ),
     );

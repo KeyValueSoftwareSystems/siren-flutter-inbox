@@ -14,99 +14,102 @@ class MockSirenDataProvider extends Mock implements SirenDataProvider {
 }
 
 void main() {
-  //  late MockSirenDataProvider mockSirenDataProvider;
-  //  setUp(() {
-  //   mockSirenDataProvider = MockSirenDataProvider();
-  // });
   group('SirenDataProvider', () {
     test('initialize should set apiDomain from environment', () async {
-      // Arrange
       final mockSirenDataProvider = MockSirenDataProvider();
       const expectedApiDomain = 'https://example.com';
 
-      // Stub the getApiDomain method to return a specific value
-      // when(mockSirenDataProvider.initialize()).thenAnswer((_) => Future.value());
-
-      // Act
       await mockSirenDataProvider.initialize();
-      //verify(mockSirenDataProvider.initialize()).called(1);
-
-      // Assert
       expect(mockSirenDataProvider.apiDomain, expectedApiDomain);
     });
   });
 
-  group('CardProps', () {
+  group('CardParams', () {
     test('constructor should initialize properties with provided values', () {
-      // Arrange & Act
-      const cardProps = CardProps(hideAvatar: true, showMedia: false);
+      const cardParams = CardParams(
+        hideAvatar: true,
+      );
 
-      // Assert
-      expect(cardProps.hideAvatar, true);
-      expect(cardProps.showMedia, false);
+      expect(cardParams.hideAvatar, true);
     });
   });
 
   group('IconStyle', () {
     test('constructor should initialize size property with provided value', () {
-      // Arrange & Act
-      const iconStyle = IconStyle(size: 24);
+      const iconStyle = NotificationIconStyle(size: 24);
 
-      // Assert
       expect(iconStyle.size, 24.0);
     });
   });
 
   group('DefaultIconStyle', () {
     test('iconSize should return default size for the notification icon', () {
-      // Arrange & Act
+      final defaultFontSize = DefaultIconStyle.defaultFontSize;
+      final defaultSize = DefaultIconStyle.defaultSize;
+      final defaultTop = DefaultIconStyle.defaultTop;
+      final defaultRight = DefaultIconStyle.defaultRight;
       final iconSize = DefaultIconStyle.iconSize;
 
-      // Assert
+      expect(defaultFontSize, 10);
+      expect(defaultSize, 20);
+      expect(defaultTop, 0);
+      expect(defaultRight, 2);
       expect(iconSize, 35);
     });
   });
 
   group('BadgeStyle', () {
     test('constructor should initialize properties with provided values', () {
-      // Arrange & Act
       const badgeStyle = BadgeStyle(fontSize: 16, size: 20);
 
-      // Assert
       expect(badgeStyle.fontSize, 16.0);
       expect(badgeStyle.size, 20.0);
     });
   });
 
-  group('SirenStyleProps', () {
+  group('CustomStyles', () {
     test('constructor should initialize properties with provided values', () {
-      // Arrange & Act
-      const sirenStyleProps = SirenStyleProps(
-        container: BoxDecoration(color: Colors.blue),
-        iconStyle: IconStyle(size: 24),
-        badgeStyle: BadgeStyle(fontSize: 16),
+      final sirenStyleProps = CustomStyles(
+        cardStyle: CardStyle(
+          cardContainer: ContainerStyle(
+            decoration: const BoxDecoration(color: Colors.blue),
+          ),
+        ),
+        notificationIconStyle: const NotificationIconStyle(size: 24),
+        badgeStyle: const BadgeStyle(fontSize: 16),
       );
 
-      // Assert
-      expect(sirenStyleProps.container!.color, Colors.blue);
-      expect(sirenStyleProps.iconStyle!.size, 24.0);
+      expect(
+        sirenStyleProps.cardStyle?.cardContainer!.decoration!.color,
+        Colors.blue,
+      );
+      expect(sirenStyleProps.notificationIconStyle!.size, 24.0);
       expect(sirenStyleProps.badgeStyle!.fontSize, 16.0);
     });
   });
 
   group('CustomThemeColors', () {
     test('constructor should initialize properties with provided values', () {
-      // Arrange & Act
       final customThemeColors = CustomThemeColors(
         backgroundColor: Colors.white,
-        highlightedCardBorderColor: Colors.grey,
-        badgeColor: Colors.red,
+        primary: Colors.grey,
       );
 
-      // Assert
       expect(customThemeColors.backgroundColor, Colors.white);
-      expect(customThemeColors.highlightedCardBorderColor, Colors.grey);
-      expect(customThemeColors.badgeColor, Colors.red);
+      expect(customThemeColors.primary, Colors.grey);
     });
+  });
+
+  test('Card Params', () {
+    const hideAvatar = true;
+    const Widget deleteWidget = Icon(Icons.delete);
+
+    const cardParams = CardParams(
+      hideAvatar: hideAvatar,
+      deleteIcon: deleteWidget,
+    );
+
+    expect(cardParams.hideAvatar, hideAvatar);
+    expect(cardParams.deleteIcon, deleteWidget);
   });
 }

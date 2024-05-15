@@ -13,14 +13,11 @@ void main() {
         ),
       );
 
-      // Verify that CustomErrorWidget is rendered
       expect(find.byType(DefaultErrorWidget), findsOneWidget);
 
-      // Verify the texts
       expect(find.text(Strings.error_title), findsOneWidget);
       expect(find.text(Strings.error_desc), findsOneWidget);
 
-      // Verify the circle widget
       final circleFinder = find.byWidgetPredicate(
         (widget) =>
             widget is Container &&
@@ -29,13 +26,10 @@ void main() {
       );
       expect(circleFinder, findsOneWidget);
       final circleContainer = tester.widget<Container>(circleFinder);
-      // expect(circleContainer.decoration, isA<BoxDecoration>());
-      // expect(circleContainer.child, isA<Icon>());
       final iconWidget = circleContainer.child! as Icon;
       expect(iconWidget.icon, Icons.warning_rounded);
       expect(iconWidget.size, 84.0);
 
-      // Verify the text styles
       final titleText = find.text(Strings.error_title);
       final descText = find.text(Strings.error_desc);
       expect(titleText, findsOneWidget);

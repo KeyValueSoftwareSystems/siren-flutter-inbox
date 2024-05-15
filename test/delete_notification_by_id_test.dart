@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
 import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
+import 'package:sirenapp_flutter_inbox/src/errors/errors.dart';
 import 'package:sirenapp_flutter_inbox/src/models/api_response.dart';
 import 'package:sirenapp_flutter_inbox/src/services/api_client.dart';
 import 'package:sirenapp_flutter_inbox/src/services/api_provider.dart';
@@ -17,8 +18,6 @@ class MockApiClient extends ApiClient {
     CancelToken? cancelToken,
     ProgressCallback? onReceiveProgress,
   }) async {
-    // Simulate different API responses here
-    // (e.g., return ApiResponse with different status codes, data, and errors)
     final result = DioResponse(
       data: {
         'data': {'status': 'SUCCESS'},
@@ -26,7 +25,7 @@ class MockApiClient extends ApiClient {
       },
       statusCode: 200,
     );
-    return result; // Default to success for now
+    return result;
   }
 }
 
@@ -52,8 +51,7 @@ class DeleteNotificationById {
     required String notificationId,
   }) async {
     final result = ApiResponse()..isLoading = true;
-    final apiError = ApiErrorDetails()
-      ..errorType = ErrorTypes.NOTIFICATION_DELETE_FAILED;
+    final apiError = SirenErrorType()..code = ErrorCodes.DELETE_FAILED.name;
 
     final apiResponse = await api.delete(
       path: '$_apiPath/$notificationId',
@@ -62,7 +60,7 @@ class DeleteNotificationById {
       final deletionStatus = convertJsonToDeletionStatus(apiResponse.data);
 
       apiError
-        ..errorCode = ApiResponse.fromJson(apiResponse.data).error?.errorCode
+        ..type = ApiResponse.fromJson(apiResponse.data).error?.type
         ..message = ApiResponse.fromJson(apiResponse.data).error?.message;
       result
         ..isLoading = false
@@ -77,7 +75,7 @@ class DeleteNotificationById {
         ..isSuccess = false
         ..isError = true
         ..rawResponse = apiResponse
-        ..error = Generics.defaultError;
+        ..error = Errors.defaultError;
     }
 
     return result;
@@ -89,23 +87,16 @@ void main() {
     const notificationId = 'test-notification-id';
 
     test('deleteNotificationById - success', () async {
-      // Arrange
-      // final fakeApi = MockApiClient(apiProvider());
       final deleteNotification = DeleteNotificationById._internal();
 
-      // Act
       final apiResponse = await deleteNotification.deleteNotificationById(
         notificationId: notificationId,
       );
 
-      // Assert
       expect(apiResponse.isLoading, false);
       expect(apiResponse.isSuccess, true);
       expect(apiResponse.isError, false);
-      expect(apiResponse.data, Status.SUCCESS); // No data expected for success
-      // expect(apiResponse.error, ApiErrorDetails( ));
+      expect(apiResponse.data, Status.SUCCESS);
     });
-
-    // Add additional test cases for different API responses (error, network failure, etc.)
   });
 }

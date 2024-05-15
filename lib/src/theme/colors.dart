@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class AppColors {
-  const AppColors._();
+class SirenAppColors {
+  const SirenAppColors._();
   //light mode colors
   static const Color primary200 = Color(0xFFFA9874);
   static const Color primary400 = Color(0xFFF56630);
@@ -26,8 +26,8 @@ class AppColors {
   static const Color emptyWidgetBgLightTheme = Color(0xFFF7F9FC);
   static const Color emptyWidgetBgDarkTheme = Color(0xFF38383D);
   static const Color emptyWidgetBellDark = Color(0xFF5E5E6A);
-  static const Color emptyWidgetBellLight = AppColors.grey300;
-  static const Color emptyWidgetBadgeLight = AppColors.grey400;
+  static const Color emptyWidgetBellLight = SirenAppColors.grey300;
+  static const Color emptyWidgetBadgeLight = SirenAppColors.grey400;
   static const Color emptyWidgetBadgeDark = Color(0xFF63636C);
 
   static const Color avatarPlaceholderBgLight = Color(0xFFF0F2F5);

@@ -1,5 +1,6 @@
 import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
 import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
+import 'package:sirenapp_flutter_inbox/src/errors/errors.dart';
 import 'package:sirenapp_flutter_inbox/src/models/api_response.dart';
 import 'package:sirenapp_flutter_inbox/src/services/api_client.dart';
 import 'package:sirenapp_flutter_inbox/src/services/api_provider.dart';
@@ -18,20 +19,19 @@ class MarkAllNotificationsAsViewed {
   }) async {
     final api = ApiClient(apiProvider());
     final result = ApiResponse()..isLoading;
-    final apiError = ApiErrorDetails()
-      ..errorType = ErrorTypes.UPDATE_VIEWED_FAILED;
+    var apiError = Errors.markAllAsViewedError;
 
     final data = {
       'lastOpenedAt': untilDate,
     };
 
     if (SirenDataProvider.instance.tokenVerificationStatus != Status.SUCCESS) {
-      apiError.errorType = ErrorTypes.AUTHENTICATION_FAILED;
+      apiError = SirenDataProvider.instance.getVerificationErrorType();
       result
         ..isLoading = false
         ..isError = true
         ..data = null
-        ..rawResponse = Generics.rawResponseError
+        ..rawResponse = Errors.rawResponseError
         ..error = apiError;
       return result;
     }
@@ -42,9 +42,6 @@ class MarkAllNotificationsAsViewed {
       data: data,
     );
     if (apiResponse.statusCode != 0 && apiResponse.data != null) {
-      apiError
-        ..errorCode = ApiResponse.fromJson(apiResponse.data).error?.errorCode
-        ..message = ApiResponse.fromJson(apiResponse.data).error?.message;
       result
         ..isLoading = false
         ..isSuccess = apiResponse.statusCode == 200
@@ -57,7 +54,7 @@ class MarkAllNotificationsAsViewed {
         ..isSuccess = false
         ..isError = true
         ..rawResponse = apiResponse
-        ..error = Generics.defaultError;
+        ..error = Errors.defaultError;
     }
 
     return result;
