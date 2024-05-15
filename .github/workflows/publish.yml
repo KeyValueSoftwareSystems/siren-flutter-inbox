@@ -34,8 +34,8 @@ jobs:
           git config user.email github-actions@github.com
           export BRANCH=${{ steps.branch-names.outputs.current_branch }}
           echo "branch: $BRANCH"
-          if [[ "$BRANCH" != "main" ]]; then
-            echo "Tagging cannot be done on a branch other than main"
+          if [[ "$BRANCH" != "master" ]]; then
+            echo "Tagging cannot be done on a branch other than master"
             echo $BRANCH
             exit 1
           fi
