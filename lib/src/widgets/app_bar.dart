@@ -75,7 +75,11 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                           styles?.appBarStyle?.titlePadding ?? EdgeInsets.zero,
                       child: Text(
                         headerParams?.title ?? Strings.notifications,
-                        style: styles?.appBarStyle?.headerTextStyle ??
+                        style: styles?.appBarStyle?.headerTextStyle?.copyWith(
+                              color: colors?.inboxHeaderColors?.titleColor ??
+                                  colors?.textColor ??
+                                  defaultColors.appBarTextColor,
+                            ) ??
                             TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
