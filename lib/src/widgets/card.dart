@@ -63,7 +63,13 @@ class _CardWidgetState extends State<CardWidget> {
         widget.onTap(widget.notification);
       },
       child: Container(
-        decoration: widget.styles?.cardStyle?.cardContainer?.decoration ??
+        decoration: widget.styles?.cardStyle?.cardContainer?.decoration
+                ?.copyWith(
+              color: widget.notification.isRead
+                  ? widget.colors?.cardColors?.background ?? Colors.transparent
+                  : widget.colors?.highlightedCardColor ??
+                      defaultColors.cardBackgroundUnread,
+            ) ??
             _getDefaultContainerDecoration(widget.colors, defaultColors),
         padding: widget.styles?.cardStyle?.cardContainer?.padding ??
             const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
@@ -181,7 +187,11 @@ class _CardWidgetState extends State<CardWidget> {
             widget.notification.message.header ?? '',
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: widget.styles?.cardStyle?.cardTitle ??
+            style: widget.styles?.cardStyle?.cardTitle?.copyWith(
+                  color: colors?.cardColors?.titleColor ??
+                      colors?.textColor ??
+                      defaultColors.textColor,
+                ) ??
                 TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -218,7 +228,11 @@ class _CardWidgetState extends State<CardWidget> {
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: NullableText(
         text: widget.notification.message.subHeader,
-        style: widget.styles?.cardStyle?.cardSubtitle ??
+        style: widget.styles?.cardStyle?.cardSubtitle?.copyWith(
+              color: colors?.cardColors?.subtitleColor ??
+                  colors?.textColor ??
+                  defaultColors.textColor,
+            ) ??
             TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
@@ -233,7 +247,11 @@ class _CardWidgetState extends State<CardWidget> {
   Widget _buildBodyText(CustomThemeColors? colors, AppColors defaultColors) {
     return Text(
       widget.notification.message.body ?? '',
-      style: widget.styles?.cardStyle?.cardDescription ??
+      style: widget.styles?.cardStyle?.cardDescription?.copyWith(
+            color: colors?.cardColors?.descriptionColor ??
+                colors?.textColor ??
+                defaultColors.textColor,
+          ) ??
           TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w400,
@@ -261,6 +279,7 @@ class _CardWidgetState extends State<CardWidget> {
           },
           child: Container(
             height: 140,
+            margin: const EdgeInsets.only(right: 10),
             width: double.infinity,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(6),
@@ -324,7 +343,11 @@ class _CardWidgetState extends State<CardWidget> {
           generateElapsedTimeText(
             DateTime.parse(widget.notification.createdAt),
           ),
-          style: widget.styles?.cardStyle?.dateStyle ??
+          style: widget.styles?.cardStyle?.dateStyle?.copyWith(
+                color: colors?.dateColor ??
+                    colors?.textColor ??
+                    defaultColors.dateColor,
+              ) ??
               TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w400,

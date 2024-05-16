@@ -77,7 +77,7 @@ Widget _buildCircle(AppColors colors) {
         child: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: colors.notificationIconColor,
+            color: colors.emptyWidgetNotificationIconColor,
             shape: BoxShape.circle,
             border: Border.all(
               color: colors.emptyWidgetBorderColor,

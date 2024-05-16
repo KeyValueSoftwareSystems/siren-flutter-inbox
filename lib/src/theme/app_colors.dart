@@ -27,6 +27,7 @@ class AppColors {
     required this.emptyWidgetBorderColor,
     required this.emptyWidgetIconColor,
     required this.emptyWidgetNotificationColor,
+    required this.emptyWidgetNotificationIconColor,
     required this.errorWidgetIconColor,
     required this.errorWidgetIconContainer,
     required this.errorWidgetText1,
@@ -71,6 +72,7 @@ class AppColors {
   Color emptyWidgetBorderColor;
   Color emptyWidgetIconColor;
   Color emptyWidgetNotificationColor;
+  Color emptyWidgetNotificationIconColor;
   Color errorWidgetIconColor;
   Color errorWidgetIconContainer;
   Color errorWidgetText1;
