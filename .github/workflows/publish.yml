@@ -65,16 +65,19 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Setup Pub Credentials
+        shell: bash
+        env:
+          INPUT_ACCESSTOKEN: ${{ secrets.INPUT_ACCESSTOKEN }}
+          INPUT_REFRESHTOKEN: ${{ secrets.INPUT_REFRESHTOKEN }}
+        run: |
+          sh ./pub_login.sh
+
       - name: Check Publish Warnings
         run: flutter pub publish --dry-run
 
       - name: Publish Package
-        uses: k-paxian/dart-package-publisher@v1.5.1
-        with:
-          credentialJson: ${{ secrets.CREDENTIAL_JSON }}
-          flutter: true
-          skipTests: true
-          force: true
+        run: flutter pub publish -f
     
       - name: Commit pubspec.yaml
         if: success()
