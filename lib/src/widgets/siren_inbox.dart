@@ -79,7 +79,8 @@ class SirenInbox extends StatefulWidget {
   State<SirenInbox> createState() => _SirenInboxState();
 }
 
-class _SirenInboxState extends State<SirenInbox> {
+class _SirenInboxState extends State<SirenInbox>
+    with SingleTickerProviderStateMixin {
   bool isLoading = true;
   bool isEndReached = false;
   bool isError = false;
@@ -87,23 +88,37 @@ class _SirenInboxState extends State<SirenInbox> {
   int currentPage = 0;
   String? deletingNotificationId;
   int pageSize = 20;
+  int activeTabIndex = 0;
 
   List<NotificationType> notifications = [];
   late final DeleteNotificationById _deleteNotificationById;
   late final ReadNotificationById _readNotificationById;
   late Timer? _periodicUpdateRef;
   late StreamSubscription<StreamResponse> _subscription;
-  late ScrollController _scrollController;
+  late ScrollController _inboxScrollController;
+  late List<ScrollController> _tabScrollControllers;
+  late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
     pageSize = max(min(widget.itemsPerFetch ?? Generics.PAGE_SIZE, 50), 0);
     _periodicUpdateRef = Timer(const Duration(days: 1), () {});
-    _scrollController = ScrollController();
-    _scrollController.addListener(_scrollListener);
+    _inboxScrollController = ScrollController();
+    _inboxScrollController.addListener(_scrollListener);
+    _tabScrollControllers = List.generate(
+      InboxTabs.values.length,
+      (index) => ScrollController()
+        ..addListener(() {
+          _tabScrollListeners(index);
+        }),
+    );
+
     _deleteNotificationById = DeleteNotificationById.instance;
     _readNotificationById = ReadNotificationById.instance;
+    _tabController =
+        TabController(length: InboxTabs.values.length, vsync: this);
+    _tabController.addListener(_tabListener);
     _subscribeToStream();
     _initialize();
   }
@@ -111,7 +126,11 @@ class _SirenInboxState extends State<SirenInbox> {
   @override
   void dispose() {
     markAllNotificationsAsViewed();
-    _scrollController.dispose();
+    _inboxScrollController.dispose();
+    for (final controller in _tabScrollControllers) {
+      controller.dispose();
+    }
+    _tabController.dispose();
     _periodicUpdateRef?.cancel();
     _subscription.cancel();
     super.dispose();
@@ -227,10 +246,22 @@ class _SirenInboxState extends State<SirenInbox> {
   }
 
   void _scrollListener() {
-    if (_scrollController.position.atEdge &&
-        _scrollController.position.pixels ==
-            _scrollController.position.maxScrollExtent) {
+    if (_inboxScrollController.position.atEdge &&
+        _inboxScrollController.position.pixels ==
+            _inboxScrollController.position.maxScrollExtent) {
       onEndReached();
+    }
+  }
+
+  void _tabScrollListeners(int index) {
+    if (_tabScrollControllers[index].position.atEdge &&
+        _tabScrollControllers[index].position.pixels ==
+            _tabScrollControllers[index].position.maxScrollExtent) {}
+  }
+
+  void _tabListener() {
+    if (_tabController.index != _tabController.previousIndex) {
+      onTabChanged(_tabController.index);
     }
   }
 
@@ -243,6 +274,7 @@ class _SirenInboxState extends State<SirenInbox> {
         final fetchedNotifications =
             await FetchAllNotifications.instance.fetchAllNotifications(
           size: pageSize,
+          isRead: activeTabIndex == 1 ? false : null,
           start: notifications.isNotEmpty
               ? modifyAndConvertToISOString(
                   notifications[0].createdAt,
@@ -307,6 +339,7 @@ class _SirenInboxState extends State<SirenInbox> {
         await FetchAllNotifications.instance.fetchAllNotifications(
       end: DateTime.now().toUtc().toIso8601String(),
       size: pageSize,
+      isRead: activeTabIndex == 1 ? false : null,
     );
 
     if (fetchedNotifications.isSuccess) {
@@ -331,7 +364,7 @@ class _SirenInboxState extends State<SirenInbox> {
 
   Future<void> onRefresh() async {
     if (mounted) {
-      _reset();
+      _reset(cancelFetch: true);
       await initialFetchNotification();
       setState(() {
         isLoading = false;
@@ -413,6 +446,7 @@ class _SirenInboxState extends State<SirenInbox> {
             notifications[notifications.length - 1].createdAt,
           ),
           size: pageSize,
+          isRead: activeTabIndex == 1 ? false : null,
         );
         if (fetchedNotifications.isSuccess) {
           final count =
@@ -456,6 +490,43 @@ class _SirenInboxState extends State<SirenInbox> {
     }
   }
 
+  void onTabChanged(int index) {
+    if (activeTabIndex != index) {
+      if (mounted) {
+        setState(() {
+          activeTabIndex = index;
+          _reset();
+        });
+      }
+    }
+  }
+
+  Widget _buildInboxBody(ScrollController _controller) {
+    return InboxBody(
+      cardParams: widget.cardParams,
+      colors: widget.theme,
+      customCard: widget.customCard,
+      customErrorWidget: widget.customErrorWidget,
+      customLoader: widget.customLoader,
+      customStyles: widget.customStyles,
+      deleteNotification: deleteNotification,
+      deletingNotificationId: deletingNotificationId,
+      disableAutoMarkAsRead: widget.cardParams?.disableAutoMarkAsRead ?? false,
+      endReached: isEndReached,
+      isDarkMode: widget.darkMode,
+      isError: isError,
+      isLoading: isLoading,
+      listEmptyWidget: widget.listEmptyWidget,
+      loadingNextPage: loadingNextPage,
+      markAsRead: _markNotificationAsRead,
+      notifications: notifications,
+      onCardClick: widget.onCardClick,
+      onEndReached: onEndReached,
+      onRefresh: onRefresh,
+      scrollController: _controller,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = SirenAppTheme.colors(isDarkMode: widget.darkMode ?? false);
@@ -477,6 +548,7 @@ class _SirenInboxState extends State<SirenInbox> {
           body: Column(
             children: [
               TabBar(
+                controller: _tabController,
                 isScrollable: true,
                 tabAlignment: TabAlignment.start,
                 indicatorColor: colors.tabBarActiveColor,
@@ -488,7 +560,7 @@ class _SirenInboxState extends State<SirenInbox> {
                     const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                 labelPadding: const EdgeInsets.symmetric(horizontal: 24),
                 indicatorWeight: 4,
-                // onTap: ,
+                onTap: onTabChanged,
                 tabs: const [
                   Tab(
                     child: Text(
@@ -504,32 +576,10 @@ class _SirenInboxState extends State<SirenInbox> {
               ),
               Expanded(
                 child: TabBarView(
+                  controller: _tabController,
                   children: [
-                    InboxBody(
-                      cardParams: widget.cardParams,
-                      colors: widget.theme,
-                      customCard: widget.customCard,
-                      customErrorWidget: widget.customErrorWidget,
-                      customLoader: widget.customLoader,
-                      customStyles: widget.customStyles,
-                      deleteNotification: deleteNotification,
-                      deletingNotificationId: deletingNotificationId,
-                      disableAutoMarkAsRead:
-                          widget.cardParams?.disableAutoMarkAsRead ?? false,
-                      endReached: isEndReached,
-                      isDarkMode: widget.darkMode,
-                      isError: isError,
-                      isLoading: isLoading,
-                      listEmptyWidget: widget.listEmptyWidget,
-                      loadingNextPage: loadingNextPage,
-                      markAsRead: _markNotificationAsRead,
-                      notifications: notifications,
-                      onCardClick: widget.onCardClick,
-                      onEndReached: onEndReached,
-                      onRefresh: onRefresh,
-                      scrollController: _scrollController,
-                    ),
-                    const Text('TAB 2'),
+                    _buildInboxBody(_tabScrollControllers[0]),
+                    _buildInboxBody(_tabScrollControllers[1]),
                   ],
                 ),
               ),
@@ -549,30 +599,7 @@ class _SirenInboxState extends State<SirenInbox> {
           headerParams: widget.headerParams,
           styles: widget.customStyles,
         ),
-        body: InboxBody(
-          cardParams: widget.cardParams,
-          colors: widget.theme,
-          customCard: widget.customCard,
-          customErrorWidget: widget.customErrorWidget,
-          customLoader: widget.customLoader,
-          customStyles: widget.customStyles,
-          deleteNotification: deleteNotification,
-          deletingNotificationId: deletingNotificationId,
-          disableAutoMarkAsRead:
-              widget.cardParams?.disableAutoMarkAsRead ?? false,
-          endReached: isEndReached,
-          isDarkMode: widget.darkMode,
-          isError: isError,
-          isLoading: isLoading,
-          listEmptyWidget: widget.listEmptyWidget,
-          loadingNextPage: loadingNextPage,
-          markAsRead: _markNotificationAsRead,
-          notifications: notifications,
-          onCardClick: widget.onCardClick,
-          onEndReached: onEndReached,
-          onRefresh: onRefresh,
-          scrollController: _scrollController,
-        ),
+        body: _buildInboxBody(_inboxScrollController),
       );
     }
   }

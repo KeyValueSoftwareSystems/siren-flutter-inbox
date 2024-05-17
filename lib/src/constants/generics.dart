@@ -19,6 +19,8 @@ enum Status {
   INVALID_CREDENTIALS,
 }
 
+enum InboxTabs { ALL, UNREAD }
+
 enum BulkUpdateType {
   MARK_AS_READ,
   MARK_AS_DELETED,
