@@ -365,3 +365,89 @@ class CardStyle {
   /// The size of avatar image
   final double? avatarSize;
 }
+
+/// Properties for configuring the appearance and behavior of the tab bar.
+class TabParams {
+  /// Constructs a [TabParams] with optional parameters.
+  TabParams({
+    this.activeTabIndex,
+    this.tabs,
+  });
+
+  /// The index of the initial active tab.
+  final int? activeTabIndex;
+
+  /// The list of tab items.
+  final List<TabItem>? tabs;
+
+}
+
+/// Represents an individual tab item.
+class TabItem {
+  TabItem({
+    required this.key,
+    required this.title,
+  });
+
+  /// The unique key for the tab item.
+  final String key;
+
+  /// The title of the tab item.
+  final String title;
+}
+
+/// Styles for customizing the appearance of the tab bar.
+class TabStyles {
+  TabStyles(
+    this.activeTabText,
+    this.inActiveTabText, {
+    this.tabContainer,
+    this.activeTabContainer,
+    this.inActiveTabContainer,
+  });
+
+  /// The container style for the tab bar.
+  final ContainerStyle? tabContainer;
+
+  /// The container style for the active tab.
+  final ContainerStyle? activeTabContainer;
+
+  /// The container style for the inactive tab.
+  final ContainerStyle? inActiveTabContainer;
+
+  /// The text style for the active tab.
+  final TextStyle? activeTabText;
+
+  /// The text style for the inactive tab.
+  final TextStyle? inActiveTabText;
+}
+
+/// Colors for customizing the appearance of the tab bar.
+class TabColors {
+  TabColors({
+    this.containerBackgroundColor,
+    this.activeTabBackgroundColor,
+    this.inactiveTabBackgroundColor,
+    this.activeTabTextColor,
+    this.inactiveTabTextColor,
+    this.indicatorColor,
+  });
+
+  /// The background color of the tab bar container.
+  final Color? containerBackgroundColor;
+
+  /// The background color of the active tab.
+  final Color? activeTabBackgroundColor;
+
+  /// The background color of the inactive tab.
+  final Color? inactiveTabBackgroundColor;
+
+  /// The text color of the active tab.
+  final Color? activeTabTextColor;
+
+  /// The text color of the inactive tab.
+  final Color? inactiveTabTextColor;
+
+  /// The color of the tab indicator.
+  final Color? indicatorColor;
+}

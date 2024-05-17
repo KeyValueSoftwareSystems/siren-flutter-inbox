@@ -9,7 +9,6 @@ import 'package:sirenapp_flutter_inbox/src/api/mark_all_notifications_as_viewed.
 import 'package:sirenapp_flutter_inbox/src/api/notifications_bulk_update.dart';
 import 'package:sirenapp_flutter_inbox/src/api/read_notification_by_id.dart';
 import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
-import 'package:sirenapp_flutter_inbox/src/constants/strings.dart';
 import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
 import 'package:sirenapp_flutter_inbox/src/errors/errors.dart';
 import 'package:sirenapp_flutter_inbox/src/theme/app_theme.dart';
@@ -22,6 +21,7 @@ class SirenInbox extends StatefulWidget {
   const SirenInbox({
     super.key,
     this.darkMode,
+    this.hideTab,
     this.itemsPerFetch,
     this.listEmptyWidget,
     this.customCard,
@@ -29,15 +29,18 @@ class SirenInbox extends StatefulWidget {
     this.customErrorWidget,
     this.cardParams,
     this.headerParams,
+    this.tabParams,
     this.onCardClick,
     this.onError,
     this.theme,
     this.customStyles,
-    this.hideTab,
   });
 
   /// Flag for enabling dark mode.
   final bool? darkMode;
+
+  /// Flag to hide the tab bar.
+  final bool? hideTab;
 
   /// Notifications to be fetched in each request
   final int? itemsPerFetch;
@@ -54,11 +57,14 @@ class SirenInbox extends StatefulWidget {
   /// Custom error widget.
   final Widget? customErrorWidget;
 
-  ///Custom props for Card properties
+  /// Custom properties for Card
   final CardParams? cardParams;
 
-  /// Custom props for header properties
+  /// Custom properties for inbox header.
   final HeaderParams? headerParams;
+
+  // Properties for the tab bar.
+  final TabParams? tabParams;
 
   /// Callback function when a notification card is clicked.
   final void Function(NotificationType)? onCardClick;
@@ -71,9 +77,6 @@ class SirenInbox extends StatefulWidget {
 
   /// Custom styles for the card of each notification.
   final CustomStyles? customStyles;
-
-  /// Flag to hide the tab bar.
-  final bool? hideTab;
 
   @override
   State<SirenInbox> createState() => _SirenInboxState();
@@ -88,7 +91,7 @@ class _SirenInboxState extends State<SirenInbox>
   int currentPage = 0;
   String? deletingNotificationId;
   int pageSize = 20;
-  int activeTabIndex = 0;
+  int _activeTabIndex = 0;
 
   List<NotificationType> notifications = [];
   late final DeleteNotificationById _deleteNotificationById;
@@ -104,6 +107,8 @@ class _SirenInboxState extends State<SirenInbox>
     super.initState();
     pageSize = max(min(widget.itemsPerFetch ?? Generics.PAGE_SIZE, 50), 0);
     _periodicUpdateRef = Timer(const Duration(days: 1), () {});
+    _activeTabIndex = _activeTabIndex = (widget.tabParams?.activeTabIndex ?? 0)
+        .clamp(0, InboxTabs.values.length - 1);
     _inboxScrollController = ScrollController();
     _inboxScrollController.addListener(_scrollListener);
     _tabScrollControllers = List.generate(
@@ -116,8 +121,11 @@ class _SirenInboxState extends State<SirenInbox>
 
     _deleteNotificationById = DeleteNotificationById.instance;
     _readNotificationById = ReadNotificationById.instance;
-    _tabController =
-        TabController(length: InboxTabs.values.length, vsync: this);
+    _tabController = TabController(
+      length: InboxTabs.values.length,
+      vsync: this,
+      initialIndex: _activeTabIndex,
+    );
     _tabController.addListener(_tabListener);
     _subscribeToStream();
     _initialize();
@@ -274,7 +282,7 @@ class _SirenInboxState extends State<SirenInbox>
         final fetchedNotifications =
             await FetchAllNotifications.instance.fetchAllNotifications(
           size: pageSize,
-          isRead: activeTabIndex == 1 ? false : null,
+          isRead: _activeTabIndex == 1 ? false : null,
           start: notifications.isNotEmpty
               ? modifyAndConvertToISOString(
                   notifications[0].createdAt,
@@ -339,7 +347,7 @@ class _SirenInboxState extends State<SirenInbox>
         await FetchAllNotifications.instance.fetchAllNotifications(
       end: DateTime.now().toUtc().toIso8601String(),
       size: pageSize,
-      isRead: activeTabIndex == 1 ? false : null,
+      isRead: _activeTabIndex == 1 ? false : null,
     );
 
     if (fetchedNotifications.isSuccess) {
@@ -446,7 +454,7 @@ class _SirenInboxState extends State<SirenInbox>
             notifications[notifications.length - 1].createdAt,
           ),
           size: pageSize,
-          isRead: activeTabIndex == 1 ? false : null,
+          isRead: _activeTabIndex == 1 ? false : null,
         );
         if (fetchedNotifications.isSuccess) {
           final count =
@@ -491,10 +499,10 @@ class _SirenInboxState extends State<SirenInbox>
   }
 
   void onTabChanged(int index) {
-    if (activeTabIndex != index) {
+    if (_activeTabIndex != index) {
       if (mounted) {
         setState(() {
-          activeTabIndex = index;
+          _activeTabIndex = index;
           _reset();
         });
       }
@@ -530,10 +538,11 @@ class _SirenInboxState extends State<SirenInbox>
   @override
   Widget build(BuildContext context) {
     final colors = SirenAppTheme.colors(isDarkMode: widget.darkMode ?? false);
+    final tabs = widget.tabParams?.tabs ?? Generics.inboxTabs;
 
     if ((widget.hideTab ?? false) == false) {
       return DefaultTabController(
-        length: 2,
+        length: InboxTabs.values.length,
         child: Scaffold(
           backgroundColor:
               widget.theme?.backgroundColor ?? colors.scaffoldBackgroundColor,
@@ -561,18 +570,11 @@ class _SirenInboxState extends State<SirenInbox>
                 labelPadding: const EdgeInsets.symmetric(horizontal: 24),
                 indicatorWeight: 4,
                 onTap: onTabChanged,
-                tabs: const [
-                  Tab(
-                    child: Text(
-                      Strings.tabAll,
-                    ),
-                  ),
-                  Tab(
-                    child: Text(
-                      Strings.tabUnread,
-                    ),
-                  ),
-                ],
+                tabs: tabs.map((tabItem) {
+                  return Tab(
+                    child: Text(tabItem.title),
+                  );
+                }).toList(),
               ),
               Expanded(
                 child: TabBarView(
