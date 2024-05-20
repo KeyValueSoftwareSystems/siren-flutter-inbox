@@ -105,28 +105,7 @@ class _SirenInboxState extends State<SirenInbox>
   @override
   void initState() {
     super.initState();
-    pageSize = max(min(widget.itemsPerFetch ?? Generics.PAGE_SIZE, 50), 0);
-    _periodicUpdateRef = Timer(const Duration(days: 1), () {});
-    _activeTabIndex = _activeTabIndex = (widget.tabParams?.activeTabIndex ?? 0)
-        .clamp(0, InboxTabs.values.length - 1);
-    _inboxScrollController = ScrollController();
-    _inboxScrollController.addListener(_scrollListener);
-    _tabScrollControllers = List.generate(
-      InboxTabs.values.length,
-      (index) => ScrollController()
-        ..addListener(() {
-          _tabScrollListeners(index);
-        }),
-    );
-
-    _deleteNotificationById = DeleteNotificationById.instance;
-    _readNotificationById = ReadNotificationById.instance;
-    _tabController = TabController(
-      length: InboxTabs.values.length,
-      vsync: this,
-      initialIndex: _activeTabIndex,
-    );
-    _tabController.addListener(_tabListener);
+    _initializeVariables();
     _subscribeToStream();
     _initialize();
   }
@@ -157,6 +136,31 @@ class _SirenInboxState extends State<SirenInbox>
         });
       }
     }
+  }
+
+  void _initializeVariables() {
+    pageSize = max(min(widget.itemsPerFetch ?? Generics.PAGE_SIZE, 50), 0);
+    _periodicUpdateRef = Timer(const Duration(days: 1), () {});
+    _activeTabIndex = _activeTabIndex = (widget.tabParams?.activeTabIndex ?? 0)
+        .clamp(0, InboxTabs.values.length - 1);
+    _inboxScrollController = ScrollController();
+    _inboxScrollController.addListener(_scrollListener);
+    _tabScrollControllers = List.generate(
+      InboxTabs.values.length,
+      (index) => ScrollController()
+        ..addListener(() {
+          _tabScrollListeners(index);
+        }),
+    );
+
+    _deleteNotificationById = DeleteNotificationById.instance;
+    _readNotificationById = ReadNotificationById.instance;
+    _tabController = TabController(
+      length: InboxTabs.values.length,
+      vsync: this,
+      initialIndex: _activeTabIndex,
+    );
+    _tabController.addListener(_tabListener);
   }
 
   void _subscribeToStream() {
@@ -541,52 +545,78 @@ class _SirenInboxState extends State<SirenInbox>
     final tabs = widget.tabParams?.tabs ?? Generics.inboxTabs;
 
     if ((widget.hideTab ?? false) == false) {
-      return DefaultTabController(
-        length: InboxTabs.values.length,
-        child: Scaffold(
-          backgroundColor:
-              widget.theme?.backgroundColor ?? colors.scaffoldBackgroundColor,
-          appBar: SirenAppBar(
-            colors: widget.theme,
-            isDarkMode: widget.darkMode,
-            onClearAllPressed: onBulkDelete,
-            isNonEmptyNotifications: shouldShowClearAllButton(),
-            headerParams: widget.headerParams,
-            styles: widget.customStyles,
-          ),
-          body: Column(
-            children: [
-              TabBar(
+      return Scaffold(
+        backgroundColor:
+            widget.theme?.backgroundColor ?? colors.scaffoldBackgroundColor,
+        appBar: SirenAppBar(
+          colors: widget.theme,
+          isDarkMode: widget.darkMode,
+          onClearAllPressed: onBulkDelete,
+          isNonEmptyNotifications: shouldShowClearAllButton(),
+          headerParams: widget.headerParams,
+          styles: widget.customStyles,
+        ),
+        body: Column(
+          children: [
+            Container(
+              color: widget.theme?.tabColors?.containerBackgroundColor ??
+                  Colors.transparent,
+              child: TabBar(
                 controller: _tabController,
                 isScrollable: true,
-                tabAlignment: TabAlignment.start,
-                indicatorColor: colors.tabBarActiveColor,
-                labelColor: colors.tabBarActiveColor,
-                unselectedLabelColor: colors.tabBarInActiveColor,
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 indicatorSize: TabBarIndicatorSize.tab,
+                tabAlignment: TabAlignment.start,
+                indicatorColor: widget.theme?.tabColors?.indicatorColor ??
+                    colors.tabBarActiveColor,
+                indicatorWeight:
+                    widget.customStyles?.tabStyles?.indicatorSize ?? 4,
+                labelColor: widget.theme?.tabColors?.activeTabTextColor ??
+                    colors.tabBarActiveColor,
+                unselectedLabelColor:
+                    widget.theme?.tabColors?.inactiveTabTextColor ??
+                        colors.tabBarInActiveColor,
+                labelPadding: EdgeInsets.zero,
                 labelStyle:
-                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-                labelPadding: const EdgeInsets.symmetric(horizontal: 24),
-                indicatorWeight: 4,
+                    widget.customStyles?.tabStyles?.activeTabTextStyle ??
+                        const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                unselectedLabelStyle:
+                    widget.customStyles?.tabStyles?.inActiveTabTextStyle ??
+                        const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
                 onTap: onTabChanged,
-                tabs: tabs.map((tabItem) {
-                  return Tab(
-                    child: Text(tabItem.title),
+                tabs: tabs.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final tabItem = entry.value;
+                  return Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    color: _activeTabIndex == index
+                        ? widget.theme?.tabColors?.activeTabBackgroundColor ??
+                            Colors.transparent
+                        : widget.theme?.tabColors?.inactiveTabBackgroundColor ??
+                            Colors.transparent,
+                    child: Tab(
+                      child: Text(tabItem.title),
+                    ),
                   );
                 }).toList(),
               ),
-              Expanded(
-                child: TabBarView(
-                  controller: _tabController,
-                  children: [
-                    _buildInboxBody(_tabScrollControllers[0]),
-                    _buildInboxBody(_tabScrollControllers[1]),
-                  ],
-                ),
+            ),
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildInboxBody(_tabScrollControllers[0]),
+                  _buildInboxBody(_tabScrollControllers[1]),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       );
     } else {

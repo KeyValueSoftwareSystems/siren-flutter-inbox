@@ -98,6 +98,7 @@ class CustomStyles {
     this.timerIconStyle,
     this.deleteIconStyle,
     this.clearAllIconStyle,
+    this.tabStyles,
   });
 
   /// The decoration for the Siren inbox list.
@@ -123,6 +124,8 @@ class CustomStyles {
 
   /// Style of clear all icon in inbox default header
   final ClearAllIconStyle? clearAllIconStyle;
+
+  final TabStyles? tabStyles;
 }
 
 class TimerIconStyle {
@@ -170,6 +173,7 @@ class CustomThemeColors {
     this.inboxHeaderColors,
     this.badgeColors,
     this.cardColors,
+    this.tabColors,
   });
 
   /// The background color for Siren inbox.
@@ -213,6 +217,9 @@ class CustomThemeColors {
 
   /// The colors for inbox list card
   final BadgeColors? badgeColors;
+
+  /// The colors for tab bar
+  final TabColors? tabColors;
 }
 
 /// Custom theme colors to configure the appearance inbox list item.
@@ -379,7 +386,6 @@ class TabParams {
 
   /// The list of tab items.
   final List<TabItem>? tabs;
-
 }
 
 /// Represents an individual tab item.
@@ -398,28 +404,20 @@ class TabItem {
 
 /// Styles for customizing the appearance of the tab bar.
 class TabStyles {
-  TabStyles(
-    this.activeTabText,
-    this.inActiveTabText, {
-    this.tabContainer,
-    this.activeTabContainer,
-    this.inActiveTabContainer,
+  TabStyles({
+    this.activeTabTextStyle,
+    this.inActiveTabTextStyle,
+    this.indicatorSize,
   });
 
-  /// The container style for the tab bar.
-  final ContainerStyle? tabContainer;
-
-  /// The container style for the active tab.
-  final ContainerStyle? activeTabContainer;
-
-  /// The container style for the inactive tab.
-  final ContainerStyle? inActiveTabContainer;
+  /// The height of the indicator
+  final double? indicatorSize;
 
   /// The text style for the active tab.
-  final TextStyle? activeTabText;
+  final TextStyle? activeTabTextStyle;
 
   /// The text style for the inactive tab.
-  final TextStyle? inActiveTabText;
+  final TextStyle? inActiveTabTextStyle;
 }
 
 /// Colors for customizing the appearance of the tab bar.
