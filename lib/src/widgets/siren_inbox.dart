@@ -57,7 +57,7 @@ class SirenInbox extends StatefulWidget {
   /// Custom error widget.
   final Widget? customErrorWidget;
 
-  /// Custom properties for Card
+  /// Custom properties for card.
   final CardParams? cardParams;
 
   /// Custom properties for inbox header.
@@ -268,7 +268,9 @@ class _SirenInboxState extends State<SirenInbox>
   void _tabScrollListeners(int index) {
     if (_tabScrollControllers[index].position.atEdge &&
         _tabScrollControllers[index].position.pixels ==
-            _tabScrollControllers[index].position.maxScrollExtent) {}
+            _tabScrollControllers[index].position.maxScrollExtent) {
+      onEndReached();
+    }
   }
 
   void _tabListener() {
@@ -286,7 +288,8 @@ class _SirenInboxState extends State<SirenInbox>
         final fetchedNotifications =
             await FetchAllNotifications.instance.fetchAllNotifications(
           size: pageSize,
-          isRead: _activeTabIndex == 1 ? false : null,
+          isRead:
+              (widget.hideTab == false && _activeTabIndex == 1) ? false : null,
           start: notifications.isNotEmpty
               ? modifyAndConvertToISOString(
                   notifications[0].createdAt,
@@ -351,7 +354,7 @@ class _SirenInboxState extends State<SirenInbox>
         await FetchAllNotifications.instance.fetchAllNotifications(
       end: DateTime.now().toUtc().toIso8601String(),
       size: pageSize,
-      isRead: _activeTabIndex == 1 ? false : null,
+      isRead: (widget.hideTab == false && _activeTabIndex == 1) ? false : null,
     );
 
     if (fetchedNotifications.isSuccess) {
@@ -458,7 +461,8 @@ class _SirenInboxState extends State<SirenInbox>
             notifications[notifications.length - 1].createdAt,
           ),
           size: pageSize,
-          isRead: _activeTabIndex == 1 ? false : null,
+          isRead:
+              (widget.hideTab == false && _activeTabIndex == 1) ? false : null,
         );
         if (fetchedNotifications.isSuccess) {
           final count =
@@ -507,7 +511,8 @@ class _SirenInboxState extends State<SirenInbox>
       if (mounted) {
         setState(() {
           _activeTabIndex = index;
-          _reset();
+          _reset(cancelFetch: true);
+          _initialize();
         });
       }
     }
