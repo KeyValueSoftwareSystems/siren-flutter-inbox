@@ -2,6 +2,7 @@ class Strings {
   Strings._();
 
   static const empty_title = 'No new notifications';
+  static const empty_title_unread = 'No unread notifications';
   static const empty_desc = 'Check back later for updates and alerts.';
   static const error_title = 'Oops! Something went wrong.';
   static const something_went_wrong = 'Something went wrong';

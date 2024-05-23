@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
 import 'package:sirenapp_flutter_inbox/src/constants/strings.dart';
 import 'package:sirenapp_flutter_inbox/src/theme/app_colors.dart';
 import 'package:sirenapp_flutter_inbox/src/theme/app_theme.dart';
 
 class EmptyWidget extends StatelessWidget {
   const EmptyWidget({
+    required this.activeTabIndex,
     this.isDarkMode,
     super.key,
   });
 
   final bool? isDarkMode;
+  final int activeTabIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +31,7 @@ class EmptyWidget extends StatelessWidget {
               height: 10,
             ),
             Text(
-              Strings.empty_title,
+              Generics.emptyMessages[activeTabIndex],
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,

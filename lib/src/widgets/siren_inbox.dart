@@ -92,6 +92,7 @@ class _SirenInboxState extends State<SirenInbox>
   String? deletingNotificationId;
   int pageSize = 20;
   int _activeTabIndex = 0;
+  bool _enableClearAll = true;
 
   List<NotificationType> notifications = [];
   late final DeleteNotificationById _deleteNotificationById;
@@ -253,6 +254,7 @@ class _SirenInboxState extends State<SirenInbox>
     if (mounted) {
       setState(() {
         notifications = [];
+        _enableClearAll = false;
       });
     }
   }
@@ -317,15 +319,12 @@ class _SirenInboxState extends State<SirenInbox>
                     0,
                     newNotifications,
                   );
+                  _enableClearAll = count > 0;
+                  if (isLoading) {
+                    isLoading = false;
+                  }
                 },
               );
-              if (isLoading) {
-                setState(
-                  () {
-                    isLoading = false;
-                  },
-                );
-              }
             }
             newNotifications = [];
           }
@@ -365,12 +364,14 @@ class _SirenInboxState extends State<SirenInbox>
 
     if (fetchedNotifications.isSuccess) {
       unawaited(markAllNotificationsAsViewed());
+      final count =
+          (fetchedNotifications.data as Iterable<NotificationType>).length;
       setState(() {
-        notifications.addAll(
-          fetchedNotifications.data as Iterable<NotificationType>,
-        );
+        notifications
+            .addAll(fetchedNotifications.data as Iterable<NotificationType>);
         isLoading = false;
         isError = false;
+        _enableClearAll = count > 0;
       });
       fetchNewNotifications();
     } else if (fetchedNotifications.isError) {
@@ -438,9 +439,10 @@ class _SirenInboxState extends State<SirenInbox>
         ),
       );
       if (mounted) {
+        _deleteById(id);
         setState(() {
           deletingNotificationId = null;
-          _deleteById(id);
+          _enableClearAll = notifications.isNotEmpty;
         });
       }
       if (notifications.length < pageSize &&
@@ -480,6 +482,7 @@ class _SirenInboxState extends State<SirenInbox>
               isLoading = false;
               loadingNextPage = false;
               isEndReached = count < pageSize;
+              _enableClearAll = count > 0;
             });
           }
         } else if (fetchedNotifications.isError) {
@@ -529,6 +532,7 @@ class _SirenInboxState extends State<SirenInbox>
     bool isTabInactive,
   ) {
     return InboxBody(
+      activeTabIndex: _activeTabIndex,
       cardParams: widget.cardParams,
       colors: widget.theme,
       customCard: widget.customCard,
@@ -566,7 +570,7 @@ class _SirenInboxState extends State<SirenInbox>
           colors: widget.theme,
           isDarkMode: widget.darkMode,
           onClearAllPressed: onBulkDelete,
-          isNonEmptyNotifications: shouldShowClearAllButton(),
+          isNonEmptyNotifications: _enableClearAll,
           headerParams: widget.headerParams,
           styles: widget.customStyles,
         ),
@@ -647,7 +651,7 @@ class _SirenInboxState extends State<SirenInbox>
           colors: widget.theme,
           isDarkMode: widget.darkMode,
           onClearAllPressed: onBulkDelete,
-          isNonEmptyNotifications: shouldShowClearAllButton(),
+          isNonEmptyNotifications: _enableClearAll,
           headerParams: widget.headerParams,
           styles: widget.customStyles,
         ),

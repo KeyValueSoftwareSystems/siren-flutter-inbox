@@ -27,6 +27,7 @@ void main() {
           endReached: false,
           onEndReached: () {},
           scrollController: ScrollController(),
+          activeTabIndex: 0,
         ),
       ),
     );
@@ -53,6 +54,7 @@ void main() {
           endReached: false,
           onEndReached: () {},
           scrollController: ScrollController(),
+          activeTabIndex: 0,
         ),
       ),
     );
@@ -100,6 +102,7 @@ void main() {
             endReached: false,
             onEndReached: () {},
             scrollController: ScrollController(),
+            activeTabIndex: 0,
           ),
         ),
       );

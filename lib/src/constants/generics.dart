@@ -17,6 +17,10 @@ class Generics {
     TabItem(key: InboxTabs.ALL.name, title: Strings.tabAll),
     TabItem(key: InboxTabs.UNREAD.name, title: Strings.tabUnread),
   ];
+  static final List<String> emptyMessages = [
+    Strings.empty_title,
+    Strings.empty_title_unread,
+  ];
 }
 
 enum Status {
