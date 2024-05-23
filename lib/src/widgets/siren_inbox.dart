@@ -124,6 +124,12 @@ class _SirenInboxState extends State<SirenInbox>
     super.dispose();
   }
 
+  void safeSetState(VoidCallback callback) {
+    if (mounted) {
+      setState(callback);
+    }
+  }
+
   Future<void> _initialize() async {
     if (SirenDataProvider.instance.tokenVerificationStatus == Status.SUCCESS) {
       await initialFetchNotification();
@@ -131,11 +137,9 @@ class _SirenInboxState extends State<SirenInbox>
             Status.FAILED ||
         !SirenDataProvider.instance.isProviderInitialized) {
       widget.onError?.call(Errors.outsideSirenContextError);
-      if (mounted) {
-        setState(() {
-          isError = true;
-        });
-      }
+      safeSetState(() {
+        isError = true;
+      });
     }
   }
 
@@ -171,7 +175,7 @@ class _SirenInboxState extends State<SirenInbox>
           _reset(cancelFetch: true);
           return;
         } else if (streamResponse.api == UpdateEvents.SHOW_ERROR) {
-          setState(() {
+          safeSetState(() {
             isError = true;
           });
         }
@@ -205,58 +209,44 @@ class _SirenInboxState extends State<SirenInbox>
   }
 
   void _reset({bool cancelFetch = false}) {
-    if (mounted) {
-      setState(() {
-        isLoading = true;
-        notifications = [];
-        isEndReached = false;
-        currentPage = 0;
-      });
-    }
+    safeSetState(() {
+      isLoading = true;
+      notifications = [];
+      isEndReached = false;
+      currentPage = 0;
+    });
 
     if (cancelFetch) {
       _periodicUpdateRef?.cancel();
     }
   }
 
-  bool shouldShowClearAllButton() {
-    return !isError && !isLoading && notifications.isNotEmpty;
-  }
-
   void _markNotificationAsReadById(String? notificationId) {
-    if (mounted) {
-      setState(() {
-        notifications.firstWhere((n) => n.id == notificationId).markAsRead();
-      });
-    }
+    safeSetState(() {
+      notifications.firstWhere((n) => n.id == notificationId).markAsRead();
+    });
   }
 
   void _markAllNotificationsAsRead() {
-    if (mounted) {
-      setState(() {
-        for (final notification in notifications) {
-          notification.markAsRead();
-        }
-      });
-    }
+    safeSetState(() {
+      for (final notification in notifications) {
+        notification.markAsRead();
+      }
+    });
   }
 
   void _deleteById(String? notificationId) {
-    if (mounted) {
-      setState(() {
-        notifications
-            .removeWhere((notification) => notification.id == notificationId);
-      });
-    }
+    safeSetState(() {
+      notifications
+          .removeWhere((notification) => notification.id == notificationId);
+    });
   }
 
   void _deleteAllNotifications() {
-    if (mounted) {
-      setState(() {
-        notifications = [];
-        _enableClearAll = false;
-      });
-    }
+    safeSetState(() {
+      notifications = [];
+      _enableClearAll = false;
+    });
   }
 
   void _scrollListener() {
@@ -312,20 +302,20 @@ class _SirenInboxState extends State<SirenInbox>
             newNotifications.addAll(
               fetchedNotifications.data as Iterable<NotificationType>,
             );
-            if (mounted) {
-              setState(
-                () {
-                  notifications.insertAll(
-                    0,
-                    newNotifications,
-                  );
-                  _enableClearAll = count > 0;
-                  if (isLoading) {
-                    isLoading = false;
-                  }
-                },
-              );
-            }
+
+            safeSetState(
+              () {
+                notifications.insertAll(
+                  0,
+                  newNotifications,
+                );
+                _enableClearAll = notifications.isNotEmpty;
+                if (isLoading) {
+                  isLoading = false;
+                }
+              },
+            );
+
             newNotifications = [];
           }
         } else if (fetchedNotifications.isError) {
@@ -350,11 +340,10 @@ class _SirenInboxState extends State<SirenInbox>
   }
 
   Future<void> initialFetchNotification() async {
-    if (mounted) {
-      setState(() {
-        isLoading = true;
-      });
-    }
+    safeSetState(() {
+      isLoading = true;
+    });
+
     final fetchedNotifications =
         await FetchAllNotifications.instance.fetchAllNotifications(
       end: DateTime.now().toUtc().toIso8601String(),
@@ -364,22 +353,19 @@ class _SirenInboxState extends State<SirenInbox>
 
     if (fetchedNotifications.isSuccess) {
       unawaited(markAllNotificationsAsViewed());
-      final count =
-          (fetchedNotifications.data as Iterable<NotificationType>).length;
-      setState(() {
+      safeSetState(() {
         notifications
             .addAll(fetchedNotifications.data as Iterable<NotificationType>);
         isLoading = false;
         isError = false;
-        _enableClearAll = count > 0;
+        _enableClearAll = notifications.isNotEmpty;
       });
       fetchNewNotifications();
     } else if (fetchedNotifications.isError) {
-      if (mounted) {
-        setState(() {
-          isError = fetchedNotifications.isError;
-        });
-      }
+      safeSetState(() {
+        isError = fetchedNotifications.isError;
+      });
+
       widget.onError?.call(fetchedNotifications.error ?? SirenErrorType());
     }
   }
@@ -388,7 +374,7 @@ class _SirenInboxState extends State<SirenInbox>
     if (mounted) {
       _reset(cancelFetch: true);
       await initialFetchNotification();
-      setState(() {
+      safeSetState(() {
         isLoading = false;
       });
     }
@@ -424,11 +410,9 @@ class _SirenInboxState extends State<SirenInbox>
     );
 
     if (deletionStatus.data == Status.SUCCESS && deletionStatus.isSuccess) {
-      if (mounted) {
-        setState(() {
-          deletingNotificationId = id;
-        });
-      }
+      safeSetState(() {
+        deletingNotificationId = id;
+      });
 
       await Future<void>.delayed(const Duration(milliseconds: 500));
       SirenDataProvider.instance.inboxController.sink.add(
@@ -438,13 +422,13 @@ class _SirenInboxState extends State<SirenInbox>
           id,
         ),
       );
-      if (mounted) {
-        _deleteById(id);
-        setState(() {
-          deletingNotificationId = null;
-          _enableClearAll = notifications.isNotEmpty;
-        });
-      }
+
+      _deleteById(id);
+      safeSetState(() {
+        _enableClearAll = notifications.isNotEmpty;
+        deletingNotificationId = null;
+      });
+
       if (notifications.length < pageSize &&
           notifications.length < Generics.AVERAGE_ITEMS_ON_SCREEN) {
         onEndReached();
@@ -456,17 +440,15 @@ class _SirenInboxState extends State<SirenInbox>
 
   void onEndReached() {
     if (!isLoading && !loadingNextPage && !isEndReached) {
-      if (mounted) {
-        setState(() {
-          loadingNextPage = true;
-        });
-      }
+      safeSetState(() {
+        loadingNextPage = true;
+      });
 
       Future.delayed(Duration.zero, () async {
         final fetchedNotifications =
             await FetchAllNotifications.instance.fetchAllNotifications(
           end: convertToISOString(
-            notifications[notifications.length - 1].createdAt,
+            notifications.last.createdAt,
           ),
           size: pageSize,
           isRead: getIsRead(),
@@ -474,23 +456,21 @@ class _SirenInboxState extends State<SirenInbox>
         if (fetchedNotifications.isSuccess) {
           final count =
               (fetchedNotifications.data as Iterable<NotificationType>).length;
-          if (mounted) {
-            setState(() {
-              notifications.addAll(
-                fetchedNotifications.data as Iterable<NotificationType>,
-              );
-              isLoading = false;
-              loadingNextPage = false;
-              isEndReached = count < pageSize;
-              _enableClearAll = count > 0;
-            });
-          }
+
+          safeSetState(() {
+            notifications.addAll(
+              fetchedNotifications.data as Iterable<NotificationType>,
+            );
+            isLoading = false;
+            loadingNextPage = false;
+            isEndReached = count < pageSize;
+            _enableClearAll = notifications.isNotEmpty;
+          });
         } else if (fetchedNotifications.isError) {
-          if (mounted) {
-            setState(() {
-              loadingNextPage = false;
-            });
-          }
+          safeSetState(() {
+            loadingNextPage = false;
+          });
+
           widget.onError?.call(fetchedNotifications.error ?? SirenErrorType());
         }
       });
@@ -516,13 +496,11 @@ class _SirenInboxState extends State<SirenInbox>
 
   void onTabChanged(int index) {
     if (_activeTabIndex != index) {
-      if (mounted) {
-        setState(() {
-          _activeTabIndex = index;
-          _reset(cancelFetch: true);
-          _initialize();
-        });
-      }
+      safeSetState(() {
+        _activeTabIndex = index;
+        _reset(cancelFetch: true);
+        _initialize();
+      });
     }
   }
 
