@@ -278,8 +278,21 @@ class _SirenInboxState extends State<SirenInbox>
     return null;
   }
 
+  Future<void> markAllNotificationsAsViewed() async {
+    final notificationsMarkedAsViewed = await MarkAllNotificationsAsViewed
+        .instance
+        .markAllNotificationsAsViewed(
+      untilDate: DateTime.now().toUtc().toIso8601String(),
+    );
+
+    if (notificationsMarkedAsViewed.isError) {
+      widget.onError?.call(
+        notificationsMarkedAsViewed.error ?? SirenErrorType(),
+      );
+    }
+  }
+
   void fetchNewNotifications() {
-    late var newNotifications = <NotificationType>[];
     _periodicUpdateRef?.cancel();
     _periodicUpdateRef = Timer.periodic(
       const Duration(seconds: Generics.DATA_FETCH_INTERVAL),
@@ -295,48 +308,26 @@ class _SirenInboxState extends State<SirenInbox>
               : null,
         );
         if (fetchedNotifications.isSuccess) {
-          final count =
-              (fetchedNotifications.data as Iterable<NotificationType>).length;
+          final newNotifications =
+              fetchedNotifications.data as Iterable<NotificationType>;
+          final count = newNotifications.length;
           if (count > 0) {
             unawaited(markAllNotificationsAsViewed());
-            newNotifications.addAll(
-              fetchedNotifications.data as Iterable<NotificationType>,
-            );
-
             safeSetState(
               () {
-                notifications.insertAll(
-                  0,
-                  newNotifications,
-                );
+                notifications.insertAll(0, newNotifications);
                 _enableClearAll = notifications.isNotEmpty;
                 if (isLoading) {
                   isLoading = false;
                 }
               },
             );
-
-            newNotifications = [];
           }
         } else if (fetchedNotifications.isError) {
           widget.onError?.call(fetchedNotifications.error ?? SirenErrorType());
         }
       },
     );
-  }
-
-  Future<void> markAllNotificationsAsViewed() async {
-    final notificationsMarkedAsViewed = await MarkAllNotificationsAsViewed
-        .instance
-        .markAllNotificationsAsViewed(
-      untilDate: DateTime.now().toUtc().toIso8601String(),
-    );
-
-    if (notificationsMarkedAsViewed.isError) {
-      widget.onError?.call(
-        notificationsMarkedAsViewed.error ?? SirenErrorType(),
-      );
-    }
   }
 
   Future<void> initialFetchNotification() async {
@@ -454,12 +445,13 @@ class _SirenInboxState extends State<SirenInbox>
           isRead: getIsRead(),
         );
         if (fetchedNotifications.isSuccess) {
-          final count =
-              (fetchedNotifications.data as Iterable<NotificationType>).length;
+          final newNotifications =
+              fetchedNotifications.data as Iterable<NotificationType>;
+          final count = newNotifications.length;
 
           safeSetState(() {
             notifications.addAll(
-              fetchedNotifications.data as Iterable<NotificationType>,
+              newNotifications,
             );
             isLoading = false;
             loadingNextPage = false;
