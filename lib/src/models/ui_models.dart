@@ -320,7 +320,7 @@ class HeaderParams {
 
 /// Properties to configure the style of container
 class ContainerStyle {
-  ContainerStyle({this.padding, this.decoration});
+  ContainerStyle({this.padding, this.decoration, this.margin});
 
   /// The padding values for all sides of a container
   final EdgeInsetsGeometry? padding;
@@ -328,6 +328,9 @@ class ContainerStyle {
   /// The appearance of the container, including
   /// properties like background color, border, border radius, etc. of a container
   final BoxDecoration? decoration;
+
+  /// The margin values for all sides of a container
+  final EdgeInsetsGeometry? margin;
 }
 
 /// Properties to configure the style of default inbox header
@@ -429,7 +432,6 @@ class TabColors {
   TabColors({
     this.containerBackgroundColor,
     this.activeTabBackgroundColor,
-    this.inactiveTabBackgroundColor,
     this.activeTabTextColor,
     this.inactiveTabTextColor,
     this.indicatorColor,
@@ -440,9 +442,6 @@ class TabColors {
 
   /// The background color of the active tab.
   final Color? activeTabBackgroundColor;
-
-  /// The background color of the inactive tab.
-  final Color? inactiveTabBackgroundColor;
 
   /// The text color of the active tab.
   final Color? activeTabTextColor;

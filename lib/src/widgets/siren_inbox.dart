@@ -547,6 +547,8 @@ class _SirenInboxState extends State<SirenInbox>
         body: Column(
           children: [
             Container(
+              margin: widget.customStyles?.tabStyles?.containerStyle?.margin ??
+                  EdgeInsets.zero,
               color: widget.theme?.tabColors?.containerBackgroundColor ??
                   Colors.transparent,
               child: TabBar(
@@ -588,8 +590,7 @@ class _SirenInboxState extends State<SirenInbox>
                     color: _activeTabIndex == index
                         ? widget.theme?.tabColors?.activeTabBackgroundColor ??
                             Colors.transparent
-                        : widget.theme?.tabColors?.inactiveTabBackgroundColor ??
-                            Colors.transparent,
+                        : Colors.transparent,
                     child: Tab(
                       child: Text(tabItem.title),
                     ),
