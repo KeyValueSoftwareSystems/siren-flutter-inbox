@@ -74,8 +74,8 @@ jobs:
       - name: Setup Pub Credentials
         shell: bash
         env:
-          INPUT_ACCESSTOKEN: ${{ secrets.INPUT_ACCESSTOKEN }}
-          INPUT_REFRESHTOKEN: ${{ secrets.INPUT_REFRESHTOKEN }}
+          INPUT_ACCESS_TOKEN: ${{ secrets.INPUT_ACCESS_TOKEN }}
+          INPUT_REFRESH_TOKEN: ${{ secrets.INPUT_REFRESH_TOKEN }}
         run: |
           sh ./pub_login.sh
 

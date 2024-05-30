@@ -3,13 +3,13 @@
 
 # Checking whether the secrets are available as environment
 # variables or not.
-if [ -z "${INPUT_ACCESSTOKEN}" ]; then
-  echo "Missing INPUT_ACCESSTOKEN environment variable"
+if [ -z "${INPUT_ACCESS_TOKEN}" ]; then
+  echo "Missing INPUT_ACCESS_TOKEN environment variable"
   exit 1
 fi
 
-if [ -z "${INPUT_REFRESHTOKEN}" ]; then
-  echo "Missing INPUT_REFRESHTOKEN environment variable"
+if [ -z "${INPUT_REFRESH_TOKEN}" ]; then
+  echo "Missing INPUT_REFRESH_TOKEN environment variable"
   exit 1
 fi
 
@@ -19,8 +19,8 @@ fi
   mkdir -p ~/.config/dart
     cat <<-EOF > ~/.config/dart/pub-credentials.json
     {
-        "accessToken":"$INPUT_ACCESSTOKEN",
-        "refreshToken":"$INPUT_REFRESHTOKEN",
+        "accessToken":"$INPUT_ACCESS_TOKEN",
+        "refreshToken":"$INPUT_REFRESH_TOKEN",
         "tokenEndpoint":"https://accounts.google.com/o/oauth2/token",
         "scopes": [ "openid", "https://www.googleapis.com/auth/userinfo.email" ],
         "expiration": 1577149838000
