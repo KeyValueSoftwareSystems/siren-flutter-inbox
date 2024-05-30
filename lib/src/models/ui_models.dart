@@ -405,10 +405,14 @@ class TabItem {
 /// Styles for customizing the appearance of the tab bar.
 class TabStyles {
   TabStyles({
+    this.containerStyle,
     this.activeTabTextStyle,
     this.inActiveTabTextStyle,
     this.indicatorSize,
   });
+
+  /// The tab bar container style
+  final ContainerStyle? containerStyle;
 
   /// The height of the indicator
   final double? indicatorSize;

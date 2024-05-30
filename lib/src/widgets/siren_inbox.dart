@@ -552,7 +552,9 @@ class _SirenInboxState extends State<SirenInbox>
               child: TabBar(
                 controller: _tabController,
                 isScrollable: true,
-                padding: const EdgeInsets.symmetric(horizontal: 24),
+                padding:
+                    widget.customStyles?.tabStyles?.containerStyle?.padding ??
+                        const EdgeInsets.symmetric(horizontal: 24),
                 indicatorSize: TabBarIndicatorSize.tab,
                 tabAlignment: TabAlignment.start,
                 indicatorColor: widget.theme?.tabColors?.indicatorColor ??
