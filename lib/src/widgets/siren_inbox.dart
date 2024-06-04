@@ -560,6 +560,9 @@ class _SirenInboxState extends State<SirenInbox>
                         const EdgeInsets.symmetric(horizontal: 24),
                 indicatorSize: TabBarIndicatorSize.tab,
                 tabAlignment: TabAlignment.start,
+                dividerColor:
+                    widget.theme?.tabColors?.containerBackgroundColor ??
+                        colors.scaffoldBackgroundColor,
                 indicatorColor: widget.theme?.tabColors?.indicatorColor ??
                     colors.tabBarActiveColor,
                 indicatorWeight:
@@ -598,6 +601,14 @@ class _SirenInboxState extends State<SirenInbox>
                   );
                 }).toList(),
               ),
+            ),
+            Container(
+              height: 1,
+              margin: widget.customStyles?.tabStyles?.containerStyle?.margin ??
+                  EdgeInsets.zero,
+              color: widget.theme?.cardColors?.borderColor ??
+                  widget.theme?.borderColor ??
+                  colors.cardBorderColor,
             ),
             Expanded(
               child: TabBarView(
