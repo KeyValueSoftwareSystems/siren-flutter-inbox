@@ -25,6 +25,7 @@ class Siren {
   /// Returns the response from the API call.
   static Future markAsReadByDate({
     required String startDate,
+    String? category,
   }) async {
     final data = {
       'until': startDate,
@@ -34,6 +35,7 @@ class Siren {
         await NotificationsBulkUpdate.instance.notificationsBulkUpdate(
       data: data,
       operation: BulkUpdateType.MARK_AS_READ.name,
+      category: category,
     );
     SirenDataProvider.instance.inboxController.sink
         .add(StreamResponse(response, UpdateEvents.READ_ALL, ''));
@@ -45,6 +47,7 @@ class Siren {
   /// Returns the response from the API call.
   static Future markAllAsViewed({
     required String startDate,
+    String? category,
   }) async {
     final response = await MarkAllNotificationsAsViewed.instance
         .markAllNotificationsAsViewed(untilDate: startDate);
@@ -71,6 +74,7 @@ class Siren {
   /// Returns the response from the API call.
   static Future deleteByDate({
     required String startDate,
+    String? category,
   }) async {
     final data = {
       'until': startDate,
@@ -80,6 +84,7 @@ class Siren {
         await NotificationsBulkUpdate.instance.notificationsBulkUpdate(
       data: data,
       operation: BulkUpdateType.MARK_AS_DELETED.name,
+      category: category,
     );
     SirenDataProvider.instance.inboxController.sink
         .add(StreamResponse(response, UpdateEvents.DELETE_ALL, ''));

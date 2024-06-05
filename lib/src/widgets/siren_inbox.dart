@@ -20,6 +20,7 @@ import 'package:sirenapp_flutter_inbox/src/widgets/inbox_body.dart';
 class SirenInbox extends StatefulWidget {
   const SirenInbox({
     super.key,
+    this.category,
     this.darkMode,
     this.itemsPerFetch,
     this.listEmptyWidget,
@@ -33,6 +34,9 @@ class SirenInbox extends StatefulWidget {
     this.theme,
     this.customStyles,
   });
+
+  /// Category of the notifications to be fetched.
+  final String? category;
 
   /// Flag for enabling dark mode.
   final bool? darkMode;
@@ -243,6 +247,7 @@ class _SirenInboxState extends State<SirenInbox> {
                   notifications[0].createdAt,
                 )
               : null,
+          category: widget.category,
         );
         if (fetchedNotifications.isSuccess) {
           final count =
@@ -302,6 +307,7 @@ class _SirenInboxState extends State<SirenInbox> {
         await FetchAllNotifications.instance.fetchAllNotifications(
       end: DateTime.now().toUtc().toIso8601String(),
       size: pageSize,
+      category: widget.category,
     );
 
     if (fetchedNotifications.isSuccess) {
@@ -343,6 +349,7 @@ class _SirenInboxState extends State<SirenInbox> {
         await NotificationsBulkUpdate.instance.notificationsBulkUpdate(
       data: data,
       operation: BulkUpdateType.MARK_AS_DELETED.name,
+      category: widget.category,
     );
     if (deleteAllResponse.isSuccess) {
       SirenDataProvider.instance.inboxController.sink.add(
@@ -408,6 +415,7 @@ class _SirenInboxState extends State<SirenInbox> {
             notifications[notifications.length - 1].createdAt,
           ),
           size: pageSize,
+          category: widget.category,
         );
         if (fetchedNotifications.isSuccess) {
           final count =

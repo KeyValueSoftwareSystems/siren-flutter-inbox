@@ -29,6 +29,7 @@ class FetchAllNotifications {
     bool? isRead,
     String? start,
     String? end,
+    String? category,
   }) async {
     final _apiPath =
         '${Generics.V2}${Generics.BASE_URL}${SirenDataProvider.instance.recipientId}/notifications';
@@ -47,6 +48,10 @@ class FetchAllNotifications {
 
     if (start != null) {
       queryParams['start'] = start;
+    }
+
+    if (category != null) {
+      queryParams['category'] = category;
     }
 
     final queryString =

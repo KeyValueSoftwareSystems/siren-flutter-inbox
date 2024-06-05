@@ -25,6 +25,8 @@ class MockNotificationsBulkUpdate extends Mock
   Future<ApiResponse> notificationsBulkUpdate({
     required Map<String, dynamic> data,
     required String operation,
+    bool? isRead,
+    String? category,
   }) {
     final result = ApiResponse()..data = 'SUCCESS';
     result.error = null;

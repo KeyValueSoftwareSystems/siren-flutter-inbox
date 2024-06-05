@@ -17,12 +17,26 @@ class NotificationsBulkUpdate {
   Future<ApiResponse> notificationsBulkUpdate({
     required Map<String, dynamic> data,
     required String operation,
+    bool? isRead,
+    String? category,
   }) async {
     final api = ApiClient(apiProvider());
     final apiPath =
         '${Generics.V2}${Generics.BASE_URL}${SirenDataProvider.instance.recipientId}/notifications/bulk-update';
     final result = ApiResponse()..isLoading;
     var apiError = Errors.markAsReadFailedError;
+    final queryParams = {};
+
+    if (isRead != null) {
+      queryParams['isRead'] = isRead.toString();
+    }
+
+    if (category != null) {
+      queryParams['category'] = category;
+    }
+
+    final queryString =
+        queryParams.entries.map((e) => '${e.key}=${e.value}').join('&');
 
     if (operation == BulkUpdateType.MARK_AS_DELETED.name) {
       apiError = Errors.deleteAllFailedError;
@@ -40,7 +54,7 @@ class NotificationsBulkUpdate {
     }
 
     final apiResponse = await api.post(
-      path: apiPath,
+      path: '$apiPath?$queryString',
       data: data,
     );
     if (apiResponse.statusCode != 0 && apiResponse.data != null) {
