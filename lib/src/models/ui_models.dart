@@ -99,6 +99,7 @@ class CustomStyles {
     this.deleteIconStyle,
     this.clearAllIconStyle,
     this.tabStyles,
+    this.hideTabMargin,
   });
 
   /// The decoration for the Siren inbox list.
@@ -126,6 +127,18 @@ class CustomStyles {
   final ClearAllIconStyle? clearAllIconStyle;
 
   final TabStyles? tabStyles;
+
+  final HideTabMargin? hideTabMargin;
+}
+
+class HideTabMargin {
+  HideTabMargin({
+    this.upper,
+    this.lower,
+  });
+
+  final bool? upper;
+  final bool? lower;
 }
 
 class TimerIconStyle {
@@ -412,6 +425,7 @@ class TabStyles {
     this.activeTabTextStyle,
     this.inActiveTabTextStyle,
     this.indicatorSize,
+    this.indicatorPadding,
   });
 
   /// The tab bar container style
@@ -425,6 +439,8 @@ class TabStyles {
 
   /// The text style for the inactive tab.
   final TextStyle? inActiveTabTextStyle;
+
+  final EdgeInsetsGeometry? indicatorPadding;
 }
 
 /// Colors for customizing the appearance of the tab bar.
