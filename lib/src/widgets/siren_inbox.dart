@@ -34,6 +34,7 @@ class SirenInbox extends StatefulWidget {
     this.onError,
     this.theme,
     this.customStyles,
+    this.customTabIndicator,
   });
 
   /// Flag for enabling dark mode.
@@ -77,6 +78,8 @@ class SirenInbox extends StatefulWidget {
 
   /// Custom styles for the card of each notification.
   final CustomStyles? customStyles;
+
+  final BoxDecoration? customTabIndicator;
 
   @override
   State<SirenInbox> createState() => _SirenInboxState();
@@ -558,15 +561,23 @@ class _SirenInboxState extends State<SirenInbox>
                 padding:
                     widget.customStyles?.tabStyles?.containerStyle?.padding ??
                         const EdgeInsets.symmetric(horizontal: 24),
+                indicator: widget.customTabIndicator ??
+                    UnderlineTabIndicator(
+                      borderSide: BorderSide(
+                        color: widget.theme?.tabColors?.activeTabTextColor ??
+                            colors.tabBarActiveColor,
+                        width:
+                            widget.customStyles?.tabStyles?.indicatorSize ?? 4,
+                      ),
+                    ),
+                indicatorPadding:
+                    widget.customStyles?.tabStyles?.indicatorPadding ??
+                        EdgeInsets.zero,
                 indicatorSize: TabBarIndicatorSize.tab,
                 tabAlignment: TabAlignment.start,
                 dividerColor:
                     widget.theme?.tabColors?.containerBackgroundColor ??
                         colors.scaffoldBackgroundColor,
-                indicatorColor: widget.theme?.tabColors?.indicatorColor ??
-                    colors.tabBarActiveColor,
-                indicatorWeight:
-                    widget.customStyles?.tabStyles?.indicatorSize ?? 4,
                 labelColor: widget.theme?.tabColors?.activeTabTextColor ??
                     colors.tabBarActiveColor,
                 unselectedLabelColor:
@@ -602,14 +613,16 @@ class _SirenInboxState extends State<SirenInbox>
                 }).toList(),
               ),
             ),
-            Container(
-              height: 1,
-              margin: widget.customStyles?.tabStyles?.containerStyle?.margin ??
-                  EdgeInsets.zero,
-              color: widget.theme?.cardColors?.borderColor ??
-                  widget.theme?.borderColor ??
-                  colors.cardBorderColor,
-            ),
+            if (widget.customStyles?.hideTabMargin?.lower != true)
+              Container(
+                height: 1,
+                margin:
+                    widget.customStyles?.tabStyles?.containerStyle?.margin ??
+                        EdgeInsets.zero,
+                color: widget.theme?.cardColors?.borderColor ??
+                    widget.theme?.borderColor ??
+                    colors.cardBorderColor,
+              ),
             Expanded(
               child: TabBarView(
                 controller: _tabController,
