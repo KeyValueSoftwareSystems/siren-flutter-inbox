@@ -566,10 +566,13 @@ class _SirenInboxState extends State<SirenInbox>
                       borderSide: BorderSide(
                         color: widget.theme?.tabColors?.activeTabTextColor ??
                             colors.tabBarActiveColor,
-                        width: 4,
+                        width:
+                            widget.customStyles?.tabStyles?.indicatorSize ?? 4,
                       ),
                     ),
-                indicatorPadding: widget.customStyles?.tabStyles?.indicatorPadding ?? EdgeInsets.all(0),
+                indicatorPadding:
+                    widget.customStyles?.tabStyles?.indicatorPadding ??
+                        EdgeInsets.zero,
                 indicatorSize: TabBarIndicatorSize.tab,
                 tabAlignment: TabAlignment.start,
                 dividerColor:
