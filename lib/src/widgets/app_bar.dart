@@ -45,7 +45,7 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                       defaultColors.appBarBorderColor,
                 ),
               )
-            : null, 
+            : null,
       ),
       height: preferredSize.height,
       child: Padding(

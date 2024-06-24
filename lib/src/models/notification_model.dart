@@ -77,9 +77,10 @@ class MessageData {
       thumbnailUrl: json?['thumbnailUrl'] != null
           ? (json?['thumbnailUrl'] as String?)
           : '',
-      additionalData: (json?['additionalData'] != null && json?['additionalData'] is Map)
-          ? json!['additionalData'] as Map<String, dynamic>?
-          : null,
+      additionalData:
+          (json?['additionalData'] != null && json?['additionalData'] is Map)
+              ? json!['additionalData'] as Map<String, dynamic>?
+              : null,
     );
   }
 
