@@ -22,7 +22,8 @@ void main() {
         'cardColor': Colors.blue,
       };
 
-      final notification = NotificationType.fromJson(Map<String, dynamic>.from(json));
+      final notification =
+          NotificationType.fromJson(Map<String, dynamic>.from(json));
 
       expect(notification.id, 'notificationId');
       expect(notification.createdAt, '2022-01-01T00:00:00Z');
