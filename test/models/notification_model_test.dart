@@ -49,7 +49,7 @@ void main() {
           body: 'body',
           actionUrl: 'actionUrl',
           avatar: AvatarData(url: 'avatarUrl', altText: 'altText'),
-          additionalData: 'additionalData',
+          additionalData: {},
         ),
         requestId: 'requestId',
         isRead: false,
