@@ -98,6 +98,8 @@ class CustomStyles {
     this.timerIconStyle,
     this.deleteIconStyle,
     this.clearAllIconStyle,
+    this.tabStyles,
+    this.hideTabMargin,
   });
 
   /// The decoration for the Siren inbox list.
@@ -123,6 +125,20 @@ class CustomStyles {
 
   /// Style of clear all icon in inbox default header
   final ClearAllIconStyle? clearAllIconStyle;
+
+  final TabStyles? tabStyles;
+
+  final HideTabMargin? hideTabMargin;
+}
+
+class HideTabMargin {
+  HideTabMargin({
+    this.upper,
+    this.lower,
+  });
+
+  final bool? upper;
+  final bool? lower;
 }
 
 class TimerIconStyle {
@@ -170,6 +186,7 @@ class CustomThemeColors {
     this.inboxHeaderColors,
     this.badgeColors,
     this.cardColors,
+    this.tabColors,
   });
 
   /// The background color for Siren inbox.
@@ -213,6 +230,9 @@ class CustomThemeColors {
 
   /// The colors for inbox list card
   final BadgeColors? badgeColors;
+
+  /// The colors for tab bar
+  final TabColors? tabColors;
 }
 
 /// Custom theme colors to configure the appearance inbox list item.
@@ -313,7 +333,7 @@ class HeaderParams {
 
 /// Properties to configure the style of container
 class ContainerStyle {
-  ContainerStyle({this.padding, this.decoration});
+  ContainerStyle({this.padding, this.decoration, this.margin});
 
   /// The padding values for all sides of a container
   final EdgeInsetsGeometry? padding;
@@ -321,6 +341,9 @@ class ContainerStyle {
   /// The appearance of the container, including
   /// properties like background color, border, border radius, etc. of a container
   final BoxDecoration? decoration;
+
+  /// The margin values for all sides of a container
+  final EdgeInsetsGeometry? margin;
 }
 
 /// Properties to configure the style of default inbox header
@@ -364,4 +387,84 @@ class CardStyle {
 
   /// The size of avatar image
   final double? avatarSize;
+}
+
+/// Properties for configuring the appearance and behavior of the tab bar.
+class TabParams {
+  /// Constructs a [TabParams] with optional parameters.
+  TabParams({
+    this.activeTabIndex,
+    this.tabs,
+  });
+
+  /// The index of the initial active tab.
+  final int? activeTabIndex;
+
+  /// The list of tab items.
+  final List<TabItem>? tabs;
+}
+
+/// Represents an individual tab item.
+class TabItem {
+  TabItem({
+    required this.key,
+    required this.title,
+  });
+
+  /// The unique key for the tab item.
+  final String key;
+
+  /// The title of the tab item.
+  final String title;
+}
+
+/// Styles for customizing the appearance of the tab bar.
+class TabStyles {
+  TabStyles({
+    this.containerStyle,
+    this.activeTabTextStyle,
+    this.inActiveTabTextStyle,
+    this.indicatorSize,
+    this.indicatorPadding,
+  });
+
+  /// The tab bar container style
+  final ContainerStyle? containerStyle;
+
+  /// The height of the indicator
+  final double? indicatorSize;
+
+  /// The text style for the active tab.
+  final TextStyle? activeTabTextStyle;
+
+  /// The text style for the inactive tab.
+  final TextStyle? inActiveTabTextStyle;
+
+  final EdgeInsetsGeometry? indicatorPadding;
+}
+
+/// Colors for customizing the appearance of the tab bar.
+class TabColors {
+  TabColors({
+    this.containerBackgroundColor,
+    this.activeTabBackgroundColor,
+    this.activeTabTextColor,
+    this.inactiveTabTextColor,
+    this.indicatorColor,
+  });
+
+  /// The background color of the tab bar container.
+  final Color? containerBackgroundColor;
+
+  /// The background color of the active tab.
+  final Color? activeTabBackgroundColor;
+
+  /// The text color of the active tab.
+  final Color? activeTabTextColor;
+
+  /// The text color of the inactive tab.
+  final Color? inactiveTabTextColor;
+
+  /// The color of the tab indicator.
+  final Color? indicatorColor;
 }

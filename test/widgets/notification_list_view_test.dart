@@ -24,7 +24,7 @@ void main() {
           altText: 'Test alt text',
           url: 'https://picsum.photos/200/300',
         ),
-        additionalData: 'Test Additional Data',
+        additionalData: {},
       ),
       requestId: 'request-id',
       isRead: false,
