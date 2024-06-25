@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.2.0
+
+### Added
+- Support for tab-based categorization, tabular styles and formats exposure.
+
+
 ## 1.1.0
 
 ### Added
@@ -16,8 +22,3 @@ This is the first public release of the package.
 
 ### Added
 - Flutter UI kit for displaying and managing in-app notifications.
-
-
-
-
-

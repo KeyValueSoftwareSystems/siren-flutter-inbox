@@ -49,6 +49,10 @@ class FetchAllNotifications {
       queryParams['start'] = start;
     }
 
+    if (isRead != null) {
+      queryParams['isRead'] = isRead.toString();
+    }
+
     final queryString =
         queryParams.entries.map((e) => '${e.key}=${e.value}').join('&');
 

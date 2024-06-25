@@ -136,5 +136,17 @@ void main() {
       SirenDataProvider.instance.inboxController.sink
           .add(StreamResponse(result, UpdateEvents.READ_ALL, ''));
     });
+
+    testWidgets('Hide tab bar', (WidgetTester tester) async {
+      const widget = MaterialApp(
+        home: Scaffold(
+          body: SirenInbox(
+            hideTab: true,
+          ),
+        ),
+      );
+      await tester.pumpWidget(widget);
+      expect(find.byType(TabBar), findsNothing);
+    });
   });
 }

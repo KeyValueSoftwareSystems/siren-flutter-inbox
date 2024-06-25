@@ -11,7 +11,9 @@ void main() {
         MaterialApp(
           home: Builder(
             builder: (context) {
-              return const EmptyWidget();
+              return const EmptyWidget(
+                activeTabIndex: 0,
+              );
             },
           ),
         ),
@@ -35,7 +37,9 @@ void main() {
               final theme = Theme.of(context);
               return MaterialApp(
                 theme: theme.copyWith(),
-                home: const EmptyWidget(),
+                home: const EmptyWidget(
+                  activeTabIndex: 0,
+                ),
               );
             },
           ),
