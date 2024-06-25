@@ -37,13 +37,15 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
       decoration: BoxDecoration(
         color: colors?.inboxHeaderColors?.background ??
             defaultColors.backgroundColor,
-        border: Border(
-          bottom: BorderSide(
-            width: styles?.appBarStyle?.borderWidth ?? 1,
-            color: colors?.inboxHeaderColors?.borderColor ??
-                defaultColors.appBarBorderColor,
-          ),
-        ),
+        border: styles?.hideTabMargin?.upper != true
+            ? Border(
+                bottom: BorderSide(
+                  width: styles?.appBarStyle?.borderWidth ?? 1,
+                  color: colors?.inboxHeaderColors?.borderColor ??
+                      defaultColors.appBarBorderColor,
+                ),
+              )
+            : null,
       ),
       height: preferredSize.height,
       child: Padding(

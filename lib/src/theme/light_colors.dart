@@ -39,6 +39,8 @@ final lightColors = AppColors(
   primary: SirenAppColors.primary200,
   scaffoldBackgroundColor: Colors.white,
   skeletonLoaderColor: SirenAppColors.avatarPlaceholderBgLight,
+  tabBarActiveColor: SirenAppColors.primary400,
+  tabBarInActiveColor: SirenAppColors.grey700,
   textColor: SirenAppColors.grey700,
   timerIcon: SirenAppColors.grey500,
 );
