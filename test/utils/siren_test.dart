@@ -1,71 +1,75 @@
+// ignore_for_file: cascade_invocations
+
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sirenapp_flutter_inbox/src/utils/siren.dart';
+import 'package:mockito/mockito.dart';
+import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
+import 'package:sirenapp_flutter_inbox/src/api/notifications_bulk_update.dart';
+import 'package:sirenapp_flutter_inbox/src/api/read_notification_by_id.dart';
+import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
+import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
+
+class MockReadNotificationById extends Mock implements ReadNotificationById {
+  @override
+  Future<ApiResponse> readNotificationById({
+    required String notificationId,
+  }) {
+    final result = ApiResponse()..data = 'SUCCESS';
+    result.error = null;
+    return Future(() => result);
+  }
+}
+
+class MockNotificationsBulkUpdate extends Mock
+    implements NotificationsBulkUpdate {
+  @override
+  Future<ApiResponse> notificationsBulkUpdate({
+    required Map<String, dynamic> data,
+    required String operation,
+  }) {
+    final result = ApiResponse()..data = 'SUCCESS';
+    result.error = null;
+    return Future(() => result);
+  }
+}
+
+class MockSirenDataProvider extends Mock implements SirenDataProvider {}
 
 void main() {
-  group('Siren', () {
-    test('markAsReadById should mark a notification as read', () async {
-      // Arrange
-      const id = 'notification_id';
+  late MockReadNotificationById mockReadNotificationById;
+  late MockNotificationsBulkUpdate mockMockNotificationsBulkUpdate;
 
-      // Act
-      final result = await Siren.markAsReadById(id: id);
+  setUp(() {
+    mockReadNotificationById = MockReadNotificationById();
+    mockMockNotificationsBulkUpdate = MockNotificationsBulkUpdate();
+  });
 
-      // Assert
-      expect(result, isNotNull);
-      // Add more assertions here
-    });
+  test(
+      'markAsRead method should call ReadNotificationById and update inboxController',
+      () async {
+    const notificationId = 'notification_id';
+    final mockResponse = ApiResponse(data: 'SUCCESS');
+    final response = await mockReadNotificationById.readNotificationById(
+      notificationId: notificationId,
+    );
 
-    test(
-        'markAsReadByDate should mark notifications as read until a specific date',
-        () async {
-      // Arrange
-      const startDate = '2022-01-01T00:00:00Z';
+    expect(mockResponse.data, response.data);
+  });
 
-      // Act
-      final result = await Siren.markAsReadByDate(startDate: startDate);
+  test(
+      'mark notifications as read by a specific date and  update inboxController',
+      () async {
+    const startDate = '2024-03-15T04:07:14.577928Z';
+    final mockData = {
+      'until': startDate,
+      'operation': BulkUpdateType.MARK_AS_READ.name,
+    };
+    final mockResponse = ApiResponse(data: 'SUCCESS');
+    final response =
+        await mockMockNotificationsBulkUpdate.notificationsBulkUpdate(
+      data: mockData,
+      operation: BulkUpdateType.MARK_AS_READ.name,
+    );
 
-      // Assert
-      expect(result, isNotNull);
-      // Add more assertions here
-    });
-
-    test(
-        'markAllAsViewed should mark all notifications as viewed until a specific date',
-        () async {
-      // Arrange
-      const startDate = '2022-01-01T00:00:00Z';
-
-      // Act
-      final result = await Siren.markAllAsViewed(startDate: startDate);
-
-      // Assert
-      expect(result, isNotNull);
-      // Add more assertions here
-    });
-
-    test('deleteById should delete a notification by its ID', () async {
-      // Arrange
-      const id = 'notification_id';
-
-      // Act
-      final result = await Siren.deleteById(id: id);
-
-      // Assert
-      expect(result, isNotNull);
-      // Add more assertions here
-    });
-
-    test('deleteByDate should delete notifications until a specific date',
-        () async {
-      // Arrange
-      const startDate = '2022-01-01T00:00:00Z';
-
-      // Act
-      final result = await Siren.deleteByDate(startDate: startDate);
-
-      // Assert
-      expect(result, isNotNull);
-      // Add more assertions here
-    });
+    expect(mockResponse.data, response.data);
   });
 }

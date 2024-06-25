@@ -1,6 +1,3 @@
-import 'package:sirenapp_flutter_inbox/src/constants/strings.dart';
-import 'package:sirenapp_flutter_inbox/src/models/ui_models.dart';
-
 class Generics {
   Generics._();
 
@@ -12,15 +9,6 @@ class Generics {
   static const int AVERAGE_ITEMS_ON_SCREEN = 7;
   static const int MAX_RETRIES = 2;
   static const String ENV_PATH = 'packages/sirenapp_flutter_inbox/env';
-
-  static final inboxTabs = [
-    TabItem(key: InboxTabs.ALL.name, title: Strings.tabAll),
-    TabItem(key: InboxTabs.UNREAD.name, title: Strings.tabUnread),
-  ];
-  static final List<String> emptyMessages = [
-    Strings.empty_title,
-    Strings.empty_title_unread,
-  ];
 }
 
 enum Status {
@@ -30,8 +18,6 @@ enum Status {
   IN_PROGRESS,
   INVALID_CREDENTIALS,
 }
-
-enum InboxTabs { ALL, UNREAD }
 
 enum BulkUpdateType {
   MARK_AS_READ,

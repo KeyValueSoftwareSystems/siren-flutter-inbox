@@ -40,8 +40,6 @@ class AppColors {
     required this.primary,
     required this.scaffoldBackgroundColor,
     required this.skeletonLoaderColor,
-    required this.tabBarActiveColor,
-    required this.tabBarInActiveColor,
     required this.textColor,
     required this.timerIcon,
   });
@@ -85,8 +83,6 @@ class AppColors {
   Color primary;
   Color scaffoldBackgroundColor;
   Color skeletonLoaderColor;
-  Color tabBarActiveColor;
-  Color tabBarInActiveColor;
   Color textColor;
   Color timerIcon;
 }

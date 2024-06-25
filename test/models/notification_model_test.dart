@@ -15,15 +15,13 @@ void main() {
           'body': 'body',
           'actionUrl': 'actionUrl',
           'avatar': {'imageUrl': 'avatarUrl', 'altText': 'altText'},
-          'additionalData': <String, dynamic>{},
+          'additionalData': 'additionalData',
         },
         'requestId': 'requestId',
         'isRead': true,
         'cardColor': Colors.blue,
       };
-
-      final notification =
-          NotificationType.fromJson(Map<String, dynamic>.from(json));
+      final notification = NotificationType.fromJson(json);
 
       expect(notification.id, 'notificationId');
       expect(notification.createdAt, '2022-01-01T00:00:00Z');
@@ -37,7 +35,7 @@ void main() {
       expect(notification.message.actionUrl, 'actionUrl');
       expect(notification.message.avatar?.url, 'avatarUrl');
       expect(notification.message.avatar?.altText, 'altText');
-      expect(notification.message.additionalData, {});
+      expect(notification.message.additionalData, 'additionalData');
     });
 
     test('markAsRead() should mark the notification as read', () {
@@ -51,7 +49,7 @@ void main() {
           body: 'body',
           actionUrl: 'actionUrl',
           avatar: AvatarData(url: 'avatarUrl', altText: 'altText'),
-          additionalData: <String, dynamic>{},
+          additionalData: 'additionalData',
         ),
         requestId: 'requestId',
         isRead: false,
@@ -77,10 +75,9 @@ void main() {
         'body': 'body',
         'actionUrl': 'actionUrl',
         'avatar': {'imageUrl': 'avatarUrl', 'altText': 'altText'},
-        'additionalData': <String, dynamic>{},
+        'additionalData': 'additionalData',
       };
-
-      final message = MessageData.fromJson(Map<String, dynamic>.from(json));
+      final message = MessageData.fromJson(json);
 
       expect(message.channel, 'channel');
       expect(message.header, 'header');
@@ -89,15 +86,14 @@ void main() {
       expect(message.actionUrl, 'actionUrl');
       expect(message.avatar?.url, 'avatarUrl');
       expect(message.avatar?.altText, 'altText');
-      expect(message.additionalData, {});
+      expect(message.additionalData, 'additionalData');
     });
   });
 
   group('AvatarData', () {
     test('fromJson() should parse JSON correctly', () {
       final json = {'imageUrl': 'avatarUrl', 'altText': 'altText'};
-
-      final avatar = AvatarData.fromJson(Map<String, dynamic>.from(json));
+      final avatar = AvatarData.fromJson(json);
 
       expect(avatar.url, 'avatarUrl');
       expect(avatar.altText, 'altText');

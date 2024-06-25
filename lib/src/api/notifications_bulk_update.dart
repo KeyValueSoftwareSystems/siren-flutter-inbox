@@ -17,14 +17,10 @@ class NotificationsBulkUpdate {
   Future<ApiResponse> notificationsBulkUpdate({
     required Map<String, dynamic> data,
     required String operation,
-    bool? isRead,
   }) async {
     final api = ApiClient(apiProvider());
-    var apiPath =
+    final apiPath =
         '${Generics.V2}${Generics.BASE_URL}${SirenDataProvider.instance.recipientId}/notifications/bulk-update';
-    if (isRead != null) {
-      apiPath = '$apiPath?isRead=$isRead';
-    }
     final result = ApiResponse()..isLoading;
     var apiError = Errors.markAsReadFailedError;
 

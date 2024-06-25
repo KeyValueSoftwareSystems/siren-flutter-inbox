@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
-import 'package:sirenapp_flutter_inbox/src/constants/strings.dart';
 import 'package:sirenapp_flutter_inbox/src/errors/errors.dart';
 
 void main() {
@@ -18,16 +17,6 @@ void main() {
         Errors.defaultError.message,
         'Something went wrong',
       );
-
-      expect(Generics.inboxTabs.length, 2);
-      expect(Generics.inboxTabs[0].key, 'ALL');
-      expect(Generics.inboxTabs[0].title, Strings.tabAll);
-      expect(Generics.inboxTabs[1].key, 'UNREAD');
-      expect(Generics.inboxTabs[1].title, Strings.tabUnread);
-
-      expect(Generics.emptyMessages.length, 2);
-      expect(Generics.emptyMessages[0], Strings.empty_title);
-      expect(Generics.emptyMessages[1], Strings.empty_title_unread);
     });
   });
 

@@ -72,7 +72,7 @@ class _CardWidgetState extends State<CardWidget> {
             ) ??
             _getDefaultContainerDecoration(widget.colors, defaultColors),
         padding: widget.styles?.cardStyle?.cardContainer?.padding ??
-            const EdgeInsets.symmetric(vertical: 12, horizontal: 18),
+            const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -154,6 +154,7 @@ class _CardWidgetState extends State<CardWidget> {
       child: Padding(
         padding: const EdgeInsets.only(
           right: 6,
+          left: 6,
         ),
         child: CircleAvatar(
           radius: widget.styles?.cardStyle?.avatarSize ?? 21,
@@ -278,7 +279,7 @@ class _CardWidgetState extends State<CardWidget> {
           },
           child: Container(
             height: 140,
-            margin: const EdgeInsets.only(right: 2),
+            margin: const EdgeInsets.only(right: 10),
             width: double.infinity,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(6),

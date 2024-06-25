@@ -77,10 +77,7 @@ class MessageData {
       thumbnailUrl: json?['thumbnailUrl'] != null
           ? (json?['thumbnailUrl'] as String?)
           : '',
-      additionalData:
-          (json?['additionalData'] != null && json?['additionalData'] is Map)
-              ? json!['additionalData'] as Map<String, dynamic>?
-              : null,
+      additionalData: json?['additionalData'] as String?,
     );
   }
 
@@ -103,9 +100,9 @@ class MessageData {
   final AvatarData? avatar;
 
   /// Additional data related to the message.
-  final Map<String, dynamic>? additionalData;
+  final String? additionalData;
 
-  /// The thumbnail URL associated with the message to display.
+  /// The thumbnail URL associated with the message to display
   final String? thumbnailUrl;
 }
 

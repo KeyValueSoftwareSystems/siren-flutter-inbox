@@ -22,7 +22,6 @@ class InboxBody extends StatelessWidget {
     required this.endReached,
     required this.onEndReached,
     required this.scrollController,
-    required this.activeTabIndex,
     this.customErrorWidget,
     this.customLoader,
     this.customStyles,
@@ -53,7 +52,6 @@ class InboxBody extends StatelessWidget {
   final ScrollController scrollController;
   final Widget? listEmptyWidget;
   final bool? isDarkMode;
-  final int activeTabIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -95,11 +93,7 @@ class InboxBody extends StatelessWidget {
         label: 'siren-empty-state',
         hint: 'Empty notification list',
         key: const Key('siren-empty-state'),
-        child: listEmptyWidget ??
-            EmptyWidget(
-              isDarkMode: isDarkMode,
-              activeTabIndex: activeTabIndex,
-            ),
+        child: listEmptyWidget ?? EmptyWidget(isDarkMode: isDarkMode),
       );
     } else {
       return Container(

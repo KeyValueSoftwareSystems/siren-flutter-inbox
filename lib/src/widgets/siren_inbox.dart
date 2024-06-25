@@ -21,7 +21,6 @@ class SirenInbox extends StatefulWidget {
   const SirenInbox({
     super.key,
     this.darkMode,
-    this.hideTab,
     this.itemsPerFetch,
     this.listEmptyWidget,
     this.customCard,
@@ -29,19 +28,14 @@ class SirenInbox extends StatefulWidget {
     this.customErrorWidget,
     this.cardParams,
     this.headerParams,
-    this.tabParams,
     this.onCardClick,
     this.onError,
     this.theme,
     this.customStyles,
-    this.customTabIndicator,
   });
 
   /// Flag for enabling dark mode.
   final bool? darkMode;
-
-  /// Flag to hide the tab bar.
-  final bool? hideTab;
 
   /// Notifications to be fetched in each request
   final int? itemsPerFetch;
@@ -58,14 +52,11 @@ class SirenInbox extends StatefulWidget {
   /// Custom error widget.
   final Widget? customErrorWidget;
 
-  /// Custom properties for card.
+  ///Custom props for Card properties
   final CardParams? cardParams;
 
-  /// Custom properties for inbox header.
+  /// Custom props for header properties
   final HeaderParams? headerParams;
-
-  // Properties for the tab bar.
-  final TabParams? tabParams;
 
   /// Callback function when a notification card is clicked.
   final void Function(NotificationType)? onCardClick;
@@ -79,14 +70,11 @@ class SirenInbox extends StatefulWidget {
   /// Custom styles for the card of each notification.
   final CustomStyles? customStyles;
 
-  final BoxDecoration? customTabIndicator;
-
   @override
   State<SirenInbox> createState() => _SirenInboxState();
 }
 
-class _SirenInboxState extends State<SirenInbox>
-    with SingleTickerProviderStateMixin {
+class _SirenInboxState extends State<SirenInbox> {
   bool isLoading = true;
   bool isEndReached = false;
   bool isError = false;
@@ -94,22 +82,23 @@ class _SirenInboxState extends State<SirenInbox>
   int currentPage = 0;
   String? deletingNotificationId;
   int pageSize = 20;
-  int _activeTabIndex = 0;
-  bool _enableClearAll = true;
 
   List<NotificationType> notifications = [];
   late final DeleteNotificationById _deleteNotificationById;
   late final ReadNotificationById _readNotificationById;
   late Timer? _periodicUpdateRef;
   late StreamSubscription<StreamResponse> _subscription;
-  late ScrollController _inboxScrollController;
-  late List<ScrollController> _tabScrollControllers;
-  late TabController _tabController;
+  late ScrollController _scrollController;
 
   @override
   void initState() {
     super.initState();
-    _initializeVariables();
+    pageSize = max(min(widget.itemsPerFetch ?? Generics.PAGE_SIZE, 50), 0);
+    _periodicUpdateRef = Timer(const Duration(days: 1), () {});
+    _scrollController = ScrollController();
+    _scrollController.addListener(_scrollListener);
+    _deleteNotificationById = DeleteNotificationById.instance;
+    _readNotificationById = ReadNotificationById.instance;
     _subscribeToStream();
     _initialize();
   }
@@ -117,20 +106,10 @@ class _SirenInboxState extends State<SirenInbox>
   @override
   void dispose() {
     markAllNotificationsAsViewed();
-    _inboxScrollController.dispose();
-    for (final controller in _tabScrollControllers) {
-      controller.dispose();
-    }
-    _tabController.dispose();
+    _scrollController.dispose();
     _periodicUpdateRef?.cancel();
     _subscription.cancel();
     super.dispose();
-  }
-
-  void safeSetState(VoidCallback callback) {
-    if (mounted) {
-      setState(callback);
-    }
   }
 
   Future<void> _initialize() async {
@@ -140,35 +119,12 @@ class _SirenInboxState extends State<SirenInbox>
             Status.FAILED ||
         !SirenDataProvider.instance.isProviderInitialized) {
       widget.onError?.call(Errors.outsideSirenContextError);
-      safeSetState(() {
-        isError = true;
-      });
+      if (mounted) {
+        setState(() {
+          isError = true;
+        });
+      }
     }
-  }
-
-  void _initializeVariables() {
-    pageSize = max(min(widget.itemsPerFetch ?? Generics.PAGE_SIZE, 50), 0);
-    _periodicUpdateRef = Timer(const Duration(days: 1), () {});
-    _activeTabIndex = _activeTabIndex = (widget.tabParams?.activeTabIndex ?? 0)
-        .clamp(0, InboxTabs.values.length - 1);
-    _inboxScrollController = ScrollController();
-    _inboxScrollController.addListener(_scrollListener);
-    _tabScrollControllers = List.generate(
-      InboxTabs.values.length,
-      (index) => ScrollController()
-        ..addListener(() {
-          _tabScrollListeners(index);
-        }),
-    );
-
-    _deleteNotificationById = DeleteNotificationById.instance;
-    _readNotificationById = ReadNotificationById.instance;
-    _tabController = TabController(
-      length: InboxTabs.values.length,
-      vsync: this,
-      initialIndex: _activeTabIndex,
-    );
-    _tabController.addListener(_tabListener);
   }
 
   void _subscribeToStream() {
@@ -178,7 +134,7 @@ class _SirenInboxState extends State<SirenInbox>
           _reset(cancelFetch: true);
           return;
         } else if (streamResponse.api == UpdateEvents.SHOW_ERROR) {
-          safeSetState(() {
+          setState(() {
             isError = true;
           });
         }
@@ -212,73 +168,114 @@ class _SirenInboxState extends State<SirenInbox>
   }
 
   void _reset({bool cancelFetch = false}) {
-    safeSetState(() {
-      isLoading = true;
-      notifications = [];
-      isEndReached = false;
-      currentPage = 0;
-    });
+    if (mounted) {
+      setState(() {
+        isLoading = true;
+        notifications = [];
+        isEndReached = false;
+        currentPage = 0;
+      });
+    }
 
     if (cancelFetch) {
       _periodicUpdateRef?.cancel();
     }
   }
 
+  bool shouldShowClearAllButton() {
+    return !isError && !isLoading && notifications.isNotEmpty;
+  }
+
   void _markNotificationAsReadById(String? notificationId) {
-    safeSetState(() {
-      notifications.firstWhere((n) => n.id == notificationId).markAsRead();
-    });
+    if (mounted) {
+      setState(() {
+        notifications.firstWhere((n) => n.id == notificationId).markAsRead();
+      });
+    }
   }
 
   void _markAllNotificationsAsRead() {
-    safeSetState(() {
-      for (final notification in notifications) {
-        notification.markAsRead();
-      }
-    });
+    if (mounted) {
+      setState(() {
+        for (final notification in notifications) {
+          notification.markAsRead();
+        }
+      });
+    }
   }
 
   void _deleteById(String? notificationId) {
-    safeSetState(() {
-      notifications
-          .removeWhere((notification) => notification.id == notificationId);
-    });
+    if (mounted) {
+      setState(() {
+        notifications
+            .removeWhere((notification) => notification.id == notificationId);
+      });
+    }
   }
 
   void _deleteAllNotifications() {
-    safeSetState(() {
-      notifications = [];
-      _enableClearAll = false;
-    });
+    if (mounted) {
+      setState(() {
+        notifications = [];
+      });
+    }
   }
 
   void _scrollListener() {
-    if (_inboxScrollController.position.atEdge &&
-        _inboxScrollController.position.pixels ==
-            _inboxScrollController.position.maxScrollExtent) {
+    if (_scrollController.position.atEdge &&
+        _scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent) {
       onEndReached();
     }
   }
 
-  void _tabScrollListeners(int index) {
-    if (_tabScrollControllers[index].position.atEdge &&
-        _tabScrollControllers[index].position.pixels ==
-            _tabScrollControllers[index].position.maxScrollExtent) {
-      onEndReached();
-    }
-  }
-
-  void _tabListener() {
-    if (_tabController.index != _tabController.previousIndex) {
-      onTabChanged(_tabController.index);
-    }
-  }
-
-  bool? getIsRead() {
-    if ((widget.hideTab ?? false) == false && _activeTabIndex == 1) {
-      return false;
-    }
-    return null;
+  void fetchNewNotifications() {
+    late var newNotifications = <NotificationType>[];
+    _periodicUpdateRef?.cancel();
+    _periodicUpdateRef = Timer.periodic(
+      const Duration(seconds: Generics.DATA_FETCH_INTERVAL),
+      (timer) async {
+        final fetchedNotifications =
+            await FetchAllNotifications.instance.fetchAllNotifications(
+          size: pageSize,
+          start: notifications.isNotEmpty
+              ? modifyAndConvertToISOString(
+                  notifications[0].createdAt,
+                )
+              : null,
+        );
+        if (fetchedNotifications.isSuccess) {
+          final count =
+              (fetchedNotifications.data as Iterable<NotificationType>).length;
+          if (count > 0) {
+            unawaited(markAllNotificationsAsViewed());
+            newNotifications.addAll(
+              fetchedNotifications.data as Iterable<NotificationType>,
+            );
+            if (mounted) {
+              setState(
+                () {
+                  notifications.insertAll(
+                    0,
+                    newNotifications,
+                  );
+                },
+              );
+              if (isLoading) {
+                setState(
+                  () {
+                    isLoading = false;
+                  },
+                );
+              }
+            }
+            newNotifications = [];
+          }
+        } else if (fetchedNotifications.isError) {
+          widget.onError?.call(fetchedNotifications.error ?? SirenErrorType());
+        }
+      },
+    );
   }
 
   Future<void> markAllNotificationsAsViewed() async {
@@ -295,80 +292,43 @@ class _SirenInboxState extends State<SirenInbox>
     }
   }
 
-  void fetchNewNotifications() {
-    _periodicUpdateRef?.cancel();
-    _periodicUpdateRef = Timer.periodic(
-      const Duration(seconds: Generics.DATA_FETCH_INTERVAL),
-      (timer) async {
-        final fetchedNotifications =
-            await FetchAllNotifications.instance.fetchAllNotifications(
-          size: pageSize,
-          isRead: getIsRead(),
-          start: notifications.isNotEmpty
-              ? modifyAndConvertToISOString(
-                  notifications[0].createdAt,
-                )
-              : null,
-        );
-        if (fetchedNotifications.isSuccess) {
-          final newNotifications =
-              fetchedNotifications.data as Iterable<NotificationType>;
-          final count = newNotifications.length;
-          if (count > 0) {
-            unawaited(markAllNotificationsAsViewed());
-            safeSetState(
-              () {
-                notifications.insertAll(0, newNotifications);
-                _enableClearAll = notifications.isNotEmpty;
-                if (isLoading) {
-                  isLoading = false;
-                }
-              },
-            );
-          }
-        } else if (fetchedNotifications.isError) {
-          widget.onError?.call(fetchedNotifications.error ?? SirenErrorType());
-        }
-      },
-    );
-  }
-
   Future<void> initialFetchNotification() async {
-    safeSetState(() {
-      isLoading = true;
-    });
-
+    if (mounted) {
+      setState(() {
+        isLoading = true;
+      });
+    }
     final fetchedNotifications =
         await FetchAllNotifications.instance.fetchAllNotifications(
       end: DateTime.now().toUtc().toIso8601String(),
       size: pageSize,
-      isRead: getIsRead(),
     );
 
     if (fetchedNotifications.isSuccess) {
       unawaited(markAllNotificationsAsViewed());
-      safeSetState(() {
-        notifications
-            .addAll(fetchedNotifications.data as Iterable<NotificationType>);
+      setState(() {
+        notifications.addAll(
+          fetchedNotifications.data as Iterable<NotificationType>,
+        );
         isLoading = false;
         isError = false;
-        _enableClearAll = notifications.isNotEmpty;
       });
       fetchNewNotifications();
     } else if (fetchedNotifications.isError) {
-      safeSetState(() {
-        isError = fetchedNotifications.isError;
-      });
-
+      if (mounted) {
+        setState(() {
+          isError = fetchedNotifications.isError;
+        });
+      }
       widget.onError?.call(fetchedNotifications.error ?? SirenErrorType());
     }
   }
 
   Future<void> onRefresh() async {
     if (mounted) {
-      _reset(cancelFetch: true);
+      _reset();
       await initialFetchNotification();
-      safeSetState(() {
+      setState(() {
         isLoading = false;
       });
     }
@@ -383,7 +343,6 @@ class _SirenInboxState extends State<SirenInbox>
         await NotificationsBulkUpdate.instance.notificationsBulkUpdate(
       data: data,
       operation: BulkUpdateType.MARK_AS_DELETED.name,
-      isRead: getIsRead(),
     );
     if (deleteAllResponse.isSuccess) {
       SirenDataProvider.instance.inboxController.sink.add(
@@ -405,9 +364,11 @@ class _SirenInboxState extends State<SirenInbox>
     );
 
     if (deletionStatus.data == Status.SUCCESS && deletionStatus.isSuccess) {
-      safeSetState(() {
-        deletingNotificationId = id;
-      });
+      if (mounted) {
+        setState(() {
+          deletingNotificationId = id;
+        });
+      }
 
       await Future<void>.delayed(const Duration(milliseconds: 500));
       SirenDataProvider.instance.inboxController.sink.add(
@@ -417,13 +378,12 @@ class _SirenInboxState extends State<SirenInbox>
           id,
         ),
       );
-
-      _deleteById(id);
-      safeSetState(() {
-        _enableClearAll = notifications.isNotEmpty;
-        deletingNotificationId = null;
-      });
-
+      if (mounted) {
+        setState(() {
+          deletingNotificationId = null;
+          _deleteById(id);
+        });
+      }
       if (notifications.length < pageSize &&
           notifications.length < Generics.AVERAGE_ITEMS_ON_SCREEN) {
         onEndReached();
@@ -435,38 +395,39 @@ class _SirenInboxState extends State<SirenInbox>
 
   void onEndReached() {
     if (!isLoading && !loadingNextPage && !isEndReached) {
-      safeSetState(() {
-        loadingNextPage = true;
-      });
+      if (mounted) {
+        setState(() {
+          loadingNextPage = true;
+        });
+      }
 
       Future.delayed(Duration.zero, () async {
         final fetchedNotifications =
             await FetchAllNotifications.instance.fetchAllNotifications(
           end: convertToISOString(
-            notifications.last.createdAt,
+            notifications[notifications.length - 1].createdAt,
           ),
           size: pageSize,
-          isRead: getIsRead(),
         );
         if (fetchedNotifications.isSuccess) {
-          final newNotifications =
-              fetchedNotifications.data as Iterable<NotificationType>;
-          final count = newNotifications.length;
-
-          safeSetState(() {
-            notifications.addAll(
-              newNotifications,
-            );
-            isLoading = false;
-            loadingNextPage = false;
-            isEndReached = count < pageSize;
-            _enableClearAll = notifications.isNotEmpty;
-          });
+          final count =
+              (fetchedNotifications.data as Iterable<NotificationType>).length;
+          if (mounted) {
+            setState(() {
+              notifications.addAll(
+                fetchedNotifications.data as Iterable<NotificationType>,
+              );
+              isLoading = false;
+              loadingNextPage = false;
+              isEndReached = count < pageSize;
+            });
+          }
         } else if (fetchedNotifications.isError) {
-          safeSetState(() {
-            loadingNextPage = false;
-          });
-
+          if (mounted) {
+            setState(() {
+              loadingNextPage = false;
+            });
+          }
           widget.onError?.call(fetchedNotifications.error ?? SirenErrorType());
         }
       });
@@ -490,171 +451,45 @@ class _SirenInboxState extends State<SirenInbox>
     }
   }
 
-  void onTabChanged(int index) {
-    if (_activeTabIndex != index) {
-      safeSetState(() {
-        _activeTabIndex = index;
-        _reset(cancelFetch: true);
-        _initialize();
-      });
-    }
-  }
-
-  Widget _buildInboxBody(
-    ScrollController _controller,
-    List<NotificationType> data,
-    bool isTabInactive,
-  ) {
-    return InboxBody(
-      activeTabIndex: _activeTabIndex,
-      cardParams: widget.cardParams,
-      colors: widget.theme,
-      customCard: widget.customCard,
-      customErrorWidget: widget.customErrorWidget,
-      customLoader: widget.customLoader,
-      customStyles: widget.customStyles,
-      deleteNotification: deleteNotification,
-      deletingNotificationId: deletingNotificationId,
-      disableAutoMarkAsRead: widget.cardParams?.disableAutoMarkAsRead ?? false,
-      endReached: isEndReached,
-      isDarkMode: widget.darkMode,
-      isError: isError,
-      isLoading: ((!(widget.hideTab ?? false)) && isTabInactive) || isLoading,
-      listEmptyWidget: widget.listEmptyWidget,
-      loadingNextPage: loadingNextPage,
-      markAsRead: _markNotificationAsRead,
-      notifications: data,
-      onCardClick: widget.onCardClick,
-      onEndReached: onEndReached,
-      onRefresh: onRefresh,
-      scrollController: _controller,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final colors = SirenAppTheme.colors(isDarkMode: widget.darkMode ?? false);
-    final tabs = widget.tabParams?.tabs ?? Generics.inboxTabs;
 
-    if ((widget.hideTab ?? false) == false) {
-      return Scaffold(
-        backgroundColor:
-            widget.theme?.backgroundColor ?? colors.scaffoldBackgroundColor,
-        appBar: SirenAppBar(
-          colors: widget.theme,
-          isDarkMode: widget.darkMode,
-          onClearAllPressed: onBulkDelete,
-          isNonEmptyNotifications: _enableClearAll,
-          headerParams: widget.headerParams,
-          styles: widget.customStyles,
-        ),
-        body: Column(
-          children: [
-            Container(
-              margin: widget.customStyles?.tabStyles?.containerStyle?.margin ??
-                  EdgeInsets.zero,
-              color: widget.theme?.tabColors?.containerBackgroundColor ??
-                  Colors.transparent,
-              child: TabBar(
-                controller: _tabController,
-                isScrollable: true,
-                padding:
-                    widget.customStyles?.tabStyles?.containerStyle?.padding ??
-                        const EdgeInsets.symmetric(horizontal: 24),
-                indicator: widget.customTabIndicator ??
-                    UnderlineTabIndicator(
-                      borderSide: BorderSide(
-                        color: widget.theme?.tabColors?.activeTabTextColor ??
-                            colors.tabBarActiveColor,
-                        width:
-                            widget.customStyles?.tabStyles?.indicatorSize ?? 4,
-                      ),
-                    ),
-                indicatorPadding:
-                    widget.customStyles?.tabStyles?.indicatorPadding ??
-                        EdgeInsets.zero,
-                indicatorSize: TabBarIndicatorSize.tab,
-                tabAlignment: TabAlignment.start,
-                dividerColor:
-                    widget.theme?.tabColors?.containerBackgroundColor ??
-                        colors.scaffoldBackgroundColor,
-                labelColor: widget.theme?.tabColors?.activeTabTextColor ??
-                    colors.tabBarActiveColor,
-                unselectedLabelColor:
-                    widget.theme?.tabColors?.inactiveTabTextColor ??
-                        colors.tabBarInActiveColor,
-                labelPadding: EdgeInsets.zero,
-                labelStyle:
-                    widget.customStyles?.tabStyles?.activeTabTextStyle ??
-                        const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
-                unselectedLabelStyle:
-                    widget.customStyles?.tabStyles?.inActiveTabTextStyle ??
-                        const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
-                onTap: onTabChanged,
-                tabs: tabs.asMap().entries.map((entry) {
-                  final index = entry.key;
-                  final tabItem = entry.value;
-                  return Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    color: _activeTabIndex == index
-                        ? widget.theme?.tabColors?.activeTabBackgroundColor ??
-                            Colors.transparent
-                        : Colors.transparent,
-                    child: Tab(
-                      child: Text(tabItem.title),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-            if (widget.customStyles?.hideTabMargin?.lower != true)
-              Container(
-                height: 1,
-                margin:
-                    widget.customStyles?.tabStyles?.containerStyle?.margin ??
-                        EdgeInsets.zero,
-                color: widget.theme?.cardColors?.borderColor ??
-                    widget.theme?.borderColor ??
-                    colors.cardBorderColor,
-              ),
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  ...List.generate(
-                    tabs.length,
-                    (index) => _buildInboxBody(
-                      _tabScrollControllers[index],
-                      index == _activeTabIndex ? notifications : [],
-                      index != _activeTabIndex,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      );
-    } else {
-      return Scaffold(
-        backgroundColor:
-            widget.theme?.backgroundColor ?? colors.scaffoldBackgroundColor,
-        appBar: SirenAppBar(
-          colors: widget.theme,
-          isDarkMode: widget.darkMode,
-          onClearAllPressed: onBulkDelete,
-          isNonEmptyNotifications: _enableClearAll,
-          headerParams: widget.headerParams,
-          styles: widget.customStyles,
-        ),
-        body: _buildInboxBody(_inboxScrollController, notifications, false),
-      );
-    }
+    return Scaffold(
+      backgroundColor:
+          widget.theme?.backgroundColor ?? colors.scaffoldBackgroundColor,
+      appBar: SirenAppBar(
+        colors: widget.theme,
+        isDarkMode: widget.darkMode,
+        onClearAllPressed: onBulkDelete,
+        isNonEmptyNotifications: shouldShowClearAllButton(),
+        headerParams: widget.headerParams,
+        styles: widget.customStyles,
+      ),
+      body: InboxBody(
+        cardParams: widget.cardParams,
+        colors: widget.theme,
+        customCard: widget.customCard,
+        customErrorWidget: widget.customErrorWidget,
+        customLoader: widget.customLoader,
+        customStyles: widget.customStyles,
+        deleteNotification: deleteNotification,
+        deletingNotificationId: deletingNotificationId,
+        disableAutoMarkAsRead:
+            widget.cardParams?.disableAutoMarkAsRead ?? false,
+        endReached: isEndReached,
+        isDarkMode: widget.darkMode,
+        isError: isError,
+        isLoading: isLoading,
+        listEmptyWidget: widget.listEmptyWidget,
+        loadingNextPage: loadingNextPage,
+        markAsRead: _markNotificationAsRead,
+        notifications: notifications,
+        onCardClick: widget.onCardClick,
+        onEndReached: onEndReached,
+        onRefresh: onRefresh,
+        scrollController: _scrollController,
+      ),
+    );
   }
 }
