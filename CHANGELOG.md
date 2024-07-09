@@ -5,8 +5,9 @@ All notable changes to this project will be documented in this file.
 ## 1.3.0
 
 ### Added
--Fixed the extra padding issue in the app bar when a custom header is passed.
--Fixed the parsing of additional data to JSON when received as a string.
+- Added a fix for the extra padding issue in the app bar when a custom header is passed.
+- Added a fix for parsing additional data to JSON when received as a string.
+
 
 ## 1.2.0
 
