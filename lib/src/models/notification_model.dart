@@ -67,6 +67,7 @@ class MessageData {
 
   /// Factory method to create MessageData from data.
   factory MessageData.fromJson(Map<String, dynamic>? data) {
+    // ignore: prefer_typing_uninitialized_variables
     var dataDecoded;
     Map<String, dynamic>? additionalData;
     if (data?['additionalData'] != null) {
