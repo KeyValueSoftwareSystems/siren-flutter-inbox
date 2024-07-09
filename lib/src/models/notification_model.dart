@@ -67,17 +67,14 @@ class MessageData {
 
   /// Factory method to create MessageData from data.
   factory MessageData.fromJson(Map<String, dynamic>? data) {
-    // ignore: prefer_typing_uninitialized_variables
-    var dataDecoded;
     Map<String, dynamic>? additionalData;
-    if (data?['additionalData'] != null) {
-      try {
-        dataDecoded = json.decode(data?['additionalData'] as String);
-        additionalData = dataDecoded as Map<String, dynamic>?;
-      } catch (error) {
-        additionalData = null;
-      }
+  if (data?['additionalData'] != null) {
+    try {
+      additionalData = json.decode(data?['additionalData'] as String) as Map<String, dynamic>?;
+    } catch (error) {
+      additionalData = null;
     }
+  }
     return MessageData(
       channel: data?['channel'] as String?,
       header: data?['header'] as String?,
