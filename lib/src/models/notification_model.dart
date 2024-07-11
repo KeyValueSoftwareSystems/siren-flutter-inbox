@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 /// Class representing the data structure of a notification.
@@ -63,24 +65,30 @@ class MessageData {
     this.subHeader,
   });
 
-  /// Factory method to create MessageData from JSON.
-  factory MessageData.fromJson(Map<String, dynamic>? json) {
+  /// Factory method to create MessageData from data.
+  factory MessageData.fromJson(Map<String, dynamic>? data) {
+    Map<String, dynamic>? additionalData;
+    if (data?['additionalData'] != null) {
+      try {
+        additionalData = json.decode(data?['additionalData'] as String)
+            as Map<String, dynamic>?;
+      } catch (error) {
+        additionalData = null;
+      }
+    }
     return MessageData(
-      channel: json?['channel'] as String?,
-      header: json?['header'] as String?,
-      subHeader: json?['subHeader'] as String?,
-      body: json?['body'] as String?,
-      actionUrl: json?['actionUrl'] as String?,
-      avatar: json?['avatar'] != null
-          ? AvatarData.fromJson(json?['avatar'] as Map<String, dynamic>)
+      channel: data?['channel'] as String?,
+      header: data?['header'] as String?,
+      subHeader: data?['subHeader'] as String?,
+      body: data?['body'] as String?,
+      actionUrl: data?['actionUrl'] as String?,
+      avatar: data?['avatar'] != null
+          ? AvatarData.fromJson(data?['avatar'] as Map<String, dynamic>)
           : null,
-      thumbnailUrl: json?['thumbnailUrl'] != null
-          ? (json?['thumbnailUrl'] as String?)
+      thumbnailUrl: data?['thumbnailUrl'] != null
+          ? (data?['thumbnailUrl'] as String?)
           : '',
-      additionalData:
-          (json?['additionalData'] != null && json?['additionalData'] is Map)
-              ? json!['additionalData'] as Map<String, dynamic>?
-              : null,
+      additionalData: additionalData,
     );
   }
 

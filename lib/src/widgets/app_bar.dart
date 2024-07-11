@@ -48,13 +48,13 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
             : null,
       ),
       height: preferredSize.height,
-      child: Padding(
-        padding: const EdgeInsets.only(right: 16, left: 20),
-        child: headerParams?.customHeader ??
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
+      child: headerParams?.customHeader ??
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 16, left: 20),
+                child: Row(
                   children: [
                     if (headerParams?.showBackButton ?? false)
                       Semantics(
@@ -93,49 +93,49 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                   ],
                 ),
-                if (!(headerParams?.hideClearAll ?? false))
-                  Semantics(
-                    label: 'siren-header-clear-all',
-                    hint: 'Tap to clear all notifications',
-                    child: GestureDetector(
-                      key: const Key('siren-header-clear-all'),
-                      onTap: () {
-                        if (isNonEmptyNotifications &&
-                            onClearAllPressed != null) {
-                          onClearAllPressed!();
-                        }
-                      },
-                      child: Opacity(
-                        opacity: isNonEmptyNotifications ? 1 : 0.4,
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 4),
-                              child: Icon(
-                                Icons.clear_all,
-                                size: styles?.clearAllIconStyle?.size ?? 24,
-                                color: colors?.clearAllIcon ??
-                                    defaultColors.appBarActionText,
-                              ),
+              ),
+              if (!(headerParams?.hideClearAll ?? false))
+                Semantics(
+                  label: 'siren-header-clear-all',
+                  hint: 'Tap to clear all notifications',
+                  child: GestureDetector(
+                    key: const Key('siren-header-clear-all'),
+                    onTap: () {
+                      if (isNonEmptyNotifications &&
+                          onClearAllPressed != null) {
+                        onClearAllPressed!();
+                      }
+                    },
+                    child: Opacity(
+                      opacity: isNonEmptyNotifications ? 1 : 0.4,
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 4),
+                            child: Icon(
+                              Icons.clear_all,
+                              size: styles?.clearAllIconStyle?.size ?? 24,
+                              color: colors?.clearAllIcon ??
+                                  defaultColors.appBarActionText,
                             ),
-                            Text(
-                              Strings.clear_all,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: colors?.inboxHeaderColors
-                                        ?.headerActionColor ??
-                                    defaultColors.appBarActionText,
-                              ),
+                          ),
+                          Text(
+                            Strings.clear_all,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: colors
+                                      ?.inboxHeaderColors?.headerActionColor ??
+                                  defaultColors.appBarActionText,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-              ],
-            ),
-      ),
+                ),
+            ],
+          ),
     );
   }
 }

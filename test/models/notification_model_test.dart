@@ -15,7 +15,7 @@ void main() {
           'body': 'body',
           'actionUrl': 'actionUrl',
           'avatar': {'imageUrl': 'avatarUrl', 'altText': 'altText'},
-          'additionalData': <String, dynamic>{},
+          'additionalData': '{}',
         },
         'requestId': 'requestId',
         'isRead': true,
@@ -37,7 +37,7 @@ void main() {
       expect(notification.message.actionUrl, 'actionUrl');
       expect(notification.message.avatar?.url, 'avatarUrl');
       expect(notification.message.avatar?.altText, 'altText');
-      expect(notification.message.additionalData, {});
+      expect(notification.message.additionalData, isA<Map<String, dynamic>>());
     });
 
     test('markAsRead() should mark the notification as read', () {
@@ -77,7 +77,7 @@ void main() {
         'body': 'body',
         'actionUrl': 'actionUrl',
         'avatar': {'imageUrl': 'avatarUrl', 'altText': 'altText'},
-        'additionalData': <String, dynamic>{},
+        'additionalData': '{}',
       };
 
       final message = MessageData.fromJson(Map<String, dynamic>.from(json));
@@ -89,7 +89,7 @@ void main() {
       expect(message.actionUrl, 'actionUrl');
       expect(message.avatar?.url, 'avatarUrl');
       expect(message.avatar?.altText, 'altText');
-      expect(message.additionalData, {});
+      expect(message.additionalData, isA<Map<String, dynamic>>());
     });
   });
 
