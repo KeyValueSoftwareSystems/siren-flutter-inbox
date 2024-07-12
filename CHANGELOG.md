@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## 1.3.0
+## 1.2.1
 
 ### Added
 - Added a fix for the extra padding issue in the app bar when a custom header is passed.
