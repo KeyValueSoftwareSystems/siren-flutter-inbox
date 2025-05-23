@@ -16,7 +16,7 @@ class ReadNotificationById {
   }) async {
     final result = ApiResponse()..isLoading = true;
     var apiError = Errors.markAsReadFailedError;
-    final _apiPath =
+    final apiPath =
         '${Generics.V2}${Generics.BASE_URL}${SirenDataProvider.instance.recipientId}/notifications';
     if (SirenDataProvider.instance.tokenVerificationStatus != Status.SUCCESS) {
       apiError = SirenDataProvider.instance.getVerificationErrorType();
@@ -30,7 +30,7 @@ class ReadNotificationById {
     }
 
     final apiResponse = await api.patch(
-      path: '$_apiPath/$notificationId',
+      path: '$apiPath/$notificationId',
       data: {
         'isRead': true,
         'isDelivered': true,

@@ -30,7 +30,7 @@ class FetchAllNotifications {
     String? start,
     String? end,
   }) async {
-    final _apiPath =
+    final apiPath =
         '${Generics.V2}${Generics.BASE_URL}${SirenDataProvider.instance.recipientId}/notifications';
     final result = ApiResponse()..isLoading = true;
     var apiError = Errors.notificationFetchFailedError;
@@ -68,7 +68,7 @@ class FetchAllNotifications {
     }
 
     final apiResponse = await api.get(
-      path: '$_apiPath?$queryString',
+      path: '$apiPath?$queryString',
     );
 
     if (apiResponse.statusCode != 0 && apiResponse.data != null) {
