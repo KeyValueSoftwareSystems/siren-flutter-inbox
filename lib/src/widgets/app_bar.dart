@@ -11,14 +11,21 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.styles,
     this.colors,
     this.isDarkMode,
+    this.categories = const [],
+    this.selectedValues = const [],
+    this.onCategorySelected,
     super.key,
   });
+
   final VoidCallback? onClearAllPressed;
   final bool isNonEmptyNotifications;
   final HeaderParams? headerParams;
   final CustomStyles? styles;
   final CustomThemeColors? colors;
   final bool? isDarkMode;
+  final List<String> categories;
+  final List<String> selectedValues;
+  final void Function(String)? onCategorySelected;
 
   @override
   Size get preferredSize {
@@ -94,6 +101,52 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ],
                 ),
               ),
+              if (categories.isNotEmpty)
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton<String>(
+                          value: null,
+                          hint: Row(
+                            children: [
+                              Expanded(
+                                child: selectedValues.isEmpty
+                                    ? const Text(
+                                        'Select Options',
+                                        style: TextStyle(color: Colors.grey),
+                                      )
+                                    : Text(
+                                        selectedValues.join(', '),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
+                              ),
+                            ],
+                          ),
+                          isExpanded: true,
+                          items: categories.map((category) {
+                            return DropdownMenuItem(
+                              value: category,
+                              child: Text(category),
+                            );
+                          }).toList(),
+                          onChanged: (String? value) {
+                            if (value != null && onCategorySelected != null) {
+                              onCategorySelected!(value);
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               if (!(headerParams?.hideClearAll ?? false))
                 Semantics(
                   label: 'siren-header-clear-all',

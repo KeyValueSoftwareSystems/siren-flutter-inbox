@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
 import 'package:sirenapp_flutter_inbox/src/api/delete_notification_by_id.dart';
 import 'package:sirenapp_flutter_inbox/src/api/fetch_all_notification.dart';
+import 'package:sirenapp_flutter_inbox/src/api/fetch_categories.dart';
 import 'package:sirenapp_flutter_inbox/src/api/mark_all_notifications_as_viewed.dart';
 import 'package:sirenapp_flutter_inbox/src/api/notifications_bulk_update.dart';
 import 'package:sirenapp_flutter_inbox/src/api/read_notification_by_id.dart';
@@ -35,6 +36,7 @@ class SirenInbox extends StatefulWidget {
     this.theme,
     this.customStyles,
     this.customTabIndicator,
+    this.showCategories = false,
   });
 
   /// Flag for enabling dark mode.
@@ -81,6 +83,9 @@ class SirenInbox extends StatefulWidget {
 
   final BoxDecoration? customTabIndicator;
 
+  /// Flag to show categories dropdown in the app bar.
+  final bool showCategories;
+
   @override
   State<SirenInbox> createState() => _SirenInboxState();
 }
@@ -98,8 +103,11 @@ class _SirenInboxState extends State<SirenInbox>
   bool _enableClearAll = true;
 
   List<NotificationType> notifications = [];
+  List<String> allCategories = ['1', '2', '3'];
+  List<String> selectedCategories = [];
   late final DeleteNotificationById _deleteNotificationById;
   late final ReadNotificationById _readNotificationById;
+  late final FetchCategories _fetchCategories;
   late Timer? _periodicUpdateRef;
   late StreamSubscription<StreamResponse> _subscription;
   late ScrollController _inboxScrollController;
@@ -135,7 +143,10 @@ class _SirenInboxState extends State<SirenInbox>
 
   Future<void> _initialize() async {
     if (SirenDataProvider.instance.tokenVerificationStatus == Status.SUCCESS) {
-      await initialFetchNotification();
+      await Future.wait([
+        initialFetchNotification(),
+        _fetchAllCategories(),
+      ]);
     } else if (SirenDataProvider.instance.tokenVerificationStatus ==
             Status.FAILED ||
         !SirenDataProvider.instance.isProviderInitialized) {
@@ -143,6 +154,17 @@ class _SirenInboxState extends State<SirenInbox>
       safeSetState(() {
         isError = true;
       });
+    }
+  }
+
+  Future<void> _fetchAllCategories() async {
+    final response = await _fetchCategories.fetchCategories();
+    if (response.isSuccess && response.data != null) {
+      safeSetState(() {
+        allCategories = response.data as List<String>;
+      });
+    } else {
+      widget.onError?.call(response.error ?? SirenErrorType());
     }
   }
 
@@ -163,6 +185,7 @@ class _SirenInboxState extends State<SirenInbox>
 
     _deleteNotificationById = DeleteNotificationById.instance;
     _readNotificationById = ReadNotificationById.instance;
+    _fetchCategories = FetchCategories.instance;
     _tabController = TabController(
       length: InboxTabs.values.length,
       vsync: this,
@@ -200,11 +223,8 @@ class _SirenInboxState extends State<SirenInbox>
               _initialize();
               break;
 
-            
-
             // ignore: no_default_cases
             default:
-            
           }
         } else if (streamResponse.response?.isError ?? false) {
           widget.onError
@@ -503,6 +523,16 @@ class _SirenInboxState extends State<SirenInbox>
     }
   }
 
+  void _updateSelectedCategories(String category) {
+    setState(() {
+      if (selectedCategories.contains(category)) {
+        selectedCategories.remove(category);
+      } else {
+        selectedCategories.add(category);
+      }
+    });
+  }
+
   Widget _buildInboxBody(
     ScrollController controller,
     List<NotificationType> data,
@@ -550,6 +580,10 @@ class _SirenInboxState extends State<SirenInbox>
           isNonEmptyNotifications: _enableClearAll,
           headerParams: widget.headerParams,
           styles: widget.customStyles,
+          categories: widget.showCategories ? allCategories : const [],
+          selectedValues: widget.showCategories ? selectedCategories : const [],
+          onCategorySelected:
+              widget.showCategories ? _updateSelectedCategories : null,
         ),
         body: Column(
           children: [
@@ -655,6 +689,10 @@ class _SirenInboxState extends State<SirenInbox>
           isNonEmptyNotifications: _enableClearAll,
           headerParams: widget.headerParams,
           styles: widget.customStyles,
+          categories: widget.showCategories ? allCategories : const [],
+          selectedValues: widget.showCategories ? selectedCategories : const [],
+          onCategorySelected:
+              widget.showCategories ? _updateSelectedCategories : null,
         ),
         body: _buildInboxBody(_inboxScrollController, notifications, false),
       );
