@@ -5,23 +5,38 @@ import 'package:sirenapp_flutter_inbox/sirenapp_flutter_inbox.dart';
 import 'package:sirenapp_flutter_inbox/src/api/verify_token.dart';
 import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
 import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
+import 'package:sirenapp_flutter_inbox/src/models/api_response.dart';
+import 'package:sirenapp_flutter_inbox/src/services/api_client.dart';
 
 import 'siren_data_provider_test.mocks.dart';
 
 @GenerateNiceMocks([
-  MockSpec<VerifyToken>(),
+  MockSpec<ApiClient>(),
 ])
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   late SirenDataProvider sirenDataProvider;
-  late MockVerifyToken mockVerifyToken;
+  late MockApiClient mockApiClient;
 
   setUp(() {
-    sirenDataProvider = SirenDataProvider.instance..initialize();
-    mockVerifyToken = MockVerifyToken();
+    mockApiClient = MockApiClient();
+    sirenDataProvider = SirenDataProvider.instance;
+    VerifyToken().api = mockApiClient;
+    sirenDataProvider.initialize();
   });
 
   group('SirenDataProvider', () {
     test('UpdateParams updates user token and recipient ID', () async {
+      when(mockApiClient.get(path: anyNamed('path'))).thenAnswer(
+        (_) async => DioResponse(
+          data: {
+            'data': {'status': 'SUCCESS'}
+          },
+          statusCode: 200,
+        ),
+      );
+
       sirenDataProvider.updateParams(
         userToken: 'token',
         recipientId: 'recipientId',
@@ -32,25 +47,31 @@ void main() {
     });
 
     test('IconDispose closes icon controller', () {
+      final controller = sirenDataProvider.iconController;
       sirenDataProvider.iconDispose();
-
-      expect(sirenDataProvider.iconController.isClosed, false);
+      expect(controller.isClosed, true);
     });
 
     test('InboxDispose closes inbox controller', () {
+      final controller = sirenDataProvider.inboxController;
       sirenDataProvider.inboxDispose();
-
-      expect(sirenDataProvider.inboxController.isClosed, false);
+      expect(controller.isClosed, true);
     });
 
     test('Handles retry logic on token verification failure', () async {
-      final failedResponse = ApiResponse(data: false);
-      when(mockVerifyToken.verifyToken())
-          .thenAnswer((_) async => failedResponse);
+      when(mockApiClient.get(path: anyNamed('path'))).thenAnswer(
+        (_) async => DioResponse(
+          data: {
+            'data': {'status': 'FAILED'}
+          },
+          statusCode: 401,
+        ),
+      );
 
-      await sirenDataProvider.initialize();
-
-      sirenDataProvider.updateParams(userToken: 'token', recipientId: '123');
+      sirenDataProvider.updateParams(
+        userToken: 'token',
+        recipientId: 'recipientId',
+      );
 
       await Future<void>.delayed(
         const Duration(seconds: Generics.DATA_FETCH_INTERVAL) *
