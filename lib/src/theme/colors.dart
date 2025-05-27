@@ -34,4 +34,6 @@ class SirenAppColors {
   static const Color avatarIconLight = Color(0xFF98A2B3);
   static const Color avatarPlaceholderBgDark = Color(0xFF4C4C4C);
   static const Color avatarIconDark = Color(0xFF999999);
+
+  static const Color dropdownHighlightColor = Color(0xFFF1F2F5);
 }

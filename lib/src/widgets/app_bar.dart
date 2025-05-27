@@ -16,6 +16,7 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.onCategorySelected,
     this.dropdownItemBuilder,
     this.categoryStyle,
+    this.placeholderText,
     super.key,
   });
 
@@ -30,6 +31,7 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
   final void Function(String)? onCategorySelected;
   final Widget Function(String)? dropdownItemBuilder;
   final CategoryStyle? categoryStyle;
+  final String? placeholderText;
 
   @override
   Size get preferredSize {
@@ -44,6 +46,12 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
       return const SizedBox.shrink();
     }
     final defaultColors = SirenAppTheme.colors(isDarkMode: isDarkMode ?? false);
+    print("colors: ${colors}");
+    print("colors defaultColors: ${defaultColors}");
+    print("colors cat: ${colors?.categoryColors}");
+    print("colors cat: ${colors?.categoryColors}");
+    print(
+        "colors cat dropdownHighlightColor: ${colors?.categoryColors?.dropdownHighlightColor}");
     return Container(
       decoration: BoxDecoration(
         color: colors?.inboxHeaderColors?.background ??
@@ -120,13 +128,12 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                           ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
-                          value: null,
                           hint: Row(
                             children: [
                               Expanded(
                                 child: selectedValues.isEmpty
                                     ? Text(
-                                        'Select Options',
+                                        placeholderText ?? 'Select Category',
                                         style: categoryStyle
                                                 ?.placeholderTextStyle ??
                                             const TextStyle(color: Colors.grey),
@@ -141,14 +148,36 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                             ],
                           ),
                           isExpanded: true,
+                          borderRadius: BorderRadius.circular(8),
                           items: categories.map((category) {
+                            final isSelected =
+                                selectedValues.contains(category);
                             return DropdownMenuItem(
                               value: category,
-                              child: dropdownItemBuilder?.call(category) ??
-                                  Text(
-                                    category,
-                                    style: categoryStyle?.dropdownTextStyle,
-                                  ),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8,
+                                  horizontal: 12,
+                                ),
+                                decoration: categoryStyle?.boxDecoration ??
+                                    BoxDecoration(
+                                      color: isSelected
+                                          ? (colors?.categoryColors
+                                                  ?.dropdownHighlightColor ??
+                                              defaultColors
+                                                  .dropdownHighlightColor)
+                                          : Colors.transparent,
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  child: dropdownItemBuilder?.call(category) ??
+                                      Text(
+                                        category,
+                                        style: categoryStyle?.dropdownTextStyle,
+                                      ),
+                                ),
+                              ),
                             );
                           }).toList(),
                           onChanged: (String? value) {

@@ -597,6 +597,7 @@ class _SirenInboxState extends State<SirenInbox>
               : null,
           dropdownItemBuilder: widget.categoryParams?.dropdownItemBuilder,
           categoryStyle: widget.categoryParams?.style,
+          placeholderText: widget.categoryParams?.placeholderText,
         ),
         body: Column(
           children: [
@@ -713,6 +714,7 @@ class _SirenInboxState extends State<SirenInbox>
               : null,
           dropdownItemBuilder: widget.categoryParams?.dropdownItemBuilder,
           categoryStyle: widget.categoryParams?.style,
+          placeholderText: widget.categoryParams?.placeholderText,
         ),
         body: _buildInboxBody(_inboxScrollController, notifications, false),
       );

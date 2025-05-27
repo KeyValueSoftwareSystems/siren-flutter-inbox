@@ -43,4 +43,5 @@ final darkColors = AppColors(
   tabBarInActiveColor: SirenAppColors.grey300,
   textColor: SirenAppColors.grey700Complementary,
   timerIcon: SirenAppColors.grey400,
+  dropdownHighlightColor: SirenAppColors.grey300Complementary,
 );

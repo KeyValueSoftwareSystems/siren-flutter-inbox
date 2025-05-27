@@ -187,6 +187,7 @@ class CustomThemeColors {
     this.badgeColors,
     this.cardColors,
     this.tabColors,
+    this.categoryColors,
   });
 
   /// The background color for Siren inbox.
@@ -233,6 +234,18 @@ class CustomThemeColors {
 
   /// The colors for tab bar
   final TabColors? tabColors;
+
+  /// The colors for category dropdown
+  final CategoryColors? categoryColors;
+}
+
+class CategoryColors {
+  CategoryColors({
+    this.dropdownHighlightColor,
+  });
+
+  /// The highlight color for selected items in the dropdown
+  final Color? dropdownHighlightColor;
 }
 
 /// Custom theme colors to configure the appearance inbox list item.
@@ -477,6 +490,8 @@ class CategoryStyle {
     this.dropdownTextStyle,
     this.selectedTextStyle,
     this.placeholderTextStyle,
+    this.boxDecoration,
+    this.placeholderText,
   });
 
   /// The container style for the category dropdown.
@@ -490,6 +505,12 @@ class CategoryStyle {
 
   /// The text style for the placeholder text.
   final TextStyle? placeholderTextStyle;
+
+  /// The box decoration for the category dropdown.
+  final BoxDecoration? boxDecoration;
+
+  /// The placeholder text to show when no category is selected.
+  final String? placeholderText;
 }
 
 /// Properties for configuring the appearance and behavior of the category dropdown.
@@ -499,6 +520,7 @@ class CategoryParams {
     this.showCategories = false,
     this.dropdownItemBuilder,
     this.style,
+    this.placeholderText,
   });
 
   /// Flag to show the categories dropdown in the app bar.
@@ -510,4 +532,7 @@ class CategoryParams {
 
   /// Style properties for the category dropdown.
   final CategoryStyle? style;
+
+  /// The placeholder text to show when no category is selected.
+  final String? placeholderText;
 }

@@ -44,6 +44,7 @@ class AppColors {
     required this.tabBarInActiveColor,
     required this.textColor,
     required this.timerIcon,
+    required this.dropdownHighlightColor,
   });
   factory AppColors.lightColorTheme() => lightColors;
 
@@ -89,4 +90,5 @@ class AppColors {
   Color tabBarInActiveColor;
   Color textColor;
   Color timerIcon;
+  Color dropdownHighlightColor;
 }

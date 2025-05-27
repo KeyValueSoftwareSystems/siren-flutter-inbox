@@ -54,12 +54,22 @@ class FetchAllNotifications {
       queryParams['isRead'] = isRead.toString();
     }
 
+    // Build the query string
+    final queryParts = <String>[];
+
+    // Add all non-category parameters
+    queryParams.forEach((key, value) {
+      queryParts.add('$key=${Uri.encodeComponent(value)}');
+    });
+
+    // Add each category as a separate parameter
     if (categories != null && categories.isNotEmpty) {
-      queryParams['categories'] = categories.join(',');
+      for (final category in categories) {
+        queryParts.add('category=${Uri.encodeComponent(category)}');
+      }
     }
 
-    final queryString =
-        queryParams.entries.map((e) => '${e.key}=${e.value}').join('&');
+    final queryString = queryParts.join('&');
 
     if (SirenDataProvider.instance.tokenVerificationStatus != Status.SUCCESS) {
       apiError = SirenDataProvider.instance.getVerificationErrorType();
