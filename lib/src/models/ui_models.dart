@@ -468,3 +468,46 @@ class TabColors {
   /// The color of the tab indicator.
   final Color? indicatorColor;
 }
+
+/// Properties for configuring the appearance of the category dropdown.
+class CategoryStyle {
+  /// Constructs a [CategoryStyle] with optional parameters.
+  const CategoryStyle({
+    this.container,
+    this.dropdownTextStyle,
+    this.selectedTextStyle,
+    this.placeholderTextStyle,
+  });
+
+  /// The container style for the category dropdown.
+  final ContainerStyle? container;
+
+  /// The text style for dropdown items.
+  final TextStyle? dropdownTextStyle;
+
+  /// The text style for selected items in the dropdown.
+  final TextStyle? selectedTextStyle;
+
+  /// The text style for the placeholder text.
+  final TextStyle? placeholderTextStyle;
+}
+
+/// Properties for configuring the appearance and behavior of the category dropdown.
+class CategoryParams {
+  /// Constructs a [CategoryParams] with optional parameters.
+  const CategoryParams({
+    this.showCategories = false,
+    this.dropdownItemBuilder,
+    this.style,
+  });
+
+  /// Flag to show the categories dropdown in the app bar.
+  final bool showCategories;
+
+  /// Custom builder for dropdown menu items.
+  /// If not provided, a default Text widget will be used.
+  final Widget Function(String)? dropdownItemBuilder;
+
+  /// Style properties for the category dropdown.
+  final CategoryStyle? style;
+}

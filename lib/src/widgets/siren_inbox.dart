@@ -36,7 +36,7 @@ class SirenInbox extends StatefulWidget {
     this.theme,
     this.customStyles,
     this.customTabIndicator,
-    this.showCategories = false,
+    this.categoryParams,
   });
 
   /// Flag for enabling dark mode.
@@ -83,8 +83,8 @@ class SirenInbox extends StatefulWidget {
 
   final BoxDecoration? customTabIndicator;
 
-  /// Flag to show categories dropdown in the app bar.
-  final bool showCategories;
+  /// Properties for configuring the category dropdown.
+  final CategoryParams? categoryParams;
 
   @override
   State<SirenInbox> createState() => _SirenInboxState();
@@ -103,7 +103,7 @@ class _SirenInboxState extends State<SirenInbox>
   bool _enableClearAll = true;
 
   List<NotificationType> notifications = [];
-  List<String> allCategories = ['1', '2', '3'];
+  List<String> allCategories = [];
   List<String> selectedCategories = [];
   late final DeleteNotificationById _deleteNotificationById;
   late final ReadNotificationById _readNotificationById;
@@ -332,6 +332,7 @@ class _SirenInboxState extends State<SirenInbox>
                   notifications[0].createdAt,
                 )
               : null,
+          categories: selectedCategories,
         );
         if (fetchedNotifications.isSuccess) {
           final newNotifications =
@@ -366,6 +367,7 @@ class _SirenInboxState extends State<SirenInbox>
       end: DateTime.now().toUtc().toIso8601String(),
       size: pageSize,
       isRead: getIsRead(),
+      categories: selectedCategories,
     );
 
     if (fetchedNotifications.isSuccess) {
@@ -470,6 +472,7 @@ class _SirenInboxState extends State<SirenInbox>
           ),
           size: pageSize,
           isRead: getIsRead(),
+          categories: selectedCategories,
         );
         if (fetchedNotifications.isSuccess) {
           final newNotifications =
@@ -531,6 +534,9 @@ class _SirenInboxState extends State<SirenInbox>
         selectedCategories.add(category);
       }
     });
+    // Reset and fetch notifications with new category selection
+    _reset(cancelFetch: true);
+    initialFetchNotification();
   }
 
   Widget _buildInboxBody(
@@ -580,10 +586,17 @@ class _SirenInboxState extends State<SirenInbox>
           isNonEmptyNotifications: _enableClearAll,
           headerParams: widget.headerParams,
           styles: widget.customStyles,
-          categories: widget.showCategories ? allCategories : const [],
-          selectedValues: widget.showCategories ? selectedCategories : const [],
-          onCategorySelected:
-              widget.showCategories ? _updateSelectedCategories : null,
+          categories: widget.categoryParams?.showCategories ?? false
+              ? allCategories
+              : const [],
+          selectedValues: widget.categoryParams?.showCategories ?? false
+              ? selectedCategories
+              : const [],
+          onCategorySelected: widget.categoryParams?.showCategories ?? false
+              ? _updateSelectedCategories
+              : null,
+          dropdownItemBuilder: widget.categoryParams?.dropdownItemBuilder,
+          categoryStyle: widget.categoryParams?.style,
         ),
         body: Column(
           children: [
@@ -689,10 +702,17 @@ class _SirenInboxState extends State<SirenInbox>
           isNonEmptyNotifications: _enableClearAll,
           headerParams: widget.headerParams,
           styles: widget.customStyles,
-          categories: widget.showCategories ? allCategories : const [],
-          selectedValues: widget.showCategories ? selectedCategories : const [],
-          onCategorySelected:
-              widget.showCategories ? _updateSelectedCategories : null,
+          categories: widget.categoryParams?.showCategories ?? false
+              ? allCategories
+              : const [],
+          selectedValues: widget.categoryParams?.showCategories ?? false
+              ? selectedCategories
+              : const [],
+          onCategorySelected: widget.categoryParams?.showCategories ?? false
+              ? _updateSelectedCategories
+              : null,
+          dropdownItemBuilder: widget.categoryParams?.dropdownItemBuilder,
+          categoryStyle: widget.categoryParams?.style,
         ),
         body: _buildInboxBody(_inboxScrollController, notifications, false),
       );

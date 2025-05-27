@@ -29,6 +29,7 @@ class FetchAllNotifications {
     bool? isRead,
     String? start,
     String? end,
+    List<String>? categories,
   }) async {
     final apiPath =
         '${Generics.V2}${Generics.BASE_URL}${SirenDataProvider.instance.recipientId}/notifications';
@@ -51,6 +52,10 @@ class FetchAllNotifications {
 
     if (isRead != null) {
       queryParams['isRead'] = isRead.toString();
+    }
+
+    if (categories != null && categories.isNotEmpty) {
+      queryParams['categories'] = categories.join(',');
     }
 
     final queryString =

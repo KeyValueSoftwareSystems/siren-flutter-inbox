@@ -14,6 +14,8 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.categories = const [],
     this.selectedValues = const [],
     this.onCategorySelected,
+    this.dropdownItemBuilder,
+    this.categoryStyle,
     super.key,
   });
 
@@ -26,6 +28,8 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<String> categories;
   final List<String> selectedValues;
   final void Function(String)? onCategorySelected;
+  final Widget Function(String)? dropdownItemBuilder;
+  final CategoryStyle? categoryStyle;
 
   @override
   Size get preferredSize {
@@ -104,13 +108,16 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
               if (categories.isNotEmpty)
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
+                      padding: categoryStyle?.container?.padding ??
+                          const EdgeInsets.symmetric(horizontal: 12),
+                      margin: categoryStyle?.container?.margin,
+                      decoration: categoryStyle?.container?.decoration ??
+                          BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           value: null,
@@ -118,14 +125,17 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                             children: [
                               Expanded(
                                 child: selectedValues.isEmpty
-                                    ? const Text(
+                                    ? Text(
                                         'Select Options',
-                                        style: TextStyle(color: Colors.grey),
+                                        style: categoryStyle
+                                                ?.placeholderTextStyle ??
+                                            const TextStyle(color: Colors.grey),
                                       )
                                     : Text(
                                         selectedValues.join(', '),
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 1,
+                                        style: categoryStyle?.selectedTextStyle,
                                       ),
                               ),
                             ],
@@ -134,7 +144,11 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                           items: categories.map((category) {
                             return DropdownMenuItem(
                               value: category,
-                              child: Text(category),
+                              child: dropdownItemBuilder?.call(category) ??
+                                  Text(
+                                    category,
+                                    style: categoryStyle?.dropdownTextStyle,
+                                  ),
                             );
                           }).toList(),
                           onChanged: (String? value) {
