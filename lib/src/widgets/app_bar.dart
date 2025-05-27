@@ -46,12 +46,6 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
       return const SizedBox.shrink();
     }
     final defaultColors = SirenAppTheme.colors(isDarkMode: isDarkMode ?? false);
-    print("colors: ${colors}");
-    print("colors defaultColors: ${defaultColors}");
-    print("colors cat: ${colors?.categoryColors}");
-    print("colors cat: ${colors?.categoryColors}");
-    print(
-        "colors cat dropdownHighlightColor: ${colors?.categoryColors?.dropdownHighlightColor}");
     return Container(
       decoration: BoxDecoration(
         color: colors?.inboxHeaderColors?.background ??
@@ -113,125 +107,177 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ],
                 ),
               ),
-              if (categories.isNotEmpty)
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Container(
-                      padding: categoryStyle?.container?.padding ??
-                          const EdgeInsets.symmetric(horizontal: 12),
-                      margin: categoryStyle?.container?.margin,
-                      decoration: categoryStyle?.container?.decoration ??
-                          BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          hint: Row(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  if (categories.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: _CategoryFilter(
+                        categories: categories,
+                        selectedValues: selectedValues,
+                        onSelectionChanged: onCategorySelected,
+                        colors: colors,
+                      ),
+                    ),
+                  if (!(headerParams?.hideClearAll ?? false))
+                    Semantics(
+                      label: 'siren-header-clear-all',
+                      hint: 'Tap to clear all notifications',
+                      child: GestureDetector(
+                        key: const Key('siren-header-clear-all'),
+                        onTap: () {
+                          if (isNonEmptyNotifications &&
+                              onClearAllPressed != null) {
+                            onClearAllPressed!();
+                          }
+                        },
+                        child: Opacity(
+                          opacity: isNonEmptyNotifications ? 1 : 0.4,
+                          child: Row(
                             children: [
-                              Expanded(
-                                child: selectedValues.isEmpty
-                                    ? Text(
-                                        placeholderText ?? 'Select Category',
-                                        style: categoryStyle
-                                                ?.placeholderTextStyle ??
-                                            const TextStyle(color: Colors.grey),
-                                      )
-                                    : Text(
-                                        selectedValues.join(', '),
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        style: categoryStyle?.selectedTextStyle,
-                                      ),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 4),
+                                child: Icon(
+                                  Icons.clear_all,
+                                  size: styles?.clearAllIconStyle?.size ?? 24,
+                                  color: colors?.clearAllIcon ??
+                                      defaultColors.appBarActionText,
+                                ),
+                              ),
+                              Text(
+                                Strings.clear_all,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: colors?.inboxHeaderColors
+                                          ?.headerActionColor ??
+                                      defaultColors.appBarActionText,
+                                ),
                               ),
                             ],
                           ),
-                          isExpanded: true,
-                          borderRadius: BorderRadius.circular(8),
-                          items: categories.map((category) {
-                            final isSelected =
-                                selectedValues.contains(category);
-                            return DropdownMenuItem(
-                              value: category,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8,
-                                  horizontal: 12,
-                                ),
-                                decoration: categoryStyle?.boxDecoration ??
-                                    BoxDecoration(
-                                      color: isSelected
-                                          ? (colors?.categoryColors
-                                                  ?.dropdownHighlightColor ??
-                                              defaultColors
-                                                  .dropdownHighlightColor)
-                                          : Colors.transparent,
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                child: SizedBox(
-                                  width: double.infinity,
-                                  child: dropdownItemBuilder?.call(category) ??
-                                      Text(
-                                        category,
-                                        style: categoryStyle?.dropdownTextStyle,
-                                      ),
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: (String? value) {
-                            if (value != null && onCategorySelected != null) {
-                              onCategorySelected!(value);
-                            }
-                          },
                         ),
                       ),
                     ),
-                  ),
-                ),
-              if (!(headerParams?.hideClearAll ?? false))
-                Semantics(
-                  label: 'siren-header-clear-all',
-                  hint: 'Tap to clear all notifications',
-                  child: GestureDetector(
-                    key: const Key('siren-header-clear-all'),
-                    onTap: () {
-                      if (isNonEmptyNotifications &&
-                          onClearAllPressed != null) {
-                        onClearAllPressed!();
-                      }
-                    },
-                    child: Opacity(
-                      opacity: isNonEmptyNotifications ? 1 : 0.4,
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 4),
-                            child: Icon(
-                              Icons.clear_all,
-                              size: styles?.clearAllIconStyle?.size ?? 24,
-                              color: colors?.clearAllIcon ??
-                                  defaultColors.appBarActionText,
-                            ),
-                          ),
-                          Text(
-                            Strings.clear_all,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: colors
-                                      ?.inboxHeaderColors?.headerActionColor ??
-                                  defaultColors.appBarActionText,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                ],
+              ),
             ],
           ),
+    );
+  }
+}
+
+class _CategoryFilter extends StatelessWidget {
+  const _CategoryFilter({
+    required this.categories,
+    required this.selectedValues,
+    required this.onSelectionChanged,
+    required this.colors,
+  });
+
+  final List<String> categories;
+  final List<String> selectedValues;
+  final void Function(String)? onSelectionChanged;
+  final CustomThemeColors? colors;
+
+  Future<void> _showFilterMenu(BuildContext context) async {
+    final button = context.findRenderObject()! as RenderBox;
+    final overlay =
+        Overlay.of(context).context.findRenderObject()! as RenderBox;
+    final position = button.localToGlobal(Offset.zero, ancestor: overlay);
+
+    await showMenu<String>(
+      context: context,
+      position: RelativeRect.fromLTRB(
+        position.dx,
+        position.dy + button.size.height,
+        position.dx + button.size.width,
+        0,
+      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      items: categories.map((category) {
+        final isSelected = selectedValues.contains(category);
+        return PopupMenuItem<String>(
+          value: category,
+          child: Row(
+            children: [
+              Container(
+                width: 24,
+                height: 24,
+                decoration: BoxDecoration(
+                  color: isSelected ? Colors.deepOrange : Colors.transparent,
+                  border: Border.all(
+                    color:
+                        isSelected ? Colors.deepOrange : Colors.grey.shade300,
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: isSelected
+                    ? const Icon(
+                        Icons.check,
+                        color: Colors.white,
+                        size: 16,
+                      )
+                    : null,
+              ),
+              const SizedBox(width: 12),
+              Text(
+                category,
+                style: const TextStyle(fontSize: 18),
+              ),
+            ],
+          ),
+          onTap: () {
+            if (onSelectionChanged != null) {
+              onSelectionChanged!(category);
+            }
+          },
+        );
+      }).toList(),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Container(
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey.shade300,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: IconButton(
+            icon: const Icon(Icons.filter_alt_outlined),
+            onPressed: () => _showFilterMenu(context),
+          ),
+        ),
+        if (selectedValues.isNotEmpty)
+          Positioned(
+            right: -11,
+            top: -4,
+            child: Container(
+              width: 22,
+              height: 22,
+              decoration: const BoxDecoration(
+                color: Colors.red,
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: Text(
+                  '${selectedValues.length}',
+                  style: const TextStyle(color: Colors.white, fontSize: 12),
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }
