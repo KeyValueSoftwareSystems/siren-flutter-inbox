@@ -96,7 +96,7 @@ class _SirenInboxIconState extends State<SirenInboxIcon> {
                 await _initialize();
                 break;
               }
-            // ignore: no_default_cases
+            // ignore: no_default_cases, reason: All cases are handled above
             default:
           }
         } else if (streamResponse.response?.isError ?? false) {
