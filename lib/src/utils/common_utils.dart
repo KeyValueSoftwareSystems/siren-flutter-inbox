@@ -1,4 +1,4 @@
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart' show PlatformException, rootBundle;
 import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
 
 /// Generates elapsed time text based on the difference between the target time and the current time.
@@ -64,7 +64,7 @@ Future<Map<String, String>> loadEnv() async {
     }
 
     return envVariables;
-  } catch (e) {
+  } on PlatformException {
     return {};
   }
 }
