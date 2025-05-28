@@ -101,78 +101,180 @@ Given below are the arguments of Siren Inbox Widget.
 | Arguments         | Description                                                          | Type                       | Default value                                                                                                                                                                                                                          |
 | ----------------- | -------------------------------------------------------------------- | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | darkMode          | Toggle to enable dark mode when custom theme is not passed           | bool                       | false                                                                                                                                                                                                                                  |
-| hideTab           | Toggle to enable all and unread tabs                                 | bool                       | false                                                                                                                                                                                                                                  |
-| itemsPerFetch     | Number of notifications fetch per api request (have a max cap of 50) | int                        | 20                                                                                                                                                                                                                                     |
+| hideTab           | Toggle to hide the tab bar                                           | bool                       | false                                                                                                                                                                                                                                  |
+| itemsPerFetch     | Number of notifications fetch per api request (max 50)               | int                        | 20                                                                                                                                                                                                                                     |
 | listEmptyWidget   | Custom widget for empty notification list                            | Widget                     | null                                                                                                                                                                                                                                   |
-| customCard        | Custom widget to display the notification cards                      | Widget                     | null                                                                                                                                                                                                                                   |
+| customCard        | Custom builder for notification cards                                | Widget Function(NotificationType) | null                                                                                                                                                                                                                                   |
 | customLoader      | Custom widget to display the initial loading state                   | Widget                     | null                                                                                                                                                                                                                                   |
 | customErrorWidget | Custom error widget                                                  | Widget                     | null                                                                                                                                                                                                                                   |
 | cardParams        | Properties of notification card                                      | CardParams                 | CardParams(hideAvatar: false, disableAutoMarkAsRead: false, hideDelete: false, deleteIcon: Icon(Icons.close), onAvatarClick: Function(NotificationType), hideMediaThumbnail: false, onMediaThumbnailClick: Function(NotificationType)) |
-| headerParams      | Properties of notification window header                             | HeaderParams               | HeaderParams(hideHeader: false, hideClearAll: false,title: 'Notifications', customHeader: null showBackButton:false, backButton: null, onBackPress: ()=> null )                                                                        |
-| tabParams         | Properties of tab bar                                                | TabParams                  | TabParams(tabs: [TabItem(key: 'ALL', title: 'All'), TabItem(key: 'UNREAD', title: 'Unread')], activeTabIndex:0,)                                                                                                                       |
+| headerParams      | Properties of notification window header                             | HeaderParams               | HeaderParams(hideHeader: false, hideClearAll: false, title: 'Notifications', customHeader: null, showBackButton: false, backButton: null, onBackPress: null)                                                                          |
+| tabParams         | Properties of tab bar                                                | TabParams                  | TabParams(tabs: [TabItem(key: 'ALL', title: 'All'), TabItem(key: 'UNREAD', title: 'Unread')], activeTabIndex: 0)                                                                                                                       |
 | onCardClick       | Custom click handler for notification cards                          | Function(NotificationType) | null                                                                                                                                                                                                                                   |
 | onError           | Callback for handling errors                                         | Function(SirenErrorType)   | null                                                                                                                                                                                                                                   |
 | theme             | Theme properties for custom color theme                              | CustomThemeColors          | null                                                                                                                                                                                                                                   |
 | customStyles      | Style properties for custom styling                                  | CustomStyles               | null                                                                                                                                                                                                                                   |
+| customTabIndicator| Custom decoration for tab indicator                                  | BoxDecoration             | null                                                                                                                                                                                                                                   |
+| filterParams      | Properties for configuring the filter dropdown                     | FilterParams               | FilterParams(showFilters: true, filterIconWidget: null, style: null, hideBadge: false)                                                                                                                                                 |
 
 #### Theme customization
 
-Here are some of the available theme options:
+Here are the available theme options:
 
 ```dart
 theme: CustomThemeColors(
-            primary: Colors.blue,
-            highlightedCardColor: Colors.blueAccent,
-            textColor: Colors.green,
-            cardColors: CardColors(
-                titleColor: Colors.grey,
-                subtitleColor: Colors.grey,
-            ),
-            inboxHeaderColors: InboxHeaderColors(
-                titleColor:  Colors.redAccent,
-                headerActionColor: Colors.purpleAccent,
-                borderColor: Colors.cyanAccent
-            ),
-        ),
+    backgroundColor: Colors.blue,
+    primary: Colors.blueAccent,
+    highlightedCardColor: Colors.blue.shade100,
+    borderColor: Colors.grey.shade300,
+    deleteIcon: Colors.red,
+    clearAllIcon: Colors.grey,
+    textColor: Colors.black87,
+    dateColor: Colors.grey,
+    timerIcon: Colors.blue,
+    notificationIconColor: Colors.blue,
+    loaderColor: Colors.blue,
+    inboxHeaderColors: InboxHeaderColors(
+        background: Colors.white,
+        titleColor: Colors.black87,
+        headerActionColor: Colors.blue,
+        borderColor: Colors.grey.shade300
+    ),
+    badgeColors: BadgeColors(
+        backgroundColor: Colors.red,
+        color: Colors.white
+    ),
+    cardColors: CardColors(
+        borderColor: Colors.grey.shade300,
+        background: Colors.white,
+        titleColor: Colors.black87,
+        subtitleColor: Colors.grey,
+        descriptionColor: Colors.black54
+    ),
+    tabColors: TabColors(
+        containerBackgroundColor: Colors.white,
+        activeTabBackgroundColor: Colors.blue.shade50,
+        activeTabTextColor: Colors.blue,
+        inactiveTabTextColor: Colors.grey,
+        indicatorColor: Colors.blue
+    ),
+    filterColors: FilterColors(
+        filterIconBorderColor: Colors.grey.shade300,
+        filterBadgeColor: Colors.blue,
+        filterDropdownBackgroundColor: Colors.white,
+        filterCheckboxCheckedColor: Colors.blue,
+        filterCheckboxUncheckedColor: Colors.grey.shade300,
+        filterActionTextColor: Colors.black87,
+        filterIconColor: Colors.blue,
+        checkIconColor: Colors.white
+    )
+)
 ```
 
-#### Style options
+#### Style customization
 
-Here are some of the custom style options for the notification inbox:
+Here are the custom style options for the notification inbox:
 
 ```dart
 customStyles: CustomStyles(
     container: ContainerStyle(
-        padding: EdgeInsets.all(20),
-        decoration: BoxDecoration(color: Colors.yellow)),
+        padding: EdgeInsets.all(16),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8)
+        ),
+        margin: EdgeInsets.all(8)
+    ),
     cardStyle: CardStyle(
         cardContainer: ContainerStyle(
-            padding: EdgeInsets.all(20),
+            padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
-                color: Colors.yellow,
-                border: Border.all(color: Colors.red))),
-            cardTitle: TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
-            cardSubtitle:
-                TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-            cardDescription:
-                TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-            dateStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                avatarSize: 30,
+                color: Colors.white,
+                border: Border.all(color: Colors.grey.shade300),
+                borderRadius: BorderRadius.circular(8)
+            )
         ),
+        cardTitle: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Colors.black87
+        ),
+        cardSubtitle: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.grey
+        ),
+        cardDescription: TextStyle(
+            fontSize: 14,
+            color: Colors.black54
+        ),
+        dateStyle: TextStyle(
+            fontSize: 12,
+            color: Colors.grey
+        ),
+        avatarSize: 40
+    ),
     appBarStyle: InboxHeaderStyle(
-        headerTextStyle:
-        TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
-                titlePadding: EdgeInsets.symmetric(horizontal: 30),
-        borderWidth: 5),
-    timerIconStyle: TimerIconStyle(size: 30),
-    deleteIconStyle: DeleteIconStyle(size: 30),
-    clearAllIconStyle: ClearAllIconStyle(size: 30),
-),
+        headerTextStyle: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: Colors.black87
+        ),
+        titlePadding: EdgeInsets.symmetric(horizontal: 16),
+        borderWidth: 1
+    ),
+    notificationIconStyle: NotificationIconStyle(
+        size: 24
+    ),
+    badgeStyle: BadgeStyle(
+        fontSize: 12,
+        size: 20,
+        top: 0,
+        right: 2
+    ),
+    timerIconStyle: TimerIconStyle(
+        size: 20
+    ),
+    deleteIconStyle: DeleteIconStyle(
+        size: 20
+    ),
+    clearAllIconStyle: ClearAllIconStyle(
+        size: 20
+    ),
+    tabStyles: TabStyles(
+        containerStyle: ContainerStyle(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            margin: EdgeInsets.only(bottom: 8)
+        ),
+        activeTabTextStyle: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: Colors.blue
+        ),
+        inActiveTabTextStyle: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.grey
+        ),
+        indicatorSize: 2,
+        indicatorPadding: EdgeInsets.symmetric(horizontal: 16)
+    ),
+    hideTabMargin: HideTabMargin(
+        upper: false,
+        lower: false
+    ),
+    filterStyles: FilterStyles(
+        dropdownTextStyle: TextStyle(
+            fontSize: 14,
+            color: Colors.black87
+        )
+    )
+)
 ```
 
 ## 3. Siren Class
 
-The `Siren Class` provides utility functions for modifying notifications.
+The ``Siren Class` provides utility functions for modifying notifications.
 
 ```dart
 Siren.markAsRead(id: 'notification-id');
