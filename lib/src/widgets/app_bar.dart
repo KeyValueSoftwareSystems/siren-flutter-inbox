@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sirenapp_flutter_inbox/src/constants/strings.dart';
 import 'package:sirenapp_flutter_inbox/src/models/ui_models.dart';
+import 'package:sirenapp_flutter_inbox/src/theme/app_colors.dart';
 import 'package:sirenapp_flutter_inbox/src/theme/app_theme.dart';
 
 class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -118,6 +119,7 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                         selectedValues: selectedValues,
                         onSelectionChanged: onCategorySelected,
                         colors: colors,
+                        defaultColors: defaultColors,
                       ),
                     ),
                   if (!(headerParams?.hideClearAll ?? false))
@@ -174,12 +176,14 @@ class _CategoryFilter extends StatelessWidget {
     required this.selectedValues,
     required this.onSelectionChanged,
     required this.colors,
+    required this.defaultColors,
   });
 
   final List<String> categories;
   final List<String> selectedValues;
   final void Function(String)? onSelectionChanged;
   final CustomThemeColors? colors;
+  final AppColors defaultColors;
 
   Future<void> _showFilterMenu(BuildContext context) async {
     final button = context.findRenderObject()! as RenderBox;
@@ -195,6 +199,8 @@ class _CategoryFilter extends StatelessWidget {
         position.dx + button.size.width,
         0,
       ),
+      color: colors?.categoryColors?.filterDropdownBackgroundColor ??
+          defaultColors.filterDropdownBackgroundColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       items: categories.map((category) {
         final isSelected = selectedValues.contains(category);
@@ -206,10 +212,17 @@ class _CategoryFilter extends StatelessWidget {
                 width: 24,
                 height: 24,
                 decoration: BoxDecoration(
-                  color: isSelected ? Colors.deepOrange : Colors.transparent,
+                  color: isSelected
+                      ? colors?.categoryColors?.filterCheckboxCheckedColor ??
+                          defaultColors.filterCheckboxCheckedColor
+                      : Colors.transparent,
                   border: Border.all(
-                    color:
-                        isSelected ? Colors.deepOrange : Colors.grey.shade300,
+                    color: isSelected
+                        ? colors?.categoryColors?.filterCheckboxCheckedColor ??
+                            defaultColors.filterCheckboxCheckedColor
+                        : colors?.categoryColors
+                                ?.filterCheckboxUncheckedColor ??
+                            defaultColors.filterCheckboxUncheckedColor,
                     width: 2,
                   ),
                   borderRadius: BorderRadius.circular(8),
@@ -225,13 +238,17 @@ class _CategoryFilter extends StatelessWidget {
               const SizedBox(width: 12),
               Text(
                 category,
-                style: const TextStyle(fontSize: 18),
+                style: TextStyle(
+                  fontSize: 14,
+                  color: colors?.categoryColors?.menuActionTextColor ??
+                      defaultColors.menuActionTextColor,
+                ),
               ),
             ],
           ),
           onTap: () {
             if (onSelectionChanged != null) {
-              onSelectionChanged!(category);
+              onSelectionChanged?.call(category);
             }
           },
         );
@@ -249,7 +266,8 @@ class _CategoryFilter extends StatelessWidget {
           height: 44,
           decoration: BoxDecoration(
             border: Border.all(
-              color: Colors.grey.shade300,
+              color: colors?.categoryColors?.filterIconBorderColor ??
+                  defaultColors.filterIconBorderColor,
             ),
             borderRadius: BorderRadius.circular(8),
           ),
@@ -265,8 +283,9 @@ class _CategoryFilter extends StatelessWidget {
             child: Container(
               width: 22,
               height: 22,
-              decoration: const BoxDecoration(
-                color: Colors.red,
+              decoration: BoxDecoration(
+                color: colors?.categoryColors?.filterBadgeColor ??
+                    defaultColors.filterBadgeColor,
                 shape: BoxShape.circle,
               ),
               child: Center(

@@ -36,4 +36,18 @@ class SirenAppColors {
   static const Color avatarIconDark = Color(0xFF999999);
 
   static const Color dropdownHighlightColor = Color(0xFFF1F2F5);
+
+  // Filter (category) dropdown and badge colors
+  static const Color filterIconBorderLight = Color(0xFFE0E0E0);
+  static const Color filterBadgeLight = Color(0xFFD32F2F);
+  static const Color filterDropdownBackgroundLight = Color(0xFFFFFFFF);
+  static const Color filterCheckboxCheckedLight = Color(0xFFFF7043);
+  static const Color filterCheckboxUncheckedLight = Color(0xFFBDBDBD);
+
+  static const Color filterIconBorderDark = Color(0xFF444444);
+  static const Color filterBadgeDark = Color(0xFFD32F2F);
+  static const Color filterDropdownBackgroundDark = Color(0xFF232323);
+  static const Color filterCheckboxCheckedDark = Color(0xFFFF7043);
+  static const Color filterCheckboxUncheckedDark = Color(0xFF888888);
+  static const Color menuActionTextColorLight = Color(0xFF101928);
 }

@@ -44,4 +44,10 @@ final darkColors = AppColors(
   textColor: SirenAppColors.grey700Complementary,
   timerIcon: SirenAppColors.grey400,
   dropdownHighlightColor: SirenAppColors.grey300Complementary,
+  filterIconBorderColor: SirenAppColors.filterIconBorderDark,
+  filterBadgeColor: SirenAppColors.filterBadgeDark,
+  filterDropdownBackgroundColor: SirenAppColors.filterDropdownBackgroundDark,
+  filterCheckboxCheckedColor: SirenAppColors.filterCheckboxCheckedDark,
+  filterCheckboxUncheckedColor: SirenAppColors.filterCheckboxUncheckedDark,
+  menuActionTextColor: SirenAppColors.avatarPlaceholderBgLight,
 );

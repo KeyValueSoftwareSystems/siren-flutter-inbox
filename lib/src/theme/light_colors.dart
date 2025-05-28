@@ -44,4 +44,10 @@ final lightColors = AppColors(
   textColor: SirenAppColors.grey700,
   timerIcon: SirenAppColors.grey500,
   dropdownHighlightColor: SirenAppColors.grey300,
+  filterIconBorderColor: SirenAppColors.filterIconBorderLight,
+  filterBadgeColor: SirenAppColors.filterBadgeLight,
+  filterDropdownBackgroundColor: SirenAppColors.filterDropdownBackgroundLight,
+  filterCheckboxCheckedColor: SirenAppColors.filterCheckboxCheckedLight,
+  filterCheckboxUncheckedColor: SirenAppColors.filterCheckboxUncheckedLight,
+  menuActionTextColor: SirenAppColors.menuActionTextColorLight,
 );

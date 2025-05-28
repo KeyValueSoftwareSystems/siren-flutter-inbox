@@ -242,10 +242,34 @@ class CustomThemeColors {
 class CategoryColors {
   CategoryColors({
     this.dropdownHighlightColor,
+    this.filterIconBorderColor,
+    this.filterBadgeColor,
+    this.filterDropdownBackgroundColor,
+    this.filterCheckboxCheckedColor,
+    this.filterCheckboxUncheckedColor,
+    this.menuActionTextColor,
   });
 
   /// The highlight color for selected items in the dropdown
   final Color? dropdownHighlightColor;
+
+  /// The border color for the filter icon button
+  final Color? filterIconBorderColor;
+
+  /// The badge color for the filter icon
+  final Color? filterBadgeColor;
+
+  /// The background color for the filter dropdown
+  final Color? filterDropdownBackgroundColor;
+
+  /// The checked color for the filter checkbox
+  final Color? filterCheckboxCheckedColor;
+
+  /// The unchecked color for the filter checkbox border
+  final Color? filterCheckboxUncheckedColor;
+
+  /// The menu action text color
+  final Color? menuActionTextColor;
 }
 
 /// Custom theme colors to configure the appearance inbox list item.
