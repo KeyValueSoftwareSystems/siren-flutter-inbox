@@ -170,7 +170,7 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 }
 
-class _CategoryFilter extends StatelessWidget {
+class _CategoryFilter extends StatefulWidget {
   const _CategoryFilter({
     required this.categories,
     required this.selectedValues,
@@ -185,122 +185,221 @@ class _CategoryFilter extends StatelessWidget {
   final CustomThemeColors? colors;
   final AppColors defaultColors;
 
-  Future<void> _showFilterMenu(BuildContext context) async {
-    final button = context.findRenderObject()! as RenderBox;
-    final overlay =
-        Overlay.of(context).context.findRenderObject()! as RenderBox;
-    final position = button.localToGlobal(Offset.zero, ancestor: overlay);
+  @override
+  State<_CategoryFilter> createState() => _CategoryFilterState();
+}
 
-    await showMenu<String>(
-      context: context,
-      position: RelativeRect.fromLTRB(
-        position.dx,
-        position.dy + button.size.height,
-        position.dx + button.size.width,
-        0,
-      ),
-      color: colors?.filterColors?.filterDropdownBackgroundColor ??
-          defaultColors.filterDropdownBackgroundColor,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      items: categories.map((category) {
-        final isSelected = selectedValues.contains(category);
-        return PopupMenuItem<String>(
-          value: category,
-          child: Row(
+class _CategoryFilterState extends State<_CategoryFilter> {
+  final LayerLink _layerLink = LayerLink();
+  OverlayEntry? _overlayEntry;
+  bool _isDropdownOpen = false;
+
+  void _toggleDropdown() {
+    if (_isDropdownOpen) {
+      _removeOverlay();
+    } else {
+      _showOverlay();
+    }
+  }
+
+  void _showOverlay() {
+    _overlayEntry = _createOverlayEntry();
+    Overlay.of(context).insert(_overlayEntry!);
+    _isDropdownOpen = true;
+  }
+
+  void _removeOverlay() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+    _isDropdownOpen = false;
+  }
+
+  void _handleItemSelection(String category) {
+    if (widget.onSelectionChanged != null) {
+      widget.onSelectionChanged?.call(category);
+      // Update the overlay to reflect the new selection
+      _overlayEntry?.markNeedsBuild();
+    }
+  }
+
+  OverlayEntry _createOverlayEntry() {
+    final renderBox = context.findRenderObject() as RenderBox;
+    final size = renderBox.size;
+    final offset = renderBox.localToGlobal(Offset.zero);
+
+    return OverlayEntry(
+      builder: (context) {
+        return GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: _removeOverlay,
+          child: Stack(
             children: [
-              Container(
-                width: 24,
-                height: 24,
-                decoration: BoxDecoration(
-                  color: isSelected
-                      ? colors?.filterColors?.filterCheckboxCheckedColor ??
-                          defaultColors.filterCheckboxCheckedColor
-                      : Colors.transparent,
-                  border: Border.all(
-                    color: isSelected
-                        ? colors?.filterColors?.filterCheckboxCheckedColor ??
-                            defaultColors.filterCheckboxCheckedColor
-                        : colors?.filterColors?.filterCheckboxUncheckedColor ??
-                            defaultColors.filterCheckboxUncheckedColor,
-                    width: 2,
+              Positioned(
+                left: offset.dx,
+                top: offset.dy + size.height + 8,
+                width: 220,
+                child: CompositedTransformFollower(
+                  link: _layerLink,
+                  showWhenUnlinked: false,
+                  offset: Offset(-220 + size.width, size.height),
+                  child: Material(
+                    color: widget.colors?.filterColors
+                            ?.filterDropdownBackgroundColor ??
+                        widget.defaultColors.filterDropdownBackgroundColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    elevation: 4,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxHeight: 300),
+                        child: NotificationListener<ScrollNotification>(
+                          onNotification: (_) => true,
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: widget.categories.length,
+                            itemBuilder: (context, index) {
+                              final category = widget.categories[index];
+                              final isSelected =
+                                  widget.selectedValues.contains(category);
+
+                              return GestureDetector(
+                                behavior: HitTestBehavior.opaque,
+                                onTap: () => _handleItemSelection(category),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 8,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: 24,
+                                        height: 24,
+                                        decoration: BoxDecoration(
+                                          color: isSelected
+                                              ? widget.colors?.filterColors
+                                                      ?.filterCheckboxCheckedColor ??
+                                                  widget.defaultColors
+                                                      .filterCheckboxCheckedColor
+                                              : Colors.transparent,
+                                          border: Border.all(
+                                            color: isSelected
+                                                ? widget.colors?.filterColors
+                                                        ?.filterCheckboxCheckedColor ??
+                                                    widget.defaultColors
+                                                        .filterCheckboxCheckedColor
+                                                : widget.colors?.filterColors
+                                                        ?.filterCheckboxUncheckedColor ??
+                                                    widget.defaultColors
+                                                        .filterCheckboxUncheckedColor,
+                                            width: 2,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: isSelected
+                                            ? Center(
+                                                child: Icon(
+                                                  Icons.check,
+                                                  color: widget
+                                                          .colors
+                                                          ?.filterColors
+                                                          ?.checkIconColor ??
+                                                      widget.defaultColors
+                                                          .checkIconColor,
+                                                  size: 16,
+                                                ),
+                                              )
+                                            : null,
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Text(
+                                        category,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: widget.colors?.filterColors
+                                                  ?.filterActionTextColor ??
+                                              widget.defaultColors
+                                                  .filterActionTextColor,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: isSelected
-                    ? Icon(
-                        Icons.check,
-                        color: colors?.filterColors?.checkIconColor ??
-                            defaultColors.checkIconColor,
-                        size: 16,
-                      )
-                    : null,
-              ),
-              const SizedBox(width: 12),
-              Text(
-                category,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: colors?.filterColors?.filterActionTextColor ??
-                      defaultColors.filterActionTextColor,
                 ),
               ),
             ],
           ),
-          onTap: () {
-            if (onSelectionChanged != null) {
-              onSelectionChanged?.call(category);
-            }
-          },
         );
-      }).toList(),
+      },
     );
   }
 
   @override
+  void dispose() {
+    _removeOverlay();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        Container(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: colors?.filterColors?.filterIconBorderColor ??
-                  defaultColors.filterIconBorderColor,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: IconButton(
-            icon: Icon(
-              Icons.filter_alt_outlined,
-              color: colors?.filterColors?.filterIconColor ??
-                  defaultColors.filterIconColor,
-            ),
-            onPressed: () => _showFilterMenu(context),
-          ),
-        ),
-        if (selectedValues.isNotEmpty)
-          Positioned(
-            right: -11,
-            top: -4,
-            child: Container(
-              width: 22,
-              height: 22,
-              decoration: BoxDecoration(
-                color: colors?.filterColors?.filterBadgeColor ??
-                    defaultColors.filterBadgeColor,
-                shape: BoxShape.circle,
+    return CompositedTransformTarget(
+      link: _layerLink,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: widget.colors?.filterColors?.filterIconBorderColor ??
+                    widget.defaultColors.filterIconBorderColor,
               ),
-              child: Center(
-                child: Text(
-                  '${selectedValues.length}',
-                  style: const TextStyle(color: Colors.white, fontSize: 12),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: IconButton(
+              icon: Icon(
+                Icons.filter_alt_outlined,
+                color: widget.colors?.filterColors?.filterIconColor ??
+                    widget.defaultColors.filterIconColor,
+              ),
+              onPressed: _toggleDropdown,
+              padding: EdgeInsets.zero,
+              iconSize: 24,
+            ),
+          ),
+          if (widget.selectedValues.isNotEmpty)
+            Positioned(
+              right: -11,
+              top: -4,
+              child: Container(
+                width: 22,
+                height: 22,
+                decoration: BoxDecoration(
+                  color: widget.colors?.filterColors?.filterBadgeColor ??
+                      widget.defaultColors.filterBadgeColor,
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Text(
+                    '${widget.selectedValues.length}',
+                    style: const TextStyle(color: Colors.white, fontSize: 12),
+                  ),
                 ),
               ),
             ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 }
