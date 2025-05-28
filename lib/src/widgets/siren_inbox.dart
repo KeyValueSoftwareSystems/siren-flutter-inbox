@@ -36,7 +36,7 @@ class SirenInbox extends StatefulWidget {
     this.theme,
     this.customStyles,
     this.customTabIndicator,
-    this.categoryParams,
+    this.filterParams,
   });
 
   /// Flag for enabling dark mode.
@@ -84,7 +84,7 @@ class SirenInbox extends StatefulWidget {
   final BoxDecoration? customTabIndicator;
 
   /// Properties for configuring the category dropdown.
-  final CategoryParams? categoryParams;
+  final FilterParams? filterParams;
 
   @override
   State<SirenInbox> createState() => _SirenInboxState();
@@ -586,18 +586,18 @@ class _SirenInboxState extends State<SirenInbox>
           isNonEmptyNotifications: _enableClearAll,
           headerParams: widget.headerParams,
           styles: widget.customStyles,
-          categories: widget.categoryParams?.showCategories ?? false
+          categories: widget.filterParams?.showFilters ?? false
               ? allCategories
               : const [],
-          selectedValues: widget.categoryParams?.showCategories ?? false
+          selectedValues: widget.filterParams?.showFilters ?? false
               ? selectedCategories
               : const [],
-          onCategorySelected: widget.categoryParams?.showCategories ?? false
+          onCategorySelected: widget.filterParams?.showFilters ?? false
               ? _updateSelectedCategories
               : null,
-          dropdownItemBuilder: widget.categoryParams?.dropdownItemBuilder,
-          categoryStyle: widget.categoryParams?.style,
-          placeholderText: widget.categoryParams?.placeholderText,
+          filterWidget: widget.filterParams?.filterWidget,
+          categoryStyle: widget.filterParams?.style,
+          placeholderText: widget.filterParams?.placeholderText,
         ),
         body: Column(
           children: [
@@ -703,18 +703,18 @@ class _SirenInboxState extends State<SirenInbox>
           isNonEmptyNotifications: _enableClearAll,
           headerParams: widget.headerParams,
           styles: widget.customStyles,
-          categories: widget.categoryParams?.showCategories ?? false
+          categories: widget.filterParams?.showFilters ?? false
               ? allCategories
               : const [],
-          selectedValues: widget.categoryParams?.showCategories ?? false
+          selectedValues: widget.filterParams?.showFilters ?? false
               ? selectedCategories
               : const [],
-          onCategorySelected: widget.categoryParams?.showCategories ?? false
+          onCategorySelected: widget.filterParams?.showFilters ?? false
               ? _updateSelectedCategories
               : null,
-          dropdownItemBuilder: widget.categoryParams?.dropdownItemBuilder,
-          categoryStyle: widget.categoryParams?.style,
-          placeholderText: widget.categoryParams?.placeholderText,
+          filterWidget: widget.filterParams?.filterWidget,
+          categoryStyle: widget.filterParams?.style,
+          placeholderText: widget.filterParams?.placeholderText,
         ),
         body: _buildInboxBody(_inboxScrollController, notifications, false),
       );

@@ -100,6 +100,7 @@ class CustomStyles {
     this.clearAllIconStyle,
     this.tabStyles,
     this.hideTabMargin,
+    this.filterStyles,
   });
 
   /// The decoration for the Siren inbox list.
@@ -126,9 +127,14 @@ class CustomStyles {
   /// Style of clear all icon in inbox default header
   final ClearAllIconStyle? clearAllIconStyle;
 
+  /// Styles for customizing the appearance of tabs in the Siren inbox
   final TabStyles? tabStyles;
 
+  /// Controls whether to hide margins above and below the tabs
   final HideTabMargin? hideTabMargin;
+
+  /// Styles for customizing the appearance of category filters
+  final FilterStyles? filterStyles;
 }
 
 class HideTabMargin {
@@ -516,10 +522,7 @@ class FilterStyles {
   const FilterStyles({
     this.container,
     this.dropdownTextStyle,
-    this.selectedTextStyle,
-    this.placeholderTextStyle,
     this.boxDecoration,
-    this.placeholderText,
   });
 
   /// The container style for the category dropdown.
@@ -528,35 +531,26 @@ class FilterStyles {
   /// The text style for dropdown items.
   final TextStyle? dropdownTextStyle;
 
-  /// The text style for selected items in the dropdown.
-  final TextStyle? selectedTextStyle;
-
-  /// The text style for the placeholder text.
-  final TextStyle? placeholderTextStyle;
-
   /// The box decoration for the category dropdown.
   final BoxDecoration? boxDecoration;
-
-  /// The placeholder text to show when no category is selected.
-  final String? placeholderText;
 }
 
 /// Properties for configuring the appearance and behavior of the category dropdown.
-class CategoryParams {
-  /// Constructs a [CategoryParams] with optional parameters.
-  const CategoryParams({
-    this.showCategories = false,
-    this.dropdownItemBuilder,
+class FilterParams {
+  /// Constructs a [FilterParams] with optional parameters.
+  const FilterParams({
+    this.showFilters = false,
+    this.filterWidget,
     this.style,
     this.placeholderText,
   });
 
   /// Flag to show the categories dropdown in the app bar.
-  final bool showCategories;
+  final bool showFilters;
 
-  /// Custom builder for dropdown menu items.
-  /// If not provided, a default Text widget will be used.
-  final Widget Function(String)? dropdownItemBuilder;
+  /// Custom widget to display the filter UI.
+  /// If not provided, a default filter UI will be used.
+  final Widget? filterWidget;
 
   /// Style properties for the category dropdown.
   final FilterStyles? style;

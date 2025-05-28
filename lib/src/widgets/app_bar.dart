@@ -15,7 +15,7 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.categories = const [],
     this.selectedValues = const [],
     this.onCategorySelected,
-    this.dropdownItemBuilder,
+    this.filterWidget,
     this.categoryStyle,
     this.placeholderText,
     super.key,
@@ -30,7 +30,7 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<String> categories;
   final List<String> selectedValues;
   final void Function(String)? onCategorySelected;
-  final Widget Function(String)? dropdownItemBuilder;
+  final Widget? filterWidget;
   final FilterStyles? categoryStyle;
   final String? placeholderText;
 
@@ -114,12 +114,18 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                   if (categories.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: _CategoryFilter(
-                        categories: categories,
-                        selectedValues: selectedValues,
-                        onSelectionChanged: onCategorySelected,
-                        colors: colors,
-                        defaultColors: defaultColors,
+                      child: SizedBox(
+                        width: 44,
+                        height: 44,
+                        child: _CategoryFilter(
+                          categories: categories,
+                          selectedValues: selectedValues,
+                          onSelectionChanged: onCategorySelected,
+                          colors: colors,
+                          defaultColors: defaultColors,
+                          styles: styles,
+                          filterWidget: filterWidget,
+                        ),
                       ),
                     ),
                   if (!(headerParams?.hideClearAll ?? false))
@@ -177,6 +183,8 @@ class _CategoryFilter extends StatefulWidget {
     required this.onSelectionChanged,
     required this.colors,
     required this.defaultColors,
+    required this.styles,
+    this.filterWidget,
   });
 
   final List<String> categories;
@@ -184,6 +192,8 @@ class _CategoryFilter extends StatefulWidget {
   final void Function(String)? onSelectionChanged;
   final CustomThemeColors? colors;
   final AppColors defaultColors;
+  final Widget? filterWidget;
+  final CustomStyles? styles;
 
   @override
   State<_CategoryFilter> createState() => _CategoryFilterState();
@@ -223,7 +233,7 @@ class _CategoryFilterState extends State<_CategoryFilter> {
   }
 
   OverlayEntry _createOverlayEntry() {
-    final renderBox = context.findRenderObject() as RenderBox;
+    final renderBox = context.findRenderObject()! as RenderBox;
     final size = renderBox.size;
     final offset = renderBox.localToGlobal(Offset.zero);
 
@@ -317,13 +327,21 @@ class _CategoryFilterState extends State<_CategoryFilter> {
                                       const SizedBox(width: 12),
                                       Text(
                                         category,
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: widget.colors?.filterColors
-                                                  ?.filterActionTextColor ??
-                                              widget.defaultColors
-                                                  .filterActionTextColor,
-                                        ),
+                                        style: widget.styles?.filterStyles
+                                                ?.dropdownTextStyle
+                                                ?.copyWith(
+                                              color: widget.colors?.filterColors
+                                                      ?.filterActionTextColor ??
+                                                  widget.defaultColors
+                                                      .filterActionTextColor,
+                                            ) ??
+                                            TextStyle(
+                                              fontSize: 14,
+                                              color: widget.colors?.filterColors
+                                                      ?.filterActionTextColor ??
+                                                  widget.defaultColors
+                                                      .filterActionTextColor,
+                                            ),
                                       ),
                                     ],
                                   ),
@@ -357,27 +375,28 @@ class _CategoryFilterState extends State<_CategoryFilter> {
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: widget.colors?.filterColors?.filterIconBorderColor ??
-                    widget.defaultColors.filterIconBorderColor,
+          widget.filterWidget ??
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: widget.colors?.filterColors?.filterIconBorderColor ??
+                        widget.defaultColors.filterIconBorderColor,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.filter_alt_outlined,
+                    color: widget.colors?.filterColors?.filterIconColor ??
+                        widget.defaultColors.filterIconColor,
+                  ),
+                  onPressed: _toggleDropdown,
+                  padding: EdgeInsets.zero,
+                  iconSize: 24,
+                ),
               ),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: IconButton(
-              icon: Icon(
-                Icons.filter_alt_outlined,
-                color: widget.colors?.filterColors?.filterIconColor ??
-                    widget.defaultColors.filterIconColor,
-              ),
-              onPressed: _toggleDropdown,
-              padding: EdgeInsets.zero,
-              iconSize: 24,
-            ),
-          ),
           if (widget.selectedValues.isNotEmpty)
             Positioned(
               right: -11,
