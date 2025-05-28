@@ -72,7 +72,7 @@ class MessageData {
       try {
         additionalData = json.decode(data?['additionalData'] as String)
             as Map<String, dynamic>?;
-      } catch (error) {
+      } on FormatException {
         additionalData = null;
       }
     }

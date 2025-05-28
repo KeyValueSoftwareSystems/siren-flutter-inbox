@@ -200,7 +200,7 @@ class _SirenInboxState extends State<SirenInbox>
               _initialize();
               break;
 
-            // ignore: no_default_cases
+            // ignore: no_default_cases, reason: All cases are handled above
             default:
           }
         } else if (streamResponse.response?.isError ?? false) {
@@ -501,7 +501,7 @@ class _SirenInboxState extends State<SirenInbox>
   }
 
   Widget _buildInboxBody(
-    ScrollController _controller,
+    ScrollController controller,
     List<NotificationType> data,
     bool isTabInactive,
   ) {
@@ -527,7 +527,7 @@ class _SirenInboxState extends State<SirenInbox>
       onCardClick: widget.onCardClick,
       onEndReached: onEndReached,
       onRefresh: onRefresh,
-      scrollController: _controller,
+      scrollController: controller,
     );
   }
 

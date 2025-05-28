@@ -22,7 +22,7 @@ class DeleteNotificationById {
   Future<ApiResponse> deleteNotificationById({
     required String notificationId,
   }) async {
-    final _apiPath =
+    final apiPath =
         '${Generics.V2}${Generics.BASE_URL}${SirenDataProvider.instance.recipientId}/notifications';
     final result = ApiResponse()..isLoading = true;
     var apiError = Errors.deleteFailedError;
@@ -39,7 +39,7 @@ class DeleteNotificationById {
     }
 
     final apiResponse = await api.delete(
-      path: '$_apiPath/$notificationId',
+      path: '$apiPath/$notificationId',
     );
     if (apiResponse.statusCode != 0 && apiResponse.data != null) {
       final deletionStatus = convertJsonToDeletionStatus(apiResponse.data);

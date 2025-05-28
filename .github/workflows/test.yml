@@ -19,10 +19,10 @@ jobs:
         channel: 'stable' 
     - name: Exclude Example application
       run: rm -rf example
-    - name: Verify formatting
-      run: dart format --output=none --set-exit-if-changed .
     - name: Install dependencies
       run: flutter pub get
+    - name: Verify formatting
+      run: dart format --output=none --set-exit-if-changed .
     - name: Analyze project source
       run: flutter analyze lib/
     - name: Run tests
