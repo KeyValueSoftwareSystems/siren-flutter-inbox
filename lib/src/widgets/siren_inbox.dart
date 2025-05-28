@@ -595,9 +595,9 @@ class _SirenInboxState extends State<SirenInbox>
           onCategorySelected: widget.filterParams?.showFilters ?? false
               ? _updateSelectedCategories
               : null,
-          filterWidget: widget.filterParams?.filterWidget,
+          filterIconWidget: widget.filterParams?.filterIconWidget,
           categoryStyle: widget.filterParams?.style,
-          placeholderText: widget.filterParams?.placeholderText,
+          hideBadge: widget.filterParams?.hideBadge ?? false,
         ),
         body: Column(
           children: [
@@ -712,9 +712,8 @@ class _SirenInboxState extends State<SirenInbox>
           onCategorySelected: widget.filterParams?.showFilters ?? false
               ? _updateSelectedCategories
               : null,
-          filterWidget: widget.filterParams?.filterWidget,
+          filterIconWidget: widget.filterParams?.filterIconWidget,
           categoryStyle: widget.filterParams?.style,
-          placeholderText: widget.filterParams?.placeholderText,
         ),
         body: _buildInboxBody(_inboxScrollController, notifications, false),
       );

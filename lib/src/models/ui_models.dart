@@ -520,29 +520,20 @@ class TabColors {
 class FilterStyles {
   /// Constructs a [FilterStyles] with optional parameters.
   const FilterStyles({
-    this.container,
     this.dropdownTextStyle,
-    this.boxDecoration,
   });
-
-  /// The container style for the category dropdown.
-  final ContainerStyle? container;
 
   /// The text style for dropdown items.
   final TextStyle? dropdownTextStyle;
-
-  /// The box decoration for the category dropdown.
-  final BoxDecoration? boxDecoration;
 }
 
 /// Properties for configuring the appearance and behavior of the category dropdown.
 class FilterParams {
   /// Constructs a [FilterParams] with optional parameters.
   const FilterParams({
-    this.showFilters = false,
-    this.filterWidget,
+    this.showFilters = true,
+    this.filterIconWidget,
     this.style,
-    this.placeholderText,
     this.hideBadge = false,
   });
 
@@ -551,13 +542,10 @@ class FilterParams {
 
   /// Custom widget to display the filter UI.
   /// If not provided, a default filter UI will be used.
-  final Widget? filterWidget;
+  final Widget? filterIconWidget;
 
   /// Style properties for the category dropdown.
   final FilterStyles? style;
-
-  /// The placeholder text to show when no category is selected.
-  final String? placeholderText;
 
   /// Flag to hide the badge showing number of selected filters.
   final bool hideBadge;

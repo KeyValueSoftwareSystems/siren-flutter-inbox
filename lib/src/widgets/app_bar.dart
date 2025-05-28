@@ -15,9 +15,8 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.categories = const [],
     this.selectedValues = const [],
     this.onCategorySelected,
-    this.filterWidget,
+    this.filterIconWidget,
     this.categoryStyle,
-    this.placeholderText,
     this.hideBadge = false,
     super.key,
   });
@@ -31,9 +30,8 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<String> categories;
   final List<String> selectedValues;
   final void Function(String)? onCategorySelected;
-  final Widget? filterWidget;
+  final Widget? filterIconWidget;
   final FilterStyles? categoryStyle;
-  final String? placeholderText;
   final bool hideBadge;
 
   @override
@@ -130,7 +128,7 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                             colors: colors,
                             defaultColors: defaultColors,
                             styles: styles,
-                            filterWidget: filterWidget,
+                            filterIconWidget: filterIconWidget,
                             hideBadge: hideBadge,
                           ),
                         ),
@@ -192,7 +190,7 @@ class _CategoryFilter extends StatefulWidget {
     required this.colors,
     required this.defaultColors,
     required this.styles,
-    this.filterWidget,
+    this.filterIconWidget,
     this.hideBadge = false,
   });
 
@@ -201,7 +199,7 @@ class _CategoryFilter extends StatefulWidget {
   final void Function(String)? onSelectionChanged;
   final CustomThemeColors? colors;
   final AppColors defaultColors;
-  final Widget? filterWidget;
+  final Widget? filterIconWidget;
   final CustomStyles? styles;
   final bool hideBadge;
 
@@ -385,28 +383,32 @@ class _CategoryFilterState extends State<_CategoryFilter> {
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          widget.filterWidget ??
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: widget.colors?.filterColors?.filterIconBorderColor ??
-                        widget.defaultColors.filterIconBorderColor,
-                  ),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: IconButton(
-                  icon: Icon(
-                    Icons.filter_alt_outlined,
-                    color: widget.colors?.filterColors?.filterIconColor ??
-                        widget.defaultColors.filterIconColor,
-                  ),
-                  onPressed: _toggleDropdown,
-                  padding: EdgeInsets.zero,
-                  iconSize: 24,
-                ),
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: widget.colors?.filterColors?.filterIconBorderColor ??
+                    widget.defaultColors.filterIconBorderColor,
               ),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: widget.filterIconWidget != null
+                ? GestureDetector(
+                    onTap: _toggleDropdown,
+                    child: widget.filterIconWidget,
+                  )
+                : IconButton(
+                    icon: Icon(
+                      Icons.filter_alt_outlined,
+                      color: widget.colors?.filterColors?.filterIconColor ??
+                          widget.defaultColors.filterIconColor,
+                    ),
+                    onPressed: _toggleDropdown,
+                    padding: EdgeInsets.zero,
+                    iconSize: 24,
+                  ),
+          ),
           if (widget.selectedValues.isNotEmpty && !widget.hideBadge)
             Positioned(
               right: -11,
