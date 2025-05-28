@@ -187,7 +187,7 @@ class CustomThemeColors {
     this.badgeColors,
     this.cardColors,
     this.tabColors,
-    this.categoryColors,
+    this.filterColors,
   });
 
   /// The background color for Siren inbox.
@@ -236,22 +236,20 @@ class CustomThemeColors {
   final TabColors? tabColors;
 
   /// The colors for category dropdown
-  final CategoryColors? categoryColors;
+  final FilterColors? filterColors;
 }
 
-class CategoryColors {
-  CategoryColors({
-    this.dropdownHighlightColor,
+class FilterColors {
+  FilterColors({
     this.filterIconBorderColor,
     this.filterBadgeColor,
     this.filterDropdownBackgroundColor,
     this.filterCheckboxCheckedColor,
     this.filterCheckboxUncheckedColor,
-    this.menuActionTextColor,
+    this.filterActionTextColor,
+    this.filterIconColor,
+    this.checkIconColor,
   });
-
-  /// The highlight color for selected items in the dropdown
-  final Color? dropdownHighlightColor;
 
   /// The border color for the filter icon button
   final Color? filterIconBorderColor;
@@ -269,7 +267,13 @@ class CategoryColors {
   final Color? filterCheckboxUncheckedColor;
 
   /// The menu action text color
-  final Color? menuActionTextColor;
+  final Color? filterActionTextColor;
+
+  /// The text color for the filter icon
+  final Color? filterIconColor;
+
+  /// The color for the check icon in the filter dropdown
+  final Color? checkIconColor;
 }
 
 /// Custom theme colors to configure the appearance inbox list item.
@@ -507,9 +511,9 @@ class TabColors {
 }
 
 /// Properties for configuring the appearance of the category dropdown.
-class CategoryStyle {
-  /// Constructs a [CategoryStyle] with optional parameters.
-  const CategoryStyle({
+class FilterStyles {
+  /// Constructs a [FilterStyles] with optional parameters.
+  const FilterStyles({
     this.container,
     this.dropdownTextStyle,
     this.selectedTextStyle,
@@ -555,7 +559,7 @@ class CategoryParams {
   final Widget Function(String)? dropdownItemBuilder;
 
   /// Style properties for the category dropdown.
-  final CategoryStyle? style;
+  final FilterStyles? style;
 
   /// The placeholder text to show when no category is selected.
   final String? placeholderText;

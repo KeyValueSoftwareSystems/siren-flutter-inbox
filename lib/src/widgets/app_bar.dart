@@ -31,7 +31,7 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<String> selectedValues;
   final void Function(String)? onCategorySelected;
   final Widget Function(String)? dropdownItemBuilder;
-  final CategoryStyle? categoryStyle;
+  final FilterStyles? categoryStyle;
   final String? placeholderText;
 
   @override
@@ -199,7 +199,7 @@ class _CategoryFilter extends StatelessWidget {
         position.dx + button.size.width,
         0,
       ),
-      color: colors?.categoryColors?.filterDropdownBackgroundColor ??
+      color: colors?.filterColors?.filterDropdownBackgroundColor ??
           defaultColors.filterDropdownBackgroundColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       items: categories.map((category) {
@@ -213,24 +213,24 @@ class _CategoryFilter extends StatelessWidget {
                 height: 24,
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? colors?.categoryColors?.filterCheckboxCheckedColor ??
+                      ? colors?.filterColors?.filterCheckboxCheckedColor ??
                           defaultColors.filterCheckboxCheckedColor
                       : Colors.transparent,
                   border: Border.all(
                     color: isSelected
-                        ? colors?.categoryColors?.filterCheckboxCheckedColor ??
+                        ? colors?.filterColors?.filterCheckboxCheckedColor ??
                             defaultColors.filterCheckboxCheckedColor
-                        : colors?.categoryColors
-                                ?.filterCheckboxUncheckedColor ??
+                        : colors?.filterColors?.filterCheckboxUncheckedColor ??
                             defaultColors.filterCheckboxUncheckedColor,
                     width: 2,
                   ),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: isSelected
-                    ? const Icon(
+                    ? Icon(
                         Icons.check,
-                        color: Colors.white,
+                        color: colors?.filterColors?.checkIconColor ??
+                            defaultColors.checkIconColor,
                         size: 16,
                       )
                     : null,
@@ -240,8 +240,8 @@ class _CategoryFilter extends StatelessWidget {
                 category,
                 style: TextStyle(
                   fontSize: 14,
-                  color: colors?.categoryColors?.menuActionTextColor ??
-                      defaultColors.menuActionTextColor,
+                  color: colors?.filterColors?.filterActionTextColor ??
+                      defaultColors.filterActionTextColor,
                 ),
               ),
             ],
@@ -266,13 +266,17 @@ class _CategoryFilter extends StatelessWidget {
           height: 44,
           decoration: BoxDecoration(
             border: Border.all(
-              color: colors?.categoryColors?.filterIconBorderColor ??
+              color: colors?.filterColors?.filterIconBorderColor ??
                   defaultColors.filterIconBorderColor,
             ),
             borderRadius: BorderRadius.circular(8),
           ),
           child: IconButton(
-            icon: const Icon(Icons.filter_alt_outlined),
+            icon: Icon(
+              Icons.filter_alt_outlined,
+              color: colors?.filterColors?.filterIconColor ??
+                  defaultColors.filterIconColor,
+            ),
             onPressed: () => _showFilterMenu(context),
           ),
         ),
@@ -284,7 +288,7 @@ class _CategoryFilter extends StatelessWidget {
               width: 22,
               height: 22,
               decoration: BoxDecoration(
-                color: colors?.categoryColors?.filterBadgeColor ??
+                color: colors?.filterColors?.filterBadgeColor ??
                     defaultColors.filterBadgeColor,
                 shape: BoxShape.circle,
               ),
