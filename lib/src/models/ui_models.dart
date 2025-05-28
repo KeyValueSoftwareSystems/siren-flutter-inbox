@@ -543,6 +543,7 @@ class FilterParams {
     this.filterWidget,
     this.style,
     this.placeholderText,
+    this.hideBadge = false,
   });
 
   /// Flag to show the categories dropdown in the app bar.
@@ -557,4 +558,7 @@ class FilterParams {
 
   /// The placeholder text to show when no category is selected.
   final String? placeholderText;
+
+  /// Flag to hide the badge showing number of selected filters.
+  final bool hideBadge;
 }

@@ -18,6 +18,7 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.filterWidget,
     this.categoryStyle,
     this.placeholderText,
+    this.hideBadge = false,
     super.key,
   });
 
@@ -33,6 +34,7 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget? filterWidget;
   final FilterStyles? categoryStyle;
   final String? placeholderText;
+  final bool hideBadge;
 
   @override
   Size get preferredSize {
@@ -112,19 +114,25 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   if (categories.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: SizedBox(
-                        width: 44,
-                        height: 44,
-                        child: _CategoryFilter(
-                          categories: categories,
-                          selectedValues: selectedValues,
-                          onSelectionChanged: onCategorySelected,
-                          colors: colors,
-                          defaultColors: defaultColors,
-                          styles: styles,
-                          filterWidget: filterWidget,
+                    Semantics(
+                      label: 'siren-filter',
+                      hint: 'Tap to filter notifications by categories',
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: SizedBox(
+                          key: const Key('siren-filter'),
+                          width: 44,
+                          height: 44,
+                          child: _CategoryFilter(
+                            categories: categories,
+                            selectedValues: selectedValues,
+                            onSelectionChanged: onCategorySelected,
+                            colors: colors,
+                            defaultColors: defaultColors,
+                            styles: styles,
+                            filterWidget: filterWidget,
+                            hideBadge: hideBadge,
+                          ),
                         ),
                       ),
                     ),
@@ -185,6 +193,7 @@ class _CategoryFilter extends StatefulWidget {
     required this.defaultColors,
     required this.styles,
     this.filterWidget,
+    this.hideBadge = false,
   });
 
   final List<String> categories;
@@ -194,6 +203,7 @@ class _CategoryFilter extends StatefulWidget {
   final AppColors defaultColors;
   final Widget? filterWidget;
   final CustomStyles? styles;
+  final bool hideBadge;
 
   @override
   State<_CategoryFilter> createState() => _CategoryFilterState();
@@ -397,7 +407,7 @@ class _CategoryFilterState extends State<_CategoryFilter> {
                   iconSize: 24,
                 ),
               ),
-          if (widget.selectedValues.isNotEmpty)
+          if (widget.selectedValues.isNotEmpty && !widget.hideBadge)
             Positioned(
               right: -11,
               top: -4,
