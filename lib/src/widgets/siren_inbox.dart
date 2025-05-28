@@ -200,11 +200,8 @@ class _SirenInboxState extends State<SirenInbox>
               _initialize();
               break;
 
-            
-
             // ignore: no_default_cases
             default:
-            
           }
         } else if (streamResponse.response?.isError ?? false) {
           widget.onError
