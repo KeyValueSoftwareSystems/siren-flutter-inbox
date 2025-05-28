@@ -189,4 +189,65 @@ void main() {
       expect(tabColors.inactiveTabTextColor, Colors.black);
     });
   });
+
+  group('FilterStyles', () {
+    test('constructor should initialize dropdownTextStyle with provided value',
+        () {
+      const textStyle = TextStyle(color: Colors.red, fontSize: 16);
+      const filterStyles = FilterStyles(dropdownTextStyle: textStyle);
+
+      expect(filterStyles.dropdownTextStyle, textStyle);
+    });
+  });
+
+  group('FilterParams', () {
+    test('constructor should initialize properties with default values', () {
+      const filterParams = FilterParams();
+
+      expect(filterParams.showFilters, true);
+      expect(filterParams.filterIconWidget, null);
+      expect(filterParams.style, null);
+      expect(filterParams.hideBadge, false);
+    });
+
+    test('constructor should initialize properties with provided values', () {
+      const customIcon = Icon(Icons.tune);
+      const customStyle = FilterStyles();
+      const filterParams = FilterParams(
+        showFilters: false,
+        filterIconWidget: customIcon,
+        style: customStyle,
+        hideBadge: true,
+      );
+
+      expect(filterParams.showFilters, false);
+      expect(filterParams.filterIconWidget, customIcon);
+      expect(filterParams.style, customStyle);
+      expect(filterParams.hideBadge, true);
+    });
+  });
+
+  group('FilterColors', () {
+    test('constructor should initialize properties with provided values', () {
+      final filterColors = FilterColors(
+        filterIconBorderColor: Colors.red,
+        filterBadgeColor: Colors.blue,
+        filterDropdownBackgroundColor: Colors.green,
+        filterCheckboxCheckedColor: Colors.yellow,
+        filterCheckboxUncheckedColor: Colors.purple,
+        filterActionTextColor: Colors.orange,
+        filterIconColor: Colors.pink,
+        checkIconColor: Colors.brown,
+      );
+
+      expect(filterColors.filterIconBorderColor, Colors.red);
+      expect(filterColors.filterBadgeColor, Colors.blue);
+      expect(filterColors.filterDropdownBackgroundColor, Colors.green);
+      expect(filterColors.filterCheckboxCheckedColor, Colors.yellow);
+      expect(filterColors.filterCheckboxUncheckedColor, Colors.purple);
+      expect(filterColors.filterActionTextColor, Colors.orange);
+      expect(filterColors.filterIconColor, Colors.pink);
+      expect(filterColors.checkIconColor, Colors.brown);
+    });
+  });
 }
