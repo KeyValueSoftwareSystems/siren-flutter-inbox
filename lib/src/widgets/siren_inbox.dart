@@ -161,7 +161,9 @@ class _SirenInboxState extends State<SirenInbox>
     final response = await _fetchCategories.fetchCategories();
     if (response.isSuccess && response.data != null) {
       safeSetState(() {
-        allCategories = response.data as List<String>;
+        allCategories = (response.data as List<String>)
+          ..removeWhere((e) => e.isEmpty)
+          ..addAll(['']);
       });
     } else {
       widget.onError?.call(response.error ?? SirenErrorType());

@@ -245,10 +245,13 @@ class CustomThemeColors {
   final FilterColors? filterColors;
 }
 
+/// Custom theme colors to configure the appearance of filters
 class FilterColors {
   const FilterColors({
     this.categoryFilterColors,
   });
+
+  /// The colors for category dropdown
   final CategoryFilterColors? categoryFilterColors;
 }
 
