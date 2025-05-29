@@ -189,4 +189,52 @@ void main() {
       expect(tabColors.inactiveTabTextColor, Colors.black);
     });
   });
+
+  group('FilterParams', () {
+    test('constructor should initialize properties with default values', () {
+      const filterParams = CategoryFilterParams();
+
+      expect(filterParams.showFilters, true);
+      expect(filterParams.filterIconWidget, null);
+      expect(filterParams.style, null);
+      expect(filterParams.hideBadge, false);
+    });
+
+    test('constructor should initialize properties with provided values', () {
+      const customIcon = Icon(Icons.tune);
+      const filterParams = CategoryFilterParams(
+        showFilters: false,
+        filterIconWidget: customIcon,
+        hideBadge: true,
+      );
+
+      expect(filterParams.showFilters, false);
+      expect(filterParams.filterIconWidget, customIcon);
+      expect(filterParams.hideBadge, true);
+    });
+  });
+
+  group('FilterColors', () {
+    test('constructor should initialize properties with provided values', () {
+      final filterColors = CategoryFilterColors(
+        filterIconBorderColor: Colors.red,
+        filterBadgeColor: Colors.blue,
+        filterDropdownBackgroundColor: Colors.green,
+        filterCheckboxCheckedColor: Colors.yellow,
+        filterCheckboxUncheckedColor: Colors.purple,
+        filterActionTextColor: Colors.orange,
+        filterIconColor: Colors.pink,
+        checkIconColor: Colors.brown,
+      );
+
+      expect(filterColors.filterIconBorderColor, Colors.red);
+      expect(filterColors.filterBadgeColor, Colors.blue);
+      expect(filterColors.filterDropdownBackgroundColor, Colors.green);
+      expect(filterColors.filterCheckboxCheckedColor, Colors.yellow);
+      expect(filterColors.filterCheckboxUncheckedColor, Colors.purple);
+      expect(filterColors.filterActionTextColor, Colors.orange);
+      expect(filterColors.filterIconColor, Colors.pink);
+      expect(filterColors.checkIconColor, Colors.brown);
+    });
+  });
 }

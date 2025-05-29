@@ -132,4 +132,145 @@ void main() {
     await tester.tap(find.text('Clear All'));
     expect(clearAllPressed, true);
   });
+
+  // New tests for filter functionality
+  testWidgets('SirenAppBar displays filter icon when categories are provided',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          appBar: SirenAppBar(
+            headerParams: HeaderParams(
+              title: 'Title',
+              showBackButton: false,
+            ),
+            isNonEmptyNotifications: false,
+            categories: const ['Category 1', 'Category 2'],
+          ),
+        ),
+      ),
+    );
+
+    expect(find.byIcon(Icons.filter_alt_outlined), findsOneWidget);
+  });
+
+  testWidgets(
+      'SirenAppBar does not display filter icon when no categories are provided',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          appBar: SirenAppBar(
+            headerParams: HeaderParams(
+              title: 'Title',
+              showBackButton: false,
+            ),
+            isNonEmptyNotifications: false,
+          ),
+        ),
+      ),
+    );
+
+    expect(find.byIcon(Icons.filter_alt_outlined), findsNothing);
+  });
+
+  testWidgets('SirenAppBar displays filter badge with selected count',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          appBar: SirenAppBar(
+            headerParams: HeaderParams(
+              title: 'Title',
+              showBackButton: false,
+            ),
+            isNonEmptyNotifications: false,
+            categories: const ['Category 1', 'Category 2'],
+            selectedValues: const ['Category 1'],
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('1'), findsOneWidget);
+  });
+
+  testWidgets(
+      'SirenAppBar does not display filter badge when hideBadge is true',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          appBar: SirenAppBar(
+            headerParams: HeaderParams(
+              title: 'Title',
+              showBackButton: false,
+            ),
+            isNonEmptyNotifications: false,
+            categories: const ['Category 1', 'Category 2'],
+            selectedValues: const ['Category 1'],
+            hideBadge: true,
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('1'), findsNothing);
+  });
+
+  testWidgets(
+      'SirenAppBar calls onCategorySelected when filter item is selected',
+      (WidgetTester tester) async {
+    String? selectedCategory;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          appBar: SirenAppBar(
+            headerParams: HeaderParams(
+              title: 'Title',
+              showBackButton: false,
+            ),
+            isNonEmptyNotifications: false,
+            categories: const ['Category 1', 'Category 2'],
+            onCategorySelected: (category) {
+              selectedCategory = category;
+            },
+          ),
+        ),
+      ),
+    );
+
+    // Open filter dropdown
+    await tester.tap(find.byIcon(Icons.filter_alt_outlined));
+    await tester.pumpAndSettle();
+
+    // Select a category
+    await tester.tap(find.text('Category 1'));
+    await tester.pumpAndSettle();
+
+    expect(selectedCategory, 'Category 1');
+  });
+
+  testWidgets('SirenAppBar uses custom filter icon widget when provided',
+      (WidgetTester tester) async {
+    const customIcon = Icon(Icons.tune);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          appBar: SirenAppBar(
+            headerParams: HeaderParams(
+              title: 'Title',
+              showBackButton: false,
+            ),
+            isNonEmptyNotifications: false,
+            categories: const ['Category 1', 'Category 2'],
+            filterIconWidget: customIcon,
+          ),
+        ),
+      ),
+    );
+
+    expect(find.byIcon(Icons.tune), findsOneWidget);
+    expect(find.byIcon(Icons.filter_alt_outlined), findsNothing);
+  });
 }

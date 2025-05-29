@@ -100,6 +100,7 @@ class CustomStyles {
     this.clearAllIconStyle,
     this.tabStyles,
     this.hideTabMargin,
+    this.filterStyles,
   });
 
   /// The decoration for the Siren inbox list.
@@ -126,9 +127,14 @@ class CustomStyles {
   /// Style of clear all icon in inbox default header
   final ClearAllIconStyle? clearAllIconStyle;
 
+  /// Styles for customizing the appearance of tabs in the Siren inbox
   final TabStyles? tabStyles;
 
+  /// Controls whether to hide margins above and below the tabs
   final HideTabMargin? hideTabMargin;
+
+  /// Styles for customizing the appearance of filters
+  final FilterStyles? filterStyles;
 }
 
 class HideTabMargin {
@@ -187,6 +193,7 @@ class CustomThemeColors {
     this.badgeColors,
     this.cardColors,
     this.tabColors,
+    this.filterColors,
   });
 
   /// The background color for Siren inbox.
@@ -233,6 +240,56 @@ class CustomThemeColors {
 
   /// The colors for tab bar
   final TabColors? tabColors;
+
+  /// The colors for category dropdown
+  final FilterColors? filterColors;
+}
+
+/// Custom theme colors to configure the appearance of filters
+class FilterColors {
+  const FilterColors({
+    this.categoryFilterColors,
+  });
+
+  /// The colors for category dropdown
+  final CategoryFilterColors? categoryFilterColors;
+}
+
+class CategoryFilterColors {
+  CategoryFilterColors({
+    this.filterIconBorderColor,
+    this.filterBadgeColor,
+    this.filterDropdownBackgroundColor,
+    this.filterCheckboxCheckedColor,
+    this.filterCheckboxUncheckedColor,
+    this.filterActionTextColor,
+    this.filterIconColor,
+    this.checkIconColor,
+  });
+
+  /// The border color for the filter icon button
+  final Color? filterIconBorderColor;
+
+  /// The badge color for the filter icon
+  final Color? filterBadgeColor;
+
+  /// The background color for the filter dropdown
+  final Color? filterDropdownBackgroundColor;
+
+  /// The checked color for the filter checkbox
+  final Color? filterCheckboxCheckedColor;
+
+  /// The unchecked color for the filter checkbox border
+  final Color? filterCheckboxUncheckedColor;
+
+  /// The menu action text color
+  final Color? filterActionTextColor;
+
+  /// The text color for the filter icon
+  final Color? filterIconColor;
+
+  /// The color for the check icon in the filter dropdown
+  final Color? checkIconColor;
 }
 
 /// Custom theme colors to configure the appearance inbox list item.
@@ -467,4 +524,55 @@ class TabColors {
 
   /// The color of the tab indicator.
   final Color? indicatorColor;
+}
+
+/// Styles for customizing the appearance of filters
+class FilterStyles {
+  const FilterStyles({
+    this.categoryFilterStyles,
+  });
+  final CategoryFilterStyles? categoryFilterStyles;
+}
+
+/// Properties for configuring the appearance of the category dropdown.
+class CategoryFilterStyles {
+  /// Constructs a [CategoryFilterStyles] with optional parameters.
+  const CategoryFilterStyles({
+    this.dropdownTextStyle,
+  });
+
+  /// The text style for dropdown items.
+  final TextStyle? dropdownTextStyle;
+}
+
+class FilterParams {
+  const FilterParams({
+    this.categoryFilterParams,
+  });
+
+  final CategoryFilterParams? categoryFilterParams;
+}
+
+/// Properties for configuring the appearance and behavior of the category dropdown.
+class CategoryFilterParams {
+  /// Constructs a [CategoryFilterParams] with optional parameters.
+  const CategoryFilterParams({
+    this.showFilters = true,
+    this.filterIconWidget,
+    this.style,
+    this.hideBadge = false,
+  });
+
+  /// Flag to show the categories dropdown in the app bar.
+  final bool showFilters;
+
+  /// Custom widget to display the filter UI.
+  /// If not provided, a default filter UI will be used.
+  final Widget? filterIconWidget;
+
+  /// Style properties for the category dropdown.
+  final CategoryFilterStyles? style;
+
+  /// Flag to hide the badge showing number of selected filters.
+  final bool hideBadge;
 }

@@ -29,6 +29,7 @@ class FetchAllNotifications {
     bool? isRead,
     String? start,
     String? end,
+    List<String>? categories,
   }) async {
     final apiPath =
         '${Generics.V2}${Generics.BASE_URL}${SirenDataProvider.instance.recipientId}/notifications';
@@ -53,8 +54,22 @@ class FetchAllNotifications {
       queryParams['isRead'] = isRead.toString();
     }
 
-    final queryString =
-        queryParams.entries.map((e) => '${e.key}=${e.value}').join('&');
+    // Build the query string
+    final queryParts = <String>[];
+
+    // Add all non-category parameters
+    queryParams.forEach((key, value) {
+      queryParts.add('$key=${Uri.encodeComponent(value)}');
+    });
+
+    // Add each category as a separate parameter
+    if (categories != null && categories.isNotEmpty) {
+      for (final category in categories) {
+        queryParts.add('category=${Uri.encodeComponent(category)}');
+      }
+    }
+
+    final queryString = queryParts.join('&');
 
     if (SirenDataProvider.instance.tokenVerificationStatus != Status.SUCCESS) {
       apiError = SirenDataProvider.instance.getVerificationErrorType();
