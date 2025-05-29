@@ -269,7 +269,7 @@ class _CategoryFilterState extends State<_CategoryFilter> {
                     ),
                     elevation: 4,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      padding: const EdgeInsets.only(bottom: 8),
                       child: ConstrainedBox(
                         constraints: const BoxConstraints(maxHeight: 300),
                         child: NotificationListener<ScrollNotification>(
@@ -287,7 +287,7 @@ class _CategoryFilterState extends State<_CategoryFilter> {
                                 onTap: () => _handleItemSelection(category),
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
+                                    horizontal: 14,
                                     vertical: 8,
                                   ),
                                   child: Row(
@@ -315,7 +315,7 @@ class _CategoryFilterState extends State<_CategoryFilter> {
                                             width: 2,
                                           ),
                                           borderRadius:
-                                              BorderRadius.circular(8),
+                                              BorderRadius.circular(6),
                                         ),
                                         child: isSelected
                                             ? Center(
@@ -333,23 +333,32 @@ class _CategoryFilterState extends State<_CategoryFilter> {
                                             : null,
                                       ),
                                       const SizedBox(width: 12),
-                                      Text(
-                                        category,
-                                        style: widget.styles?.filterStyles
-                                                ?.dropdownTextStyle
-                                                ?.copyWith(
-                                              color: widget.colors?.filterColors
-                                                      ?.filterActionTextColor ??
-                                                  widget.defaultColors
-                                                      .filterActionTextColor,
-                                            ) ??
-                                            TextStyle(
-                                              fontSize: 14,
-                                              color: widget.colors?.filterColors
-                                                      ?.filterActionTextColor ??
-                                                  widget.defaultColors
-                                                      .filterActionTextColor,
-                                            ),
+                                      Expanded(
+                                        child: Text(
+                                          category.isEmpty
+                                              ? 'Others'
+                                              : category,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: widget.styles?.filterStyles
+                                                  ?.dropdownTextStyle
+                                                  ?.copyWith(
+                                                color: widget
+                                                        .colors
+                                                        ?.filterColors
+                                                        ?.filterActionTextColor ??
+                                                    widget.defaultColors
+                                                        .filterActionTextColor,
+                                              ) ??
+                                              TextStyle(
+                                                fontSize: 14,
+                                                color: widget
+                                                        .colors
+                                                        ?.filterColors
+                                                        ?.filterActionTextColor ??
+                                                    widget.defaultColors
+                                                        .filterActionTextColor,
+                                              ),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -383,31 +392,26 @@ class _CategoryFilterState extends State<_CategoryFilter> {
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: widget.colors?.filterColors?.filterIconBorderColor ??
-                    widget.defaultColors.filterIconBorderColor,
+          GestureDetector(
+            onTap: _toggleDropdown,
+            child: Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: widget.colors?.filterColors?.filterIconBorderColor ??
+                      widget.defaultColors.filterIconBorderColor,
+                ),
+                borderRadius: BorderRadius.circular(8),
               ),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: widget.filterIconWidget != null
-                ? GestureDetector(
-                    onTap: _toggleDropdown,
-                    child: widget.filterIconWidget,
-                  )
-                : IconButton(
-                    icon: Icon(
-                      Icons.filter_alt_outlined,
-                      color: widget.colors?.filterColors?.filterIconColor ??
-                          widget.defaultColors.filterIconColor,
-                    ),
-                    onPressed: _toggleDropdown,
-                    padding: EdgeInsets.zero,
-                    iconSize: 24,
+              child: widget.filterIconWidget ??
+                  Icon(
+                    Icons.filter_alt_outlined,
+                    color: widget.colors?.filterColors?.filterIconColor ??
+                        widget.defaultColors.filterIconColor,
+                    size: 24,
                   ),
+            ),
           ),
           if (widget.selectedValues.isNotEmpty && !widget.hideBadge)
             Positioned(
@@ -423,8 +427,8 @@ class _CategoryFilterState extends State<_CategoryFilter> {
                 ),
                 child: Center(
                   child: Text(
-                    '${widget.selectedValues.length}',
-                    style: const TextStyle(color: Colors.white, fontSize: 12),
+                    '${widget.selectedValues.length > 99 ? '99+' : widget.selectedValues.length}',
+                    style: const TextStyle(color: Colors.white, fontSize: 10),
                   ),
                 ),
               ),
