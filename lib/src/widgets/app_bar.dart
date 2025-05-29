@@ -263,7 +263,7 @@ class _CategoryFilterState extends State<_CategoryFilter> {
                             ?.filterDropdownBackgroundColor ??
                         widget.defaultColors.filterDropdownBackgroundColor,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     elevation: 4,
                     child: Padding(
@@ -319,7 +319,7 @@ class _CategoryFilterState extends State<_CategoryFilter> {
                                                         ?.filterCheckboxUncheckedColor ??
                                                     widget.defaultColors
                                                         .filterCheckboxUncheckedColor,
-                                            width: 2,
+                                            width: 1.5,
                                           ),
                                           borderRadius:
                                               BorderRadius.circular(6),
