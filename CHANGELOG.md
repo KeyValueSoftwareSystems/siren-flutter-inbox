@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.3.0
+
+### Added
+- Added support to filter notifications by category.
+
 ## 1.2.1
 
 ### Added
