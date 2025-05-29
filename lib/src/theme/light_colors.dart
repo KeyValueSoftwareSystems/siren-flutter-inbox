@@ -43,4 +43,12 @@ final lightColors = AppColors(
   tabBarInActiveColor: SirenAppColors.grey700,
   textColor: SirenAppColors.grey700,
   timerIcon: SirenAppColors.grey500,
+  filterIconBorderColor: SirenAppColors.filterIconBorderLight,
+  filterBadgeColor: SirenAppColors.filterBadgeLight,
+  filterDropdownBackgroundColor: SirenAppColors.filterDropdownBackgroundLight,
+  filterCheckboxCheckedColor: SirenAppColors.filterCheckboxCheckedLight,
+  filterCheckboxUncheckedColor: SirenAppColors.filterCheckboxUncheckedLight,
+  filterActionTextColor: SirenAppColors.menuActionTextColorLight,
+  filterIconColor: SirenAppColors.grey500,
+  checkIconColor: SirenAppColors.checkIconColorLight,
 );

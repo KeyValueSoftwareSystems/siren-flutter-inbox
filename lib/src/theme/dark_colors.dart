@@ -43,4 +43,12 @@ final darkColors = AppColors(
   tabBarInActiveColor: SirenAppColors.grey300,
   textColor: SirenAppColors.grey700Complementary,
   timerIcon: SirenAppColors.grey400,
+  filterIconBorderColor: SirenAppColors.filterIconBorderDark,
+  filterBadgeColor: SirenAppColors.filterBadgeDark,
+  filterDropdownBackgroundColor: SirenAppColors.filterDropdownBackgroundDark,
+  filterCheckboxCheckedColor: SirenAppColors.filterCheckboxCheckedDark,
+  filterCheckboxUncheckedColor: SirenAppColors.filterCheckboxUncheckedDark,
+  filterActionTextColor: SirenAppColors.avatarPlaceholderBgLight,
+  filterIconColor: SirenAppColors.grey500Complementary,
+  checkIconColor: SirenAppColors.checkIconColorDark,
 );

@@ -1,5 +1,3 @@
-// ignore_for_file: cascade_invocations
-
 import 'package:flutter/material.dart';
 import 'package:sirenapp_flutter_inbox/src/theme/app_theme.dart';
 
@@ -75,16 +73,14 @@ class DiagonalPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
 
-    final lightColorPath = Path();
-    lightColorPath
+    final lightColorPath = Path()
       ..moveTo(
         size.width + 2,
         size.height + 2,
       )
       ..lineTo(-2, -2);
 
-    final darkColorPath = Path();
-    darkColorPath
+    final darkColorPath = Path()
       ..moveTo(
         size.width + gap,
         size.height,

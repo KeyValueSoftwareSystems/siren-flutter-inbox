@@ -5,19 +5,26 @@ import 'package:sirenapp_flutter_inbox/src/models/api_response.dart';
 import 'package:sirenapp_flutter_inbox/src/services/api_client.dart';
 import 'package:sirenapp_flutter_inbox/src/services/api_provider.dart';
 
-class ReadNotificationById {
-  ReadNotificationById._internal();
-  static final ReadNotificationById instance = ReadNotificationById._internal();
-
+class FetchCategories {
+  FetchCategories._internal();
+  static final FetchCategories instance = FetchCategories._internal();
   final ApiClient api = ApiClient(apiProvider());
 
-  Future<ApiResponse> readNotificationById({
-    required String notificationId,
-  }) async {
-    final result = ApiResponse()..isLoading = true;
-    var apiError = Errors.markAsReadFailedError;
+  List<String> convertJsonToCategoryList(List<dynamic> dataList) {
+    return dataList.map((dynamic json) {
+      if (json is String) {
+        return json;
+      }
+      throw const FormatException('Invalid JSON format');
+    }).toList();
+  }
+
+  Future<ApiResponse> fetchCategories() async {
     final apiPath =
-        '${Generics.V2}${Generics.BASE_URL}${SirenDataProvider.instance.recipientId}/notifications';
+        '${Generics.V2}${Generics.BASE_URL}${SirenDataProvider.instance.recipientId}/categories';
+    final result = ApiResponse()..isLoading = true;
+    var apiError = Errors.notificationFetchFailedError;
+
     if (SirenDataProvider.instance.tokenVerificationStatus != Status.SUCCESS) {
       apiError = SirenDataProvider.instance.getVerificationErrorType();
       result
@@ -29,18 +36,18 @@ class ReadNotificationById {
       return result;
     }
 
-    final apiResponse = await api.patch(
-      path: '$apiPath/$notificationId',
-      data: {
-        'isRead': true,
-        'isDelivered': true,
-      },
+    final apiResponse = await api.get(
+      path: apiPath,
     );
+
     if (apiResponse.statusCode != 0 && apiResponse.data != null) {
+      final dataList =
+          ApiResponse.fromJson(apiResponse.data).data as List<dynamic>?;
       result
         ..isLoading = false
         ..isSuccess = apiResponse.statusCode == 200
         ..isError = apiResponse.statusCode != 200
+        ..data = convertJsonToCategoryList(dataList ?? [])
         ..rawResponse = apiResponse
         ..error = apiError;
     } else {
@@ -51,6 +58,7 @@ class ReadNotificationById {
         ..rawResponse = apiResponse
         ..error = Errors.defaultError;
     }
+
     return result;
   }
 }

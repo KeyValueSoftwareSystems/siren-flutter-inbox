@@ -44,6 +44,14 @@ class AppColors {
     required this.tabBarInActiveColor,
     required this.textColor,
     required this.timerIcon,
+    required this.filterIconBorderColor,
+    required this.filterBadgeColor,
+    required this.filterDropdownBackgroundColor,
+    required this.filterCheckboxCheckedColor,
+    required this.filterCheckboxUncheckedColor,
+    required this.filterActionTextColor,
+    required this.filterIconColor,
+    required this.checkIconColor,
   });
   factory AppColors.lightColorTheme() => lightColors;
 
@@ -89,4 +97,12 @@ class AppColors {
   Color tabBarInActiveColor;
   Color textColor;
   Color timerIcon;
+  Color filterIconBorderColor;
+  Color filterBadgeColor;
+  Color filterDropdownBackgroundColor;
+  Color filterCheckboxCheckedColor;
+  Color filterCheckboxUncheckedColor;
+  Color filterActionTextColor;
+  Color filterIconColor;
+  Color checkIconColor;
 }

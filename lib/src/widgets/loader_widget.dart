@@ -99,7 +99,7 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: defaultColors.skeletonLoaderColor
-                        .withOpacity(0.5 + 0.5 * _controller.value),
+                        .withValues(alpha: 0.5 + 0.5 * _controller.value),
                   ),
                 ),
               ),
@@ -117,7 +117,7 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
                       height: 18,
                       decoration: BoxDecoration(
                         color: defaultColors.skeletonLoaderColor
-                            .withOpacity(0.5 + 0.5 * _controller.value),
+                            .withValues(alpha: 0.5 + 0.5 * _controller.value),
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
@@ -128,7 +128,7 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
                       height: 18,
                       decoration: BoxDecoration(
                         color: defaultColors.skeletonLoaderColor
-                            .withOpacity(0.5 + 0.5 * _controller.value),
+                            .withValues(alpha: 0.5 + 0.5 * _controller.value),
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
@@ -139,7 +139,7 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
                       height: 18,
                       decoration: BoxDecoration(
                         color: defaultColors.skeletonLoaderColor
-                            .withOpacity(0.5 + 0.5 * _controller.value),
+                            .withValues(alpha: 0.5 + 0.5 * _controller.value),
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
@@ -153,8 +153,9 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
                           height: 10,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: defaultColors.skeletonLoaderColor
-                                .withOpacity(0.5 + 0.5 * _controller.value),
+                            color: defaultColors.skeletonLoaderColor.withValues(
+                              alpha: 0.5 + 0.5 * _controller.value,
+                            ),
                           ),
                         ),
                       ),
@@ -164,8 +165,10 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
                           builder: (context, child) => Container(
                             height: 12,
                             decoration: BoxDecoration(
-                              color: defaultColors.skeletonLoaderColor
-                                  .withOpacity(0.5 + 0.5 * _controller.value),
+                              color:
+                                  defaultColors.skeletonLoaderColor.withValues(
+                                alpha: 0.5 + 0.5 * _controller.value,
+                              ),
                               borderRadius: BorderRadius.circular(4),
                             ),
                           ),
@@ -183,7 +186,7 @@ class CardLoaderWidgetState extends State<CardLoaderWidget>
               height: 16,
               decoration: BoxDecoration(
                 color: defaultColors.skeletonLoaderColor
-                    .withOpacity(0.5 + 0.5 * _controller.value),
+                    .withValues(alpha: 0.5 + 0.5 * _controller.value),
                 borderRadius: BorderRadius.circular(4),
               ),
             ),
