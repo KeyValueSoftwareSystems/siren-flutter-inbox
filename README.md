@@ -115,7 +115,7 @@ Given below are the arguments of Siren Inbox Widget.
 | theme             | Theme properties for custom color theme                              | CustomThemeColors          | null                                                                                                                                                                                                                                   |
 | customStyles      | Style properties for custom styling                                  | CustomStyles               | null                                                                                                                                                                                                                                   |
 | customTabIndicator| Custom decoration for tab indicator                                  | BoxDecoration             | null                                                                                                                                                                                                                                   |
-| filterParams      | Properties for configuring the filter dropdown                     | FilterParams               | FilterParams(showFilters: true, filterIconWidget: null, style: null, hideBadge: false)                                                                                                                                                 |
+| filterParams      | Properties for configuring the filter dropdown                     | FilterParams               | FilterParams(categoryFilterParams: CategoryFilterParams(showFilters: true, filterIconWidget: null, hideBadge: false))                                                                                                                                                 |
 
 #### Theme customization
 
@@ -159,14 +159,16 @@ theme: CustomThemeColors(
         indicatorColor: Colors.blue
     ),
     filterColors: FilterColors(
-        filterIconBorderColor: Colors.grey.shade300,
-        filterBadgeColor: Colors.blue,
-        filterDropdownBackgroundColor: Colors.white,
-        filterCheckboxCheckedColor: Colors.blue,
-        filterCheckboxUncheckedColor: Colors.grey.shade300,
-        filterActionTextColor: Colors.black87,
-        filterIconColor: Colors.blue,
-        checkIconColor: Colors.white
+        categoryFilterColors: CategoryFilterColors(
+            filterIconBorderColor: Colors.grey.shade300,
+            filterBadgeColor: Colors.blue,
+            filterDropdownBackgroundColor: Colors.white,
+            filterCheckboxCheckedColor: Colors.blue,
+            filterCheckboxUncheckedColor: Colors.grey.shade300,
+            filterActionTextColor: Colors.black87,
+            filterIconColor: Colors.blue,
+            checkIconColor: Colors.white
+        )
     )
 )
 ```
@@ -264,13 +266,37 @@ customStyles: CustomStyles(
         lower: false
     ),
     filterStyles: FilterStyles(
-        dropdownTextStyle: TextStyle(
-            fontSize: 14,
-            color: Colors.black87
+        categoryFilterStyles: CategoryFilterStyles(
+            dropdownTextStyle: TextStyle(
+                fontSize: 14,
+                color: Colors.black87
+            )
         )
     )
 )
 ```
+
+### 2.4. Filter Configuration
+
+The filter functionality allows users to filter notifications by categories. Here's how to configure it:
+
+```dart
+SirenInbox(
+    filterParams: FilterParams(
+        categoryFilterParams: CategoryFilterParams(
+            showFilters: true,
+            filterIconWidget: Icon(Icons.filter_list), // Optional custom filter icon
+            hideBadge: false // Optional hide badge showing number of selected filters
+        )
+    )
+)
+```
+
+#### Filter Features:
+- Custom filter icon support
+- Badge showing number of selected filters (99+ for more than 99 selections)
+- Dropdown with checkbox selection
+- Customizable colors and styles for all filter components
 
 ## 3. Siren Class
 

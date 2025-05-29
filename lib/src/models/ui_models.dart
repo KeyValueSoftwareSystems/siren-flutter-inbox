@@ -133,7 +133,7 @@ class CustomStyles {
   /// Controls whether to hide margins above and below the tabs
   final HideTabMargin? hideTabMargin;
 
-  /// Styles for customizing the appearance of category filters
+  /// Styles for customizing the appearance of filters
   final FilterStyles? filterStyles;
 }
 
@@ -246,7 +246,14 @@ class CustomThemeColors {
 }
 
 class FilterColors {
-  FilterColors({
+  const FilterColors({
+    this.categoryFilterColors,
+  });
+  final CategoryFilterColors? categoryFilterColors;
+}
+
+class CategoryFilterColors {
+  CategoryFilterColors({
     this.filterIconBorderColor,
     this.filterBadgeColor,
     this.filterDropdownBackgroundColor,
@@ -516,10 +523,18 @@ class TabColors {
   final Color? indicatorColor;
 }
 
-/// Properties for configuring the appearance of the category dropdown.
+/// Styles for customizing the appearance of filters
 class FilterStyles {
-  /// Constructs a [FilterStyles] with optional parameters.
   const FilterStyles({
+    this.categoryFilterStyles,
+  });
+  final CategoryFilterStyles? categoryFilterStyles;
+}
+
+/// Properties for configuring the appearance of the category dropdown.
+class CategoryFilterStyles {
+  /// Constructs a [CategoryFilterStyles] with optional parameters.
+  const CategoryFilterStyles({
     this.dropdownTextStyle,
   });
 
@@ -527,10 +542,18 @@ class FilterStyles {
   final TextStyle? dropdownTextStyle;
 }
 
-/// Properties for configuring the appearance and behavior of the category dropdown.
 class FilterParams {
-  /// Constructs a [FilterParams] with optional parameters.
   const FilterParams({
+    this.categoryFilterParams,
+  });
+
+  final CategoryFilterParams? categoryFilterParams;
+}
+
+/// Properties for configuring the appearance and behavior of the category dropdown.
+class CategoryFilterParams {
+  /// Constructs a [CategoryFilterParams] with optional parameters.
+  const CategoryFilterParams({
     this.showFilters = true,
     this.filterIconWidget,
     this.style,
@@ -545,7 +568,7 @@ class FilterParams {
   final Widget? filterIconWidget;
 
   /// Style properties for the category dropdown.
-  final FilterStyles? style;
+  final CategoryFilterStyles? style;
 
   /// Flag to hide the badge showing number of selected filters.
   final bool hideBadge;

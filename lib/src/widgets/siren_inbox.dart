@@ -586,18 +586,22 @@ class _SirenInboxState extends State<SirenInbox>
           isNonEmptyNotifications: _enableClearAll,
           headerParams: widget.headerParams,
           styles: widget.customStyles,
-          categories: widget.filterParams?.showFilters ?? false
-              ? allCategories
-              : const [],
-          selectedValues: widget.filterParams?.showFilters ?? false
-              ? selectedCategories
-              : const [],
-          onCategorySelected: widget.filterParams?.showFilters ?? false
-              ? _updateSelectedCategories
-              : null,
-          filterIconWidget: widget.filterParams?.filterIconWidget,
-          categoryStyle: widget.filterParams?.style,
-          hideBadge: widget.filterParams?.hideBadge ?? false,
+          categories:
+              widget.filterParams?.categoryFilterParams?.showFilters ?? false
+                  ? allCategories
+                  : const [],
+          selectedValues:
+              widget.filterParams?.categoryFilterParams?.showFilters ?? false
+                  ? selectedCategories
+                  : const [],
+          onCategorySelected:
+              widget.filterParams?.categoryFilterParams?.showFilters ?? false
+                  ? _updateSelectedCategories
+                  : null,
+          filterIconWidget:
+              widget.filterParams?.categoryFilterParams?.filterIconWidget,
+          hideBadge:
+              widget.filterParams?.categoryFilterParams?.hideBadge ?? false,
         ),
         body: Column(
           children: [
@@ -703,17 +707,22 @@ class _SirenInboxState extends State<SirenInbox>
           isNonEmptyNotifications: _enableClearAll,
           headerParams: widget.headerParams,
           styles: widget.customStyles,
-          categories: widget.filterParams?.showFilters ?? false
-              ? allCategories
-              : const [],
-          selectedValues: widget.filterParams?.showFilters ?? false
-              ? selectedCategories
-              : const [],
-          onCategorySelected: widget.filterParams?.showFilters ?? false
-              ? _updateSelectedCategories
-              : null,
-          filterIconWidget: widget.filterParams?.filterIconWidget,
-          categoryStyle: widget.filterParams?.style,
+          categories:
+              widget.filterParams?.categoryFilterParams?.showFilters ?? false
+                  ? allCategories
+                  : const [],
+          selectedValues:
+              widget.filterParams?.categoryFilterParams?.showFilters ?? false
+                  ? selectedCategories
+                  : const [],
+          onCategorySelected:
+              widget.filterParams?.categoryFilterParams?.showFilters ?? false
+                  ? _updateSelectedCategories
+                  : null,
+          filterIconWidget:
+              widget.filterParams?.categoryFilterParams?.filterIconWidget,
+          hideBadge:
+              widget.filterParams?.categoryFilterParams?.hideBadge ?? false,
         ),
         body: _buildInboxBody(_inboxScrollController, notifications, false),
       );

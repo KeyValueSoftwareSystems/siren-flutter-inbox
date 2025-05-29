@@ -16,7 +16,6 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.selectedValues = const [],
     this.onCategorySelected,
     this.filterIconWidget,
-    this.categoryStyle,
     this.hideBadge = false,
     super.key,
   });
@@ -31,7 +30,6 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<String> selectedValues;
   final void Function(String)? onCategorySelected;
   final Widget? filterIconWidget;
-  final FilterStyles? categoryStyle;
   final bool hideBadge;
 
   @override
@@ -261,7 +259,7 @@ class _CategoryFilterState extends State<_CategoryFilter> {
                   showWhenUnlinked: false,
                   offset: Offset(-220 + size.width, size.height),
                   child: Material(
-                    color: widget.colors?.filterColors
+                    color: widget.colors?.filterColors?.categoryFilterColors
                             ?.filterDropdownBackgroundColor ??
                         widget.defaultColors.filterDropdownBackgroundColor,
                     shape: RoundedRectangleBorder(
@@ -297,18 +295,27 @@ class _CategoryFilterState extends State<_CategoryFilter> {
                                         height: 24,
                                         decoration: BoxDecoration(
                                           color: isSelected
-                                              ? widget.colors?.filterColors
+                                              ? widget
+                                                      .colors
+                                                      ?.filterColors
+                                                      ?.categoryFilterColors
                                                       ?.filterCheckboxCheckedColor ??
                                                   widget.defaultColors
                                                       .filterCheckboxCheckedColor
                                               : Colors.transparent,
                                           border: Border.all(
                                             color: isSelected
-                                                ? widget.colors?.filterColors
+                                                ? widget
+                                                        .colors
+                                                        ?.filterColors
+                                                        ?.categoryFilterColors
                                                         ?.filterCheckboxCheckedColor ??
                                                     widget.defaultColors
                                                         .filterCheckboxCheckedColor
-                                                : widget.colors?.filterColors
+                                                : widget
+                                                        .colors
+                                                        ?.filterColors
+                                                        ?.categoryFilterColors
                                                         ?.filterCheckboxUncheckedColor ??
                                                     widget.defaultColors
                                                         .filterCheckboxUncheckedColor,
@@ -324,6 +331,7 @@ class _CategoryFilterState extends State<_CategoryFilter> {
                                                   color: widget
                                                           .colors
                                                           ?.filterColors
+                                                          ?.categoryFilterColors
                                                           ?.checkIconColor ??
                                                       widget.defaultColors
                                                           .checkIconColor,
@@ -339,12 +347,16 @@ class _CategoryFilterState extends State<_CategoryFilter> {
                                               ? 'Others'
                                               : category,
                                           overflow: TextOverflow.ellipsis,
-                                          style: widget.styles?.filterStyles
+                                          style: widget
+                                                  .styles
+                                                  ?.filterStyles
+                                                  ?.categoryFilterStyles
                                                   ?.dropdownTextStyle
                                                   ?.copyWith(
                                                 color: widget
                                                         .colors
                                                         ?.filterColors
+                                                        ?.categoryFilterColors
                                                         ?.filterActionTextColor ??
                                                     widget.defaultColors
                                                         .filterActionTextColor,
@@ -354,6 +366,7 @@ class _CategoryFilterState extends State<_CategoryFilter> {
                                                 color: widget
                                                         .colors
                                                         ?.filterColors
+                                                        ?.categoryFilterColors
                                                         ?.filterActionTextColor ??
                                                     widget.defaultColors
                                                         .filterActionTextColor,
@@ -399,7 +412,8 @@ class _CategoryFilterState extends State<_CategoryFilter> {
               height: 44,
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: widget.colors?.filterColors?.filterIconBorderColor ??
+                  color: widget.colors?.filterColors?.categoryFilterColors
+                          ?.filterIconBorderColor ??
                       widget.defaultColors.filterIconBorderColor,
                 ),
                 borderRadius: BorderRadius.circular(8),
@@ -407,7 +421,8 @@ class _CategoryFilterState extends State<_CategoryFilter> {
               child: widget.filterIconWidget ??
                   Icon(
                     Icons.filter_alt_outlined,
-                    color: widget.colors?.filterColors?.filterIconColor ??
+                    color: widget.colors?.filterColors?.categoryFilterColors
+                            ?.filterIconColor ??
                         widget.defaultColors.filterIconColor,
                     size: 24,
                   ),
@@ -421,7 +436,8 @@ class _CategoryFilterState extends State<_CategoryFilter> {
                 width: 22,
                 height: 22,
                 decoration: BoxDecoration(
-                  color: widget.colors?.filterColors?.filterBadgeColor ??
+                  color: widget.colors?.filterColors?.categoryFilterColors
+                          ?.filterBadgeColor ??
                       widget.defaultColors.filterBadgeColor,
                   shape: BoxShape.circle,
                 ),

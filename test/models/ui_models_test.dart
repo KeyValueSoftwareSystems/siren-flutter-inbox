@@ -190,19 +190,9 @@ void main() {
     });
   });
 
-  group('FilterStyles', () {
-    test('constructor should initialize dropdownTextStyle with provided value',
-        () {
-      const textStyle = TextStyle(color: Colors.red, fontSize: 16);
-      const filterStyles = FilterStyles(dropdownTextStyle: textStyle);
-
-      expect(filterStyles.dropdownTextStyle, textStyle);
-    });
-  });
-
   group('FilterParams', () {
     test('constructor should initialize properties with default values', () {
-      const filterParams = FilterParams();
+      const filterParams = CategoryFilterParams();
 
       expect(filterParams.showFilters, true);
       expect(filterParams.filterIconWidget, null);
@@ -212,24 +202,21 @@ void main() {
 
     test('constructor should initialize properties with provided values', () {
       const customIcon = Icon(Icons.tune);
-      const customStyle = FilterStyles();
-      const filterParams = FilterParams(
+      const filterParams = CategoryFilterParams(
         showFilters: false,
         filterIconWidget: customIcon,
-        style: customStyle,
         hideBadge: true,
       );
 
       expect(filterParams.showFilters, false);
       expect(filterParams.filterIconWidget, customIcon);
-      expect(filterParams.style, customStyle);
       expect(filterParams.hideBadge, true);
     });
   });
 
   group('FilterColors', () {
     test('constructor should initialize properties with provided values', () {
-      final filterColors = FilterColors(
+      final filterColors = CategoryFilterColors(
         filterIconBorderColor: Colors.red,
         filterBadgeColor: Colors.blue,
         filterDropdownBackgroundColor: Colors.green,
