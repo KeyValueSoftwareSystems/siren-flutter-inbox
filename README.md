@@ -274,7 +274,7 @@ customStyles: CustomStyles(
 
 ## 3. Siren Class
 
-The ``Siren Class` provides utility functions for modifying notifications.
+The `Siren Class` provides utility functions for modifying notifications.
 
 ```dart
 Siren.markAsRead(id: 'notification-id');

@@ -62,13 +62,13 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
             : null,
       ),
       height: preferredSize.height,
-      child: headerParams?.customHeader ??
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 16, left: 20),
-                child: Row(
+      child: Container(
+        margin: const EdgeInsets.only(right: 16, left: 20),
+        child: headerParams?.customHeader ??
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
                   children: [
                     if (headerParams?.showBackButton ?? false)
                       Semantics(
@@ -107,77 +107,77 @@ class SirenAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                   ],
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  if (categories.isNotEmpty)
-                    Semantics(
-                      label: 'siren-filter',
-                      hint: 'Tap to filter notifications by categories',
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: SizedBox(
-                          key: const Key('siren-filter'),
-                          width: 44,
-                          height: 44,
-                          child: _CategoryFilter(
-                            categories: categories,
-                            selectedValues: selectedValues,
-                            onSelectionChanged: onCategorySelected,
-                            colors: colors,
-                            defaultColors: defaultColors,
-                            styles: styles,
-                            filterIconWidget: filterIconWidget,
-                            hideBadge: hideBadge,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    if (categories.isNotEmpty)
+                      Semantics(
+                        label: 'siren-filter',
+                        hint: 'Tap to filter notifications by categories',
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: SizedBox(
+                            key: const Key('siren-filter'),
+                            width: 44,
+                            height: 44,
+                            child: _CategoryFilter(
+                              categories: categories,
+                              selectedValues: selectedValues,
+                              onSelectionChanged: onCategorySelected,
+                              colors: colors,
+                              defaultColors: defaultColors,
+                              styles: styles,
+                              filterIconWidget: filterIconWidget,
+                              hideBadge: hideBadge,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  if (!(headerParams?.hideClearAll ?? false))
-                    Semantics(
-                      label: 'siren-header-clear-all',
-                      hint: 'Tap to clear all notifications',
-                      child: GestureDetector(
-                        key: const Key('siren-header-clear-all'),
-                        onTap: () {
-                          if (isNonEmptyNotifications &&
-                              onClearAllPressed != null) {
-                            onClearAllPressed!();
-                          }
-                        },
-                        child: Opacity(
-                          opacity: isNonEmptyNotifications ? 1 : 0.4,
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 4),
-                                child: Icon(
-                                  Icons.clear_all,
-                                  size: styles?.clearAllIconStyle?.size ?? 24,
-                                  color: colors?.clearAllIcon ??
-                                      defaultColors.appBarActionText,
+                    if (!(headerParams?.hideClearAll ?? false))
+                      Semantics(
+                        label: 'siren-header-clear-all',
+                        hint: 'Tap to clear all notifications',
+                        child: GestureDetector(
+                          key: const Key('siren-header-clear-all'),
+                          onTap: () {
+                            if (isNonEmptyNotifications &&
+                                onClearAllPressed != null) {
+                              onClearAllPressed!();
+                            }
+                          },
+                          child: Opacity(
+                            opacity: isNonEmptyNotifications ? 1 : 0.4,
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 4),
+                                  child: Icon(
+                                    Icons.clear_all,
+                                    size: styles?.clearAllIconStyle?.size ?? 24,
+                                    color: colors?.clearAllIcon ??
+                                        defaultColors.appBarActionText,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                Strings.clear_all,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: colors?.inboxHeaderColors
-                                          ?.headerActionColor ??
-                                      defaultColors.appBarActionText,
+                                Text(
+                                  Strings.clear_all,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: colors?.inboxHeaderColors
+                                            ?.headerActionColor ??
+                                        defaultColors.appBarActionText,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                ],
-              ),
-            ],
-          ),
+                  ],
+                ),
+              ],
+            ),
+      ),
     );
   }
 }
