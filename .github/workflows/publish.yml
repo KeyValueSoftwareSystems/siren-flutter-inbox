@@ -13,12 +13,11 @@ on:
           - "Minor"
           - "Patch"
 
-
 jobs:
   publish:
     permissions:
       id-token: write # Required for authentication using OIDC
-      contents: write 
+      contents: write # Required for pushing commits and tags
     runs-on: ubuntu-latest
     steps:
       - name: Get branch names.
@@ -27,73 +26,112 @@ jobs:
       
       - name: Checkout code
         uses: actions/checkout@v4
+        # Fetch full history for accurate versioning and tagging
+        with:
+          fetch-depth: 0 
       
-      - name: Set up Git
+      - name: Set up Git User
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          export BRANCH=${{ steps.branch-names.outputs.current_branch }}
-          echo "branch: $BRANCH"
-          if [[ "$BRANCH" != "master" ]]; then
-            echo "Tagging cannot be done on a branch other than master"
-            echo $BRANCH
-            exit 1
-          fi
-          export VERSION=$(cat pubspec.yaml | grep "version:" | awk '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//')
-          echo $VERSION
-          export UPDATE_CHOICE=${{ inputs.ReleaseType }}
-          export MAJOR=$(echo $VERSION | cut -d. -f1)
-          export MINOR=$(echo $VERSION | cut -d. -f2)
-          export PATCH=$(echo $VERSION | cut -d"+" -f1 | cut -d"." -f3)
-          if [[ "$UPDATE_CHOICE" == "Major" ]]; then export NEW_TAG=$((MAJOR + 1)).0.0; fi
-          if [[ "$UPDATE_CHOICE" == "Minor" ]]; then export NEW_TAG=$MAJOR.$((MINOR + 1)).0; fi
-          if [[ "$UPDATE_CHOICE" == "Patch" ]]; then export NEW_TAG=$MAJOR.$MINOR.$((PATCH + 1)); fi
-          echo NEW_TAG $NEW_TAG
-          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
-          sed -i "s/version: $VERSION/version: $NEW_TAG/g" pubspec.yaml
 
-      - uses: actions/setup-java@v1
+      - name: Set up Java
+        uses: actions/setup-java@v1
         with:
-            java-version: '12.x'
-      - uses: subosito/flutter-action@v1
+            java-version: '12.x' # Ensure this is compatible with your Flutter/Dart SDK
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v1
         with:
             channel: 'stable' 
 
-      - name: Install dependencies
+      - name: Install dependencies (pre-dry-run)
+        # Install dependencies for the current, committed version
         run: flutter pub get
 
-      - name: Analyze project source
+      - name: Analyze project source (pre-dry-run)
         run: flutter analyze lib/
         
-      - name: Run tests
+      - name: Run tests (pre-dry-run)
         run: flutter test lib/
 
       - name: Setup Pub Credentials
         shell: bash
         env:
           INPUT_ACCESS_TOKEN: ${{ secrets.INPUT_ACCESS_TOKEN }}
-          INPUT_REFRESH_TOKEN: ${{ secrets.INPUT_REFRESH_TOKEN }}
+          INPUT_REFRESH_TOKEN: ${{ secrets.INPUT_REFRESH_TOKEN }} # Corrected secret name if it's REFRESH_TOKEN
         run: |
+          # Ensure this script correctly sets up ~/.pub-cache/credentials.json
           sh ./pub_login.sh
 
-      - name: Check Publish Warnings
+      - name: Initial Dry Run (on current committed version)
+        id: initial-dry-run # ID to check outcome
+        # This checks the package as it is currently committed.
+        # It should pass without 'modified file' warning if your repo is truly clean.
         run: flutter pub publish --dry-run
+    
+      - name: Calculate New Version, Update pubspec.yaml Locally, and Commit
+        id: version-bump-commit # ID for this step
+        # This step only runs if the initial dry run was successful
+        if: steps.initial-dry-run.outcome == 'success'
+        env:
+          BRANCH: ${{ steps.branch-names.outputs.current_branch }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed for git push
+        run: |
+          echo "Current branch: $BRANCH"
+          if [[ "$BRANCH" != "master" ]]; then
+            echo "Error: Publishing and tagging can only be done from the 'master' branch."
+            exit 1
+          fi
+
+          # Get current version from pubspec.yaml
+          CURRENT_VERSION=$(grep "version:" pubspec.yaml | awk '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//')
+          echo "Current version: $CURRENT_VERSION"
+
+          # Parse version components
+          MAJOR=$(echo "$CURRENT_VERSION" | cut -d. -f1)
+          MINOR=$(echo "$CURRENT_VERSION" | cut -d. -f2)
+          PATCH=$(echo "$CURRENT_VERSION" | cut -d"." -f3)
+
+          # Calculate new tag based on ReleaseType input
+          NEW_TAG=""
+          UPDATE_CHOICE=${{ inputs.ReleaseType }}
+
+          if [[ "$UPDATE_CHOICE" == "Major" ]]; then
+            NEW_TAG=$((MAJOR + 1)).0.0
+          elif [[ "$UPDATE_CHOICE" == "Minor" ]]; then
+            NEW_TAG=$MAJOR.$((MINOR + 1)).0
+          elif [[ "$UPDATE_CHOICE" == "Patch" ]]; then
+            NEW_TAG=$MAJOR.$MINOR.$((PATCH + 1))
+          else
+            echo "Invalid ReleaseType: $UPDATE_CHOICE"
+            exit 1
+          fi
+          
+          echo "New calculated version: $NEW_TAG"
+          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV # Make NEW_TAG available to subsequent steps
+
+          # Update pubspec.yaml locally
+          sed -i "s/version: $CURRENT_VERSION/version: $NEW_TAG/g" pubspec.yaml
+
+          # Run flutter pub get again for the new version to update pubspec.lock
+          flutter pub get
+
+          # Commit the version bump and updated pubspec.lock
+          git add pubspec.yaml pubspec.lock
+          git commit -m "chore: Bump version to $NEW_TAG"
+          git push origin $BRANCH # Push the new version commit
 
       - name: Publish Package
+        id: publish-package # ID to reference this step's outcome
+        # This step only runs if the version bump commit was successful
+        if: steps.version-bump-commit.outcome == 'success'
+        # Now, flutter pub publish -f will run on a clean Git state with the new version
         run: flutter pub publish -f
     
-      - name: Commit pubspec.yaml
-        if: success()
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NEW_TAG: ${{ env.NEW_TAG }}
-        run: |
-          git add pubspec.yaml
-          git commit -m "Version bumped to $NEW_TAG"
-          git push origin $BRANCH
-
       - name: Create New Tag
-        if: success()
+        # This step now depends on the successful publish
+        if: steps.publish-package.outcome == 'success'
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             NEW_TAG: ${{ env.NEW_TAG }}
@@ -101,9 +139,9 @@ jobs:
             git tag v${{ env.NEW_TAG }}
             git push origin v${{ env.NEW_TAG }}
 
-
       - name: Create GitHub release
-        if: success()
+        # This step also depends on the successful publish
+        if: steps.publish-package.outcome == 'success'
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -113,4 +151,3 @@ jobs:
             release_name: Release v${{ env.NEW_TAG }}
             draft: false
             prerelease: false
-     
