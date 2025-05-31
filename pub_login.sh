@@ -23,6 +23,6 @@ fi
         "refreshToken":"$INPUT_REFRESH_TOKEN",
         "tokenEndpoint":"https://accounts.google.com/o/oauth2/token",
         "scopes": [ "openid", "https://www.googleapis.com/auth/userinfo.email" ],
-        "expiration": 1577149838000
+        "expiration": 1748677407236
     }
 EOF
