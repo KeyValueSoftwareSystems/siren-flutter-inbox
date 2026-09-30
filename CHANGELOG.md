@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.4.0
+
+### Added
+- Added `SirenNotificationBuilder` widget for building fully custom notification UIs.
+- Added `Siren.fetchNotifications` for fetching notifications with optional filters.
+- Added `Siren.notificationStream` for listening to real-time inbox update events.
+
 ## 1.3.0
 
 ### Added

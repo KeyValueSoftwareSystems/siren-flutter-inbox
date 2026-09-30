@@ -136,12 +136,12 @@ class SirenDataProvider {
   /// Disposes the icon controller.
   void iconDispose() {
     _iconController.close();
-    _iconController = StreamController<StreamResponse>();
+    _iconController = StreamController<StreamResponse>.broadcast();
   }
 
   /// Disposes the inbox controller.
   void inboxDispose() {
     _inboxController.close();
-    _inboxController = StreamController<StreamResponse>();
+    _inboxController = StreamController<StreamResponse>.broadcast();
   }
 }

@@ -321,21 +321,81 @@ CategoryFilterStyles(
 |------------------|------------------------------------------------|-----------|----------------------------------|
 | dropdownTextStyle| Style for the category text in dropdown        | TextStyle | fontSize: 14, color: Colors.black87 |
 
-## 3. Siren Class
+### 2.5 Configure notification builder
 
-The `Siren Class` provides utility functions for modifying notifications.
+`SirenNotificationBuilder` is a headless widget that manages notification data (fetching, pagination, polling, and state) and exposes it through a builder callback. Use it to build fully custom notification UIs while the SDK handles the data layer.
 
 ```dart
-Siren.markAsRead(id: 'notification-id');
+SirenNotificationBuilder(
+  itemsPerFetch: 10,
+  builder: (context, state, controller) {
+    if (state.isLoading) return CircularProgressIndicator();
+    if (state.isError) return Text('Error: ${state.error?.message}');
+    return ListView.builder(
+      itemCount: state.notifications.length,
+      itemBuilder: (context, index) {
+        final notification = state.notifications[index];
+        return ListTile(
+          title: Text(notification.message.header ?? ''),
+          subtitle: Text(notification.message.body ?? ''),
+          onTap: () => controller.markAsRead(notification.id),
+        );
+      },
+    );
+  },
+)
 ```
 
-| Function         | Arguments | Type            | Description                                                          |
-| ---------------- | --------- | --------------- | -------------------------------------------------------------------- |
-| markAsReadByDate | startDate | ISO date string | Sets the read status of notifications to true until the given date   |
-| markAsReadById   | id        | string          | Set read status of a notification to true                            |
-| deleteById       | id        | string          | Delete a notification by id                                          |
-| deleteByDate     | startDate | ISO date string | Delete all notifications until given date                            |
-| markAllAsViewed  | startDate | ISO date string | Sets the viewed status of notifications to true until the given date |
+#### Arguments for notification builder
+
+| Arguments     | Description                                               | Type                                                                           | Default value |
+| ------------- | --------------------------------------------------------- | ------------------------------------------------------------------------------ | ------------- |
+| builder       | Builder that receives state and controller                | Widget Function(BuildContext, SirenNotificationState, SirenNotificationController) | required      |
+| itemsPerFetch | Number of notifications per page (max 50)                 | int?                                                                           | 20            |
+| isRead        | Filter by read status. `null` returns all                 | bool?                                                                          | null          |
+| categories    | Filter by notification categories                         | List\<String\>?                                                                | null          |
+| onError       | Callback for handling errors                              | Function(SirenErrorType)?                                                      | null          |
+
+#### SirenNotificationState
+
+The state object provided to the builder:
+
+| Property      | Type                    | Description                             |
+| ------------- | ----------------------- | --------------------------------------- |
+| notifications | List\<NotificationType\>| The list of notifications fetched so far|
+| isLoading     | bool                    | Whether the initial fetch is in progress|
+| isError       | bool                    | Whether an error occurred               |
+| hasMore       | bool                    | Whether more pages are available        |
+| error         | SirenErrorType?         | The error details, if any               |
+
+#### SirenNotificationController
+
+The controller object provided to the builder:
+
+| Method     | Return type    | Description                            |
+| ---------- | -------------- | -------------------------------------- |
+| loadMore() | void           | Load the next page of notifications    |
+| refresh()  | Future\<void\> | Refresh the notification list          |
+| markAsRead(id) | Future\<void\> | Mark a notification as read by ID  |
+| delete(id) | Future\<void\> | Delete a notification by ID            |
+
+## 3. Siren Class
+
+The `Siren` class provides static utility functions for fetching and modifying notifications.
+
+```dart
+Siren.markAsReadById(id: 'notification-id');
+```
+
+| Function           | Arguments  | Type                       | Description                                                          |
+| ------------------ | ---------- | -------------------------- | -------------------------------------------------------------------- |
+| fetchNotifications | size, isRead, start, end, categories | SirenNotificationResult | Fetch a list of notifications with optional filters |
+| notificationStream | —          | Stream\<StreamResponse\>   | Broadcast stream of inbox update events                              |
+| markAsReadById     | id         | string                     | Set read status of a notification to true                            |
+| markAsReadByDate   | startDate  | ISO date string            | Sets the read status of notifications to true until the given date   |
+| deleteById         | id         | string                     | Delete a notification by id                                          |
+| deleteByDate       | startDate  | ISO date string            | Delete all notifications until given date                            |
+| markAllAsViewed    | startDate  | ISO date string            | Sets the viewed status of notifications to true until the given date |
 
 ## Example
 
