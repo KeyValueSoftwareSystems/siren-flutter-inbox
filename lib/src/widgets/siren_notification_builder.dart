@@ -351,10 +351,6 @@ class _SirenNotificationBuilderState
       SirenDataProvider.instance.inboxController.sink.add(
         StreamResponse(response, UpdateEvents.READ_BY_ID, id),
       );
-      _safeSetState(() {
-        final match = _notifications.where((n) => n.id == id);
-        if (match.isNotEmpty) match.first.markAsRead();
-      });
     } else {
       widget.onError?.call(response.error ?? SirenErrorType());
     }
@@ -367,9 +363,6 @@ class _SirenNotificationBuilderState
       SirenDataProvider.instance.inboxController.sink.add(
         StreamResponse(response, UpdateEvents.DELETE_BY_ID, id),
       );
-      _safeSetState(() {
-        _notifications.removeWhere((n) => n.id == id);
-      });
     } else {
       widget.onError?.call(response.error ?? SirenErrorType());
     }

@@ -219,12 +219,14 @@ void main() {
     testWidgets('handles READ_BY_ID stream event with success response',
         (WidgetTester tester) async {
       final successResponse = ApiResponse()..isSuccess = true;
+      SirenNotificationState? capturedState;
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: SirenNotificationBuilder(
               builder: (context, state, controller) {
+                capturedState = state;
                 return const SizedBox.shrink();
               },
             ),
@@ -239,18 +241,21 @@ void main() {
       );
 
       await tester.pump();
-      expect(find.byType(SizedBox), findsOneWidget);
+      expect(capturedState, isNotNull);
+      expect(capturedState!.notifications, isEmpty);
     });
 
     testWidgets('handles READ_ALL stream event with success response',
         (WidgetTester tester) async {
       final successResponse = ApiResponse()..isSuccess = true;
+      SirenNotificationState? capturedState;
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: SirenNotificationBuilder(
               builder: (context, state, controller) {
+                capturedState = state;
                 return const SizedBox.shrink();
               },
             ),
@@ -265,18 +270,21 @@ void main() {
       );
 
       await tester.pump();
-      expect(find.byType(SizedBox), findsOneWidget);
+      expect(capturedState, isNotNull);
+      expect(capturedState!.notifications, isEmpty);
     });
 
     testWidgets('handles DELETE_BY_ID stream event with success response',
         (WidgetTester tester) async {
       final successResponse = ApiResponse()..isSuccess = true;
+      SirenNotificationState? capturedState;
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: SirenNotificationBuilder(
               builder: (context, state, controller) {
+                capturedState = state;
                 return const SizedBox.shrink();
               },
             ),
@@ -295,18 +303,21 @@ void main() {
       );
 
       await tester.pump();
-      expect(find.byType(SizedBox), findsOneWidget);
+      expect(capturedState, isNotNull);
+      expect(capturedState!.notifications, isEmpty);
     });
 
     testWidgets('handles DELETE_ALL stream event with success response',
         (WidgetTester tester) async {
       final successResponse = ApiResponse()..isSuccess = true;
+      SirenNotificationState? capturedState;
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: SirenNotificationBuilder(
               builder: (context, state, controller) {
+                capturedState = state;
                 return const SizedBox.shrink();
               },
             ),
@@ -321,18 +332,21 @@ void main() {
       );
 
       await tester.pump();
-      expect(find.byType(SizedBox), findsOneWidget);
+      expect(capturedState, isNotNull);
+      expect(capturedState!.notifications, isEmpty);
     });
 
     testWidgets('handles TOKEN_VERIFIED stream event',
         (WidgetTester tester) async {
       final successResponse = ApiResponse()..isSuccess = true;
+      SirenNotificationState? capturedState;
 
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: SirenNotificationBuilder(
               builder: (context, state, controller) {
+                capturedState = state;
                 return const SizedBox.shrink();
               },
             ),
@@ -347,7 +361,8 @@ void main() {
       );
 
       await tester.pump();
-      expect(find.byType(SizedBox), findsOneWidget);
+      expect(capturedState, isNotNull);
+      expect(capturedState!.notifications, isEmpty);
     });
 
     testWidgets('calls onError callback on stream error response',
