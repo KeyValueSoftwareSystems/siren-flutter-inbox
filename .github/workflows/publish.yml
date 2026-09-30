@@ -64,6 +64,13 @@ jobs:
           # Ensure this script correctly sets up ~/.pub-cache/credentials.json
           sh ./pub_login.sh
 
+      - name: Log modified files before dry-run
+        run: |
+          echo "=== Modified files ==="
+          git diff --name-only
+          echo "=== Diff details ==="
+          git diff
+
       - name: Initial Dry Run (on current committed version)
         id: initial-dry-run # ID to check outcome
         # This checks the package as it is currently committed.
