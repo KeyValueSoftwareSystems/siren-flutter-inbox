@@ -46,8 +46,7 @@ class Siren {
     List<String>? categories,
   }) async {
     final validatedSize = (size ?? 20).clamp(1, 50);
-    final response =
-        await FetchAllNotifications.instance.fetchAllNotifications(
+    final response = await FetchAllNotifications.instance.fetchAllNotifications(
       size: validatedSize,
       isRead: isRead,
       start: start,

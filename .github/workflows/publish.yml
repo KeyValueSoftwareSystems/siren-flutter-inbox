@@ -41,7 +41,7 @@ jobs:
             java-version: '12.x' # Ensure this is compatible with your Flutter/Dart SDK
 
       - name: Set up Flutter
-        uses: subosito/flutter-action@v1
+        uses: subosito/flutter-action@v2
         with:
             channel: 'stable' 
 
@@ -117,8 +117,8 @@ jobs:
           # Run flutter pub get again for the new version to update pubspec.lock
           flutter pub get
 
-          # Commit the version bump and updated pubspec.lock
-          git add pubspec.yaml pubspec.lock
+          # Commit the version bump
+          git add pubspec.yaml
           git commit -m "chore: Bump version to $NEW_TAG"
           git push origin $BRANCH # Push the new version commit
 
