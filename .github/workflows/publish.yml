@@ -64,18 +64,19 @@ jobs:
           # Ensure this script correctly sets up ~/.pub-cache/credentials.json
           sh ./pub_login.sh
 
-      - name: Log modified files before dry-run
-        run: |
-          echo "=== Modified files ==="
-          git diff --name-only
-          echo "=== Diff details ==="
-          git diff
-
       - name: Initial Dry Run (on current committed version)
         id: initial-dry-run # ID to check outcome
         # This checks the package as it is currently committed.
         # It should pass without 'modified file' warning if your repo is truly clean.
         run: flutter pub publish --dry-run
+
+      - name: Log modified files if dry-run failed
+        if: failure() && steps.initial-dry-run.outcome == 'failure'
+        run: |
+          echo "=== Modified files ==="
+          git diff --name-only
+          echo "=== Diff details ==="
+          git diff
     
       - name: Calculate New Version, Update pubspec.yaml Locally, and Commit
         id: version-bump-commit # ID for this step
