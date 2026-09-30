@@ -89,8 +89,7 @@ void main() {
       expect(find.byType(Column), findsOneWidget);
     });
 
-    testWidgets('passes itemsPerFetch parameter',
-        (WidgetTester tester) async {
+    testWidgets('passes itemsPerFetch parameter', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -108,8 +107,7 @@ void main() {
       expect(find.byType(SizedBox), findsOneWidget);
     });
 
-    testWidgets('clamps itemsPerFetch to max 50',
-        (WidgetTester tester) async {
+    testWidgets('clamps itemsPerFetch to max 50', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -127,8 +125,7 @@ void main() {
       expect(find.byType(SizedBox), findsOneWidget);
     });
 
-    testWidgets('passes isRead filter parameter',
-        (WidgetTester tester) async {
+    testWidgets('passes isRead filter parameter', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -188,8 +185,7 @@ void main() {
       expect(find.byType(Text), findsOneWidget);
     });
 
-    testWidgets('handles SHOW_ERROR stream event',
-        (WidgetTester tester) async {
+    testWidgets('handles SHOW_ERROR stream event', (WidgetTester tester) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(

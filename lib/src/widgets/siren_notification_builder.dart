@@ -120,8 +120,7 @@ class SirenNotificationBuilder extends StatefulWidget {
       _SirenNotificationBuilderState();
 }
 
-class _SirenNotificationBuilderState
-    extends State<SirenNotificationBuilder> {
+class _SirenNotificationBuilderState extends State<SirenNotificationBuilder> {
   List<NotificationType> _notifications = [];
   bool _isLoading = true;
   bool _isError = false;
@@ -129,6 +128,7 @@ class _SirenNotificationBuilderState
   bool _loadingNextPage = false;
   SirenErrorType? _error;
   int _pageSize = 20;
+
   /// Incremented on every [_reset] so in-flight fetches can detect staleness.
   int _generation = 0;
 
@@ -172,8 +172,8 @@ class _SirenNotificationBuilderState
           switch (streamResponse.api) {
             case UpdateEvents.READ_BY_ID:
               _safeSetState(() {
-                final match = _notifications
-                    .where((n) => n.id == streamResponse.id);
+                final match =
+                    _notifications.where((n) => n.id == streamResponse.id);
                 if (match.isNotEmpty) match.first.markAsRead();
               });
               break;
@@ -186,8 +186,7 @@ class _SirenNotificationBuilderState
               break;
             case UpdateEvents.DELETE_BY_ID:
               _safeSetState(() {
-                _notifications
-                    .removeWhere((n) => n.id == streamResponse.id);
+                _notifications.removeWhere((n) => n.id == streamResponse.id);
               });
               break;
             case UpdateEvents.DELETE_ALL:
@@ -238,8 +237,7 @@ class _SirenNotificationBuilderState
     final generation = _generation;
     _safeSetState(() => _isLoading = true);
 
-    final response =
-        await FetchAllNotifications.instance.fetchAllNotifications(
+    final response = await FetchAllNotifications.instance.fetchAllNotifications(
       end: DateTime.now().toUtc().toIso8601String(),
       size: _pageSize,
       isRead: widget.isRead,
@@ -289,8 +287,7 @@ class _SirenNotificationBuilderState
         if (!mounted || generation != _generation) return;
 
         if (response.isSuccess) {
-          final newNotifications =
-              response.data as Iterable<NotificationType>;
+          final newNotifications = response.data as Iterable<NotificationType>;
           if (newNotifications.isNotEmpty) {
             unawaited(_markAllAsViewed());
             _safeSetState(() {
@@ -305,7 +302,9 @@ class _SirenNotificationBuilderState
   }
 
   void _onEndReached() {
-    if (!_isLoading && !_loadingNextPage && _hasMore &&
+    if (!_isLoading &&
+        !_loadingNextPage &&
+        _hasMore &&
         _notifications.isNotEmpty) {
       final generation = _generation;
       _loadingNextPage = true;
@@ -324,8 +323,7 @@ class _SirenNotificationBuilderState
         }
 
         if (response.isSuccess) {
-          final newNotifications =
-              response.data as Iterable<NotificationType>;
+          final newNotifications = response.data as Iterable<NotificationType>;
           _safeSetState(() {
             _notifications.addAll(newNotifications);
             _loadingNextPage = false;
