@@ -1,12 +1,76 @@
+import 'dart:async';
+
 import 'package:sirenapp_flutter_inbox/src/api/delete_notification_by_id.dart';
+import 'package:sirenapp_flutter_inbox/src/api/fetch_all_notification.dart';
 import 'package:sirenapp_flutter_inbox/src/api/mark_all_notifications_as_viewed.dart';
 import 'package:sirenapp_flutter_inbox/src/api/notifications_bulk_update.dart';
 import 'package:sirenapp_flutter_inbox/src/api/read_notification_by_id.dart';
 import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
 import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
 import 'package:sirenapp_flutter_inbox/src/models/api_response.dart';
+import 'package:sirenapp_flutter_inbox/src/models/notification_model.dart';
+
+/// The result of a notification fetch operation.
+class SirenNotificationResult {
+  /// Constructs a [SirenNotificationResult].
+  const SirenNotificationResult({
+    required this.notifications,
+    this.error,
+  });
+
+  /// The list of fetched notifications.
+  final List<NotificationType> notifications;
+
+  /// The error, if the fetch failed.
+  final SirenErrorType? error;
+
+  /// Whether the fetch was successful.
+  bool get isSuccess => error == null;
+}
 
 class Siren {
+  /// Fetches a list of notifications.
+  ///
+  /// [size] — number of notifications per page (default 20, max 50).
+  /// [isRead] — filter by read status. `null` returns all.
+  /// [start] — ISO 8601 date string; fetch notifications created after this.
+  /// [end] — ISO 8601 date string; fetch notifications created before this.
+  /// [categories] — optional list of category strings to filter by.
+  ///
+  /// Returns a [SirenNotificationResult] containing the list and any error.
+  static Future<SirenNotificationResult> fetchNotifications({
+    int? size,
+    bool? isRead,
+    String? start,
+    String? end,
+    List<String>? categories,
+  }) async {
+    final validatedSize = (size ?? 20).clamp(1, 50);
+    final response =
+        await FetchAllNotifications.instance.fetchAllNotifications(
+      size: validatedSize,
+      isRead: isRead,
+      start: start,
+      end: end,
+      categories: categories,
+    );
+    if (response.isSuccess) {
+      final list = response.data as Iterable<NotificationType>? ?? [];
+      return SirenNotificationResult(notifications: list.toList());
+    }
+    return SirenNotificationResult(
+      notifications: [],
+      error: response.error,
+    );
+  }
+
+  /// A broadcast stream of [StreamResponse] events for inbox updates.
+  ///
+  /// Listen to this stream to react to changes like new notifications,
+  /// read/delete events, and parameter changes.
+  static Stream<StreamResponse> get notificationStream =>
+      SirenDataProvider.instance.inboxController.stream;
+
   /// Marks a notification as read by its ID.
   /// [id] is the notification id to be mark as read.
   /// Returns the response from the API call.

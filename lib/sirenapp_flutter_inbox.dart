@@ -3,12 +3,15 @@ import 'package:sirenapp_flutter_inbox/src/constants/generics.dart';
 import 'package:sirenapp_flutter_inbox/src/data/siren_data_provider.dart';
 import 'package:sirenapp_flutter_inbox/src/models/api_response.dart';
 
+export 'package:sirenapp_flutter_inbox/src/constants/generics.dart'
+    show UpdateEvents;
 export 'package:sirenapp_flutter_inbox/src/models/api_response.dart';
 export 'package:sirenapp_flutter_inbox/src/models/notification_model.dart';
 export 'package:sirenapp_flutter_inbox/src/models/ui_models.dart';
 export 'package:sirenapp_flutter_inbox/src/utils/siren.dart';
 export 'package:sirenapp_flutter_inbox/src/widgets/siren_inbox.dart';
 export 'package:sirenapp_flutter_inbox/src/widgets/siren_inbox_icon.dart';
+export 'package:sirenapp_flutter_inbox/src/widgets/siren_notification_builder.dart';
 
 /// Provides access to the Siren SDK functionalities.
 class SirenProvider extends StatefulWidget {
