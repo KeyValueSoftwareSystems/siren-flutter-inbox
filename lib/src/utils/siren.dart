@@ -66,8 +66,8 @@ class Siren {
 
   /// A broadcast stream of [StreamResponse] events for inbox updates.
   ///
-  /// Listen to this stream to react to changes like new notifications,
-  /// read/delete events, and parameter changes.
+  /// Listen to this stream to react to read, delete, and view
+  /// operations performed on notifications.
   static Stream<StreamResponse> get notificationStream =>
       SirenDataProvider.instance.inboxController.stream;
 
