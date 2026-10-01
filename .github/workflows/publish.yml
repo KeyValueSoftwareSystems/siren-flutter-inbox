@@ -2,22 +2,12 @@ name: Publish sirenapp_flutter_inbox in pub.dev
 
 on:
   workflow_dispatch:
-    inputs:
-      ReleaseType:
-        description: 'Release Type'
-        required: true
-        default: 'Patch'
-        type: choice
-        options:
-          - "Major"
-          - "Minor"
-          - "Patch"
 
 jobs:
   publish:
     permissions:
       id-token: write # Required for authentication using OIDC
-      contents: write # Required for pushing commits and tags
+      contents: write # Required for creating tags and releases
     runs-on: ubuntu-latest
     steps:
       - name: Get branch names.
@@ -29,7 +19,17 @@ jobs:
         # Fetch full history for accurate versioning and tagging
         with:
           fetch-depth: 0 
-      
+
+      - name: Verify branch is master
+        env:
+          BRANCH: ${{ steps.branch-names.outputs.current_branch }}
+        run: |
+          echo "Current branch: $BRANCH"
+          if [[ "$BRANCH" != "master" ]]; then
+            echo "Error: Publishing can only be done from the 'master' branch."
+            exit 1
+          fi
+
       - name: Set up Git User
         run: |
           git config user.name github-actions
@@ -64,88 +64,40 @@ jobs:
           # Ensure this script correctly sets up ~/.pub-cache/credentials.json
           sh ./pub_login.sh
 
-      - name: Initial Dry Run (on current committed version)
-        id: initial-dry-run # ID to check outcome
+      - name: Dry Run
+        id: dry-run # ID to check outcome
         # This checks the package as it is currently committed.
         # It should pass without 'modified file' warning if your repo is truly clean.
         run: flutter pub publish --dry-run
 
       - name: Log modified files if dry-run failed
-        if: failure() && steps.initial-dry-run.outcome == 'failure'
+        if: failure() && steps.dry-run.outcome == 'failure'
         run: |
           echo "=== Modified files ==="
           git diff --name-only
           echo "=== Diff details ==="
           git diff
-    
-      - name: Calculate New Version, Update pubspec.yaml Locally, and Commit
-        id: version-bump-commit # ID for this step
-        # This step only runs if the initial dry run was successful
-        if: steps.initial-dry-run.outcome == 'success'
-        env:
-          BRANCH: ${{ steps.branch-names.outputs.current_branch }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed for git push
+
+      - name: Read version from pubspec.yaml
+        id: version
         run: |
-          echo "Current branch: $BRANCH"
-          if [[ "$BRANCH" != "master" ]]; then
-            echo "Error: Publishing and tagging can only be done from the 'master' branch."
-            exit 1
-          fi
-
-          # Get current version from pubspec.yaml
-          CURRENT_VERSION=$(grep "version:" pubspec.yaml | awk '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//')
-          echo "Current version: $CURRENT_VERSION"
-
-          # Parse version components
-          MAJOR=$(echo "$CURRENT_VERSION" | cut -d. -f1)
-          MINOR=$(echo "$CURRENT_VERSION" | cut -d. -f2)
-          PATCH=$(echo "$CURRENT_VERSION" | cut -d"." -f3)
-
-          # Calculate new tag based on ReleaseType input
-          NEW_TAG=""
-          UPDATE_CHOICE=${{ inputs.ReleaseType }}
-
-          if [[ "$UPDATE_CHOICE" == "Major" ]]; then
-            NEW_TAG=$((MAJOR + 1)).0.0
-          elif [[ "$UPDATE_CHOICE" == "Minor" ]]; then
-            NEW_TAG=$MAJOR.$((MINOR + 1)).0
-          elif [[ "$UPDATE_CHOICE" == "Patch" ]]; then
-            NEW_TAG=$MAJOR.$MINOR.$((PATCH + 1))
-          else
-            echo "Invalid ReleaseType: $UPDATE_CHOICE"
-            exit 1
-          fi
-          
-          echo "New calculated version: $NEW_TAG"
-          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV # Make NEW_TAG available to subsequent steps
-
-          # Update pubspec.yaml locally
-          sed -i "s/version: $CURRENT_VERSION/version: $NEW_TAG/g" pubspec.yaml
-
-          # Run flutter pub get again for the new version to update pubspec.lock
-          flutter pub get
-
-          # Commit the version bump
-          git add pubspec.yaml
-          git commit -m "chore: Bump version to $NEW_TAG"
-          git push origin $BRANCH # Push the new version commit
+          VERSION=$(grep "version:" pubspec.yaml | awk '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//')
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "Publishing version: $VERSION"
 
       - name: Publish Package
-        id: publish-package # ID to reference this step's outcome
-        # This step only runs if the version bump commit was successful
-        if: steps.version-bump-commit.outcome == 'success'
-        # Now, flutter pub publish -f will run on a clean Git state with the new version
+        id: publish-package # ID to reference the outcome of the publish step
+        if: steps.dry-run.outcome == 'success'
         run: flutter pub publish -f
     
-      - name: Create New Tag
-        # This step now depends on the successful publish
+      - name: Create Tag
+        # This step depends on the successful publish
         if: steps.publish-package.outcome == 'success'
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            NEW_TAG: ${{ env.NEW_TAG }}
         run: |
-            git tag v${{ env.NEW_TAG }}
-            git push origin v${{ env.NEW_TAG }}
+            git tag v${{ steps.version.outputs.VERSION }}
+            git push origin v${{ steps.version.outputs.VERSION }}
 
       - name: Create GitHub release
         # This step also depends on the successful publish
@@ -153,9 +105,8 @@ jobs:
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NEW_TAG: ${{ env.NEW_TAG }}
         with:
-            tag_name: v${{ env.NEW_TAG }}
-            release_name: Release v${{ env.NEW_TAG }}
+            tag_name: v${{ steps.version.outputs.VERSION }}
+            release_name: Release v${{ steps.version.outputs.VERSION }}
             draft: false
             prerelease: false
