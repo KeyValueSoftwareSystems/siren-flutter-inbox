@@ -20,6 +20,8 @@ analyzer:
     implicit_dynamic_map_literal: false
     implicit_dynamic_method: false
     implicit_dynamic_type: false
+  exclude:
+    - build/**
 
 linter:
   # The lint rules applied to this project can be customized in the
